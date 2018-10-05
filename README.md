@@ -2,7 +2,8 @@
 Final Degree Project of Statistics Degree based on General Addictive Models for Location, Scale and Shape.
 
 ## Contents
-[TODO]
+
+* [Documento Completo](tex/document/document.pdf)
 
 ## Authors
 [TODO]

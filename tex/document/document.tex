@@ -1,0 +1,24 @@
+% !TEX root = ./document.tex
+
+\documentclass[twoside, openright, 12pt]{report}
+
+\usepackage{thestyle}
+\usepackage{thevars}
+
+\begin{document}
+
+  \subfile{tex/title}
+  \subfile{tex/abstract}
+  \subfile{tex/acknowledgements}
+  \subfile{tex/preface}
+
+  \tableofcontents
+
+  \subfile{tex/chapters/introduction}
+
+  \appendix
+
+  \subfile{tex/bibliography}
+
+
+\end{document}
