@@ -3,7 +3,7 @@ Final Degree Project of Statistics Degree based on General Addictive Models for 
 
 ## Contents
 
-* [Documento Completo](tex/document/document.pdf)
+* [Complete Document](tex/document/document.pdf)
 
 ## Authors
 [TODO]
