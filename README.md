@@ -1,5 +1,5 @@
-# tfg.gamlss
-Final Degree Project of Statistics Degree based on General Addictive Models for Location, Scale and Shape.
+# tfg-pickup-and-delivery
+Final Degree Project of Statistics Degree based on the Pickup and Delivery Problem (PDP).
 
 ## Contents
 
