@@ -2,7 +2,7 @@ import unittest
 
 from uuid import UUID
 
-from ride import (
+from rider import (
     GeometricSurface,
 )
 from .utils import generate_positions
