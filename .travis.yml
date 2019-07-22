@@ -7,6 +7,6 @@ install:
   - 'pip install pipenv'
   - 'pipenv sync --dev'
 script:
-  - 'coverage run --source=rider --module unittest discover tests'
+  - 'coverage run --source=jinete --module unittest discover tests'
 after_success:
   - 'coveralls'

@@ -1,7 +1,7 @@
 import unittest
 from uuid import UUID
 
-from rider import (
+from jinete import (
     XYPosition,
 )
 

@@ -1,7 +1,7 @@
 from random import uniform
 from typing import Set
 
-from rider import (
+from jinete import (
     XYPosition,
 )
 

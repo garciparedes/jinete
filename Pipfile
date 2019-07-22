@@ -4,12 +4,11 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-coveralls = "*"
 coverage = "*"
-twine = "*"
+coveralls = "*"
 
 [packages]
-rider = {editable = true,path = "."}
+jinete = {editable = true,path = "."}
 
 [requires]
 python_version = "3.7"

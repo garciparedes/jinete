@@ -2,7 +2,7 @@ import unittest
 from datetime import datetime, timedelta
 from uuid import UUID
 
-from rider import (
+from jinete import (
     Vehicle,
 )
 from .utils import (
