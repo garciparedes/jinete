@@ -6,6 +6,7 @@ verify_ssl = true
 [dev-packages]
 coveralls = "*"
 coverage = "*"
+twine = "*"
 
 [packages]
 ride = {path = "."}
