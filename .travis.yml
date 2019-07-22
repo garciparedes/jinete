@@ -1,0 +1,11 @@
+language: python
+python:
+  - "3.7"
+cache: pip
+install:
+  - 'pip install pipenv'
+  - 'pipenv sync --dev'
+script:
+  - 'coverage run --source=ride --module unittest discover tests'
+after_success:
+  - 'coveralls'
