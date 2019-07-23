@@ -20,6 +20,9 @@ if TYPE_CHECKING:
     from uuid import (
         UUID,
     )
+    from .surfaces import (
+        Surface,
+    )
 
 logger = logging.getLogger(__name__)
 
@@ -27,4 +30,5 @@ logger = logging.getLogger(__name__)
 @dataclass
 class Planning(object):
     routes: Set[Route]
+    surface: Surface
     uuid: UUID = field(default_factory=uuid4)

@@ -26,7 +26,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-@dataclass
+@dataclass(frozen=True)
 class Trip(object):
     origin: Position
     destination: Position
@@ -44,3 +44,14 @@ class Trip(object):
         if self.timeout is None:
             return None
         return self.earliest + self.timeout
+
+
+@dataclass(frozen=True)
+class PlannedTrip(object):
+    trip: Trip
+    collection_time: datetime
+    delivery_time: datetime
+
+    @property
+    def duration(self) -> timedelta:
+        return self.delivery_time - self.collection_time

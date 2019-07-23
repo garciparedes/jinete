@@ -4,6 +4,7 @@ from .models import (
     Surface,
     GeometricSurface,
     Trip,
+    PlannedTrip,
     Vehicle,
     Route,
     Planning,

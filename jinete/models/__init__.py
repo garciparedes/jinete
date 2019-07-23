@@ -8,6 +8,7 @@ from .surfaces import (
 )
 from .trips import (
     Trip,
+    PlannedTrip,
 )
 from .vehicles import (
     Vehicle,
