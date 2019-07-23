@@ -1,10 +1,8 @@
 import unittest
-from datetime import datetime, timedelta
+from sys import maxsize
 from uuid import UUID
 
-from jinete import (
-    Vehicle,
-)
+import jinete as jit
 from .utils import (
     generate_one_position,
 )
@@ -14,26 +12,26 @@ class TestVehicles(unittest.TestCase):
 
     def test_vehicle(self):
         initial = generate_one_position()
-        vehicle = Vehicle(initial=initial)
+        vehicle = jit.Vehicle(initial)
 
         self.assertEqual(1, vehicle.capacity)
-        self.assertEqual(initial, vehicle.initial)
-        self.assertIsNone(vehicle.final)
-        self.assertIsNone(vehicle.earliest)
-        self.assertIsNone(vehicle.latest)
+        self.assertEqual(vehicle.initial, initial)
+        self.assertEqual(vehicle.final, vehicle.initial)
+        self.assertEqual(vehicle.earliest, 0)
+        self.assertEqual(vehicle.latest, maxsize)
         self.assertIsNone(vehicle.timeout)
         self.assertIsInstance(vehicle.uuid, UUID)
 
     def test_vehicle_with_capacity(self):
         capacity = 3
         initial = generate_one_position()
-        vehicle = Vehicle(capacity=capacity, initial=initial)
+        vehicle = jit.Vehicle(initial, capacity=capacity)
 
-        self.assertEqual(capacity, vehicle.capacity)
-        self.assertEqual(initial, vehicle.initial)
-        self.assertIsNone(vehicle.final)
-        self.assertIsNone(vehicle.earliest)
-        self.assertIsNone(vehicle.latest)
+        self.assertEqual(vehicle.capacity, capacity)
+        self.assertEqual(vehicle.initial, initial)
+        self.assertEqual(vehicle.final, vehicle.initial)
+        self.assertEqual(vehicle.earliest, 0)
+        self.assertEqual(vehicle.latest, maxsize)
         self.assertIsNone(vehicle.timeout)
         self.assertIsInstance(vehicle.uuid, UUID)
 
@@ -41,56 +39,43 @@ class TestVehicles(unittest.TestCase):
         capacity = 3
         initial = generate_one_position()
         final = generate_one_position()
-        vehicle = Vehicle(capacity=capacity, initial=initial, final=final)
+        vehicle = jit.Vehicle(initial, capacity=capacity, _final=final)
 
-        self.assertEqual(capacity, vehicle.capacity)
-        self.assertEqual(initial, vehicle.initial)
-        self.assertEqual(final, vehicle.final)
-        self.assertIsNone(vehicle.earliest)
-        self.assertIsNone(vehicle.latest)
+        self.assertEqual(vehicle.capacity, capacity)
+        self.assertEqual(vehicle.initial, initial)
+        self.assertEqual(vehicle.final, final)
+        self.assertEqual(vehicle.earliest, 0)
+        self.assertEqual(vehicle.latest, maxsize)
         self.assertIsNone(vehicle.timeout)
         self.assertIsInstance(vehicle.uuid, UUID)
 
     def test_vehicle_with_earliest(self):
         initial = generate_one_position()
-        earliest = datetime.now()
+        earliest = 3600
 
-        vehicle = Vehicle(initial=initial, earliest=earliest)
+        vehicle = jit.Vehicle(initial, earliest=earliest)
 
-        self.assertEqual(1, vehicle.capacity)
-        self.assertEqual(initial, vehicle.initial)
-        self.assertIsNone(vehicle.final)
-        self.assertEqual(earliest, vehicle.earliest)
-        self.assertIsNone(vehicle.latest)
-        self.assertIsNone(vehicle.timeout)
-        self.assertIsInstance(vehicle.uuid, UUID)
-
-    def test_vehicle_with_latest(self):
-        initial = generate_one_position()
-        latest = datetime.now()
-
-        vehicle = Vehicle(initial=initial, latest=latest)
-
-        self.assertEqual(1, vehicle.capacity)
-        self.assertEqual(initial, vehicle.initial)
-        self.assertIsNone(vehicle.final)
-        self.assertIsNone(vehicle.earliest)
-        self.assertEqual(latest, vehicle.latest)
+        self.assertEqual(vehicle.capacity, 1, )
+        self.assertEqual(vehicle.initial, initial)
+        self.assertEqual(vehicle.final, vehicle.initial)
+        self.assertEqual(vehicle.earliest, earliest)
+        self.assertEqual(vehicle.latest, maxsize)
         self.assertIsNone(vehicle.timeout)
         self.assertIsInstance(vehicle.uuid, UUID)
 
     def test_vehicle_with_timeout(self):
         initial = generate_one_position()
-        timeout = timedelta(hours=8)
+        earliest = 1800
+        timeout = 3600
 
-        vehicle = Vehicle(initial=initial, timeout=timeout)
+        vehicle = jit.Vehicle(initial, earliest=earliest, timeout=timeout)
 
-        self.assertEqual(1, vehicle.capacity)
-        self.assertEqual(initial, vehicle.initial)
-        self.assertIsNone(vehicle.final)
-        self.assertIsNone(vehicle.earliest)
-        self.assertIsNone(vehicle.latest)
-        self.assertEqual(timeout, vehicle.timeout)
+        self.assertEqual(vehicle.capacity, 1)
+        self.assertEqual(vehicle.initial, initial)
+        self.assertEqual(vehicle.final, vehicle.initial)
+        self.assertEqual(vehicle.earliest, earliest)
+        self.assertEqual(vehicle.latest, earliest + timeout)
+        self.assertEqual(vehicle.timeout, timeout)
         self.assertIsInstance(vehicle.uuid, UUID)
 
 

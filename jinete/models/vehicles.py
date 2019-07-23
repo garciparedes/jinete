@@ -5,7 +5,7 @@ from dataclasses import (
     dataclass,
     field,
 )
-from datetime import datetime, timedelta
+from sys import maxsize
 from typing import (
     TYPE_CHECKING,
 )
@@ -17,9 +17,9 @@ if TYPE_CHECKING:
     from uuid import (
         UUID,
     )
-    from .positions import (
-        Position,
-    )
+from .positions import (
+    Position,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -28,8 +28,19 @@ logger = logging.getLogger(__name__)
 class Vehicle(object):
     initial: Position
     capacity: int = field(default=1)
-    final: Position = field(default=None)
-    earliest: datetime = field(default=None)
-    latest: datetime = field(default=None)
-    timeout: timedelta = field(default=None)
+    _final: Position = field(default=None)
+    earliest: float = field(default=0.0)
+    timeout: float = field(default=None)
     uuid: UUID = field(default_factory=uuid4)
+
+    @property
+    def latest(self) -> float:
+        if self.timeout is None:
+            return maxsize
+        return self.earliest + self.timeout
+
+    @property
+    def final(self) -> Position:
+        if self._final is None:
+            return self.initial
+        return self._final

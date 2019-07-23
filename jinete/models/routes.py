@@ -36,6 +36,19 @@ class Route(object):
 
     @property
     def feasible(self) -> bool:
+        if len(self.planned_trips) > 0:
+            if not self.first_trip.origin == self.vehicle.initial:
+                return False
+            if not self.vehicle.earliest <= self.first_planned_trip.collection_time:
+                return False
+            if not self.last_trip.destination == self.vehicle.final:
+                return False
+            if not self.last_planned_trip.delivery_time <= self.vehicle.latest:
+                return False
+
+        for planned_trip in self.planned_trips:
+            if not planned_trip.feasible:
+                return False
         return True
 
     @property
@@ -55,5 +68,5 @@ class Route(object):
         return self.last_planned_trip.trip
 
     @property
-    def duration(self) -> timedelta:
+    def duration(self) -> float:
         return self.last_planned_trip.delivery_time - self.first_planned_trip.collection_time
