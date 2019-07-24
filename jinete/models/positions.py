@@ -28,3 +28,9 @@ class Position(ABC):
 class XYPosition(Position):
     lat: float = field(default=0)
     lon: float = field(default=0)
+
+    def __eq__(self, other: 'XYPosition') -> bool:
+        return isinstance(other, XYPosition) and self.is_equal(other.lat, other.lon)
+
+    def is_equal(self, lat, lon, *args, **kwargs):
+        return self.lat == lat and self.lon == lon

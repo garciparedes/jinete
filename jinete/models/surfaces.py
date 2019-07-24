@@ -2,19 +2,23 @@ from __future__ import annotations
 import logging
 from abc import (
     ABC,
-)
-from dataclasses import (
-    dataclass,
-    field,
-)
+    abstractmethod)
+
 from math import sqrt
 from typing import (
     TYPE_CHECKING,
     Set,
-)
+    Any, Dict)
 
 from uuid import (
     uuid4,
+)
+
+from .abc import (
+    Model,
+)
+from .positions import (
+    XYPosition,
 )
 
 if TYPE_CHECKING:
@@ -22,20 +26,55 @@ if TYPE_CHECKING:
         UUID,
     )
     from .positions import (
-        XYPosition,
+        Position,
     )
 
 logger = logging.getLogger(__name__)
 
 
-@dataclass
-class Surface(ABC):
-    uuid: UUID = field(default_factory=uuid4)
+class Surface(Model, ABC):
+    uuid: UUID
 
+    def __init__(self, positions: Set[Position] = None, uuid: UUID = None):
+        if uuid is None:
+            uuid = uuid4()
+        if positions is None:
+            positions = set()
+        self.uuid = uuid
+        self.positions = positions
 
-@dataclass
+    def get_or_create_position(self, *args, **kwargs) -> Position:
+        position = self._build_position(*args, **kwargs)
+        self.positions.add(position)
+
+        position = next(
+            (position for position in self.positions if position.is_equal(*args, **kwargs)),
+            None,
+        )
+        if position is None:
+            position = self._build_position(*args, **kwargs)
+            self.positions.add(position)
+        return position
+
+    @abstractmethod
+    def _build_position(self, *args, **kwargs):
+        pass
+
+    def as_dict(self) -> Dict[str, Any]:
+        positions_str = ', '.join(str(position) for position in self.positions)
+        dict_values = {
+            'positions': f'{{{positions_str}}}'
+        }
+        return dict_values
+
 class GeometricSurface(Surface):
-    positions: Set[XYPosition] = field(default=set)
+    positions: Set[XYPosition]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def _build_position(self, *args, **kwargs):
+        return XYPosition(*args, **kwargs)
 
     def distance(self, position_a: XYPosition, position_b: XYPosition, auto_add: bool = False) -> float:
         if position_a not in self.positions:

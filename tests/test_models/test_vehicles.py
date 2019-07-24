@@ -39,7 +39,7 @@ class TestVehicles(unittest.TestCase):
         capacity = 3
         initial = generate_one_position()
         final = generate_one_position()
-        vehicle = jit.Vehicle(initial, capacity=capacity, _final=final)
+        vehicle = jit.Vehicle(initial, capacity=capacity, final=final)
 
         self.assertEqual(vehicle.capacity, capacity)
         self.assertEqual(vehicle.initial, initial)

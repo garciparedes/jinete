@@ -11,7 +11,7 @@ class Loader(ABC):
 
     @property
     @abstractmethod
-    def vehicles(self) -> Set[Vehicle]:
+    def fleet(self) -> Set[Vehicle]:
         pass
 
     @property

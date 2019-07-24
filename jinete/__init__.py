@@ -6,6 +6,12 @@ from .models import (
     Trip,
     PlannedTrip,
     Vehicle,
+    Fleet,
     Route,
     Planning,
+)
+
+from .loaders import (
+    Loader,
+    FileLoader,
 )

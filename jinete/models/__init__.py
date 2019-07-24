@@ -1,3 +1,6 @@
+from .abc import (
+    Model,
+)
 from .positions import (
     Position,
     XYPosition,
@@ -12,6 +15,7 @@ from .trips import (
 )
 from .vehicles import (
     Vehicle,
+    Fleet,
 )
 from .routes import (
     Route,
