@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from abc import ABC
+from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -21,3 +21,7 @@ class Dispatcher(ABC):
         self.loader = loader
         self.algorithm = algorithm
         self.storer = storer
+
+    @abstractmethod
+    def run(self):
+        pass
