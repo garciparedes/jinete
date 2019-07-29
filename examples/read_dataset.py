@@ -11,11 +11,8 @@ def main():
     loader = jit.FileLoader(file_path)
 
     print(f'Surface: \n  {loader.surface}')
-
-    print(f'Vehicles: \n  {loader.fleet}')
-
-    trips = "\n  ".join(map(str, loader.trips))
-    print(f'Trips: \n  {trips}')
+    print(f'Fleet: \n  {loader.fleet}')
+    print(f'Job: \n  {loader.job}')
 
 
 if __name__ == '__main__':

@@ -4,7 +4,10 @@ import logging
 from sys import maxsize
 from typing import (
     TYPE_CHECKING,
-    Set, Any, Dict)
+    Set,
+    Any,
+    Dict,
+)
 from uuid import (
     uuid4,
 )
@@ -74,12 +77,8 @@ class Fleet(Model):
     def __init__(self, vehicles: Set[Vehicle]):
         self.vehicles = vehicles
 
-    def __repr__(self):
-        return self._print(self.as_dict())
-
-    def _print(self, values):
-        values = ', '.join(f'{key}={value}' for key, value in values.items())
-        return f'{self.__class__.__name__}({values})'
+    def __iter__(self):
+        yield from self.vehicles
 
     def as_dict(self) -> Dict[str, Any]:
         vehicles_str = ', '.join(str(vehicle) for vehicle in self.vehicles)

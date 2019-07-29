@@ -13,6 +13,10 @@ from .trips import (
     Trip,
     PlannedTrip,
 )
+
+from .jobs import (
+    Job
+)
 from .vehicles import (
     Vehicle,
     Fleet,

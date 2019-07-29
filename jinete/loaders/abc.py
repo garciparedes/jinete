@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import Set
 
 from ..models import (
-    Vehicle,
-    Trip,
+    Fleet,
+    Job,
 )
 
 
@@ -11,10 +10,10 @@ class Loader(ABC):
 
     @property
     @abstractmethod
-    def fleet(self) -> Set[Vehicle]:
+    def fleet(self) -> Fleet:
         pass
 
     @property
     @abstractmethod
-    def trips(self) -> Set[Trip]:
+    def job(self) -> Job:
         pass

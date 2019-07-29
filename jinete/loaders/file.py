@@ -8,6 +8,7 @@ from typing import Set, Tuple
 
 from ..models import (
     Trip,
+    Job,
     Vehicle,
     Surface,
     Fleet,
@@ -27,7 +28,7 @@ class FileLoader(Loader):
         self.file_path = file_path
 
         self._fleet = None
-        self._trips = None
+        self._job = None
         self._surface = None
 
     def synchronize(self):
@@ -38,7 +39,7 @@ class FileLoader(Loader):
             self._fleet = self._build_fleet(row[2])
             # TODO: Set bonus and number of steps (Config object)
             #
-            self._trips = self._build_trips(data[1:])
+            self._job = self._build_job(data[1:])
 
     def _build_surface(self, rows: int, columns: int) -> Surface:
         return GeometricSurface()
@@ -48,8 +49,9 @@ class FileLoader(Loader):
         vehicles = set(Vehicle(initial, capacity=capacity) for _ in range(n))
         return Fleet(vehicles)
 
-    def _build_trips(self, raw):
-        return set(self._build_trip(row) for row in raw)
+    def _build_job(self, raw, *args, **kwargs):
+        trips = set(self._build_trip(row) for row in raw)
+        return Job(trips, *args, **kwargs)
 
     def _build_trip(self, row: Tuple[int]) -> Trip:
         origin = self._surface.get_or_create_position(lat=row[0], lon=row[1])
@@ -66,10 +68,10 @@ class FileLoader(Loader):
         return self._fleet
 
     @property
-    def trips(self) -> Set[Trip]:
-        if self._trips is None:
+    def job(self) -> Set[Trip]:
+        if self._job is None:
             self.synchronize()
-        return self._trips
+        return self._job
 
     @property
     def surface(self) -> Surface:

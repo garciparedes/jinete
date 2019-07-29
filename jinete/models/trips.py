@@ -71,5 +71,9 @@ class PlannedTrip(object):
         return self.delivery_time - self.collection_time
 
     @property
+    def capacity(self):
+        return self.trip.capacity
+
+    @property
     def feasible(self) -> bool:
         return self.trip.earliest <= self.collection_time and self.delivery_time <= self.trip.latest
