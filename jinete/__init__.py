@@ -15,3 +15,22 @@ from .loaders import (
     Loader,
     FileLoader,
 )
+
+from .dispatchers import (
+    Dispatcher,
+    StaticDispatcher,
+)
+
+from .storers import (
+    StorerFormatter,
+    ColumnarStorerFormatter,
+    HashCodeStorerFormatter,
+    Storer,
+    FileStorer,
+    PromptStorer,
+)
+
+from .algorithms import (
+    Algorithm,
+    NaiveAlgorithm,
+)

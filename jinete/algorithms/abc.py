@@ -1,18 +1,17 @@
 from abc import ABC, abstractmethod
-from typing import Set
 
 from ..models import (
     Planning,
-    Trip,
-    Vehicle,
+    Fleet,
+    Job,
 )
 
 
 class Algorithm(ABC):
 
-    def __init__(self, vehicles: Set[Vehicle], trips: Set[Trip], *args, **kwargs):
-        self.trips = trips
-        self.vehicles = vehicles
+    def __init__(self, fleet: Fleet, job: Job, *args, **kwargs):
+        self.fleet = fleet
+        self.job = job
 
     @abstractmethod
     def optimize(self) -> Planning:

@@ -52,6 +52,18 @@ class Route(object):
         return True
 
     @property
+    def trips(self) -> Tuple[Trip]:
+        return tuple(planned_trip.trip for planned_trip in self.planned_trips)
+
+    @property
+    def loaded_planned_trips(self) -> Tuple[PlannedTrip]:
+        return tuple(planned_trip for planned_trip in self.planned_trips if not planned_trip.empty)
+
+    @property
+    def loaded_trips(self) -> Tuple[Trip]:
+        return tuple(planned_trip.trip for planned_trip in self.planned_trips if not planned_trip.empty)
+
+    @property
     def first_planned_trip(self) -> PlannedTrip:
         return min(self.planned_trips, key=lambda pt: pt.collection_time)
 

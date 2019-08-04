@@ -8,7 +8,7 @@ from dataclasses import (
 from typing import (
     TYPE_CHECKING,
     Set,
-)
+    Optional)
 from uuid import (
     uuid4,
 )
@@ -30,5 +30,6 @@ logger = logging.getLogger(__name__)
 @dataclass
 class Planning(object):
     routes: Set[Route]
-    surface: Surface
+    computation_time: float = field(default=0)
+    surface: Optional[Surface] = field(default=None)
     uuid: UUID = field(default_factory=uuid4)

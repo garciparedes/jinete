@@ -11,11 +11,12 @@ from .utils import (
 class TestTrips(unittest.TestCase):
 
     def test_trip(self):
+        identifier = str()
         origin = generate_one_position()
         destination = generate_one_position()
         earliest = 0
 
-        trip = jit.Trip(origin=origin, destination=destination, earliest=earliest)
+        trip = jit.Trip(identifier=identifier, origin=origin, destination=destination, earliest=earliest)
 
         self.assertEqual(origin, trip.origin)
         self.assertEqual(destination, trip.destination)
@@ -27,12 +28,14 @@ class TestTrips(unittest.TestCase):
         self.assertIsInstance(trip.uuid, UUID)
 
     def test_trip_with_capacity(self):
+        identifier = str()
         capacity = 3
         origin = generate_one_position()
         destination = generate_one_position()
         earliest = 0
 
-        trip = jit.Trip(origin=origin, destination=destination, earliest=earliest, capacity=capacity)
+        trip = jit.Trip(identifier=identifier, origin=origin, destination=destination, earliest=earliest,
+                        capacity=capacity)
 
         self.assertEqual(origin, trip.origin)
         self.assertEqual(destination, trip.destination)
@@ -44,11 +47,13 @@ class TestTrips(unittest.TestCase):
         self.assertIsInstance(trip.uuid, UUID)
 
     def test_trip_with_timeout(self):
+        identifier = str()
         origin = generate_one_position()
         destination = generate_one_position()
         earliest = 0
         timeout = 3600
-        trip = jit.Trip(origin=origin, destination=destination, earliest=earliest, timeout=timeout)
+        trip = jit.Trip(identifier=identifier, origin=origin, destination=destination, earliest=earliest,
+                        timeout=timeout)
 
         self.assertEqual(origin, trip.origin)
         self.assertEqual(destination, trip.destination)
@@ -60,11 +65,13 @@ class TestTrips(unittest.TestCase):
         self.assertIsInstance(trip.uuid, UUID)
 
     def test_trip_with_load_time(self):
+        identifier = str()
         origin = generate_one_position()
         destination = generate_one_position()
         earliest = 0
         load_time = 1800
-        trip = jit.Trip(origin=origin, destination=destination, earliest=earliest, load_time=load_time)
+        trip = jit.Trip(identifier=identifier, origin=origin, destination=destination, earliest=earliest,
+                        load_time=load_time)
 
         self.assertEqual(origin, trip.origin)
         self.assertEqual(destination, trip.destination)

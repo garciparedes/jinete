@@ -25,6 +25,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass(frozen=True)
 class Trip(object):
+    identifier: str
     origin: Position
     destination: Position
 
@@ -37,14 +38,18 @@ class Trip(object):
     uuid: UUID = field(default_factory=uuid4)
 
     @staticmethod
-    def empty(origin: Position, destination: Position) -> 'Trip':
-        return Trip(origin, destination, capacity=0)
+    def build_empty(origin: Position, destination: Position) -> 'Trip':
+        return Trip('EMPTY', origin, destination, capacity=0)
 
     @property
     def latest(self) -> float:
         if self.timeout is None:
             return maxsize
         return self.earliest + self.timeout
+
+    @property
+    def empty(self) -> bool:
+        return self.capacity == 0
 
 
 @dataclass(frozen=True)
@@ -54,8 +59,8 @@ class PlannedTrip(object):
     delivery_time: float
 
     @staticmethod
-    def empty(collection_time, delivery_time, *args, **kwargs) -> 'PlannedTrip':
-        trip = Trip.empty(*args, **kwargs)
+    def build_empty(collection_time, delivery_time, *args, **kwargs) -> 'PlannedTrip':
+        trip = Trip.build_empty(*args, **kwargs)
         return PlannedTrip(trip, collection_time, delivery_time)
 
     @property
@@ -77,3 +82,7 @@ class PlannedTrip(object):
     @property
     def feasible(self) -> bool:
         return self.trip.earliest <= self.collection_time and self.delivery_time <= self.trip.latest
+
+    @property
+    def empty(self) -> bool:
+        return self.trip.empty

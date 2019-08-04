@@ -15,20 +15,22 @@ def generate_positions(n: int, *args, **kwargs) -> Set[jit.XYPosition]:
     }
 
 
-def generate_one_trip(earliest_min: float = 0, earliest_max: float = 86400, timeout_min: float = 1800,
+def generate_one_trip(identifier: str = None, earliest_min: float = 0, earliest_max: float = 86400, timeout_min: float = 1800,
                       timeout_max: float = 7200, load_time_min: float = 300, load_time_max: float = 900,
                       capacity_min: int = 1, capacity_max: int = 3, *args, **kwargs) -> jit.Trip:
+    if identifier is None:
+        identifier = str()
     origin, destination = tuple(generate_positions(2, *args, **kwargs))
     earliest = uniform(earliest_min, earliest_max)
     timeout = uniform(timeout_min, timeout_max)
     capacity = randint(capacity_min, capacity_max)
     load_time = uniform(load_time_min, load_time_max)
-    return jit.Trip(origin, destination, earliest, timeout, load_time, capacity)
+    return jit.Trip(identifier, origin, destination, earliest, timeout, load_time, capacity)
 
 
 def generate_trips(n: int, *args, **kwargs) -> Set[jit.Trip]:
     return {
-        generate_one_trip(*args, **kwargs) for _ in range(n)
+        generate_one_trip(str(i), *args, **kwargs) for i in range(n)
     }
 
 
@@ -81,7 +83,7 @@ def generate_one_route(feasible: bool, planned_trips_min: int = 1, planned_trips
                                              earliest_max=vehicle.earliest + 1, timeout_min=cut_len - 1,
                                              timeout_max=cut_len - 1)
 
-    planned_trips.append(jit.PlannedTrip.empty(
+    planned_trips.append(jit.PlannedTrip.build_empty(
         vehicle.earliest, vehicle.earliest + 1, vehicle.initial, planned_trip.origin
     ))
     planned_trips.append(planned_trip)
@@ -91,14 +93,14 @@ def generate_one_route(feasible: bool, planned_trips_min: int = 1, planned_trips
 
         planned_trip = generate_one_planned_trip(feasible, earliest_min=cut_min, earliest_max=cut_min,
                                                  timeout_min=cut_len - 1, timeout_max=cut_len - 1)
-        planned_trips.append(jit.PlannedTrip.empty(
+        planned_trips.append(jit.PlannedTrip.build_empty(
             planned_trips[-1].delivery_time, planned_trips[-1].delivery_time + 1,
             planned_trips[-1].destination, planned_trip.origin
         ))
 
         planned_trips.append(planned_trip)
 
-    planned_trips.append(jit.PlannedTrip.empty(
+    planned_trips.append(jit.PlannedTrip.build_empty(
         planned_trips[-1].delivery_time, planned_trips[-1].delivery_time + 1,
         planned_trips[-1].destination, vehicle.final
     ))

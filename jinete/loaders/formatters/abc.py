@@ -1,13 +1,15 @@
 from abc import ABC, abstractmethod
 
-from ..models import (
+from ...models import (
     Fleet,
     Job,
     Surface,
 )
 
 
-class Loader(ABC):
+class LoaderFormatter(ABC):
+    def __init__(self):
+        pass
 
     @property
     @abstractmethod
