@@ -1,13 +1,13 @@
-from .abc import (
-    Algorithm,
-)
 from ..models import (
     Planning,
+)
+from .abc import (
+    Algorithm,
 )
 
 
 class NaiveAlgorithm(Algorithm):
 
     def optimize(self) -> Planning:
-        routes = dict()
+        routes = set()
         return Planning(routes)

@@ -35,7 +35,7 @@ logger = logging.getLogger(__name__)
 class Surface(Model, ABC):
     uuid: UUID
 
-    def __init__(self, positions: Set[Position] = None, uuid: UUID = None):
+    def __init__(self, positions: Set[Position] = None, uuid: UUID = None, *args, **kwargs):
         if uuid is None:
             uuid = uuid4()
         if positions is None:
@@ -46,19 +46,18 @@ class Surface(Model, ABC):
     def get_or_create_position(self, *args, **kwargs) -> Position:
         position = self._build_position(*args, **kwargs)
         self.positions.add(position)
-
-        position = next(
-            (position for position in self.positions if position.is_equal(*args, **kwargs)),
-            None,
-        )
-        if position is None:
-            position = self._build_position(*args, **kwargs)
-            self.positions.add(position)
         return position
 
     @abstractmethod
     def _build_position(self, *args, **kwargs):
         pass
+
+    @abstractmethod
+    def distance(self, position_a: Position, position_b: Position) -> float:
+        pass
+
+    def time(self, position_a: Position, position_b: Position, now: float) -> float:
+        return self.distance(position_a, position_b)
 
     def as_dict(self) -> Dict[str, Any]:
         positions_str = ', '.join(str(position) for position in self.positions)
@@ -67,6 +66,7 @@ class Surface(Model, ABC):
         }
         return dict_values
 
+
 class GeometricSurface(Surface):
     positions: Set[XYPosition]
 
@@ -74,7 +74,7 @@ class GeometricSurface(Surface):
         super().__init__(*args, **kwargs)
 
     def _build_position(self, *args, **kwargs):
-        return XYPosition(*args, **kwargs)
+        return XYPosition(surface=self, *args, **kwargs)
 
     def distance(self, position_a: XYPosition, position_b: XYPosition, auto_add: bool = False) -> float:
         if position_a not in self.positions:

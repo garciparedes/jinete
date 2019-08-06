@@ -27,9 +27,15 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-@dataclass
 class Planning(object):
     routes: Set[Route]
-    computation_time: float = field(default=0)
-    surface: Optional[Surface] = field(default=None)
-    uuid: UUID = field(default_factory=uuid4)
+    computation_time: float
+    # surface: Optional[Surface]
+    uuid: UUID
+
+    def __init__(self, routes: Set[Route], uuid: UUID = None):
+        if uuid is None:
+            uuid = uuid4()
+
+        self.routes = routes
+        self.uuid = uuid

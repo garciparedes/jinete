@@ -27,3 +27,6 @@ from .routes import (
 from .plannings import (
     Planning,
 )
+from .results import (
+    Result,
+)

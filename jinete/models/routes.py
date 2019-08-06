@@ -1,38 +1,58 @@
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
-from datetime import timedelta
 from typing import (
     TYPE_CHECKING,
-    Tuple,
-)
-
+    Any, Dict, Optional)
 from uuid import (
     uuid4,
 )
+from ..exceptions import (
+    PlannedTripNotFeasibleException,
+)
+from .abc import (
+    Model,
+)
+from .trips import (
+    PlannedTrip,
+)
 
 if TYPE_CHECKING:
+    from typing import (
+        Tuple,
+        Iterable,
+        List,
+    )
+    from uuid import (
+        UUID,
+    )
     from .vehicles import (
         Vehicle,
     )
     from .trips import (
         Trip,
-        PlannedTrip,
     )
-    from uuid import (
-        UUID,
+    from .positions import (
+        Position,
     )
 
 logger = logging.getLogger(__name__)
 
 
-@dataclass(frozen=True)
-class Route(object):
-    planned_trips: Tuple[PlannedTrip]
+class Route(Model):
+    planned_trips: List[PlannedTrip]
     vehicle: Vehicle
+    uuid: UUID
 
-    uuid: UUID = field(default_factory=uuid4)
+    def __init__(self, vehicle: Vehicle, planned_trips: Iterable[PlannedTrip] = None, uuid=None):
+        if planned_trips is None:
+            planned_trips = tuple()
+        if uuid is None:
+            uuid = uuid4()
+
+        self.vehicle = vehicle
+        self.planned_trips = list(planned_trips)
+        self.uuid = uuid
 
     @property
     def feasible(self) -> bool:
@@ -82,3 +102,65 @@ class Route(object):
     @property
     def duration(self) -> float:
         return self.last_planned_trip.delivery_time - self.first_planned_trip.collection_time
+
+    @property
+    def last_position(self) -> Position:
+        if len(self.planned_trips) == 0:
+            return self.vehicle.initial
+        return self.last_trip.destination
+
+    @property
+    def last_time(self) -> float:
+        if len(self.planned_trips) == 0:
+            return self.vehicle.earliest
+        return self.last_planned_trip.delivery_time
+
+    @property
+    def vehicle_uuid(self) -> Optional[UUID]:
+        if self.vehicle is None:
+            return None
+        return self.vehicle.uuid
+
+    def as_dict(self) -> Dict[str, Any]:
+        return {
+            'uuid': self.uuid,
+            'vehicle_uuid': self.vehicle_uuid,
+        }
+
+    def feasible_trip(self, trip: Trip) -> Optional[PlannedTrip]:
+        time_to_go = self.last_position.distance_to(trip.origin)
+        time_to_travel = trip.duration(time_to_go)
+        trip_start_time = max(self.last_time + time_to_go, trip.earliest)
+        trip_finish_time = trip_start_time + time_to_travel
+        if not trip_finish_time <= trip.latest:
+            return None
+        time_to_return = trip.destination.time_to(self.vehicle.final, trip_finish_time)
+        vehicle_finish_time = trip_finish_time + time_to_return
+        if not vehicle_finish_time <= self.vehicle.latest:
+            return None
+        return PlannedTrip(self, trip, trip_start_time, trip_finish_time)
+
+    def _append_empty_planned_trip(self, destination: Position) -> PlannedTrip:
+        planned_trip = PlannedTrip.build_empty(
+            route=self,
+            collection_time=self.last_time,
+            delivery_time=self.last_time + self.last_position.time_to(destination, self.last_time),
+            origin=self.last_position,
+            destination=destination,
+        )
+        self.append_planned_trip(planned_trip)
+        return planned_trip
+
+    def _append_finish_planned_trip(self) -> PlannedTrip:
+        return self._append_empty_planned_trip(self.vehicle.final)
+
+    def finish(self):
+        self._append_finish_planned_trip()
+
+    def append_planned_trip(self, planned_trip: PlannedTrip):
+        if not self.last_position == planned_trip.origin:
+            self._append_empty_planned_trip(planned_trip.origin)
+        # if not planned_trip.feasible:
+        #     raise PlannedTripNotFeasibleException(self, planned_trip.trip)
+        self.planned_trips.append(planned_trip)
+        logger.info(f'Append trip "{planned_trip.trip.identifier}" identifier to route "{self.uuid}".')

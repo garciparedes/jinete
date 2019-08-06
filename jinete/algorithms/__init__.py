@@ -4,3 +4,6 @@ from .abc import (
 from .naive import (
     NaiveAlgorithm,
 )
+from .greedy import (
+    GreedyAlgorithm,
+)

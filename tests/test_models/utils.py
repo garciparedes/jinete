@@ -4,18 +4,33 @@ from typing import Set
 import jinete as jit
 
 
-def generate_one_position(x_min: float = -100, x_max: float = 100, y_min: float = -100,
-                          y_max: float = 100) -> jit.XYPosition:
-    return jit.XYPosition(lat=uniform(x_min, x_max), lon=uniform(y_min, y_max))
+def generate_one_surface(*args, **kwargs) -> jit.Surface:
+    return jit.GeometricSurface(*args, **kwargs)
 
 
-def generate_positions(n: int, *args, **kwargs) -> Set[jit.XYPosition]:
+def generate_surfaces(n: int, *args, **kwargs) -> Set[jit.Surface]:
     return {
-        generate_one_position(*args, **kwargs) for _ in range(n)
+        generate_one_surface(*args, **kwargs) for _ in range(n)
     }
 
 
-def generate_one_trip(identifier: str = None, earliest_min: float = 0, earliest_max: float = 86400, timeout_min: float = 1800,
+def generate_one_position(x_min: float = -100, x_max: float = 100, y_min: float = -100,
+                          y_max: float = 100, surface: jit.Surface = None, *args, **kwargs) -> jit.XYPosition:
+    if surface is None:
+        surface = generate_one_surface(*args, **kwargs)
+    return jit.XYPosition(lat=uniform(x_min, x_max), lon=uniform(y_min, y_max), surface=surface)
+
+
+def generate_positions(n: int, surface: jit.Surface = None, *args, **kwargs) -> Set[jit.XYPosition]:
+    if surface is None:
+        surface = generate_one_surface(*args, **kwargs)
+    return {
+        generate_one_position(surface=surface, *args, **kwargs) for _ in range(n)
+    }
+
+
+def generate_one_trip(identifier: str = None, earliest_min: float = 0, earliest_max: float = 86400,
+                      timeout_min: float = 1800,
                       timeout_max: float = 7200, load_time_min: float = 300, load_time_max: float = 900,
                       capacity_min: int = 1, capacity_max: int = 3, *args, **kwargs) -> jit.Trip:
     if identifier is None:
@@ -34,7 +49,7 @@ def generate_trips(n: int, *args, **kwargs) -> Set[jit.Trip]:
     }
 
 
-def generate_one_planned_trip(feasible: bool, *args, **kwargs) -> jit.PlannedTrip:
+def generate_one_planned_trip(feasible: bool, route=None, *args, **kwargs) -> jit.PlannedTrip:
     trip = generate_one_trip(*args, **kwargs)
 
     # TODO: Improve feasible randomness.
@@ -45,7 +60,7 @@ def generate_one_planned_trip(feasible: bool, *args, **kwargs) -> jit.PlannedTri
         collection_time = trip.earliest - 3600
         delivery_time = trip.latest + 3600
 
-    return jit.PlannedTrip(trip, collection_time, delivery_time)
+    return jit.PlannedTrip(route, trip, collection_time, delivery_time)
 
 
 def generate_planned_trips(n: int, *args, **kwargs) -> Set[jit.PlannedTrip]:
@@ -74,40 +89,40 @@ def generate_vehicles(n: int, *args, **kwargs) -> Set[jit.Vehicle]:
 def generate_one_route(feasible: bool, planned_trips_min: int = 1, planned_trips_max: int = 20,
                        *args, **kwargs) -> jit.Route:
     vehicle = generate_one_vehicle(*args, **kwargs)
+    surface = generate_one_surface(*args, **kwargs)
+    route = jit.Route(vehicle)
 
     planned_trips_len = randint(planned_trips_min, planned_trips_max)
-    planned_trips = list()
     cut_len = vehicle.timeout / planned_trips_len
 
-    planned_trip = generate_one_planned_trip(feasible, earliest_min=vehicle.earliest + 1,
-                                             earliest_max=vehicle.earliest + 1, timeout_min=cut_len - 1,
-                                             timeout_max=cut_len - 1)
+    planned_trip = generate_one_planned_trip(
+        feasible=feasible,
+        route=route,
+        earliest_min=vehicle.earliest,
+        earliest_max=vehicle.earliest,
+        timeout_min=cut_len,
+        timeout_max=cut_len,
+        surface=surface,
+    )
 
-    planned_trips.append(jit.PlannedTrip.build_empty(
-        vehicle.earliest, vehicle.earliest + 1, vehicle.initial, planned_trip.origin
-    ))
-    planned_trips.append(planned_trip)
+    route.append_planned_trip(planned_trip)
 
     for i in range(planned_trips_len):
         cut_min = vehicle.earliest + cut_len * i
 
-        planned_trip = generate_one_planned_trip(feasible, earliest_min=cut_min, earliest_max=cut_min,
-                                                 timeout_min=cut_len - 1, timeout_max=cut_len - 1)
-        planned_trips.append(jit.PlannedTrip.build_empty(
-            planned_trips[-1].delivery_time, planned_trips[-1].delivery_time + 1,
-            planned_trips[-1].destination, planned_trip.origin
-        ))
+        planned_trip = generate_one_planned_trip(
+            feasible=feasible,
+            route=route,
+            earliest_min=route.last_time,
+            earliest_max=route.last_time,
+            timeout_min=cut_len,
+            timeout_max=cut_len,
+            surface=surface,
+        )
 
-        planned_trips.append(planned_trip)
-
-    planned_trips.append(jit.PlannedTrip.build_empty(
-        planned_trips[-1].delivery_time, planned_trips[-1].delivery_time + 1,
-        planned_trips[-1].destination, vehicle.final
-    ))
-
-    planned_trips = tuple(planned_trips)
-
-    route = jit.Route(planned_trips, vehicle)
+        route.append_planned_trip(planned_trip)
+    route.finish()
+    vehicle.timeout = route.last_time - vehicle.earliest
     return route
 
 

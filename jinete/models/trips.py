@@ -19,6 +19,9 @@ if TYPE_CHECKING:
     from .positions import (
         Position,
     )
+    from .routes import (
+        Route,
+    )
 
 logger = logging.getLogger(__name__)
 
@@ -51,17 +54,25 @@ class Trip(object):
     def empty(self) -> bool:
         return self.capacity == 0
 
+    @property
+    def distance(self) -> float:
+        return self.origin.distance_to(self.destination)
+
+    def duration(self, now: float):
+        return self.origin.time_to(self.destination, now)
+
 
 @dataclass(frozen=True)
 class PlannedTrip(object):
+    route: Route
     trip: Trip
     collection_time: float
     delivery_time: float
 
     @staticmethod
-    def build_empty(collection_time, delivery_time, *args, **kwargs) -> 'PlannedTrip':
+    def build_empty(route, collection_time, delivery_time, *args, **kwargs) -> 'PlannedTrip':
         trip = Trip.build_empty(*args, **kwargs)
-        return PlannedTrip(trip, collection_time, delivery_time)
+        return PlannedTrip(route, trip, collection_time, delivery_time)
 
     @property
     def origin(self) -> Position:
@@ -78,6 +89,10 @@ class PlannedTrip(object):
     @property
     def capacity(self):
         return self.trip.capacity
+
+    @property
+    def scoring(self):
+        return self.collection_time - self.route.last_time
 
     @property
     def feasible(self) -> bool:

@@ -4,11 +4,13 @@ from .models import (
     Surface,
     GeometricSurface,
     Trip,
+    Job,
     PlannedTrip,
     Vehicle,
     Fleet,
     Route,
     Planning,
+    Result,
 )
 
 from .loaders import (
@@ -33,4 +35,5 @@ from .storers import (
 from .algorithms import (
     Algorithm,
     NaiveAlgorithm,
+    GreedyAlgorithm,
 )
