@@ -1,6 +1,6 @@
 from .models import (
     Position,
-    XYPosition,
+    GeometricPosition,
     Surface,
     GeometricSurface,
     METRIC,

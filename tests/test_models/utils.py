@@ -15,13 +15,13 @@ def generate_surfaces(n: int, *args, **kwargs) -> Set[jit.Surface]:
 
 
 def generate_one_position(x_min: float = -100, x_max: float = 100, y_min: float = -100,
-                          y_max: float = 100, surface: jit.Surface = None, *args, **kwargs) -> jit.XYPosition:
+                          y_max: float = 100, surface: jit.Surface = None, *args, **kwargs) -> jit.GeometricPosition:
     if surface is None:
         surface = generate_one_surface(*args, **kwargs)
-    return jit.XYPosition(lat=uniform(x_min, x_max), lon=uniform(y_min, y_max), surface=surface)
+    return jit.GeometricPosition([uniform(x_min, x_max), uniform(y_min, y_max)], surface=surface)
 
 
-def generate_positions(n: int, surface: jit.Surface = None, *args, **kwargs) -> Set[jit.XYPosition]:
+def generate_positions(n: int, surface: jit.Surface = None, *args, **kwargs) -> Set[jit.GeometricPosition]:
     if surface is None:
         surface = generate_one_surface(*args, **kwargs)
     return {

@@ -17,7 +17,7 @@ from .abc import (
     Model,
 )
 from .positions import (
-    XYPosition,
+    GeometricPosition,
 )
 
 if TYPE_CHECKING:
@@ -80,7 +80,7 @@ METRIC = {
 
 
 class GeometricSurface(Surface):
-    positions: Set[XYPosition]
+    positions: Set[GeometricPosition]
 
     def __init__(self, metric: Callable[[Any, Any], float] = None, *args, **kwargs):
         if metric is None:
@@ -89,9 +89,9 @@ class GeometricSurface(Surface):
         self.metric = metric
 
     def _build_position(self, *args, **kwargs):
-        return XYPosition(surface=self, *args, **kwargs)
+        return GeometricPosition(surface=self, *args, **kwargs)
 
-    def distance(self, position_a: XYPosition, position_b: XYPosition, auto_add: bool = False) -> float:
+    def distance(self, position_a: GeometricPosition, position_b: GeometricPosition, auto_add: bool = False) -> float:
         if position_a not in self.positions:
             logger.warning(f'"position_a"="{position_a}" is not on "self.positions".')
             if auto_add:
@@ -103,5 +103,5 @@ class GeometricSurface(Surface):
                 self.positions.add(position_b)
         return self.metric(position_a, position_b)
 
-    def time(self, position_a: XYPosition, position_b: XYPosition, now: float) -> float:
+    def time(self, position_a: GeometricPosition, position_b: GeometricPosition, now: float) -> float:
         return self.distance(position_a, position_b)

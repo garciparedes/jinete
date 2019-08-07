@@ -47,7 +47,7 @@ class FileLoader(Loader):
         return surface
 
     def _build_fleet(self, n: int, timeout: float, capacity: int = 1):
-        initial = self._surface.get_or_create_position(lat=0, lon=0)
+        initial = self._surface.get_or_create_position([0, 0])
         vehicles = set(Vehicle(initial, capacity=capacity, timeout=timeout) for _ in range(n))
         fleet = Fleet(vehicles)
         logger.info(f'Created fleet!')
@@ -61,8 +61,8 @@ class FileLoader(Loader):
 
     def _build_trip(self, identifier: str, x1: float, y1: float, x2: float, y2: float, earliest: float,
                     latest: float) -> Trip:
-        origin = self._surface.get_or_create_position(lat=x1, lon=y1)
-        destination = self._surface.get_or_create_position(lat=x2, lon=y2)
+        origin = self._surface.get_or_create_position([x1, y1])
+        destination = self._surface.get_or_create_position([x2, y2])
         timeout = latest - earliest
         trip = Trip(identifier, origin, destination, earliest, timeout)
         return trip

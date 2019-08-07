@@ -2,17 +2,17 @@ import unittest
 from uuid import UUID
 
 from jinete import (
-    XYPosition,
+    GeometricPosition,
 )
 
 
 class TestPositions(unittest.TestCase):
 
     def test_xy_position(self):
-        position = XYPosition(lat=3, lon=4)
+        position = GeometricPosition([3, 4])
         self.assertIsInstance(position.uuid, UUID)
-        self.assertEqual(3, position.lat)
-        self.assertEqual(4, position.lon)
+        self.assertEqual(3, position[0])
+        self.assertEqual(4, position[1])
 
 
 if __name__ == '__main__':

@@ -13,6 +13,10 @@ from uuid import (
 )
 
 if TYPE_CHECKING:
+    from typing import (
+        List,
+        Sequence,
+    )
     from uuid import (
         UUID,
     )
@@ -43,25 +47,19 @@ class Position(ABC):
         pass
 
 
-class XYPosition(Position):
-    lat: float
-    lon: float
+class GeometricPosition(Position):
+    coordinates: List[float]
 
-    def __init__(self, lat: float, lon: float, *args, **kwargs):
+    def __init__(self, coordinates: Sequence[float], *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.lat = lat
-        self.lon = lon
+        self.coordinates = list(coordinates)
 
     def __str__(self):
-        return f'({self.lat:07.3f},{self.lon:07.3f})'
+        c = ",".join(f"{x:07.3f}" for x in self)
+        return f'({c})'
 
     def __getitem__(self, item):
-        if item == 0:
-            return self.lat
-        elif item == 1:
-            return self.lon
-        else:
-            raise IndexError(f'{self.__class__.__name__} has only two positions.')
+        return self.coordinates[item]
 
-    def is_equal(self, other: XYPosition) -> bool:
-        return self.lat == other.lat and self.lon == other.lon
+    def is_equal(self, other: GeometricPosition) -> bool:
+        return self.coordinates == other.coordinates

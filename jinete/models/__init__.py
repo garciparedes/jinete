@@ -3,7 +3,7 @@ from .abc import (
 )
 from .positions import (
     Position,
-    XYPosition,
+    GeometricPosition,
 )
 from .surfaces import (
     Surface,

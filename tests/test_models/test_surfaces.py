@@ -22,7 +22,7 @@ class TestSurfaces(unittest.TestCase):
         surface = GeometricSurface(positions=positions)
 
         a, b = tuple(positions)
-        real_dist = ((a.lat - b.lat) ** 2 + (a.lon - b.lon) ** 2) ** 0.5
+        real_dist = ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2) ** 0.5
 
         dist = surface.distance(a, b)
         self.assertAlmostEqual(dist, real_dist)
