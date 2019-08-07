@@ -12,6 +12,7 @@ from ..models import (
     Surface,
     Fleet,
     GeometricSurface,
+    METRIC,
 )
 from .abc import (
     Loader,
@@ -41,7 +42,7 @@ class FileLoader(Loader):
             self._job = self._build_job(data[1:])
 
     def _build_surface(self, rows: int, columns: int) -> Surface:
-        surface = GeometricSurface()
+        surface = GeometricSurface(METRIC['MANHATTAN'])
         logger.info(f'Created surface!')
         return surface
 

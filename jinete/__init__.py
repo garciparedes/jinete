@@ -3,6 +3,7 @@ from .models import (
     XYPosition,
     Surface,
     GeometricSurface,
+    METRIC,
     Trip,
     Job,
     PlannedTrip,

@@ -8,6 +8,7 @@ from .positions import (
 from .surfaces import (
     Surface,
     GeometricSurface,
+    METRIC,
 )
 from .trips import (
     Trip,

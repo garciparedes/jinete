@@ -7,8 +7,7 @@ from abc import (
 from math import sqrt
 from typing import (
     TYPE_CHECKING,
-    Set,
-    Any, Dict)
+)
 
 from uuid import (
     uuid4,
@@ -22,6 +21,12 @@ from .positions import (
 )
 
 if TYPE_CHECKING:
+    from typing import (
+        Set,
+        Any,
+        Dict,
+        Callable,
+    )
     from uuid import (
         UUID,
     )
@@ -56,8 +61,9 @@ class Surface(Model, ABC):
     def distance(self, position_a: Position, position_b: Position) -> float:
         pass
 
+    @abstractmethod
     def time(self, position_a: Position, position_b: Position, now: float) -> float:
-        return self.distance(position_a, position_b)
+        pass
 
     def as_dict(self) -> Dict[str, Any]:
         positions_str = ', '.join(str(position) for position in self.positions)
@@ -67,11 +73,20 @@ class Surface(Model, ABC):
         return dict_values
 
 
+METRIC = {
+    'EUCLIDEAN': lambda a, b: sqrt(sum(pow(a_i - b_i, 2) for a_i, b_i in zip(a, b))),
+    'MANHATTAN': lambda a, b: sum(abs(a_i - b_i) for a_i, b_i in zip(a, b)),
+}
+
+
 class GeometricSurface(Surface):
     positions: Set[XYPosition]
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, metric: Callable[[Any, Any], float] = None, *args, **kwargs):
+        if metric is None:
+            metric = METRIC['EUCLIDEAN']
         super().__init__(*args, **kwargs)
+        self.metric = metric
 
     def _build_position(self, *args, **kwargs):
         return XYPosition(surface=self, *args, **kwargs)
@@ -86,4 +101,7 @@ class GeometricSurface(Surface):
             logger.warning(f'"position_b"="{position_b}" is not on "self.positions".')
             if auto_add:
                 self.positions.add(position_b)
-        return sqrt(pow(position_a.lat - position_b.lat, 2) + pow(position_a.lon - position_b.lon, 2))
+        return self.metric(position_a, position_b)
+
+    def time(self, position_a: XYPosition, position_b: XYPosition, now: float) -> float:
+        return self.distance(position_a, position_b)
