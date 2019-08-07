@@ -9,11 +9,56 @@
 
 ## Description 
 
-Final Degree Project of Statistics Degree based on the Pickup and Delivery Problem (PDP).
+High Performance solving suite for the Pickup and Delivery Problem and its related extensions. 
 
-## Contents
+*IMPORTANT*: This project is still under its early stage of development. So it's not recommended yet to use on real world projects. 
 
-* [Complete Document](tex/document/document.pdf)
+This library has been inspired (and created) by development from a Final Degree Project, which you can read at: https://github.com/garciparedes/tfg-pickup-and-delivery
 
-## Authors
-[TODO]
+
+## How to install
+
+```bash
+pip install jinete
+```
+
+## Getting Started
+
+```python
+import jinete as jit
+
+dispatcher = jit.StaticDispatcher(
+    partial(jit.FileLoader, file_path=file_path),
+    jit.GreedyAlgorithm,
+    partial(jit.PromptStorer, formatter_cls=jit.ColumnarStorerFormatter),
+)
+
+dispatcher.run()
+```
+
+## Documentation
+You can find the documentation at: https://jinete.readthedocs.io/
+
+
+## Development
+
+You can install it simply typing:
+
+```bash
+pipenv install --dev
+```
+
+To run the tests perform:
+
+```bash
+pipenv python -m unittest discover tests
+```
+
+## Repository Contents
+
+* [`examples`](examples/): Basic examples to start using the library.
+* [`jinete`](jinete/): The source code of the library.
+* [`tests`](tests/): The library tests.
+
+## LICENSE
+This repository is licensed under [Apache 2.0](LICENSE).

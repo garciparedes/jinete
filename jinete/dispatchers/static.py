@@ -10,7 +10,7 @@ class StaticDispatcher(Dispatcher):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def run(self):
+    def run(self) -> Result:
         loader = self.loader_cls()
 
         job = loader.job
@@ -33,3 +33,4 @@ class StaticDispatcher(Dispatcher):
 
         storer = self.storer_cls(result=result)
         storer.store()
+        return result
