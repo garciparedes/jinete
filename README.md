@@ -61,4 +61,4 @@ pipenv python -m unittest discover tests
 * [`tests`](tests/): The library tests.
 
 ## LICENSE
-This repository is licensed under [Apache 2.0](LICENSE).
+This project is licensed under [MIT](LICENSE) license.
