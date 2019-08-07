@@ -14,6 +14,10 @@ with open(convert_path('{}/_version.py'.format(module_name))) as file:
     exec(file.read(), main_ns)
     module_version = main_ns['__version__']
 
+description = (
+    "High Performance solving suite for the Pickup and Delivery "
+    "Problem and its related extensions."
+)
 setup(
     name=module_name,
     version=module_version,
@@ -22,6 +26,7 @@ setup(
     author_email='sergio@garciparedes.me',
     long_description=long_description,
     long_description_content_type='text/markdown',
+    description=description,
     packages=find_packages(),
     install_requires=[
 
