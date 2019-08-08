@@ -30,6 +30,7 @@ class Loader(ABC):
         if formatter_cls is None:
             formatter_cls = HashCodeLoaderFormatter
         self.formatter_cls = formatter_cls
+        self.formatter: LoaderFormatter = None
 
     @property
     @abstractmethod

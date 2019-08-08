@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Any
 
 from ...models import (
     Fleet,
@@ -8,20 +9,17 @@ from ...models import (
 
 
 class LoaderFormatter(ABC):
-    def __init__(self):
+    def __init__(self, data: Any):
+        self.data = data
+
+    @abstractmethod
+    def fleet(self, *args, **kwargs) -> Fleet:
         pass
 
-    @property
     @abstractmethod
-    def fleet(self) -> Fleet:
+    def job(self, *args, **kwargs) -> Job:
         pass
 
-    @property
     @abstractmethod
-    def job(self) -> Job:
-        pass
-
-    @property
-    @abstractmethod
-    def surface(self) -> Surface:
+    def surface(self, *args, **kwargs) -> Surface:
         pass
