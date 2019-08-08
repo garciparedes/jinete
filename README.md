@@ -79,9 +79,9 @@ pipenv python -m unittest discover tests
 
 ## Repository Contents
 
-* [`examples`](examples/): Basic examples to start using the library.
-* [`jinete`](jinete/): The source code of the library.
-* [`tests`](tests/): The library tests.
+* [`examples`](https://github.com/garciparedes/jinete/tree/master/examples/): Basic examples to start using the library.
+* [`jinete`](https://github.com/garciparedes/jinete/tree/master/jinete/): The source code of the library.
+* [`tests`](https://github.com/garciparedes/jinete/tree/master/tests/): The library tests.
 
 ## LICENSE
 This project is licensed under [MIT](LICENSE) license.
