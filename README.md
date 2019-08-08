@@ -1,6 +1,7 @@
+
 # jinete
 
-<img align="right"  style="max-width:25vh;max-height:50vh" src="./res/images/jinete.svg" alt="jinete">
+<img align="right" width="15%" src="./res/images/jinete.svg" alt="jinete">
 
 [![PyPI](https://img.shields.io/pypi/v/jinete.svg)](https://pypi.org/project/jinete)
 [![Read the Docs](https://img.shields.io/readthedocs/jinete.svg)](https://jinete.readthedocs.io/)
