@@ -1,5 +1,7 @@
 # jinete
 
+<img align="right"  width="25%" height="50%" src="./res/images/jinete.svg" alt="jinete">
+
 [![PyPI](https://img.shields.io/pypi/v/jinete.svg)](https://pypi.org/project/jinete)
 [![Read the Docs](https://img.shields.io/readthedocs/jinete.svg)](https://jinete.readthedocs.io/)
 [![Travis (.org) branch](https://img.shields.io/travis/garciparedes/jinete/master.svg)](https://travis-ci.org/garciparedes/jinete/branches)
