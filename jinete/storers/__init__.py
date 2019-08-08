@@ -13,3 +13,6 @@ from .file import (
 from .prompt import (
     PromptStorer,
 )
+from .naive import (
+    NaiveStorer,
+)

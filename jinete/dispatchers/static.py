@@ -5,6 +5,8 @@ from .abc import Dispatcher
 from ..models import (
     Result,
 )
+
+
 class StaticDispatcher(Dispatcher):
 
     def __init__(self, *args, **kwargs):

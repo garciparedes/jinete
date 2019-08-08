@@ -26,15 +26,29 @@ def main():
     }
 
     file_path = DATASETS_PATH / 'hashcode' / FILES['b']
-    loader = jit.FileLoader(file_path)
+
+    class MyLoader(jit.FileLoader):
+        def __init__(self, *args, **kwargs):
+            super().__init__(
+                file_path=file_path,
+                formatter_cls=jit.HashCodeLoaderFormatter,
+                *args, **kwargs,
+            )
+
+    class MyStorer(jit.PromptStorer):
+        def __init__(self, *args, **kwargs):
+            super().__init__(
+                formatter_cls=jit.HashCodeStorerFormatter,
+                *args, **kwargs,
+            )
 
     dispatcher = jit.StaticDispatcher(
-        partial(jit.FileLoader, file_path=file_path),
+        MyLoader,
         jit.GreedyAlgorithm,
-        partial(jit.PromptStorer, formatter_cls=jit.ColumnarStorerFormatter),
+        MyStorer,
     )
 
-    dispatcher.run()
+    result = dispatcher.run()
 
     logger.info('Finished...')
 

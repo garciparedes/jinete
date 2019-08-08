@@ -25,6 +25,10 @@ class FileLoader(Loader):
 
     def __init__(self, file_path: Path, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        if not isinstance(file_path, Path):
+            file_path = Path(file_path)
+
         self.file_path = file_path
 
         self._fleet = None

@@ -69,6 +69,10 @@ class Route(Model):
         return True
 
     @property
+    def loaded(self):
+        return len(self.planned_trips) > 0
+
+    @property
     def trips(self) -> Tuple[Trip]:
         return tuple(planned_trip.trip for planned_trip in self.planned_trips)
 
@@ -152,7 +156,8 @@ class Route(Model):
         return self._append_empty_planned_trip(self.vehicle.final)
 
     def finish(self):
-        self._append_finish_planned_trip()
+        if self.loaded:
+            self._append_finish_planned_trip()
 
     def append_planned_trip(self, planned_trip: PlannedTrip):
         if not self.last_position.is_equal(planned_trip.origin):

@@ -17,6 +17,8 @@ from .models import (
 from .loaders import (
     Loader,
     FileLoader,
+    LoaderFormatter,
+    HashCodeLoaderFormatter,
 )
 
 from .dispatchers import (

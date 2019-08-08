@@ -30,7 +30,6 @@ logger = logging.getLogger(__name__)
 class Planning(object):
     routes: Set[Route]
     computation_time: float
-    # surface: Optional[Surface]
     uuid: UUID
 
     def __init__(self, routes: Set[Route], uuid: UUID = None):
@@ -39,3 +38,7 @@ class Planning(object):
 
         self.routes = routes
         self.uuid = uuid
+
+    @property
+    def loaded_routes(self):
+        return set(route for route in self.routes if route.loaded)
