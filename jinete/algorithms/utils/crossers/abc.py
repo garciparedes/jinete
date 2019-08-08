@@ -1,9 +1,13 @@
 from __future__ import annotations
 
 import logging
-from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Optional
-from itertools import product
+from abc import (
+    ABC,
+    abstractmethod,
+)
+from typing import (
+    TYPE_CHECKING,
+)
 
 from ....exceptions import (
     NonFeasiblePlannedTripFoundException,
@@ -13,8 +17,13 @@ from ....models import (
 )
 
 if TYPE_CHECKING:
-    from jinete.models import (
+    from typing import (
+        Set,
+        Optional,
+    )
+    from ....models import (
         PlannedTrip,
+        Vehicle,
         Fleet,
         Trip,
         Job,
@@ -26,9 +35,18 @@ logger = logging.getLogger(__name__)
 class Crosser(ABC):
 
     def __init__(self, fleet: Fleet, job: Job):
-        self.routes = set(Route(vehicle) for vehicle in fleet.vehicles)
-        self.trips = job.trips
+        self.fleet = fleet
+        self.job = job
+        self.routes = set(Route(vehicle) for vehicle in self.vehicles)
         self.done_trips = set()
+
+    @property
+    def vehicles(self) -> Set[Vehicle]:
+        return self.fleet.vehicles
+
+    @property
+    def trips(self) -> Set[Trip]:
+        return self.job.trips
 
     def __iter__(self):
         return self

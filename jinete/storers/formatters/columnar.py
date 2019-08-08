@@ -55,4 +55,5 @@ class ColumnarStorerFormatter(StorerFormatter):
             '\n'.join(f'{self.tab_character}{row}' for row in rows),
             f'Computation time: "{self.result.computation_time:0.4f}" seconds',
             f'Coverage Rate: "{self.result.coverage_rate}"',
+            f'Cost: "{self.result.cost}"',
         ))

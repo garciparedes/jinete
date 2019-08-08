@@ -7,3 +7,6 @@ from .stateless import (
 from .best_stateless import (
     BestStatelessCrosser,
 )
+from .ordered import (
+    OrderedCrosser,
+)

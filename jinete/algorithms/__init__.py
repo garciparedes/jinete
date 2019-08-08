@@ -11,4 +11,5 @@ from .utils import (
     Crosser,
     StatelessCrosser,
     BestStatelessCrosser,
+    OrderedCrosser,
 )

@@ -40,7 +40,7 @@ def main():
     class MyAlgorithm(jit.InsertionAlgorithm):
         def __init__(self, *args, **kwargs):
             super().__init__(
-                crosser_cls=jit.BestStatelessCrosser,
+                crosser_cls=jit.OrderedCrosser,
                 *args, **kwargs
             )
 

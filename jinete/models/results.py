@@ -8,6 +8,7 @@ if TYPE_CHECKING:
     )
     from ..models import (
         Trip,
+        Route,
     )
 
 
@@ -21,12 +22,23 @@ class Result(object):
         self.computation_time = computation_time
 
     @property
+    def routes(self) -> Set[Route]:
+        return self.planning.routes
+
+    @property
     def completed_trips(self) -> Set[Trip]:
         trips = set()
-        for route in self.planning.routes:
+        for route in self.routes:
             trips |= set(route.loaded_trips)
         return trips
 
     @property
     def coverage_rate(self):
         return len(self.completed_trips) / len(self.job.trips)
+
+    @property
+    def cost(self) -> float:
+        cost = 0.0
+        for route in self.routes:
+            cost += route.cost
+        return cost

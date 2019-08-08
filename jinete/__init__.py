@@ -42,6 +42,7 @@ from .algorithms import (
     Crosser,
     StatelessCrosser,
     BestStatelessCrosser,
+    OrderedCrosser,
 )
 
 from .exceptions import (

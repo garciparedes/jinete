@@ -69,6 +69,13 @@ class Route(Model):
         return True
 
     @property
+    def cost(self) -> float:
+        cost = 0.0
+        for planned_trip in self.planned_trips:
+            cost += planned_trip.cost
+        return cost
+
+    @property
     def loaded(self):
         return len(self.planned_trips) > 0
 
@@ -163,7 +170,5 @@ class Route(Model):
     def append_planned_trip(self, planned_trip: PlannedTrip):
         if not self.last_position.is_equal(planned_trip.origin):
             self._append_empty_planned_trip(planned_trip.origin)
-        # if not planned_trip.feasible:
-        #     raise PlannedTripNotFeasibleException(self, planned_trip.trip)
         self.planned_trips.append(planned_trip)
         logger.info(f'Append trip "{planned_trip.trip.identifier}" identifier to route "{self.uuid}".')
