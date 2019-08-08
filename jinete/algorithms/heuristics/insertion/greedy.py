@@ -38,7 +38,7 @@ class GreedyAlgorithm(Algorithm):
                 break
             route = planned_trip.route
             route.append_planned_trip(planned_trip)
-            crosser.mark_as_done(planned_trip.trip)
+            crosser.mark_planned_trip_as_done(planned_trip.trip)
 
         for route in crosser.routes:
             route.finish()
