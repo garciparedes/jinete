@@ -12,6 +12,10 @@ from ...models import (
 
 class ColumnarStorerFormatter(StorerFormatter):
 
+    def __init__(self, tab_character: str = '  ', *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.tab_character = tab_character
+
     def vehicle_to_str(self, vehicle: Vehicle) -> List[str]:
         return [
             f'ID: "{vehicle.uuid}"',
@@ -24,7 +28,7 @@ class ColumnarStorerFormatter(StorerFormatter):
 
     def planned_trip_to_str(self, planned_trip: PlannedTrip) -> List[str]:
         return [
-            '\t'.join((
+            self.tab_character.join((
                 f'ID: {planned_trip.trip.identifier:6}',
                 f'Position: {planned_trip.origin} to {planned_trip.destination}',
                 f'Duration: {planned_trip.duration:7.02f}',
@@ -37,9 +41,9 @@ class ColumnarStorerFormatter(StorerFormatter):
         rows = chain.from_iterable(self.planned_trip_to_str(planned_trip) for planned_trip in route.planned_trips)
         return [
             f'Vehicle: ',
-            *(f'\t{row}' for row in self.vehicle_to_str(route.vehicle)),
+            *(f'{self.tab_character}{row}' for row in self.vehicle_to_str(route.vehicle)),
             f'Planned Trips: "{len(route.planned_trips)}"',
-            *(f'\t{row}' for row in rows)
+            *(f'{self.tab_character}{row}' for row in rows)
         ]
 
     def format(self) -> str:
@@ -48,7 +52,7 @@ class ColumnarStorerFormatter(StorerFormatter):
             f'Planning UUID: "{self.planning.uuid}"',
             f'Routes count: "{len(self.planning.routes)}"',
             f'Routes: ',
-            '\n'.join(f'\t{row}' for row in rows),
+            '\n'.join(f'{self.tab_character}{row}' for row in rows),
             f'Computation time: "{self.result.computation_time:0.4f}" seconds',
             f'Coverage Rate: "{self.result.coverage_rate}"',
         ))

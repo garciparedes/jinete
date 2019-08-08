@@ -2,11 +2,13 @@ import logging
 from functools import partial
 from pathlib import Path
 
+import coloredlogs
+
 import jinete as jit
 
-logging.basicConfig(
-    level=logging.INFO
-)
+level = logging.INFO
+logging.basicConfig(level=level)
+coloredlogs.install(level=level)
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +27,7 @@ def main():
         'e': 'e_high_bonus.in',
     }
 
-    file_path = DATASETS_PATH / 'hashcode' / FILES['b']
+    file_path = DATASETS_PATH / 'hashcode' / FILES['a']
 
     class MyLoader(jit.FileLoader):
         def __init__(self, *args, **kwargs):
@@ -38,7 +40,7 @@ def main():
     class MyStorer(jit.PromptStorer):
         def __init__(self, *args, **kwargs):
             super().__init__(
-                formatter_cls=jit.HashCodeStorerFormatter,
+                formatter_cls=jit.ColumnarStorerFormatter,
                 *args, **kwargs,
             )
 
