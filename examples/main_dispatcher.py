@@ -27,7 +27,7 @@ def main():
         'e': 'e_high_bonus.in',
     }
 
-    file_path = DATASETS_PATH / 'hashcode' / FILES['a']
+    file_path = DATASETS_PATH / 'hashcode' / FILES['b']
 
     class MyLoader(jit.FileLoader):
         def __init__(self, *args, **kwargs):
@@ -35,6 +35,13 @@ def main():
                 file_path=file_path,
                 formatter_cls=jit.HashCodeLoaderFormatter,
                 *args, **kwargs,
+            )
+
+    class MyAlgorithm(jit.InsertionAlgorithm):
+        def __init__(self, *args, **kwargs):
+            super().__init__(
+                crosser_cls=jit.BestStatelessCrosser,
+                *args, **kwargs
             )
 
     class MyStorer(jit.PromptStorer):
@@ -46,7 +53,7 @@ def main():
 
     dispatcher = jit.StaticDispatcher(
         MyLoader,
-        jit.GreedyAlgorithm,
+        MyAlgorithm,
         MyStorer,
     )
 

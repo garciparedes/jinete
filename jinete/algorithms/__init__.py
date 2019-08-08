@@ -5,8 +5,10 @@ from .naive import (
     NaiveAlgorithm,
 )
 from .heuristics import (
-    GreedyAlgorithm,
+    InsertionAlgorithm,
 )
 from .utils import (
     Crosser,
+    StatelessCrosser,
+    BestStatelessCrosser,
 )

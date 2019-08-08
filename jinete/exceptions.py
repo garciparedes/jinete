@@ -18,6 +18,10 @@ class JineteException(Exception):
         super().__init__(message)
 
 
+class NonFeasiblePlannedTripFoundException(JineteException):
+    pass
+
+
 class PlannedTripNotFeasibleException(JineteException):
 
     def __init__(self, route: Route, trip: Trip):

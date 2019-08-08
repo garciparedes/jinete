@@ -1,3 +1,0 @@
-from .greedy import (
-    GreedyAlgorithm,
-)

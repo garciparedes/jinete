@@ -40,16 +40,23 @@ class MyLoader(jit.FileLoader):
             *args, **kwargs,
         )
 
+class MyAlgorithm(jit.InsertionAlgorithm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            crosser_cls=jit.BestStatelessCrosser,
+            *args, **kwargs
+        )
+
 class MyStorer(jit.PromptStorer):
     def __init__(self, *args, **kwargs):
         super().__init__(
-            formatter_cls=jit.HashCodeStorerFormatter,
+            formatter_cls=jit.ColumnarStorerFormatter,
             *args, **kwargs,
         )
 
 dispatcher = jit.StaticDispatcher(
     MyLoader,
-    jit.GreedyAlgorithm,
+    MyAlgorithm,
     MyStorer,
 )
 

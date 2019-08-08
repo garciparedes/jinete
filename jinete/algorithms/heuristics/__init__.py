@@ -1,3 +1,3 @@
 from .insertion import (
-    GreedyAlgorithm,
+    InsertionAlgorithm,
 )

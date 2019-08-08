@@ -3,27 +3,37 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from ....models import (
+from jinete.models import (
     Planning,
 )
-from ...abc import (
+from jinete.algorithms.abc import (
     Algorithm,
 )
-from ...utils import (
-    Crosser,
+from jinete.algorithms.utils import (
+    BestStatelessCrosser,
+)
+from jinete.exceptions import (
+    NonFeasiblePlannedTripFoundException,
 )
 
 if TYPE_CHECKING:
-    pass
+    from typing import (
+        Type,
+    )
+    from jinete.algorithms.utils import (
+        Crosser,
+    )
 
 logger = logging.getLogger(__name__)
 
 
-class GreedyAlgorithm(Algorithm):
+class InsertionAlgorithm(Algorithm):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, crosser_cls: Type[Crosser] = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.crosser_cls = Crosser
+        if crosser_cls is None:
+            crosser_cls = BestStatelessCrosser
+        self.crosser_cls = crosser_cls
 
     def build_crosser(self) -> Crosser:
         return self.crosser_cls(self.fleet, self.job)
@@ -33,12 +43,13 @@ class GreedyAlgorithm(Algorithm):
         crosser = self.build_crosser()
 
         while not crosser.completed:
-            planned_trip = crosser.get_best()
-            if not planned_trip:
+            try:
+                planned_trip = next(crosser)
+            except NonFeasiblePlannedTripFoundException:
                 break
             route = planned_trip.route
             route.append_planned_trip(planned_trip)
-            crosser.mark_planned_trip_as_done(planned_trip.trip)
+            crosser.mark_planned_trip_as_done(planned_trip)
 
         for route in crosser.routes:
             route.finish()

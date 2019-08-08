@@ -94,7 +94,8 @@ class Route(Model):
 
     @property
     def last_planned_trip(self) -> PlannedTrip:
-        return max(self.planned_trips, key=lambda pt: pt.delivery_time)
+        # return max(self.planned_trips, key=lambda pt: pt.delivery_time)
+        return self.planned_trips[-1]
 
     @property
     def last_trip(self) -> Trip:

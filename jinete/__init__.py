@@ -38,5 +38,14 @@ from .storers import (
 from .algorithms import (
     Algorithm,
     NaiveAlgorithm,
-    GreedyAlgorithm,
+    InsertionAlgorithm,
+    Crosser,
+    StatelessCrosser,
+    BestStatelessCrosser,
+)
+
+from .exceptions import (
+    JineteException,
+    NonFeasiblePlannedTripFoundException,
+    PlannedTripNotFeasibleException,
 )
