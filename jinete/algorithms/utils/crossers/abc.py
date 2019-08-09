@@ -7,7 +7,7 @@ from abc import (
 )
 from typing import (
     TYPE_CHECKING,
-)
+    List)
 
 from ....exceptions import (
     NonFeasiblePlannedTripFoundException,

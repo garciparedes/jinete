@@ -36,7 +36,7 @@ class InsertionAlgorithm(Algorithm):
         self.crosser_cls = crosser_cls
 
     def build_crosser(self) -> Crosser:
-        return self.crosser_cls(self.fleet, self.job)
+        return self.crosser_cls(fleet=self.fleet, job=self.job)
 
     def optimize(self) -> Planning:
         logger.info('Optimizing...')

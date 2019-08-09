@@ -81,6 +81,10 @@ class PlannedTrip(object):
         return self.trip.uuid
 
     @property
+    def route_uuid(self) -> UUID:
+        return self.route.uuid
+
+    @property
     def origin(self) -> Position:
         return self.trip.origin
 
