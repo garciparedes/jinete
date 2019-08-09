@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from heapq import nsmallest
 from sys import maxsize
 from typing import TYPE_CHECKING
 from collections import OrderedDict
@@ -14,10 +15,12 @@ if TYPE_CHECKING:
     from typing import (
         Optional,
         Dict,
+        Iterable
     )
     from ....models import (
         PlannedTrip,
         Trip,
+        Route,
     )
 
 logger = logging.getLogger(__name__)
@@ -36,17 +39,13 @@ class OrderedCrosser(Crosser):
         ranking = dict()
         for route in self.routes:
             ranking[route.uuid] = self.create_sub_ranking(route)
+            logger.info(f"Added sub ranking! Currently {len(ranking)}.")
+
         return ranking
 
     def create_sub_ranking(self, route):
-        logger.info("Creating sub_ranking...")
-        sub_ranking = list()
-        for trip in self.pending_trips:
-            planned_trip = route.feasible_trip(trip)
-            if planned_trip is None:
-                continue
-            sub_ranking.append((trip.uuid, planned_trip))
-        return OrderedDict(sorted(sub_ranking, key=lambda x: x[1].scoring))
+        logger.debug("Creating sub_ranking...")
+        return self.recalcule(route, self.pending_trips)
 
     def update_ranking(self, planned_trip: PlannedTrip):
         logger.info("Updating ranking...")
@@ -58,13 +57,41 @@ class OrderedCrosser(Crosser):
         self.ranking[route.uuid] = self.update_sub_ranking(route)
 
     def update_sub_ranking(self, route):
-        sub_ranking = self.ranking[route.uuid]
-        raw_sub_ranking = (
-            (trip_uuid, route.feasible_trip(planned_trip.trip))
-            for trip_uuid, planned_trip in sub_ranking.items()
-            if route.feasible_trip(planned_trip.trip) is not None
+        trips = (
+            planned_trip.trip
+            for planned_trip in self.ranking[route.uuid].values()
         )
-        return OrderedDict(sorted(raw_sub_ranking, key=lambda x: x[1].scoring))
+
+        return self.recalcule(route, trips)
+
+    def recalcule(self, route: Route, trips: Iterable[Trip], k: int = 500):
+        raw_sub_ranking = (
+            route.feasible_trip(trip)
+            for trip in self.kth_smallest(trips, k)
+        )
+        raw_sub_ranking = (
+            planned_trip
+            for planned_trip in raw_sub_ranking
+            if planned_trip is not None
+        )
+        raw_sub_ranking = (
+            (planned_trip.trip_uuid, planned_trip)
+            for planned_trip in self.kth_sort(raw_sub_ranking)
+        )
+        return OrderedDict(raw_sub_ranking)
+
+    def kth_smallest(self, trips: Iterable[Trip], k: int):
+        trips = set(nsmallest(k, trips))
+        try:
+            p = iter(self.pending_trips)
+            while len(trips) < k:
+                trips.add(next(p))
+        except StopIteration:
+            pass
+        return trips
+
+    def kth_sort(self, arr: Iterable[PlannedTrip], k=None) -> Iterable:
+        return sorted(arr)
 
     def mark_planned_trip_as_done(self, planned_trip: PlannedTrip):
         super().mark_planned_trip_as_done(planned_trip)
@@ -73,12 +100,15 @@ class OrderedCrosser(Crosser):
     def get_planned_trip(self) -> Optional[PlannedTrip]:
         if not self.ranking:
             return None
-
-        sub_ranking = min(self.ranking.values(), key=lambda x: self.ordered_route_scorer(x))
+        sub_ranking = (
+            sequence for sequence in self.ranking.values() if len(sequence) > 0
+        )
+        sub_ranking = (
+            next(iter(sub_sequence.values())) for sub_sequence in sub_ranking
+        )
+        best_planned_trip = min(sub_ranking, default=None)
         if not sub_ranking:
             return None
-        best_planned_trip = next(iter(sub_ranking.values()))
-
         return best_planned_trip
 
     @staticmethod

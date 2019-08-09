@@ -143,10 +143,12 @@ class Route(Model):
         trip_finish_time = trip_start_time + time_to_travel
         if not trip_finish_time <= trip.latest:
             return None
+
         time_to_return = trip.destination.time_to(self.vehicle.final, trip_finish_time)
         vehicle_finish_time = trip_finish_time + time_to_return
         if not vehicle_finish_time <= self.vehicle.latest:
             return None
+
         return PlannedTrip(self, trip, trip_start_time, trip_finish_time)
 
     def _append_empty_planned_trip(self, destination: Position) -> PlannedTrip:

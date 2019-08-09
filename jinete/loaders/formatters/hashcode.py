@@ -46,7 +46,7 @@ class HashCodeLoaderFormatter(LoaderFormatter):
         destination = surface.get_or_create_position([x2, y2])
         timeout = latest - earliest
         trip = Trip(identifier, origin, destination, earliest, timeout)
-        logger.info(f'Created trip!')
+        logger.debug(f'Created trip!')
         return trip
 
     def surface(self, *args, **kwargs) -> Surface:

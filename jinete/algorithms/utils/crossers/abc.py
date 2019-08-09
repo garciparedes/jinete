@@ -63,20 +63,20 @@ class Crosser(ABC):
     def get_planned_trip(self) -> Optional[PlannedTrip]:
         pass
 
-    def mark_planned_trip_as_done(self, planned_trip: PlannedTrip):
+    def mark_planned_trip_as_done(self, planned_trip: PlannedTrip) -> None:
         self.mark_trip_as_done(planned_trip.trip)
 
-    def mark_trip_as_done(self, trip: Trip):
+    def mark_trip_as_done(self, trip: Trip) -> None:
         self.done_trips.add(trip)
 
-    def mark_planned_trip_as_undone(self, planned_trip: PlannedTrip):
+    def mark_planned_trip_as_undone(self, planned_trip: PlannedTrip) -> None:
         self.mark_trip_as_undone(planned_trip.trip)
 
-    def mark_trip_as_undone(self, trip: Trip):
+    def mark_trip_as_undone(self, trip: Trip) -> None:
         self.done_trips.remove(trip)
 
     @property
-    def pending_trips(self):
+    def pending_trips(self) -> Set[Trip]:
         return self.trips - self.done_trips
 
     @property

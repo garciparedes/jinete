@@ -61,6 +61,8 @@ class Trip(object):
     def duration(self, now: float):
         return self.origin.time_to(self.destination, now)
 
+    def __lt__(self, other):
+        return self.latest < other.latest
 
 @dataclass(frozen=True)
 class PlannedTrip(object):
@@ -73,6 +75,10 @@ class PlannedTrip(object):
     def build_empty(route, collection_time, delivery_time, *args, **kwargs) -> 'PlannedTrip':
         trip = Trip.build_empty(*args, **kwargs)
         return PlannedTrip(route, trip, collection_time, delivery_time)
+
+    @property
+    def trip_uuid(self) -> UUID:
+        return self.trip.uuid
 
     @property
     def origin(self) -> Position:
@@ -93,6 +99,9 @@ class PlannedTrip(object):
     @property
     def capacity(self):
         return self.trip.capacity
+
+    def __lt__(self, other):
+        return self.scoring < other.scoring
 
     @property
     def scoring(self):
