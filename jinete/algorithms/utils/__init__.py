@@ -3,4 +3,5 @@ from .crossers import (
     StatelessCrosser,
     BestStatelessCrosser,
     OrderedCrosser,
+    RandomizedCrosser,
 )

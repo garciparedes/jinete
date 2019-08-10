@@ -137,6 +137,9 @@ class Route(Model):
         }
 
     def feasible_trip(self, trip: Trip) -> Optional[PlannedTrip]:
+        if not self.last_time <= trip.latest:
+            return None
+
         time_to_go = self.last_position.distance_to(trip.origin)
         time_to_travel = trip.duration(time_to_go)
         trip_start_time = max(self.last_time + time_to_go, trip.earliest)

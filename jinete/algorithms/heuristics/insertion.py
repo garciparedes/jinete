@@ -9,8 +9,8 @@ from jinete.models import (
 from jinete.algorithms.abc import (
     Algorithm,
 )
-from jinete.algorithms.utils import (
-    BestStatelessCrosser,
+from ..utils import (
+    OrderedCrosser,
 )
 from jinete.exceptions import (
     NonFeasiblePlannedTripFoundException,
@@ -20,7 +20,7 @@ if TYPE_CHECKING:
     from typing import (
         Type,
     )
-    from jinete.algorithms.utils import (
+    from ..utils import (
         Crosser,
     )
 
@@ -32,7 +32,7 @@ class InsertionAlgorithm(Algorithm):
     def __init__(self, crosser_cls: Type[Crosser] = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if crosser_cls is None:
-            crosser_cls = BestStatelessCrosser
+            crosser_cls = OrderedCrosser
         self.crosser_cls = crosser_cls
 
     def build_crosser(self) -> Crosser:

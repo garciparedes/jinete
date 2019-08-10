@@ -7,9 +7,13 @@ from .naive import (
 from .heuristics import (
     InsertionAlgorithm,
 )
+from .metaheuristics import (
+    GraspAlgorithm,
+)
 from .utils import (
     Crosser,
     StatelessCrosser,
     BestStatelessCrosser,
     OrderedCrosser,
+    RandomizedCrosser,
 )

@@ -10,3 +10,6 @@ from .best_stateless import (
 from .ordered import (
     OrderedCrosser,
 )
+from .randomized import (
+    RandomizedCrosser,
+)

@@ -42,3 +42,13 @@ class Planning(object):
     @property
     def loaded_routes(self):
         return set(route for route in self.routes if route.loaded)
+
+    @property
+    def cost(self) -> float:
+        cost = 0.0
+        for route in self.routes:
+            cost += route.cost
+        return cost
+
+    def __lt__(self, other: 'Planning') -> bool:
+        return self.cost < other.cost

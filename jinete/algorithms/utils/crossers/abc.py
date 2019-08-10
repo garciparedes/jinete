@@ -7,7 +7,7 @@ from abc import (
 )
 from typing import (
     TYPE_CHECKING,
-    List)
+)
 
 from ....exceptions import (
     NonFeasiblePlannedTripFoundException,
@@ -38,7 +38,7 @@ class Crosser(ABC):
         self.fleet = fleet
         self.job = job
         self.routes = set(Route(vehicle) for vehicle in self.vehicles)
-        self.done_trips = set()
+        self._pending_trips = set(self.trips)
 
     @property
     def vehicles(self) -> Set[Vehicle]:
@@ -67,17 +67,21 @@ class Crosser(ABC):
         self.mark_trip_as_done(planned_trip.trip)
 
     def mark_trip_as_done(self, trip: Trip) -> None:
-        self.done_trips.add(trip)
+        self._pending_trips.remove(trip)
 
     def mark_planned_trip_as_undone(self, planned_trip: PlannedTrip) -> None:
         self.mark_trip_as_undone(planned_trip.trip)
 
     def mark_trip_as_undone(self, trip: Trip) -> None:
-        self.done_trips.remove(trip)
+        self._pending_trips.add(trip)
 
     @property
     def pending_trips(self) -> Set[Trip]:
-        return self.trips - self.done_trips
+        return self._pending_trips
+
+    @property
+    def done_trips(self) -> Set[Trip]:
+        return self.trips - self.pending_trips
 
     @property
     def completed(self) -> bool:

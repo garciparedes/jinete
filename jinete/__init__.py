@@ -39,10 +39,12 @@ from .algorithms import (
     Algorithm,
     NaiveAlgorithm,
     InsertionAlgorithm,
+    GraspAlgorithm,
     Crosser,
     StatelessCrosser,
     BestStatelessCrosser,
     OrderedCrosser,
+    RandomizedCrosser,
 )
 
 from .exceptions import (
