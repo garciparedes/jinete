@@ -34,11 +34,13 @@ class InsertionAlgorithm(Algorithm):
         if crosser_cls is None:
             crosser_cls = OrderedCrosser
         self.crosser_cls = crosser_cls
+        self.args = args
+        self.kwargs = kwargs
 
     def build_crosser(self) -> Crosser:
-        return self.crosser_cls(fleet=self.fleet, job=self.job)
+        return self.crosser_cls(*self.args, **self.kwargs)
 
-    def optimize(self) -> Planning:
+    def _optimize(self) -> Planning:
         logger.info('Optimizing...')
         crosser = self.build_crosser()
 

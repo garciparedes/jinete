@@ -1,30 +1,18 @@
 from __future__ import annotations
 
 import logging
-from itertools import islice
 from random import Random
 from typing import TYPE_CHECKING
-from collections import OrderedDict
-from uuid import UUID
-
 from .ordered import (
     OrderedCrosser,
-)
-from .abc import (
-    Crosser,
 )
 
 if TYPE_CHECKING:
     from typing import (
         Optional,
-        Dict,
-        Iterable,
-        Set,
     )
     from ....models import (
         PlannedTrip,
-        Trip,
-        Route,
     )
 
 logger = logging.getLogger(__name__)
@@ -45,9 +33,10 @@ class RandomizedCrosser(OrderedCrosser):
         for sub_ranking in self.ranking.values():
             if len(sub_ranking) == 0:
                 continue
-            current = next(iter(sub_ranking.values()))
-            if len(candidates) == 0 or candidates[-1] < current:
-                if len(candidates) != 0:
+            for current in sub_ranking.values():
+                if not (len(candidates) == 0 or candidates[-1] < current):
+                    break
+                if self.randomized_size < len(candidates):
                     candidates.pop()
                 candidates.append(current)
                 candidates.sort()

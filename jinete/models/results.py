@@ -38,7 +38,12 @@ class Result(object):
 
     @property
     def cost(self) -> float:
-        cost = 0.0
-        for route in self.routes:
-            cost += route.cost
-        return cost
+        return self.planning.cost
+
+    def __lt__(self, other: 'Result'):
+        if self.coverage_rate > other.coverage_rate:
+            return True
+        elif self.coverage_rate == other.coverage_rate:
+            if self.cost < other.cost:
+                return True
+        return False

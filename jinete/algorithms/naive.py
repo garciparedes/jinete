@@ -8,6 +8,6 @@ from .abc import (
 
 class NaiveAlgorithm(Algorithm):
 
-    def optimize(self) -> Planning:
+    def _optimize(self) -> Planning:
         routes = set()
         return Planning(routes)
