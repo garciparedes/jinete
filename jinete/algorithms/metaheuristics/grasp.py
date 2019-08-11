@@ -33,17 +33,21 @@ class GraspAlgorithm(Algorithm):
         self.algorithm_cls = algorithm_cls
         self.random = Random(seed)
 
-    def build_algorithm(self, *args, **kwargs) -> Algorithm:
-        return self.algorithm_cls(fleet=self.fleet, job=self.job, *args, **kwargs)
+        self.args = args
+        self.kwargs = kwargs
 
-    def optimize(self) -> Planning:
+    def build_algorithm(self, *args, **kwargs) -> Algorithm:
+        return self.algorithm_cls(*self.args, *args, **self.kwargs, **kwargs)
+
+    def _optimize(self) -> Planning:
         logger.info('Optimizing...')
 
         best = None
         for i in range(self.episodes):
             seed = self.random.randint(0, maxsize)
             current = self.build_algorithm(seed=seed).optimize()
-            if best is None or best < current:
+
+            if best is None or current < best:
                 best = current
         logger.info('Optimized!')
-        return best
+        return best.planning

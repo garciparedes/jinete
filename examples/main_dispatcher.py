@@ -36,11 +36,15 @@ def main():
                 *args, **kwargs,
             )
 
-    class MyAlgorithm(jit.InsertionAlgorithm):
+    class MyAlgorithm(jit.GraspAlgorithm):
         def __init__(self, *args, **kwargs):
             super().__init__(
-                crosser_cls=jit.OrderedCrosser,
-                *args, **kwargs
+                episodes=20,
+                algorithm_cls=jit.InsertionAlgorithm,
+                crosser_cls=jit.RandomizedCrosser,
+                randomized_size=3,
+                neighborhood_max_size=150,
+                *args, **kwargs,
             )
 
     class MyStorer(jit.PromptStorer):

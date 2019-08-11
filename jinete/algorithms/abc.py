@@ -7,6 +7,7 @@ from time import time
 
 from ..models import (
     Planning,
+    Result,
 )
 
 if TYPE_CHECKING:
@@ -24,6 +25,21 @@ class Algorithm(ABC):
         self.fleet = fleet
         self.job = job
 
+    def optimize(self) -> Result:
+        start_time = time()
+        planning = self._optimize()
+        end_time = time()
+        computation_time = end_time - start_time
+
+        result = Result(
+            fleet=self.fleet,
+            job=self.job,
+            algorithm_cls=self.__class__,
+            planning=planning,
+            computation_time=computation_time,
+        )
+        return result
+
     @abstractmethod
-    def optimize(self) -> Planning:
+    def _optimize(self) -> Planning:
         pass
