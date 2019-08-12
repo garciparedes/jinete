@@ -40,10 +40,9 @@ class Result(object):
     def cost(self) -> float:
         return self.planning.cost
 
+    @property
+    def scoring(self) -> float:
+        return self.planning.scoring
+
     def __lt__(self, other: 'Result'):
-        if self.coverage_rate > other.coverage_rate:
-            return True
-        elif self.coverage_rate == other.coverage_rate:
-            if self.cost < other.cost:
-                return True
-        return False
+        return self.scoring < other.scoring

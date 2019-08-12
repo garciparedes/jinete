@@ -76,6 +76,13 @@ class Route(Model):
         return cost
 
     @property
+    def scoring(self) -> float:
+        scoring = 0.0
+        for planned_trip in self.planned_trips:
+            scoring += planned_trip.scoring
+        return scoring
+
+    @property
     def loaded(self):
         return len(self.planned_trips) > 0
 

@@ -34,7 +34,7 @@ class Trip(object):
 
     earliest: float = field(default=0.0)
     timeout: Optional[float] = field(default=None)
-
+    on_time_bonus: float = field(default=0.0)
     load_time: float = field(default=0.0)
 
     capacity: int = field(default=1)
@@ -63,6 +63,7 @@ class Trip(object):
 
     def __lt__(self, other):
         return self.latest < other.latest
+
 
 @dataclass(frozen=True)
 class PlannedTrip(object):
@@ -109,7 +110,10 @@ class PlannedTrip(object):
 
     @property
     def scoring(self):
-        return self.collection_time - self.route.last_time
+        scoring = self.trip.distance
+        if self.trip.earliest == self.collection_time:
+            scoring += self.trip.on_time_bonus
+        return scoring
 
     @property
     def feasible(self) -> bool:
