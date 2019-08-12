@@ -35,7 +35,7 @@ class FileLoader(Loader):
         if self.formatter is not None and force is False:
             return
         with self.file_path.open() as file:
-            data = tuple(tuple(int(v) for v in line.split()) for line in file.readlines())
+            data = tuple(tuple(float(v) for v in line.split()) for line in file.readlines())
             self.formatter = self.formatter_cls(data)
 
     @property
