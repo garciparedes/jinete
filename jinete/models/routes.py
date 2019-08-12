@@ -92,15 +92,20 @@ class Route(Model):
         return tuple(planned_trip.trip for planned_trip in self.planned_trips if not planned_trip.empty)
 
     @property
-    def first_planned_trip(self) -> PlannedTrip:
-        return min(self.planned_trips, key=lambda pt: pt.collection_time)
+    def first_planned_trip(self) -> Optional[PlannedTrip]:
+        if len(self.planned_trips) == 0:
+            return None
+        # return min(self.planned_trips, key=lambda pt: pt.collection_time)
+        return self.planned_trips[0]
 
     @property
     def first_trip(self) -> Trip:
         return self.first_planned_trip.trip
 
     @property
-    def last_planned_trip(self) -> PlannedTrip:
+    def last_planned_trip(self) -> Optional[PlannedTrip]:
+        if len(self.planned_trips) is 0:
+            return None
         # return max(self.planned_trips, key=lambda pt: pt.delivery_time)
         return self.planned_trips[-1]
 
@@ -110,6 +115,8 @@ class Route(Model):
 
     @property
     def duration(self) -> float:
+        if len(self.planned_trips) == 0:
+            return 0.0
         return self.last_planned_trip.delivery_time - self.first_planned_trip.collection_time
 
     @property
@@ -143,7 +150,7 @@ class Route(Model):
         time_to_go = self.last_position.distance_to(trip.origin)
         time_to_travel = trip.duration(time_to_go)
         trip_start_time = max(self.last_time + time_to_go, trip.earliest)
-        trip_finish_time = trip_start_time + time_to_travel
+        trip_finish_time = trip_start_time + time_to_travel + trip.load_time
         if not trip_finish_time <= trip.latest:
             return None
 
@@ -151,6 +158,14 @@ class Route(Model):
         vehicle_finish_time = trip_finish_time + time_to_return
         if not vehicle_finish_time <= self.vehicle.latest:
             return None
+
+        if self.vehicle.vehicle_timeout is not None:
+            if not self.duration <= self.vehicle.vehicle_timeout:
+                return None
+
+        if self.vehicle.trip_timeout is not None:
+            if not trip_finish_time - trip_start_time <= self.vehicle.trip_timeout:
+                return None
 
         return PlannedTrip(self, trip, trip_start_time, trip_finish_time)
 

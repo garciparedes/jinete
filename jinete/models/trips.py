@@ -31,13 +31,11 @@ class Trip(object):
     identifier: str
     origin: Position
     destination: Position
-
     earliest: float = field(default=0.0)
     timeout: Optional[float] = field(default=None)
-
     load_time: float = field(default=0.0)
-
     capacity: int = field(default=1)
+    inbound: bool = field(default=True)
     uuid: UUID = field(default_factory=uuid4)
 
     @staticmethod
@@ -63,6 +61,7 @@ class Trip(object):
 
     def __lt__(self, other):
         return self.latest < other.latest
+
 
 @dataclass(frozen=True)
 class PlannedTrip(object):
