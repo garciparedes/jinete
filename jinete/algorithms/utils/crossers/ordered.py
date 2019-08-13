@@ -14,12 +14,9 @@ if TYPE_CHECKING:
     from typing import (
         Optional,
         Dict,
-        Iterable,
-        Set,
     )
     from ....models import (
         PlannedTrip,
-        Trip,
         Route,
     )
 
@@ -31,7 +28,13 @@ class OrderedCrosser(Crosser):
 
     def __init__(self, neighborhood_max_size: int = 250, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.neighborhood_max_size = min(neighborhood_max_size, len(self.trips))
+
+        if neighborhood_max_size is None:
+            neighborhood_max_size = len(self.trips)
+        else:
+            neighborhood_max_size = min(neighborhood_max_size, len(self.trips))
+
+        self.neighborhood_max_size = neighborhood_max_size
         self.ranking = dict()
         self.initialize_ranking()
 
