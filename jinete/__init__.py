@@ -12,6 +12,11 @@ from .models import (
     Route,
     Planning,
     Result,
+    DirectionObjective,
+    Objective,
+    DialARideObjective,
+    TaxiSharingObjective,
+    HashCodeObjective,
 )
 
 from .loaders import (

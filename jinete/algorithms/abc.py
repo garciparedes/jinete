@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from ..models import (
         Fleet,
         Job,
-        Route,
+        Objective,
     )
 logger = logging.getLogger(__name__)
 
@@ -24,6 +24,10 @@ class Algorithm(ABC):
     def __init__(self, fleet: Fleet, job: Job, *args, **kwargs):
         self.fleet = fleet
         self.job = job
+
+    @property
+    def objective(self) -> Objective:
+        return self.job.objective
 
     def optimize(self) -> Result:
         start_time = time()

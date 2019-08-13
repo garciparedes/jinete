@@ -9,6 +9,7 @@ if TYPE_CHECKING:
     from ..models import (
         Trip,
         Route,
+        Objective,
     )
 
 
@@ -37,13 +38,13 @@ class Result(object):
         return len(self.completed_trips) / len(self.job.trips)
 
     @property
+    def objective(self) -> Objective:
+        return self.job.objective
+
+    @property
     def cost(self) -> float:
         return self.planning.cost
 
-    def __lt__(self, other: 'Result'):
-        if self.coverage_rate > other.coverage_rate:
-            return True
-        elif self.coverage_rate == other.coverage_rate:
-            if self.cost < other.cost:
-                return True
-        return False
+    @property
+    def scoring(self) -> float:
+        return self.objective.result_optimization(self)

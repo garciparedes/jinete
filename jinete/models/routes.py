@@ -51,6 +51,9 @@ class Route(Model):
         self.planned_trips = list(planned_trips)
         self.uuid = uuid
 
+    def __iter__(self):
+        yield from self.planned_trips
+
     @property
     def feasible(self) -> bool:
         if len(self.planned_trips) > 0:

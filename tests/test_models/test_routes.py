@@ -3,7 +3,7 @@ from uuid import UUID
 
 import jinete as jit
 
-from .utils import (
+from tests.utils import (
     generate_one_vehicle,
     generate_one_route,
 )
