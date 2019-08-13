@@ -6,7 +6,6 @@ from .models import (
     METRIC,
     Trip,
     Job,
-    PlannedTrip,
     Vehicle,
     Fleet,
     Route,
@@ -18,6 +17,7 @@ from .models import (
     TaxiSharingObjective,
     HashCodeObjective,
 )
+from jinete.models.planned_trips import PlannedTrip
 
 from .loaders import (
     LoaderException,

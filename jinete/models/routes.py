@@ -10,7 +10,7 @@ from uuid import (
 from .abc import (
     Model,
 )
-from .trips import (
+from .planned_trips import (
     PlannedTrip,
 )
 

@@ -16,8 +16,8 @@ if TYPE_CHECKING:
     from .plannings import (
         Planning,
     )
-    from .trips import (
-        PlannedTrip
+    from .planned_trips import (
+        PlannedTrip,
     )
     from .results import (
         Result,

@@ -12,9 +12,10 @@ from .surfaces import (
 )
 from .trips import (
     Trip,
+)
+from .planned_trips import (
     PlannedTrip,
 )
-
 from .jobs import (
     Job
 )
