@@ -3,7 +3,8 @@ from sys import maxsize
 from uuid import UUID
 
 import jinete as jit
-from .utils import (
+
+from tests.utils import (
     generate_one_position,
 )
 

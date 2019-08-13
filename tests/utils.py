@@ -15,13 +15,14 @@ def generate_surfaces(n: int, *args, **kwargs) -> Set[jit.Surface]:
 
 
 def generate_one_position(x_min: float = -100, x_max: float = 100, y_min: float = -100,
-                          y_max: float = 100, surface: jit.Surface = None, *args, **kwargs) -> jit.GeometricPosition:
+                          y_max: float = 100, surface: jit.Surface = None, *args, **kwargs) -> jit.Position:
     if surface is None:
         surface = generate_one_surface(*args, **kwargs)
-    return jit.GeometricPosition([uniform(x_min, x_max), uniform(y_min, y_max)], surface=surface)
+
+    return surface.get_or_create_position([uniform(x_min, x_max), uniform(y_min, y_max)])
 
 
-def generate_positions(n: int, surface: jit.Surface = None, *args, **kwargs) -> Set[jit.GeometricPosition]:
+def generate_positions(n: int, surface: jit.Surface = None, *args, **kwargs) -> Set[jit.Position]:
     if surface is None:
         surface = generate_one_surface(*args, **kwargs)
     return {
@@ -87,9 +88,10 @@ def generate_vehicles(n: int, *args, **kwargs) -> Set[jit.Vehicle]:
 
 
 def generate_one_route(feasible: bool, planned_trips_min: int = 1, planned_trips_max: int = 20,
-                       *args, **kwargs) -> jit.Route:
-    vehicle = generate_one_vehicle(*args, **kwargs)
-    surface = generate_one_surface(*args, **kwargs)
+                       surface: jit.Surface = None, *args, **kwargs) -> jit.Route:
+    if surface is None:
+        surface = generate_one_surface(*args, **kwargs)
+    vehicle = generate_one_vehicle(surface=surface, *args, **kwargs)
     route = jit.Route(vehicle)
 
     planned_trips_len = randint(planned_trips_min, planned_trips_max)
@@ -108,8 +110,6 @@ def generate_one_route(feasible: bool, planned_trips_min: int = 1, planned_trips
     route.append_planned_trip(planned_trip)
 
     for i in range(planned_trips_len):
-        cut_min = vehicle.earliest + cut_len * i
-
         planned_trip = generate_one_planned_trip(
             feasible=feasible,
             route=route,

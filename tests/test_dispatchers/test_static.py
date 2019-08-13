@@ -1,10 +1,9 @@
 import unittest
-from uuid import UUID
 
 import jinete as jit
 
 
-class TestPositions(unittest.TestCase):
+class TestStaticDispatcher(unittest.TestCase):
 
     def test_creation(self):
         dispatcher = jit.StaticDispatcher(
