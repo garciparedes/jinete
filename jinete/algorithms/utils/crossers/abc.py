@@ -27,6 +27,7 @@ if TYPE_CHECKING:
         Fleet,
         Trip,
         Job,
+        Objective,
     )
 
 logger = logging.getLogger(__name__)
@@ -47,6 +48,10 @@ class Crosser(ABC):
     @property
     def trips(self) -> Set[Trip]:
         return self.job.trips
+
+    @property
+    def objective(self) -> Objective:
+        return self.job.objective
 
     def __iter__(self):
         return self

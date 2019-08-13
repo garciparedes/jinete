@@ -1,4 +1,4 @@
-from itertools import chain
+import itertools as it
 from typing import List
 
 from .abc import StorerFormatter
@@ -38,7 +38,7 @@ class ColumnarStorerFormatter(StorerFormatter):
         ]
 
     def route_to_str(self, route: Route) -> List[str]:
-        rows = chain.from_iterable(self.planned_trip_to_str(planned_trip) for planned_trip in route.planned_trips)
+        rows = it.chain.from_iterable(self.planned_trip_to_str(planned_trip) for planned_trip in route.planned_trips)
         return [
             f'Vehicle: ',
             *(f'{self.tab_character}{row}' for row in self.vehicle_to_str(route.vehicle)),
@@ -47,7 +47,7 @@ class ColumnarStorerFormatter(StorerFormatter):
         ]
 
     def format(self) -> str:
-        rows = chain.from_iterable(self.route_to_str(route) for route in self.planning.routes)
+        rows = it.chain.from_iterable(self.route_to_str(route) for route in self.planning.routes)
         return '\n'.join((
             f'Planning UUID: "{self.planning.uuid}"',
             f'Routes count: "{len(self.planning.routes)}"',

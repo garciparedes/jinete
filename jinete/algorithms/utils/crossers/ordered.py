@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from itertools import islice
+import itertools as it
 from typing import TYPE_CHECKING
 from collections import OrderedDict
 from uuid import UUID
@@ -47,13 +47,13 @@ class OrderedCrosser(Crosser):
     def create_sub_ranking(self, route: Route) -> OrderedDict[UUID, PlannedTrip]:
         logger.debug("Creating sub_ranking...")
         raw_sub_ranking = list()
-        for trip in islice(self.pending_trips, self.neighborhood_max_size):
+        for trip in it.islice(self.pending_trips, self.neighborhood_max_size):
             planned_trip = route.feasible_trip(trip)
             if planned_trip is None:
                 continue
-            raw_sub_ranking.append((trip.uuid, planned_trip))
-        raw_sub_ranking.sort(key=lambda x: x[1])
-        return OrderedDict(raw_sub_ranking)
+            raw_sub_ranking.append(planned_trip)
+        raw_sub_ranking.sort(key=lambda pt: self.objective.planned_trip_optimization(pt))
+        return OrderedDict((item.trip_uuid, item) for item in raw_sub_ranking)
 
     def update_ranking(self, planned_trip: PlannedTrip) -> None:
         logger.info("Updating ranking...")
@@ -74,6 +74,5 @@ class OrderedCrosser(Crosser):
             if len(sub_ranking) == 0:
                 continue
             current = next(iter(sub_ranking.values()))
-            if best is None or current < best:
-                best = current
+            best = self.objective.best_planned_trip(best, current)
         return best

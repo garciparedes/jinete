@@ -8,6 +8,7 @@ from ...models import (
     METRIC,
     Vehicle,
     Trip,
+    HashCodeObjective,
 )
 from .abc import (
     LoaderFormatter,
@@ -32,7 +33,8 @@ class HashCodeLoaderFormatter(LoaderFormatter):
         bonus = self.data[0][4]
         rows = self.data[1:]
         trips = set(self._build_trip(surface, str(i), bonus, *row) for i, row in enumerate(rows))
-        job = Job(trips, *args, **kwargs)
+        objective = HashCodeObjective()
+        job = Job(trips, objective=objective, *args, **kwargs)
         logger.info(f'Created job!')
         return job
 

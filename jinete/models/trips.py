@@ -73,9 +73,6 @@ class Trip(object):
     def duration(self, now: float):
         return self.origin.time_to(self.destination, now)
 
-    def __lt__(self, other):
-        return self.latest < other.latest
-
 
 @dataclass(frozen=True)
 class PlannedTrip(object):
@@ -106,6 +103,10 @@ class PlannedTrip(object):
         return self.trip.destination
 
     @property
+    def distance(self) -> float:
+        return self.trip.distance
+
+    @property
     def duration(self) -> float:
         return self.delivery_time - self.collection_time
 
@@ -116,16 +117,6 @@ class PlannedTrip(object):
     @property
     def capacity(self):
         return self.trip.capacity
-
-    def __lt__(self, other):
-        return self.scoring < other.scoring
-
-    @property
-    def scoring(self):
-        scoring = self.trip.distance
-        if self.trip.earliest == self.collection_time:
-            scoring += self.trip.on_time_bonus
-        return scoring
 
     @property
     def feasible(self) -> bool:

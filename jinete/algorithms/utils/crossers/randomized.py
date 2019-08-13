@@ -39,7 +39,7 @@ class RandomizedCrosser(OrderedCrosser):
                 if self.randomized_size < len(candidates):
                     candidates.pop()
                 candidates.append(current)
-                candidates.sort()
+            candidates.sort(key=lambda pt: self.objective.planned_trip_optimization(pt))
         if len(candidates) == 0:
             return None
         best = self.random.choice(candidates)

@@ -46,8 +46,6 @@ class GraspAlgorithm(Algorithm):
         for i in range(self.episodes):
             seed = self.random.randint(0, maxsize)
             current = self.build_algorithm(seed=seed).optimize()
-
-            if best is None or best < current:
-                best = current
+            best = self.objective.best_result(best, current)
         logger.info('Optimized!')
         return best.planning

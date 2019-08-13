@@ -51,6 +51,9 @@ class Route(Model):
         self.planned_trips = list(planned_trips)
         self.uuid = uuid
 
+    def __iter__(self):
+        yield from self.planned_trips
+
     @property
     def feasible(self) -> bool:
         if len(self.planned_trips) > 0:
@@ -74,13 +77,6 @@ class Route(Model):
         for planned_trip in self.planned_trips:
             cost += planned_trip.cost
         return cost
-
-    @property
-    def scoring(self) -> float:
-        scoring = 0.0
-        for planned_trip in self.planned_trips:
-            scoring += planned_trip.scoring
-        return scoring
 
     @property
     def loaded(self):

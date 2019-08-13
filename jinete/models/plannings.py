@@ -32,6 +32,9 @@ class Planning(object):
         self.routes = routes
         self.uuid = uuid
 
+    def __iter__(self):
+        yield from self.routes
+
     @property
     def loaded_routes(self):
         return set(route for route in self.routes if route.loaded)
@@ -42,13 +45,3 @@ class Planning(object):
         for route in self.routes:
             cost += route.cost
         return cost
-
-    @property
-    def scoring(self) -> float:
-        scoring = 0.0
-        for route in self.routes:
-            scoring += route.scoring
-        return scoring
-
-    def __lt__(self, other: 'Planning') -> bool:
-        return self.cost < other.cost
