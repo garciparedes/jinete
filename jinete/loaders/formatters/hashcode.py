@@ -8,6 +8,7 @@ from ...models import (
     METRIC,
     Vehicle,
     Trip,
+    HashCodeObjective,
 )
 from .abc import (
     LoaderFormatter,
@@ -17,11 +18,6 @@ logger = logging.getLogger(__name__)
 
 
 class HashCodeLoaderFormatter(LoaderFormatter):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # TODO: Set bonus and number of steps (Config object)
-        #
 
     def fleet(self, surface: Surface, *args, **kwargs) -> Fleet:
         row = self.data[0]
@@ -34,18 +30,20 @@ class HashCodeLoaderFormatter(LoaderFormatter):
         return fleet
 
     def job(self, surface: Surface, *args, **kwargs) -> Job:
+        bonus = self.data[0][4]
         rows = self.data[1:]
-        trips = set(self._build_trip(surface, str(i), *row) for i, row in enumerate(rows))
-        job = Job(trips, *args, **kwargs)
+        trips = set(self._build_trip(surface, str(i), bonus, *row) for i, row in enumerate(rows))
+        objective = HashCodeObjective()
+        job = Job(trips, objective=objective, *args, **kwargs)
         logger.info(f'Created job!')
         return job
 
-    def _build_trip(self, surface: Surface, identifier: str, x1: float, y1: float, x2: float, y2: float,
+    def _build_trip(self, surface: Surface, identifier: str, bonus: float, x1: float, y1: float, x2: float, y2: float,
                     earliest: float, latest: float) -> Trip:
         origin = surface.get_or_create_position([x1, y1])
         destination = surface.get_or_create_position([x2, y2])
         timeout = latest - earliest
-        trip = Trip(identifier, origin, destination, earliest, timeout)
+        trip = Trip(identifier, origin, destination, earliest, timeout, bonus)
         logger.debug(f'Created trip!')
         return trip
 

@@ -31,3 +31,10 @@ from .plannings import (
 from .results import (
     Result,
 )
+from .objectives import (
+    DirectionObjective,
+    Objective,
+    DialARideObjective,
+    TaxiSharingObjective,
+    HashCodeObjective,
+)

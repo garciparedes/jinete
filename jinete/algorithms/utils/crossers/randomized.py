@@ -34,12 +34,15 @@ class RandomizedCrosser(OrderedCrosser):
             if len(sub_ranking) == 0:
                 continue
             for current in sub_ranking.values():
-                if not (len(candidates) == 0 or candidates[-1] < current):
-                    break
+                if len(candidates) != 0:
+                    best = self.objective.best_planned_trip(candidates[-1], current)
+                    if not best != candidates[-1]:
+                        break
+
                 if self.randomized_size < len(candidates):
                     candidates.pop()
                 candidates.append(current)
-                candidates.sort()
+            candidates.sort(key=lambda pt: self.objective.planned_trip_optimization(pt))
         if len(candidates) == 0:
             return None
         best = self.random.choice(candidates)
