@@ -29,12 +29,12 @@ logger = logging.getLogger(__name__)
 
 class Vehicle(Model):
     initial: Position
-    capacity: int
+    capacity: float
     earliest: float
     timeout: float
     uuid: UUID
 
-    def __init__(self, initial: Position, final: Position = None, capacity: int = 1, earliest: float = 0.0,
+    def __init__(self, initial: Position, final: Position = None, capacity: float = 1.0, earliest: float = 0.0,
                  timeout: float = None, vehicle_timeout: float = None, trip_timeout: float = None, uuid: UUID = None):
 
         if uuid is None:

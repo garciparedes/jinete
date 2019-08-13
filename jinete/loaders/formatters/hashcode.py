@@ -21,7 +21,7 @@ class HashCodeLoaderFormatter(LoaderFormatter):
 
     def fleet(self, surface: Surface, *args, **kwargs) -> Fleet:
         row = self.data[0]
-        n, timeout, capacity = row[2], row[5], 1
+        n, timeout, capacity = int(row[2]), row[5], 1.0
 
         initial = surface.get_or_create_position([0, 0])
         vehicles = set(Vehicle(initial, capacity=capacity, timeout=timeout) for _ in range(n))
