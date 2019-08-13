@@ -14,7 +14,7 @@ from uuid import (
 
 if TYPE_CHECKING:
     from typing import (
-        List,
+        Tuple,
         Sequence,
     )
     from uuid import (
@@ -48,11 +48,14 @@ class Position(ABC):
 
 
 class GeometricPosition(Position):
-    coordinates: List[float]
+    coordinates: Tuple[float]
 
     def __init__(self, coordinates: Sequence[float], *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.coordinates = list(coordinates)
+        self.coordinates = tuple(coordinates)
+
+    def __hash__(self):
+        return hash(self.coordinates)
 
     def __str__(self):
         c = ",".join(f"{x:07.3f}" for x in self)
