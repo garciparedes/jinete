@@ -150,12 +150,17 @@ class Route(Model):
         if not self.last_time <= trip.latest:
             return None
 
-        time_to_go = self.last_position.distance_to(trip.origin)
-        time_to_travel = trip.duration(time_to_go)
-        trip_start_time = max(self.last_time + time_to_go, trip.earliest)
+        time_to_origin = self.last_position.distance_to(trip.origin)
+        time_to_travel = trip.duration(time_to_origin)
+        trip_start_time = max(self.last_time + time_to_origin, trip.earliest)
         trip_finish_time = trip_start_time + time_to_travel + trip.load_time
-        if not trip_finish_time <= trip.latest:
-            return None
+
+        if trip.inbound:
+            if not trip_finish_time <= trip.latest:
+                return None
+        else:
+            if not trip_start_time <= trip.latest:
+                return None
 
         time_to_return = trip.destination.time_to(self.vehicle.final, trip_finish_time)
         vehicle_finish_time = trip_finish_time + time_to_return
