@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from typing import (
         Optional,
     )
-    from jinete.models import (
+    from ....models import (
         PlannedTrip,
     )
 
