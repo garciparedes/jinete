@@ -9,4 +9,4 @@ install:
 script:
   - 'coverage run --source=jinete --module unittest discover tests'
 after_success:
-  - 'coveralls'
+  - 'codecov'

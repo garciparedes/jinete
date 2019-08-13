@@ -5,8 +5,8 @@ verify_ssl = true
 
 [dev-packages]
 coverage = "*"
-coveralls = "*"
 coloredlogs = "*"
+codecov = "*"
 
 [packages]
 jinete = {editable = true,path = "."}
