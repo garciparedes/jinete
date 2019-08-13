@@ -5,14 +5,16 @@ import jinete as jit
 from tests.utils import (
     generate_vehicles,
     generate_trips,
+    generate_one_surface,
 )
 
 
 class TestRandomizedCrosser(unittest.TestCase):
 
     def test_creation(self):
-        job = jit.Job(generate_trips(10))
-        fleet = jit.Fleet(generate_vehicles(10))
+        surface = generate_one_surface()
+        job = jit.Job(generate_trips(10, surface=surface))
+        fleet = jit.Fleet(generate_vehicles(10, surface=surface))
         randomized_size = 2
         dispatcher = jit.RandomizedCrosser(
             randomized_size=randomized_size,
