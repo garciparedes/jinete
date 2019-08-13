@@ -2,8 +2,7 @@ from __future__ import annotations
 
 import logging
 from typing import TYPE_CHECKING
-from itertools import product
-
+import itertools as it
 from .abc import (
     Crosser,
 )
@@ -32,7 +31,7 @@ class StatelessCrosser(Crosser):
         self.iterator = self.feasible_iterator()
 
     def feasible_iterator(self):
-        for route, trip in product(self.attractive_routes, self.pending_trips):
+        for route, trip in it.product(self.attractive_routes, self.pending_trips):
             logger.debug(f'Yielding ({route}, {trip})...')
             planned_trip = route.feasible_trip(trip)
             if planned_trip is None:

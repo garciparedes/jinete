@@ -2,25 +2,24 @@ import unittest
 
 from uuid import UUID
 
-from jinete import (
-    GeometricSurface,
+import jinete as jit
+from tests.utils import (
+    generate_positions,
 )
-from .utils import generate_positions
 
 
 class TestSurfaces(unittest.TestCase):
 
     def test_geometric_surface(self):
-        positions = generate_positions(100)
+        surface = jit.GeometricSurface()
+        positions = generate_positions(100, surface=surface)
         n = len(positions)
-        surface = GeometricSurface(positions=positions)
         self.assertIsInstance(surface.uuid, UUID)
         self.assertEqual(n, len(surface.positions))
 
     def test_distance(self):
-        positions = generate_positions(2)
-        surface = GeometricSurface(positions=positions)
-
+        surface = jit.GeometricSurface()
+        positions = generate_positions(2, surface=surface)
         a, b = tuple(positions)
         real_dist = ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2) ** 0.5
 

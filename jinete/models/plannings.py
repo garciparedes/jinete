@@ -1,27 +1,20 @@
 from __future__ import annotations
 
 import logging
-from dataclasses import (
-    dataclass,
-    field,
-)
-from typing import (
-    TYPE_CHECKING,
-    Set,
-    Optional)
+from typing import TYPE_CHECKING
 from uuid import (
     uuid4,
 )
 
 if TYPE_CHECKING:
+    from typing import (
+        Set,
+    )
     from .routes import (
         Route,
     )
     from uuid import (
         UUID,
-    )
-    from .surfaces import (
-        Surface,
     )
 
 logger = logging.getLogger(__name__)
@@ -39,6 +32,9 @@ class Planning(object):
         self.routes = routes
         self.uuid = uuid
 
+    def __iter__(self):
+        yield from self.routes
+
     @property
     def loaded_routes(self):
         return set(route for route in self.routes if route.loaded)
@@ -49,6 +45,3 @@ class Planning(object):
         for route in self.routes:
             cost += route.cost
         return cost
-
-    def __lt__(self, other: 'Planning') -> bool:
-        return self.cost < other.cost
