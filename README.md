@@ -6,7 +6,7 @@
 [![PyPI](https://img.shields.io/pypi/v/jinete.svg)](https://pypi.org/project/jinete)
 [![Read the Docs](https://img.shields.io/readthedocs/jinete.svg)](https://jinete.readthedocs.io/)
 [![Travis (.org) branch](https://img.shields.io/travis/garciparedes/jinete/master.svg)](https://travis-ci.org/garciparedes/jinete/branches)
-[![Codecov](https://img.shields.io/codecov/c/github/garciparedes/jinete.svg)](https://coveralls.io/github/garciparedes/jinete)
+[![Codecov](https://img.shields.io/codecov/c/github/garciparedes/jinete.svg)](https://codecov.io/gh/garciparedes/jinete)
 [![GitHub](https://img.shields.io/github/license/garciparedes/jinete.svg)](https://github.com/garciparedes/jinete/blob/master/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/garciparedes/jinete.svg)](https://github.com/garciparedes/jinete)
 
@@ -88,9 +88,18 @@ pipenv python -m unittest discover tests
 
 * [`examples`](https://github.com/garciparedes/jinete/tree/master/examples/): Basic examples to start using the library.
 * [`jinete`](https://github.com/garciparedes/jinete/tree/master/jinete/): The source code of the library.
-    * [`algorithms`](https://github.com/garciparedes/jinete/tree/master/algorithms/): [TODO]
-    * [`dispatchers`](https://github.com/garciparedes/jinete/tree/master/dispatchers/): [TODO]
-    * ...
+  * [`algorithms`](https://github.com/garciparedes/jinete/tree/master/jinete/algorithms/): [TODO]
+    * [`exacts`](https://github.com/garciparedes/jinete/tree/master/jinete/algorithms/exacts): [TODO]
+    * [`heuristics`](https://github.com/garciparedes/jinete/tree/master/jinete/algorithms/heuristics): [TODO]
+    * [`metaheuristics`](https://github.com/garciparedes/jinete/tree/master/jinete/algorithms/metaheuristics): [TODO]
+    * [`utils`](https://github.com/garciparedes/jinete/tree/master/jinete/algorithms/utils): [TODO]
+      * [`crossers`](https://github.com/garciparedes/jinete/tree/master/jinete/algorithms/utils/crossers): [TODO]
+  * [`dispatchers`](https://github.com/garciparedes/jinete/tree/master/jinete/dispatchers/): [TODO]
+  * [`loaders`](https://github.com/garciparedes/jinete/tree/master/jinete/loaders/): [TODO]
+    * [`formatters`](https://github.com/garciparedes/jinete/tree/master/jinete/loaders/formatters/): [TODO]
+  * [`models`](https://github.com/garciparedes/jinete/tree/master/jinete/models/): [TODO]
+  * [`storers`](https://github.com/garciparedes/jinete/tree/master/jinete/storers/): [TODO]
+    * [`formatters`](https://github.com/garciparedes/jinete/tree/master/jinete/storers/formatters/): [TODO]
 * [`setup.py`](https://github.com/garciparedes/jinete/tree/master/setup.py): The builder of this library.
 * [`tests`](https://github.com/garciparedes/jinete/tree/master/tests/): The library tests.
 
