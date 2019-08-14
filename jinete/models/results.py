@@ -10,6 +10,7 @@ if TYPE_CHECKING:
         Trip,
         Route,
         Objective,
+        OptimizationDirection,
     )
 
 
@@ -42,9 +43,9 @@ class Result(object):
         return self.job.objective
 
     @property
-    def cost(self) -> float:
-        return self.planning.cost
+    def scoring(self) -> float:
+        return self.objective.scoring(self)
 
     @property
-    def scoring(self) -> float:
-        return self.objective.result_optimization_function(self)
+    def direction(self) -> OptimizationDirection:
+        return self.objective.direction

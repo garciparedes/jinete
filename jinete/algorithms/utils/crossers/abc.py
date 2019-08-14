@@ -14,6 +14,7 @@ from ....exceptions import (
 )
 from ....models import (
     Route,
+    ShortestTimePlannedTripCriterion,
 )
 
 if TYPE_CHECKING:
@@ -41,6 +42,8 @@ class Crosser(ABC):
         self.routes = set(Route(vehicle) for vehicle in self.vehicles)
         self._pending_trips = set(self.trips)
 
+        self.criterion = ShortestTimePlannedTripCriterion()
+
     @property
     def vehicles(self) -> Set[Vehicle]:
         return self.fleet.vehicles
@@ -48,10 +51,6 @@ class Crosser(ABC):
     @property
     def trips(self) -> Set[Trip]:
         return self.job.trips
-
-    @property
-    def objective(self) -> Objective:
-        return self.job.objective
 
     def __iter__(self):
         return self

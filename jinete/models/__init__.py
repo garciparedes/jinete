@@ -16,6 +16,13 @@ from .trips import (
 from .planned_trips import (
     PlannedTrip,
 )
+from .criterions import (
+    PlannedTripCriterion,
+    ShortestTimePlannedTripCriterion,
+)
+from .constants import (
+    OptimizationDirection,
+)
 from .jobs import (
     Job
 )
@@ -33,7 +40,7 @@ from .results import (
     Result,
 )
 from .objectives import (
-    DirectionObjective,
+    OptimizationDirection,
     Objective,
     DialARideObjective,
     TaxiSharingObjective,

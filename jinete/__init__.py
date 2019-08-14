@@ -11,7 +11,7 @@ from .models import (
     Route,
     Planning,
     Result,
-    DirectionObjective,
+    OptimizationDirection,
     Objective,
     DialARideObjective,
     TaxiSharingObjective,

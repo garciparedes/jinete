@@ -57,10 +57,6 @@ class PlannedTrip(object):
         return self.delivery_time - self.collection_time
 
     @property
-    def cost(self) -> float:
-        return self.duration
-
-    @property
     def capacity(self):
         return self.trip.capacity
 
