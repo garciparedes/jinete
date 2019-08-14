@@ -62,10 +62,13 @@ class Objective(ABC):
     def planned_trip_optimization(self, planned_trip: PlannedTrip) -> float:
         pass
 
+    def planned_trip_ranking(self, planned_trip: PlannedTrip) -> float:
+        return planned_trip.collection_time - planned_trip.route.last_time
+
     def best_planned_trip(self, *args) -> float:
         return self._direction_function(
             (arg for arg in args if arg is not None),
-            key=lambda pt: self.planned_trip_optimization(pt),
+            key=lambda pt: self.planned_trip_ranking(pt),
         )
 
     def best_route(self, *args) -> float:

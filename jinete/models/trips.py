@@ -35,7 +35,7 @@ class Trip(object):
 
     def __init__(self, identifier: str, origin: Position, destination: Position, earliest: float = 0.0,
                  timeout: Optional[float] = None, on_time_bonus: float = 0.0, load_time: float = 0.0,
-                 capacity: float = 1, uuid: UUID = None):
+                 inbound: bool = True, capacity: float = 1, uuid: UUID = None):
         if uuid is None:
             uuid = uuid4()
         self.identifier = identifier
@@ -45,6 +45,7 @@ class Trip(object):
         self.timeout = timeout
         self.on_time_bonus = on_time_bonus
         self.load_time = load_time
+        self.inbound = inbound
         self.capacity = capacity
         self.uuid = uuid
 

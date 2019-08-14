@@ -20,10 +20,13 @@ from .models import (
 from jinete.models.planned_trips import PlannedTrip
 
 from .loaders import (
+    LoaderException,
+    LoaderFormatterException,
     Loader,
     FileLoader,
     LoaderFormatter,
     HashCodeLoaderFormatter,
+    CordeauLaporteLoaderFormatter,
 )
 
 from .dispatchers import (

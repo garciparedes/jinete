@@ -34,9 +34,13 @@ class FileLoader(Loader):
     def _build_formatter(self, force: bool = True):
         if self.formatter is not None and force is False:
             return
+        self.formatter = self.formatter_cls(self.data)
+
+    @property
+    def data(self):
         with self.file_path.open() as file:
-            data = tuple(tuple(int(v) for v in line.split()) for line in file.readlines())
-            self.formatter = self.formatter_cls(data)
+            data = tuple(tuple(float(v) for v in line.split()) for line in file.readlines())
+        return data
 
     @property
     def fleet(self) -> Fleet:
