@@ -12,7 +12,7 @@ from ..models import (
     Surface,
 )
 from .formatters import (
-    HashCodeLoaderFormatter,
+    CordeauLaporteLoaderFormatter,
 )
 
 if TYPE_CHECKING:
@@ -28,7 +28,7 @@ class Loader(ABC):
 
     def __init__(self, formatter_cls: Type[LoaderFormatter] = None):
         if formatter_cls is None:
-            formatter_cls = HashCodeLoaderFormatter
+            formatter_cls = CordeauLaporteLoaderFormatter
         self.formatter_cls = formatter_cls
         self.formatter: LoaderFormatter = None
 

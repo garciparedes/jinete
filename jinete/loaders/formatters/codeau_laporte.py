@@ -43,6 +43,7 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
         vehicles = set()
         for idx in range(m):
             vehicle = Vehicle(
+                str(idx),
                 initial,
                 final,
                 capacity=capacity,

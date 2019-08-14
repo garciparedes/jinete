@@ -24,7 +24,7 @@ class HashCodeLoaderFormatter(LoaderFormatter):
         n, timeout, capacity = int(row[2]), row[5], 1.0
 
         initial = surface.get_or_create_position([0, 0])
-        vehicles = set(Vehicle(initial, capacity=capacity, timeout=timeout) for _ in range(n))
+        vehicles = set(Vehicle(str(idx), initial, capacity=capacity, timeout=timeout) for idx in range(n))
         fleet = Fleet(vehicles)
         logger.info(f'Created fleet!')
         return fleet

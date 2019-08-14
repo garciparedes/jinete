@@ -13,8 +13,10 @@ class TestVehicles(unittest.TestCase):
 
     def test_vehicle(self):
         initial = generate_one_position()
-        vehicle = jit.Vehicle(initial)
+        identifier = str(0)
+        vehicle = jit.Vehicle(identifier, initial)
 
+        self.assertEqual(identifier, vehicle.identifier)
         self.assertEqual(1, vehicle.capacity)
         self.assertEqual(vehicle.initial, initial)
         self.assertEqual(vehicle.final, vehicle.initial)
@@ -26,7 +28,8 @@ class TestVehicles(unittest.TestCase):
     def test_vehicle_with_capacity(self):
         capacity = 3
         initial = generate_one_position()
-        vehicle = jit.Vehicle(initial, capacity=capacity)
+        identifier = str(0)
+        vehicle = jit.Vehicle(identifier, initial, capacity=capacity)
 
         self.assertEqual(vehicle.capacity, capacity)
         self.assertEqual(vehicle.initial, initial)
@@ -40,8 +43,10 @@ class TestVehicles(unittest.TestCase):
         capacity = 3
         initial = generate_one_position()
         final = generate_one_position()
-        vehicle = jit.Vehicle(initial, capacity=capacity, final=final)
+        identifier = str(0)
+        vehicle = jit.Vehicle(identifier, initial, capacity=capacity, final=final)
 
+        self.assertEqual(identifier, vehicle.identifier)
         self.assertEqual(vehicle.capacity, capacity)
         self.assertEqual(vehicle.initial, initial)
         self.assertEqual(vehicle.final, final)
@@ -53,9 +58,10 @@ class TestVehicles(unittest.TestCase):
     def test_vehicle_with_earliest(self):
         initial = generate_one_position()
         earliest = 3600
+        identifier = str(0)
+        vehicle = jit.Vehicle(identifier, initial, earliest=earliest)
 
-        vehicle = jit.Vehicle(initial, earliest=earliest)
-
+        self.assertEqual(identifier, vehicle.identifier)
         self.assertEqual(vehicle.capacity, 1, )
         self.assertEqual(vehicle.initial, initial)
         self.assertEqual(vehicle.final, vehicle.initial)
@@ -68,9 +74,10 @@ class TestVehicles(unittest.TestCase):
         initial = generate_one_position()
         earliest = 1800
         timeout = 3600
+        identifier = str(0)
+        vehicle = jit.Vehicle(identifier, initial, earliest=earliest, timeout=timeout)
 
-        vehicle = jit.Vehicle(initial, earliest=earliest, timeout=timeout)
-
+        self.assertEqual(identifier, vehicle.identifier)
         self.assertEqual(vehicle.capacity, 1)
         self.assertEqual(vehicle.initial, initial)
         self.assertEqual(vehicle.final, vehicle.initial)
