@@ -43,50 +43,38 @@ class Objective(ABC):
         else:
             return min
 
-    def result_optimization(self, result: Result) -> float:
-        return self.planning_optimization(result.planning)
+    def result_optimization_function(self, result: Result) -> float:
+        return self.planning_optimization_function(result.planning)
 
-    def planning_optimization(self, planning: Planning) -> float:
+    def planning_optimization_function(self, planning: Planning) -> float:
         scoring = 0.0
         for route in planning:
-            scoring += self.route_optimization(route)
+            scoring += self.route_optimization_function(route)
         return scoring
 
-    def route_optimization(self, route: Route) -> float:
+    def route_optimization_function(self, route: Route) -> float:
         scoring = 0.0
         for planned_trip in route:
-            scoring += self.planned_trip_optimization(planned_trip)
+            scoring += self.planned_trip_optimization_function(planned_trip)
         return scoring
 
     @abstractmethod
-    def planned_trip_optimization(self, planned_trip: PlannedTrip) -> float:
+    def planned_trip_optimization_function(self, planned_trip: PlannedTrip) -> float:
         pass
 
-    def planned_trip_ranking(self, planned_trip: PlannedTrip) -> float:
+    def planned_trip_scoring_function(self, planned_trip: PlannedTrip) -> float:
         return planned_trip.collection_time - planned_trip.route.last_time
 
     def best_planned_trip(self, *args) -> float:
         return self._direction_function(
             (arg for arg in args if arg is not None),
-            key=lambda pt: self.planned_trip_ranking(pt),
-        )
-
-    def best_route(self, *args) -> float:
-        return self._direction_function(
-            (arg for arg in args if arg is not None),
-            key=lambda pt: self.route_optimization(pt),
-        )
-
-    def best_planning(self, *args) -> float:
-        return self._direction_function(
-            (arg for arg in args if arg is not None),
-            key=lambda pt: self.planning_optimization(pt),
+            key=lambda pt: self.planned_trip_scoring_function(pt),
         )
 
     def best_result(self, *args) -> float:
         return self._direction_function(
             (arg for arg in args if arg is not None),
-            key=lambda pt: self.result_optimization(pt)
+            key=lambda pt: self.result_optimization_function(pt)
         )
 
 
@@ -98,7 +86,7 @@ class DialARideObjective(Objective):
             direction=DirectionObjective.MINIMIZE,
         )
 
-    def planned_trip_optimization(self, planned_trip: PlannedTrip) -> float:
+    def planned_trip_optimization_function(self, planned_trip: PlannedTrip) -> float:
         return planned_trip.cost
 
 
@@ -110,7 +98,7 @@ class TaxiSharingObjective(Objective):
             direction=DirectionObjective.MAXIMIZE,
         )
 
-    def planned_trip_optimization(self, planned_trip: PlannedTrip) -> float:
+    def planned_trip_optimization_function(self, planned_trip: PlannedTrip) -> float:
         if planned_trip.capacity == 0:
             return 0.0
         return planned_trip.duration
@@ -123,7 +111,7 @@ class HashCodeObjective(Objective):
             direction=DirectionObjective.MAXIMIZE,
         )
 
-    def planned_trip_optimization(self, planned_trip: PlannedTrip) -> float:
+    def planned_trip_optimization_function(self, planned_trip: PlannedTrip) -> float:
         if planned_trip.capacity == 0:
             return 0.0
         trip = planned_trip.trip

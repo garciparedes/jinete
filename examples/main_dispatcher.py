@@ -36,14 +36,10 @@ def main():
                 *args, **kwargs,
             )
 
-    class MyAlgorithm(jit.GraspAlgorithm):
+    class MyAlgorithm(jit.InsertionAlgorithm):
         def __init__(self, *args, **kwargs):
             super().__init__(
-                episodes=20,
-                algorithm_cls=jit.InsertionAlgorithm,
-                crosser_cls=jit.RandomizedCrosser,
-                randomized_size=3,
-                neighborhood_max_size=150,
+                neighborhood_max_size=None,
                 *args, **kwargs,
             )
 

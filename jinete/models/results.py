@@ -47,4 +47,4 @@ class Result(object):
 
     @property
     def scoring(self) -> float:
-        return self.objective.result_optimization(self)
+        return self.objective.result_optimization_function(self)
