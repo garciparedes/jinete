@@ -1,3 +1,11 @@
+---
+name: Pull request
+about: Merge a branch to this repository.
+title: ''
+labels: ''
+assignees: ''
+
+---
 # PR Details
 
 <!--- Provide a general summary of your changes in the Title above -->
