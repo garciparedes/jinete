@@ -16,7 +16,7 @@ High Performance solving suite for the Pickup and Delivery Problem and its relat
 
 *IMPORTANT*: This project is still under its early stage of development. So it's not recommended yet to use on real world projects. 
 
-This library has been inspired (and created) by development from a Final Degree Project, which you can read at: https://github.com/garciparedes/tfg-pickup-and-delivery
+This library has been inspired (and created) by a Final Degree Project, which you can read at: https://github.com/garciparedes/tfg-pickup-and-delivery
 
 
 ## How to install
