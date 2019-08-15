@@ -13,7 +13,10 @@ class TestRandomizedCrosser(unittest.TestCase):
 
     def test_creation(self):
         surface = generate_one_surface()
-        job = jit.Job(generate_trips(10, surface=surface))
+        job = jit.Job(
+            trips=generate_trips(10, surface=surface),
+            objective_cls=jit.DialARideObjective,
+        )
         fleet = jit.Fleet(generate_vehicles(10, surface=surface))
         randomized_size = 2
         dispatcher = jit.RandomizedCrosser(

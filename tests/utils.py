@@ -5,7 +5,7 @@ import jinete as jit
 
 
 def generate_one_surface(*args, **kwargs) -> jit.Surface:
-    return jit.GeometricSurface(*args, **kwargs)
+    return jit.GeometricSurface(metric=jit.DistanceMetric.MANHATTAN, *args, **kwargs)
 
 
 def generate_surfaces(n: int, *args, **kwargs) -> Set[jit.Surface]:

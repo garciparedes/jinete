@@ -30,20 +30,15 @@ logger = logging.getLogger(__name__)
 class Position(ABC):
     uuid: UUID
 
-    def __init__(self, surface: Surface = None, uuid: UUID = None, with_caching: bool = True):
+    def __init__(self, surface: Surface = None, uuid: UUID = None):
         if uuid is None:
             uuid = uuid4()
 
         self.surface = surface
         self.uuid = uuid
 
-        self.with_caching = with_caching
-        self._distance = None
-
     def distance_to(self, other: Position) -> float:
-        if self._distance is None or not self.with_caching:
-            self._distance = self.surface.distance(self, other)
-        return self._distance
+        return self.surface.distance(self, other)
 
     def time_to(self, other: Position, now: float) -> float:
         return self.surface.time(self, other, now)

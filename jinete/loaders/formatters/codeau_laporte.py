@@ -5,11 +5,12 @@ from typing import TYPE_CHECKING
 
 from ...models import (
     GeometricSurface,
-    METRIC,
+    DistanceMetric,
     Fleet,
     Vehicle,
     Job,
     Trip,
+    DialARideObjective,
 )
 from .exceptions import (
     LoaderFormatterException,
@@ -64,7 +65,7 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
         for idx in range(n):
             trip = self.build_trip(surface, idx, n)
             trips.add(trip)
-        job = Job(trips)
+        job = Job(trips, objective_cls=DialARideObjective)
         logger.info(f'Created job!')
         return job
 
@@ -104,6 +105,6 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
         return trip
 
     def surface(self, *args, **kwargs) -> Surface:
-        surface = GeometricSurface(METRIC['EUCLIDEAN'])
+        surface = GeometricSurface(DistanceMetric.EUCLIDEAN)
         logger.info(f'Created surface!')
         return surface
