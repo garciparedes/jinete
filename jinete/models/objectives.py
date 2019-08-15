@@ -7,9 +7,6 @@ from .constants import (
 )
 
 if TYPE_CHECKING:
-    from typing import (
-        Iterable,
-    )
     from .routes import (
         Route,
     )

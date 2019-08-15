@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 
 from ...models import (
     GeometricSurface,
-    METRIC,
+    DistanceMetric,
     Fleet,
     Vehicle,
     Job,
@@ -104,6 +104,6 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
         return trip
 
     def surface(self, *args, **kwargs) -> Surface:
-        surface = GeometricSurface(METRIC['EUCLIDEAN'])
+        surface = GeometricSurface(DistanceMetric.EUCLIDEAN)
         logger.info(f'Created surface!')
         return surface

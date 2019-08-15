@@ -24,7 +24,7 @@ class TestCordeauLaporteLoaderFormatter(unittest.TestCase):
         formatter = jit.CordeauLaporteLoaderFormatter(self.data)
 
         surface = formatter.surface()
-        self.assertEqual(surface.__class__, jit.GeometricSurface)
+        self.assertIsInstance(surface, jit.GeometricSurface)
         self.assertEqual(0, len(surface.positions))
 
     def test_format_fleet(self):
@@ -32,19 +32,19 @@ class TestCordeauLaporteLoaderFormatter(unittest.TestCase):
 
         surface = formatter.surface()
         fleet = formatter.fleet(surface)
-        self.assertEqual(jit.Fleet, fleet.__class__)
+        self.assertIsInstance(fleet, jit.Fleet)
         self.assertEqual(int(self.data[0][0]), len(fleet.vehicles))
 
         for idx, vehicle in enumerate(fleet.vehicles):
             self.assertEqual(str(idx), vehicle.identifier)
-            self.assertEqual(jit.Vehicle, vehicle.__class__)
+            self.assertIsInstance(vehicle, jit.Vehicle)
             self.assertEqual(self.data[0][2], vehicle.vehicle_timeout)
             self.assertEqual(self.data[0][3], vehicle.capacity)
             self.assertEqual(self.data[0][4], vehicle.trip_timeout)
 
             position = vehicle.initial
             self.assertEqual(vehicle.initial, vehicle.final)
-            self.assertEqual(jit.GeometricPosition, position.__class__)
+            self.assertIsInstance(position, jit.GeometricPosition)
             self.assertEqual(self.data[1][1:3], position.coordinates)
 
     def test_format_job(self):
@@ -53,7 +53,7 @@ class TestCordeauLaporteLoaderFormatter(unittest.TestCase):
 
         surface = formatter.surface()
         job = formatter.job(surface)
-        self.assertEqual(jit.Job, job.__class__)
+        self.assertIsInstance(job, jit.Job)
         self.assertEqual(n, len(job.trips))
 
         for idx, trip in enumerate(job.trips):
@@ -68,7 +68,7 @@ class TestCordeauLaporteLoaderFormatter(unittest.TestCase):
                 inbound = False
 
             self.assertEqual(str(idx), trip.identifier)
-            self.assertEqual(jit.Trip, trip.__class__)
+            self.assertIsInstance(trip, jit.Trip)
             self.assertEqual(1.0, trip.capacity)
             self.assertEqual(0.0, trip.on_time_bonus)
 
@@ -76,9 +76,9 @@ class TestCordeauLaporteLoaderFormatter(unittest.TestCase):
             self.assertEqual(earliest, trip.earliest)
             self.assertEqual(latest, trip.latest)
 
-            self.assertEqual(jit.GeometricPosition, trip.origin.__class__)
+            self.assertIsInstance(trip.origin, jit.GeometricPosition)
             self.assertEqual(origin_row[1:3], trip.origin.coordinates)
-            self.assertEqual(jit.GeometricPosition, trip.destination.__class__)
+            self.assertIsInstance(trip.destination, jit.GeometricPosition)
             self.assertEqual(destination_row[1:3], trip.destination.coordinates)
 
 

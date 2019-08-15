@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
@@ -9,13 +10,15 @@ from .constants import (
 
 if TYPE_CHECKING:
     from typing import (
-        Iterable,
         Optional,
         List,
+        Iterable,
     )
     from .planned_trips import (
         PlannedTrip,
     )
+
+logger = logging.getLogger(__name__)
 
 
 class PlannedTripCriterion(ABC):
@@ -28,26 +31,34 @@ class PlannedTripCriterion(ABC):
         pass
 
     def best(self, *args: PlannedTrip) -> Optional[PlannedTrip]:
-        return self.direction.fn(
+        return self.direction(
             (arg for arg in args if arg is not None),
             key=self.scoring,
             default=None,
         )
 
-    def sorted(self, arr: List[PlannedTrip], inplace: bool = False) -> List[PlannedTrip]:
-        if inplace:
-            arr.sort(key=self.scoring)
-        else:
-            arr = sorted(arr, key=self.scoring)
-        return arr
+    def sorted(self, planned_trips: Iterable[PlannedTrip], inplace: bool = False) -> List[PlannedTrip]:
+        return self.direction.sorted(planned_trips, key=self.scoring, inplace=inplace)
 
 
 class ShortestTimePlannedTripCriterion(PlannedTripCriterion):
 
     def __init__(self):
         super().__init__(
-            direction=OptimizationDirection.MAXIMIZATION,
+            direction=OptimizationDirection.MINIMIZATION,
             name='Shortest-Time',
+        )
+
+    def scoring(self, planned_trip: PlannedTrip) -> float:
+        return planned_trip.collection_time - planned_trip.route.last_time
+
+
+class LongestTimePlannedTripCriterion(PlannedTripCriterion):
+
+    def __init__(self):
+        super().__init__(
+            direction=OptimizationDirection.MAXIMIZATION,
+            name='Longest-Time',
         )
 
     def scoring(self, planned_trip: PlannedTrip) -> float:

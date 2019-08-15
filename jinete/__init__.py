@@ -1,23 +1,34 @@
+from ._version import (
+    __version__,
+    VERSION,
+)
+
 from .models import (
     Position,
     GeometricPosition,
     Surface,
     GeometricSurface,
-    METRIC,
+    DistanceMetric,
     Trip,
     Job,
     Vehicle,
     Fleet,
     Route,
     Planning,
+    PlannedTrip,
     Result,
+
     OptimizationDirection,
+
     Objective,
     DialARideObjective,
     TaxiSharingObjective,
     HashCodeObjective,
+
+    PlannedTripCriterion,
+    ShortestTimePlannedTripCriterion,
+    LongestTimePlannedTripCriterion,
 )
-from jinete.models.planned_trips import PlannedTrip
 
 from .loaders import (
     LoaderException,

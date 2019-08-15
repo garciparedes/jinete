@@ -5,7 +5,7 @@ from ...models import (
     Job,
     Surface,
     GeometricSurface,
-    METRIC,
+    DistanceMetric,
     Vehicle,
     Trip,
     HashCodeObjective,
@@ -51,6 +51,6 @@ class HashCodeLoaderFormatter(LoaderFormatter):
         row = self.data[0]
         rows = row[0]
         columns = row[1]
-        surface = GeometricSurface(METRIC['MANHATTAN'])
+        surface = GeometricSurface(DistanceMetric.MANHATTAN)
         logger.info(f'Created surface!')
         return surface

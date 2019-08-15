@@ -30,9 +30,10 @@ class TestFileLoader(unittest.TestCase):
         )
         self.assertEqual(loader.file_path, self.file_path)
         self.assertEqual(loader.data, self.data)
-        self.assertEqual(jit.Fleet, loader.fleet.__class__)
-        self.assertEqual(jit.Job, loader.job.__class__)
-        self.assertEqual(jit.GeometricSurface, loader.surface.__class__)
+        self.assertIsInstance(loader.fleet, jit.Fleet)
+        self.assertIsInstance(loader.job, jit.Job)
+        self.assertIsInstance(loader.surface, jit.GeometricSurface)
 
-    if __name__ == '__main__':
-        unittest.main()
+
+if __name__ == '__main__':
+    unittest.main()
