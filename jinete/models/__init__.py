@@ -19,6 +19,7 @@ from .criterions import (
     PlannedTripCriterion,
     ShortestTimePlannedTripCriterion,
     LongestTimePlannedTripCriterion,
+    LongestUtilTimePlannedTripCriterion,
 )
 from .constants import (
     OptimizationDirection,

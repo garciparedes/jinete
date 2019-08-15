@@ -50,7 +50,7 @@ class ShortestTimePlannedTripCriterion(PlannedTripCriterion):
         )
 
     def scoring(self, planned_trip: PlannedTrip) -> float:
-        return planned_trip.collection_time - planned_trip.route.last_time
+        return planned_trip.delivery_time - planned_trip.route.last_time
 
 
 class LongestTimePlannedTripCriterion(PlannedTripCriterion):
@@ -62,4 +62,16 @@ class LongestTimePlannedTripCriterion(PlannedTripCriterion):
         )
 
     def scoring(self, planned_trip: PlannedTrip) -> float:
-        return planned_trip.collection_time - planned_trip.route.last_time
+        return planned_trip.delivery_time - planned_trip.route.last_time
+
+
+class LongestUtilTimePlannedTripCriterion(PlannedTripCriterion):
+
+    def __init__(self):
+        super().__init__(
+            direction=OptimizationDirection.MAXIMIZATION,
+            name='Longest-Time',
+        )
+
+    def scoring(self, planned_trip: PlannedTrip) -> float:
+        return planned_trip.duration - planned_trip.trip.origin.distance_to(planned_trip.route.last_position)

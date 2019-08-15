@@ -28,7 +28,7 @@ if TYPE_CHECKING:
         Fleet,
         Trip,
         Job,
-        Objective,
+        PlannedTripCriterion,
     )
 
 logger = logging.getLogger(__name__)
@@ -36,13 +36,15 @@ logger = logging.getLogger(__name__)
 
 class Crosser(ABC):
 
-    def __init__(self, fleet: Fleet, job: Job):
+    def __init__(self, fleet: Fleet, job: Job, criterion: PlannedTripCriterion = None):
+        if criterion is None:
+            criterion = ShortestTimePlannedTripCriterion()
         self.fleet = fleet
         self.job = job
         self.routes = set(Route(vehicle) for vehicle in self.vehicles)
         self._pending_trips = set(self.trips)
 
-        self.criterion = ShortestTimePlannedTripCriterion()
+        self.criterion = criterion
 
     @property
     def vehicles(self) -> Set[Vehicle]:

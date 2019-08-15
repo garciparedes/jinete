@@ -28,6 +28,7 @@ from .models import (
     PlannedTripCriterion,
     ShortestTimePlannedTripCriterion,
     LongestTimePlannedTripCriterion,
+    LongestUtilTimePlannedTripCriterion,
 )
 
 from .loaders import (

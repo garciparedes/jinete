@@ -57,12 +57,12 @@ class TestLongestTimePlannedTripCriterion(unittest.TestCase):
         criterion = jit.LongestTimePlannedTripCriterion()
 
         self.assertEqual(
-            0.0,
+            2.0,
             criterion.scoring(self.planned_trips[0]),
         )
 
         self.assertEqual(
-            2.0,
+            20.0,
             criterion.scoring(self.planned_trips[1]),
         )
 
