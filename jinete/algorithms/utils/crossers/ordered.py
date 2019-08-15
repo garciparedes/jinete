@@ -48,7 +48,7 @@ class OrderedCrosser(Crosser):
         logger.debug("Creating sub_ranking...")
         raw_sub_ranking = list()
         for trip in it.islice(self.pending_trips, self.neighborhood_max_size):
-            planned_trip = route.feasible_trip(trip)
+            planned_trip = route.conjecture_trip(trip)
             if planned_trip is None:
                 continue
             raw_sub_ranking.append(planned_trip)

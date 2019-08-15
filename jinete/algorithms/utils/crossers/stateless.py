@@ -33,7 +33,7 @@ class StatelessCrosser(Crosser):
     def feasible_iterator(self):
         for route, trip in it.product(self.attractive_routes, self.pending_trips):
             logger.debug(f'Yielding ({route}, {trip})...')
-            planned_trip = route.feasible_trip(trip)
+            planned_trip = route.conjecture_trip(trip)
             if planned_trip is None:
                 continue
             yield planned_trip
