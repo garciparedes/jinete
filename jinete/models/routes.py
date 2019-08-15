@@ -139,7 +139,7 @@ class Route(Model):
             'vehicle_uuid': self.vehicle_uuid,
         }
 
-    def feasible_trip(self, trip: Trip) -> Optional[PlannedTrip]:
+    def conjecture_trip(self, trip: Trip) -> Optional[PlannedTrip]:
         if not self.last_time <= trip.latest:
             return None
 
