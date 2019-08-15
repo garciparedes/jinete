@@ -8,13 +8,24 @@ from .positions import (
 from .surfaces import (
     Surface,
     GeometricSurface,
-    METRIC,
 )
 from .trips import (
     Trip,
+)
+from .planned_trips import (
     PlannedTrip,
 )
-
+from .criterions import (
+    PlannedTripCriterion,
+    ShortestTimePlannedTripCriterion,
+    LongestTimePlannedTripCriterion,
+    LongestUtilTimePlannedTripCriterion,
+    HashCodePlannedTripCriterion,
+)
+from .constants import (
+    OptimizationDirection,
+    DistanceMetric,
+)
 from .jobs import (
     Job
 )
@@ -32,7 +43,7 @@ from .results import (
     Result,
 )
 from .objectives import (
-    DirectionObjective,
+    OptimizationDirection,
     Objective,
     DialARideObjective,
     TaxiSharingObjective,

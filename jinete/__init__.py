@@ -1,29 +1,45 @@
+from ._version import (
+    __version__,
+    VERSION,
+)
+
 from .models import (
     Position,
     GeometricPosition,
     Surface,
     GeometricSurface,
-    METRIC,
+    DistanceMetric,
     Trip,
     Job,
-    PlannedTrip,
     Vehicle,
     Fleet,
     Route,
     Planning,
+    PlannedTrip,
     Result,
-    DirectionObjective,
+
+    OptimizationDirection,
+
     Objective,
     DialARideObjective,
     TaxiSharingObjective,
     HashCodeObjective,
+
+    PlannedTripCriterion,
+    ShortestTimePlannedTripCriterion,
+    LongestTimePlannedTripCriterion,
+    LongestUtilTimePlannedTripCriterion,
+    HashCodePlannedTripCriterion,
 )
 
 from .loaders import (
+    LoaderException,
+    LoaderFormatterException,
     Loader,
     FileLoader,
     LoaderFormatter,
     HashCodeLoaderFormatter,
+    CordeauLaporteLoaderFormatter,
 )
 
 from .dispatchers import (

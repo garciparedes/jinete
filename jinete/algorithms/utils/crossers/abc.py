@@ -14,12 +14,14 @@ from ....exceptions import (
 )
 from ....models import (
     Route,
+    ShortestTimePlannedTripCriterion,
 )
 
 if TYPE_CHECKING:
     from typing import (
         Set,
         Optional,
+        Type,
     )
     from ....models import (
         PlannedTrip,
@@ -27,7 +29,7 @@ if TYPE_CHECKING:
         Fleet,
         Trip,
         Job,
-        Objective,
+        PlannedTripCriterion,
     )
 
 logger = logging.getLogger(__name__)
@@ -35,11 +37,23 @@ logger = logging.getLogger(__name__)
 
 class Crosser(ABC):
 
-    def __init__(self, fleet: Fleet, job: Job):
+    def __init__(self, fleet: Fleet, job: Job, criterion_cls: Type[PlannedTripCriterion] = None):
+        if criterion_cls is None:
+            criterion_cls = ShortestTimePlannedTripCriterion
+
         self.fleet = fleet
         self.job = job
         self.routes = set(Route(vehicle) for vehicle in self.vehicles)
         self._pending_trips = set(self.trips)
+
+        self.criterion_cls = criterion_cls
+        self._criterion = None
+
+    @property
+    def criterion(self) -> PlannedTripCriterion:
+        if self._criterion is None:
+            self._criterion = self.criterion_cls()
+        return self._criterion
 
     @property
     def vehicles(self) -> Set[Vehicle]:
@@ -48,10 +62,6 @@ class Crosser(ABC):
     @property
     def trips(self) -> Set[Trip]:
         return self.job.trips
-
-    @property
-    def objective(self) -> Objective:
-        return self.job.objective
 
     def __iter__(self):
         return self

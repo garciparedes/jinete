@@ -5,7 +5,7 @@ from ...models import (
     Job,
     Surface,
     GeometricSurface,
-    METRIC,
+    DistanceMetric,
     Vehicle,
     Trip,
     HashCodeObjective,
@@ -21,10 +21,10 @@ class HashCodeLoaderFormatter(LoaderFormatter):
 
     def fleet(self, surface: Surface, *args, **kwargs) -> Fleet:
         row = self.data[0]
-        n, timeout, capacity = row[2], row[5], 1
+        n, timeout, capacity = int(row[2]), row[5], 1.0
 
         initial = surface.get_or_create_position([0, 0])
-        vehicles = set(Vehicle(initial, capacity=capacity, timeout=timeout) for _ in range(n))
+        vehicles = set(Vehicle(str(idx), initial, capacity=capacity, timeout=timeout) for idx in range(n))
         fleet = Fleet(vehicles)
         logger.info(f'Created fleet!')
         return fleet
@@ -33,8 +33,8 @@ class HashCodeLoaderFormatter(LoaderFormatter):
         bonus = self.data[0][4]
         rows = self.data[1:]
         trips = set(self._build_trip(surface, str(i), bonus, *row) for i, row in enumerate(rows))
-        objective = HashCodeObjective()
-        job = Job(trips, objective=objective, *args, **kwargs)
+        objective_cls = HashCodeObjective
+        job = Job(trips, objective_cls=objective_cls, *args, **kwargs)
         logger.info(f'Created job!')
         return job
 
@@ -51,6 +51,6 @@ class HashCodeLoaderFormatter(LoaderFormatter):
         row = self.data[0]
         rows = row[0]
         columns = row[1]
-        surface = GeometricSurface(METRIC['MANHATTAN'])
+        surface = GeometricSurface(DistanceMetric.MANHATTAN)
         logger.info(f'Created surface!')
         return surface

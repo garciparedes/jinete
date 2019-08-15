@@ -26,7 +26,7 @@ def main():
         'e': 'e_high_bonus.in',
     }
 
-    file_path = DATASETS_PATH / 'hashcode' / FILES['b']
+    file_path = DATASETS_PATH / 'hashcode' / FILES['c']
 
     class MyLoader(jit.FileLoader):
         def __init__(self, *args, **kwargs):
@@ -36,14 +36,11 @@ def main():
                 *args, **kwargs,
             )
 
-    class MyAlgorithm(jit.GraspAlgorithm):
+    class MyAlgorithm(jit.InsertionAlgorithm):
         def __init__(self, *args, **kwargs):
             super().__init__(
-                episodes=20,
-                algorithm_cls=jit.InsertionAlgorithm,
-                crosser_cls=jit.RandomizedCrosser,
-                randomized_size=3,
-                neighborhood_max_size=150,
+                neighborhood_max_size=200,
+                criterion_cls=jit.HashCodePlannedTripCriterion,
                 *args, **kwargs,
             )
 

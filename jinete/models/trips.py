@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
 from sys import maxsize
 from typing import (
     TYPE_CHECKING,
@@ -18,9 +17,6 @@ if TYPE_CHECKING:
     )
     from .positions import (
         Position,
-    )
-    from .routes import (
-        Route,
     )
 
 logger = logging.getLogger(__name__)
@@ -39,7 +35,7 @@ class Trip(object):
 
     def __init__(self, identifier: str, origin: Position, destination: Position, earliest: float = 0.0,
                  timeout: Optional[float] = None, on_time_bonus: float = 0.0, load_time: float = 0.0,
-                 capacity: float = 1, uuid: UUID = None):
+                 inbound: bool = True, capacity: float = 1, uuid: UUID = None, with_caching: bool = True):
         if uuid is None:
             uuid = uuid4()
         self.identifier = identifier
@@ -49,8 +45,14 @@ class Trip(object):
         self.timeout = timeout
         self.on_time_bonus = on_time_bonus
         self.load_time = load_time
+        self.inbound = inbound
         self.capacity = capacity
         self.uuid = uuid
+
+        self.with_caching = with_caching
+        self._distance = None
+        # self._duration = dict()
+        self._duration = None
 
     @staticmethod
     def build_empty(origin: Position, destination: Position) -> 'Trip':
@@ -68,60 +70,14 @@ class Trip(object):
 
     @property
     def distance(self) -> float:
-        return self.origin.distance_to(self.destination)
+        if self._distance is None or not self.with_caching:
+            self._distance = self.origin.distance_to(self.destination)
+        return self._distance
 
     def duration(self, now: float):
-        return self.origin.time_to(self.destination, now)
-
-
-@dataclass(frozen=True)
-class PlannedTrip(object):
-    route: Route
-    trip: Trip
-    collection_time: float
-    delivery_time: float
-
-    @staticmethod
-    def build_empty(route, collection_time, delivery_time, *args, **kwargs) -> 'PlannedTrip':
-        trip = Trip.build_empty(*args, **kwargs)
-        return PlannedTrip(route, trip, collection_time, delivery_time)
-
-    @property
-    def trip_uuid(self) -> UUID:
-        return self.trip.uuid
-
-    @property
-    def route_uuid(self) -> UUID:
-        return self.route.uuid
-
-    @property
-    def origin(self) -> Position:
-        return self.trip.origin
-
-    @property
-    def destination(self) -> Position:
-        return self.trip.destination
-
-    @property
-    def distance(self) -> float:
-        return self.trip.distance
-
-    @property
-    def duration(self) -> float:
-        return self.delivery_time - self.collection_time
-
-    @property
-    def cost(self) -> float:
-        return self.duration
-
-    @property
-    def capacity(self):
-        return self.trip.capacity
-
-    @property
-    def feasible(self) -> bool:
-        return self.trip.earliest <= self.collection_time and self.delivery_time <= self.trip.latest
-
-    @property
-    def empty(self) -> bool:
-        return self.trip.empty
+        # if now not in self._duration or not self.with_caching:
+        #     self._duration[now] = self.origin.time_to(self.destination, now)
+        # return self._duration[now]
+        if self._duration is None or not self.with_caching:
+            self._duration = self.origin.time_to(self.destination, now)
+        return self._duration

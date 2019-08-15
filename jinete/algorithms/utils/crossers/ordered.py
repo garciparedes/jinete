@@ -52,7 +52,7 @@ class OrderedCrosser(Crosser):
             if planned_trip is None:
                 continue
             raw_sub_ranking.append(planned_trip)
-        raw_sub_ranking.sort(key=lambda pt: self.objective.planned_trip_optimization(pt))
+        self.criterion.sorted(raw_sub_ranking, inplace=True)
         return OrderedDict((item.trip_uuid, item) for item in raw_sub_ranking)
 
     def update_ranking(self, planned_trip: PlannedTrip) -> None:
@@ -74,5 +74,5 @@ class OrderedCrosser(Crosser):
             if len(sub_ranking) == 0:
                 continue
             current = next(iter(sub_ranking.values()))
-            best = self.objective.best_planned_trip(best, current)
+            best = self.criterion.best(best, current)
         return best

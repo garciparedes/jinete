@@ -4,7 +4,6 @@ from abc import (
     ABC,
     abstractmethod)
 
-from math import sqrt
 from typing import (
     TYPE_CHECKING,
 )
@@ -16,6 +15,9 @@ from uuid import (
 from .abc import (
     Model,
 )
+from .constants import (
+    DistanceMetric,
+)
 from .positions import (
     GeometricPosition,
 )
@@ -25,7 +27,6 @@ if TYPE_CHECKING:
         Set,
         Any,
         Dict,
-        Callable,
     )
     from uuid import (
         UUID,
@@ -73,18 +74,10 @@ class Surface(Model, ABC):
         return dict_values
 
 
-METRIC = {
-    'EUCLIDEAN': lambda a, b: sqrt(sum(pow(a_i - b_i, 2) for a_i, b_i in zip(a, b))),
-    'MANHATTAN': lambda a, b: sum(abs(a_i - b_i) for a_i, b_i in zip(a, b)),
-}
-
-
 class GeometricSurface(Surface):
     positions: Set[GeometricPosition]
 
-    def __init__(self, metric: Callable[[Any, Any], float] = None, *args, **kwargs):
-        if metric is None:
-            metric = METRIC['EUCLIDEAN']
+    def __init__(self, metric: DistanceMetric, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.metric = metric
 

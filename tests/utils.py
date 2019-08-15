@@ -5,7 +5,7 @@ import jinete as jit
 
 
 def generate_one_surface(*args, **kwargs) -> jit.Surface:
-    return jit.GeometricSurface(*args, **kwargs)
+    return jit.GeometricSurface(metric=jit.DistanceMetric.MANHATTAN, *args, **kwargs)
 
 
 def generate_surfaces(n: int, *args, **kwargs) -> Set[jit.Surface]:
@@ -72,18 +72,18 @@ def generate_planned_trips(n: int, *args, **kwargs) -> Set[jit.PlannedTrip]:
 
 def generate_one_vehicle(capacity_min: int = 1, capacity_max: int = 3, earliest_min: float = 0,
                          earliest_max: float = 86400, timeout_min: float = 14400, timeout_max: float = 28800,
-                         *args, **kwargs) -> jit.Vehicle:
+                         idx: int = 0, *args, **kwargs) -> jit.Vehicle:
     # TODO: Increase parameter options.
     capacity = randint(capacity_min, capacity_max)
     initial = generate_one_position(*args, **kwargs)
     earliest = uniform(earliest_min, earliest_max)
     timeout = uniform(timeout_min, timeout_max)
-    return jit.Vehicle(initial, capacity=capacity, earliest=earliest, timeout=timeout)
+    return jit.Vehicle(str(idx), initial, capacity=capacity, earliest=earliest, timeout=timeout)
 
 
 def generate_vehicles(n: int, *args, **kwargs) -> Set[jit.Vehicle]:
     return {
-        generate_one_vehicle(*args, **kwargs) for _ in range(n)
+        generate_one_vehicle(idx=idx, *args, **kwargs) for idx in range(n)
     }
 
 
