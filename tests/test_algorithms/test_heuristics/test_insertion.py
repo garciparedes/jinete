@@ -11,7 +11,7 @@ from tests.utils import (
 class TestInsertionAlgorithm(unittest.TestCase):
 
     def test_creation(self):
-        job = jit.Job(generate_trips(10))
+        job = jit.Job(generate_trips(10), objective_cls=jit.DialARideObjective)
         fleet = jit.Fleet(generate_vehicles(10))
         dispatcher = jit.InsertionAlgorithm(
             jit.Crosser,

@@ -10,6 +10,7 @@ from ...models import (
     Vehicle,
     Job,
     Trip,
+    DialARideObjective,
 )
 from .exceptions import (
     LoaderFormatterException,
@@ -64,7 +65,7 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
         for idx in range(n):
             trip = self.build_trip(surface, idx, n)
             trips.add(trip)
-        job = Job(trips)
+        job = Job(trips, objective_cls=DialARideObjective)
         logger.info(f'Created job!')
         return job
 

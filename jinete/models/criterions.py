@@ -75,3 +75,22 @@ class LongestUtilTimePlannedTripCriterion(PlannedTripCriterion):
 
     def scoring(self, planned_trip: PlannedTrip) -> float:
         return planned_trip.duration - planned_trip.trip.origin.distance_to(planned_trip.route.last_position)
+
+
+class HashCodePlannedTripCriterion(PlannedTripCriterion):
+
+    def __init__(self):
+        super().__init__(
+            direction=OptimizationDirection.MAXIMIZATION,
+            name='Longest-Time',
+        )
+
+    def scoring(self, planned_trip: PlannedTrip) -> float:
+        scoring = planned_trip.distance
+        if planned_trip.collection_time == planned_trip.trip.earliest:
+            scoring += planned_trip.trip.on_time_bonus
+
+        # TODO: Optimize this call
+        scoring -= planned_trip.origin.distance_to(planned_trip.route.last_position)
+
+        return scoring

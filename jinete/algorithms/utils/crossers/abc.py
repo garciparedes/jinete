@@ -21,6 +21,7 @@ if TYPE_CHECKING:
     from typing import (
         Set,
         Optional,
+        Type,
     )
     from ....models import (
         PlannedTrip,
@@ -36,15 +37,23 @@ logger = logging.getLogger(__name__)
 
 class Crosser(ABC):
 
-    def __init__(self, fleet: Fleet, job: Job, criterion: PlannedTripCriterion = None):
-        if criterion is None:
-            criterion = ShortestTimePlannedTripCriterion()
+    def __init__(self, fleet: Fleet, job: Job, criterion_cls: Type[PlannedTripCriterion] = None):
+        if criterion_cls is None:
+            criterion_cls = ShortestTimePlannedTripCriterion
+
         self.fleet = fleet
         self.job = job
         self.routes = set(Route(vehicle) for vehicle in self.vehicles)
         self._pending_trips = set(self.trips)
 
-        self.criterion = criterion
+        self.criterion_cls = criterion_cls
+        self._criterion = None
+
+    @property
+    def criterion(self) -> PlannedTripCriterion:
+        if self._criterion is None:
+            self._criterion = self.criterion_cls()
+        return self._criterion
 
     @property
     def vehicles(self) -> Set[Vehicle]:

@@ -29,6 +29,7 @@ from .models import (
     ShortestTimePlannedTripCriterion,
     LongestTimePlannedTripCriterion,
     LongestUtilTimePlannedTripCriterion,
+    HashCodePlannedTripCriterion,
 )
 
 from .loaders import (

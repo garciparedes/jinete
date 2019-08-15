@@ -35,7 +35,7 @@ class Trip(object):
 
     def __init__(self, identifier: str, origin: Position, destination: Position, earliest: float = 0.0,
                  timeout: Optional[float] = None, on_time_bonus: float = 0.0, load_time: float = 0.0,
-                 inbound: bool = True, capacity: float = 1, uuid: UUID = None):
+                 inbound: bool = True, capacity: float = 1, uuid: UUID = None, with_caching: bool = True):
         if uuid is None:
             uuid = uuid4()
         self.identifier = identifier
@@ -48,6 +48,11 @@ class Trip(object):
         self.inbound = inbound
         self.capacity = capacity
         self.uuid = uuid
+
+        self.with_caching = with_caching
+        self._distance = None
+        # self._duration = dict()
+        self._duration = None
 
     @staticmethod
     def build_empty(origin: Position, destination: Position) -> 'Trip':
@@ -65,7 +70,14 @@ class Trip(object):
 
     @property
     def distance(self) -> float:
-        return self.origin.distance_to(self.destination)
+        if self._distance is None or not self.with_caching:
+            self._distance = self.origin.distance_to(self.destination)
+        return self._distance
 
     def duration(self, now: float):
-        return self.origin.time_to(self.destination, now)
+        # if now not in self._duration or not self.with_caching:
+        #     self._duration[now] = self.origin.time_to(self.destination, now)
+        # return self._duration[now]
+        if self._duration is None or not self.with_caching:
+            self._duration = self.origin.time_to(self.destination, now)
+        return self._duration

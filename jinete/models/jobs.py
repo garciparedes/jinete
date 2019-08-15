@@ -15,10 +15,7 @@ if TYPE_CHECKING:
         Set,
         Any,
         Dict,
-        Callable,
-    )
-    from .routes import (
-        Route,
+        Type,
     )
     from .trips import (
         Trip,
@@ -29,12 +26,19 @@ class Job(Model):
     trips: Set[Trip]
     objective: Objective
 
-    def __init__(self, trips: Set[Trip], objective: Objective = None, *args, **kwargs):
-        if objective is None:
-            objective = DialARideObjective()
+    def __init__(self, trips: Set[Trip], objective_cls: Type[Objective], *args, **kwargs):
+        if objective_cls is None:
+            objective_cls = DialARideObjective
 
         self.trips = trips
-        self.objective = objective
+        self.objective_cls = objective_cls
+        self._objective = None
+
+    @property
+    def objective(self) -> Objective:
+        if self._objective is None:
+            self._objective = self.objective_cls()
+        return self._objective
 
     def __iter__(self):
         yield from self.trips
