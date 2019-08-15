@@ -11,6 +11,7 @@ Welcome to jinete's documentation!
    :caption: Contents:
 
 
+   installation
 
 Indices and tables
 ==================
