@@ -30,6 +30,7 @@ release = jit.__version__
 master_doc = 'index'
 
 extensions = [
+    'sphinxcontrib.apidoc',
     'sphinx.ext.autodoc',
     'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
@@ -40,12 +41,8 @@ extensions = [
     'sphinx_rtd_theme',
 ]
 
-# Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
-# List of patterns, relative to source directory, that match files and
-# directories to ignore when looking for source files.
-# This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
 # -- Options for HTML output -------------------------------------------------
@@ -55,9 +52,17 @@ html_static_path = ['_static']
 
 # -- Extension configuration -------------------------------------------------
 
+## "intersphinx" extension
 intersphinx_mapping = {'https://docs.python.org/': None}
 
-# -- Options for todo extension ----------------------------------------------
-
-# If true, `todo` and `todoList` produce output, else they produce nothing.
+## "todo" extension
 todo_include_todos = True
+
+## "apidoc" extension
+apidoc_module_dir = '../../{}'.format(jit.__name__)
+apidoc_output_dir = 'api_reference'
+apidoc_separate_modules = True
+autoclass_content = 'both'
+apidoc_toc_file = False
+apidoc_module_first = True
+apidoc_extra_args = ['--force', '--implicit-namespaces']

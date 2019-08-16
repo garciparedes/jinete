@@ -12,6 +12,7 @@ sphinx-rtd-theme = "*"
 
 [packages]
 jinete = {editable = true,path = "."}
+sphinxcontrib-apidoc = "*"
 
 [requires]
 python_version = "3.7"
