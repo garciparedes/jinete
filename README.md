@@ -67,7 +67,7 @@ result = dispatcher.run()
 ```
 
 ## Documentation
-You can find the documentation at: https://jinete.readthedocs.io/
+You can find the documentation at: https://jinete.readthedocs.io
 
 
 ## Development
