@@ -12,6 +12,8 @@ Welcome to jinete's documentation!
 
 
    installation
+   getting_started
+   api_reference/api_reference
 
 Indices and tables
 ==================

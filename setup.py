@@ -3,6 +3,7 @@
 
 from setuptools import setup, find_packages
 from distutils.util import convert_path
+import itertools as it
 
 module_name = 'jinete'
 
@@ -18,6 +19,27 @@ description = (
     "High Performance solving suite for the Pickup and Delivery "
     "Problem and its related extensions."
 )
+
+dependencies = [
+
+]
+
+extra_dependencies = {
+    'docs': [
+        'sphinx',
+        'sphinx-rtd-theme',
+        'sphinxcontrib-apidoc',
+    ],
+    'tests': [
+        'coverage',
+        'codecov',
+    ],
+    'logs': [
+        'coloredlogs',
+    ]
+}
+extra_dependencies['all'] = list(it.chain(extra_dependencies.values()))
+
 setup(
     name=module_name,
     version=module_version,
@@ -28,7 +50,6 @@ setup(
     long_description_content_type='text/markdown',
     description=description,
     packages=find_packages(),
-    install_requires=[
-
-    ],
+    install_requires=dependencies,
+    extras_require=extra_dependencies,
 )
