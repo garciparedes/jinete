@@ -5,8 +5,8 @@ python:
 cache: pip
 install:
   - 'pip install pipenv'
-  - 'pipenv sync --dev'
+  - 'pipenv sync'
 script:
-  - 'coverage run --source=jinete --module unittest discover tests'
+  - 'pipenv run coverage run --source=jinete --module unittest discover tests'
 after_success:
-  - 'codecov'
+  - 'pipenv run codecov'
