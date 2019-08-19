@@ -10,7 +10,8 @@ from .abc import (
 if TYPE_CHECKING:
     from typing import (
         Set,
-        Optional
+        Optional,
+        Iterator,
     )
     from ....models import (
         PlannedTrip,
@@ -25,17 +26,21 @@ class StatelessCrosser(Crosser):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.iterator = self.feasible_iterator()
+        self._iterator = None
 
-    def update_iterator(self):
-        self.iterator = self.feasible_iterator()
+    def flush(self):
+        self._iterator = None
 
-    def feasible_iterator(self):
+    @property
+    def iterator(self):
+        if self._iterator is None:
+            self._iterator = self._calculate_iterator()
+        return self._iterator
+
+    def _calculate_iterator(self) -> Iterator[PlannedTrip]:
         for route, trip in it.product(self.attractive_routes, self.pending_trips):
             logger.debug(f'Yielding ({route}, {trip})...')
             planned_trip = route.conjecture_trip(trip)
-            if planned_trip is None:
-                continue
             yield planned_trip
 
     def get_planned_trip(self) -> Optional[PlannedTrip]:
@@ -51,4 +56,4 @@ class StatelessCrosser(Crosser):
 
     def mark_trip_as_done(self, trip: Trip):
         super().mark_trip_as_done(trip)
-        self.update_iterator()
+        self.flush()

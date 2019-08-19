@@ -49,8 +49,6 @@ class OrderedCrosser(Crosser):
         raw_sub_ranking = list()
         for trip in it.islice(self.pending_trips, self.neighborhood_max_size):
             planned_trip = route.conjecture_trip(trip)
-            if planned_trip is None:
-                continue
             raw_sub_ranking.append(planned_trip)
         self.criterion.sorted(raw_sub_ranking, inplace=True)
         return OrderedDict((item.trip_uuid, item) for item in raw_sub_ranking)
@@ -74,5 +72,7 @@ class OrderedCrosser(Crosser):
             if len(sub_ranking) == 0:
                 continue
             current = next(iter(sub_ranking.values()))
+            if not current.feasible:
+                continue
             best = self.criterion.best(best, current)
         return best

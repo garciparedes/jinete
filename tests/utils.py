@@ -50,18 +50,30 @@ def generate_trips(n: int, *args, **kwargs) -> Set[jit.Trip]:
     }
 
 
-def generate_one_planned_trip(feasible: bool, route=None, *args, **kwargs) -> jit.PlannedTrip:
+def generate_one_planned_trip(feasible: bool, route: jit.Route = None, *args, **kwargs) -> jit.PlannedTrip:
     trip = generate_one_trip(*args, **kwargs)
 
     # TODO: Improve feasible randomness.
     if feasible:
-        collection_time = trip.earliest
-        delivery_time = trip.latest
+        down_time = 0
     else:
-        collection_time = trip.earliest - 3600
-        delivery_time = trip.latest + 3600
+        down_time = 3600
 
-    return jit.PlannedTrip(route, trip, collection_time, delivery_time)
+    initial = route.last_position
+
+    if route is None:
+        route_idx = None
+    else:
+        # route_idx = len(route.loaded_planned_trips)
+        route_idx = route.loaded_planned_trips_count
+
+    return jit.PlannedTrip(
+        route=route,
+        trip=trip,
+        initial=initial,
+        route_idx=route_idx,
+        down_time=down_time,
+    )
 
 
 def generate_planned_trips(n: int, *args, **kwargs) -> Set[jit.PlannedTrip]:

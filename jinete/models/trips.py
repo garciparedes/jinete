@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import logging
-from sys import maxsize
 from typing import (
     TYPE_CHECKING,
     Optional,
+)
+from .constants import (
+    MAX_FLOAT,
 )
 
 from uuid import (
@@ -61,7 +63,7 @@ class Trip(object):
     @property
     def latest(self) -> float:
         if self.timeout is None:
-            return maxsize
+            return MAX_FLOAT
         return self.earliest + self.timeout
 
     @property

@@ -1,5 +1,4 @@
 import unittest
-from sys import maxsize
 from uuid import UUID
 
 import jinete as jit
@@ -23,7 +22,7 @@ class TestTrips(unittest.TestCase):
         self.assertEqual(destination, trip.destination)
         self.assertEqual(earliest, trip.earliest)
         self.assertIsNone(trip.timeout)
-        self.assertEqual(trip.latest, maxsize)
+        self.assertEqual(trip.latest, jit.MAX_FLOAT)
         self.assertEqual(0, trip.load_time)
         self.assertEqual(1, trip.capacity)
         self.assertIsInstance(trip.uuid, UUID)
@@ -42,7 +41,7 @@ class TestTrips(unittest.TestCase):
         self.assertEqual(destination, trip.destination)
         self.assertEqual(earliest, trip.earliest)
         self.assertIsNone(trip.timeout)
-        self.assertEqual(trip.latest, maxsize)
+        self.assertEqual(trip.latest, jit.MAX_FLOAT)
         self.assertEqual(0, trip.load_time)
         self.assertEqual(capacity, trip.capacity)
         self.assertIsInstance(trip.uuid, UUID)
@@ -78,7 +77,7 @@ class TestTrips(unittest.TestCase):
         self.assertEqual(destination, trip.destination)
         self.assertEqual(earliest, trip.earliest)
         self.assertIsNone(trip.timeout)
-        self.assertEqual(trip.latest, maxsize)
+        self.assertEqual(trip.latest, jit.MAX_FLOAT)
         self.assertEqual(load_time, trip.load_time)
         self.assertEqual(1, trip.capacity)
         self.assertIsInstance(trip.uuid, UUID)
