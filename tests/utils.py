@@ -51,21 +51,28 @@ def generate_trips(n: int, *args, **kwargs) -> Set[jit.Trip]:
 
 
 def generate_one_planned_trip(feasible: bool, route: jit.Route = None, *args, **kwargs) -> jit.PlannedTrip:
-
-    # TODO: Improve feasible randomness.
-    if not feasible:
-        kwargs['timeout_min'], kwargs['timeout_max'] = 0, 0
-
     trip = generate_one_trip(*args, **kwargs)
 
-    first = jit.Stop(route, route.last_position)
-    last = jit.Stop(route, route.vehicle.final)
+    # TODO: Improve feasible randomness.
+    if feasible:
+        down_time = 0
+    else:
+        down_time = jit.MAX_FLOAT
+
+    initial = route.last_position
+
+    if route is None:
+        route_idx = None
+    else:
+        # route_idx = len(route.loaded_planned_trips)
+        route_idx = route.loaded_planned_trips_count
 
     return jit.PlannedTrip(
         route=route,
         trip=trip,
-        first=first,
-        last=last,
+        initial=initial,
+        route_idx=route_idx,
+        down_time=down_time,
     )
 
 
@@ -76,15 +83,13 @@ def generate_planned_trips(n: int, *args, **kwargs) -> Set[jit.PlannedTrip]:
 
 
 def generate_one_vehicle(capacity_min: int = 1, capacity_max: int = 3, earliest_min: float = 0,
-                         earliest_max: float = 86400, timeout: float = None,
-                         timeout_min: float = 14400, timeout_max: float = 28800,
+                         earliest_max: float = 86400, timeout_min: float = 14400, timeout_max: float = 28800,
                          idx: int = 0, *args, **kwargs) -> jit.Vehicle:
     # TODO: Increase parameter options.
     capacity = randint(capacity_min, capacity_max)
     initial = generate_one_position(*args, **kwargs)
     earliest = uniform(earliest_min, earliest_max)
-    if timeout is None:
-        timeout = uniform(timeout_min, timeout_max)
+    timeout = uniform(timeout_min, timeout_max)
     return jit.Vehicle(str(idx), initial, capacity=capacity, earliest=earliest, timeout=timeout)
 
 
@@ -98,21 +103,19 @@ def generate_one_route(feasible: bool, planned_trips_min: int = 1, planned_trips
                        surface: jit.Surface = None, *args, **kwargs) -> jit.Route:
     if surface is None:
         surface = generate_one_surface(*args, **kwargs)
-
-    vehicle = generate_one_vehicle(
-        surface=surface,
-        timeout=jit.MAX_FLOAT,
-        *args, **kwargs,
-    )
+    vehicle = generate_one_vehicle(surface=surface, *args, **kwargs)
     route = jit.Route(vehicle)
 
     planned_trips_len = randint(planned_trips_min, planned_trips_max)
+    cut_len = vehicle.timeout / planned_trips_len
 
     planned_trip = generate_one_planned_trip(
         feasible=feasible,
         route=route,
         earliest_min=vehicle.earliest,
         earliest_max=vehicle.earliest,
+        timeout_min=cut_len,
+        timeout_max=cut_len,
         surface=surface,
     )
 
@@ -124,11 +127,14 @@ def generate_one_route(feasible: bool, planned_trips_min: int = 1, planned_trips
             route=route,
             earliest_min=route.last_time,
             earliest_max=route.last_time,
+            timeout_min=cut_len,
+            timeout_max=cut_len,
             surface=surface,
         )
 
         route.append_planned_trip(planned_trip)
     route.finish()
+    vehicle.timeout = route.last_time - vehicle.earliest
     return route
 
 
