@@ -57,7 +57,7 @@ def generate_one_planned_trip(feasible: bool, route: jit.Route = None, *args, **
     if feasible:
         down_time = 0
     else:
-        down_time = 3600
+        down_time = jit.MAX_FLOAT
 
     initial = route.last_position
 
