@@ -5,10 +5,15 @@ from typing import TYPE_CHECKING
 from uuid import (
     uuid4,
 )
+from .abc import (
+    Model,
+)
 
 if TYPE_CHECKING:
     from typing import (
         Set,
+        Dict,
+        Any,
     )
     from .routes import (
         Route,
@@ -20,9 +25,8 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class Planning(object):
+class Planning(Model):
     routes: Set[Route]
-    computation_time: float
     uuid: UUID
 
     def __init__(self, routes: Set[Route], uuid: UUID = None):
@@ -38,3 +42,8 @@ class Planning(object):
     @property
     def loaded_routes(self):
         return set(route for route in self.routes if route.loaded)
+
+    def as_dict(self) -> Dict[str, Any]:
+        return {
+            'uuid': self.uuid,
+        }

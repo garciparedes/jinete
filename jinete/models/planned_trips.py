@@ -2,13 +2,24 @@ from __future__ import annotations
 
 import logging
 from typing import TYPE_CHECKING
-from uuid import UUID
-
+from uuid import (
+    uuid4,
+)
+from .abc import (
+    Model,
+)
 from .trips import (
     Trip,
 )
 
 if TYPE_CHECKING:
+    from typing import (
+        Dict,
+        Any,
+    )
+    from uuid import (
+        UUID,
+    )
     from .routes import (
         Route,
     )
@@ -22,7 +33,8 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class PlannedTrip(object):
+class PlannedTrip(Model):
+    uuid: UUID
     route: Route
     trip: Trip
     initial: Position
@@ -30,6 +42,7 @@ class PlannedTrip(object):
     down_time: float
 
     def __init__(self, route: Route, trip: Trip, initial: Position, route_idx: int, down_time: float = 0.0):
+        self.uuid = uuid4()
         self.route = route
         self.trip = trip
         self.initial = initial
@@ -104,6 +117,16 @@ class PlannedTrip(object):
     @property
     def empty(self) -> bool:
         return self.trip.empty
+
+    def as_dict(self) -> Dict[str, Any]:
+        return {
+            'uuid': self.uuid,
+            'route_uuid': self.route_uuid,
+            'trip_uuid': self.trip_uuid,
+            'initial': self.initial,
+            'down_time': self.down_time,
+            'feasible': self.feasible,
+        }
 
     def flush(self) -> None:
         self._collection_time = None
