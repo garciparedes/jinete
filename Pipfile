@@ -4,12 +4,9 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-coverage = "*"
-coloredlogs = "*"
-codecov = "*"
 
 [packages]
-jinete = {editable = true,path = "."}
+jinete = {editable = true,extras = ["all"],path = "."}
 
 [requires]
 python_version = "3.7"

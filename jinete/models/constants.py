@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from math import sqrt
 import functools as ft
+from sys import maxsize
 from typing import TYPE_CHECKING
 from enum import (
     Enum,
@@ -22,6 +23,12 @@ if TYPE_CHECKING:
     Number = Union[int, float]
 
 logger = logging.getLogger(__name__)
+
+MAX_INT = maxsize
+MIN_INT = -maxsize
+
+MAX_FLOAT = float('inf')
+MIN_FLOAT = float('-inf')
 
 
 @unique

@@ -2,11 +2,11 @@ from __future__ import annotations
 
 import logging
 from random import Random
-from sys import maxsize
 from typing import TYPE_CHECKING
 
 from ...models import (
     Planning,
+    MAX_INT,
 )
 from ..abc import (
     Algorithm,
@@ -44,7 +44,7 @@ class GraspAlgorithm(Algorithm):
 
         best = None
         for i in range(self.episodes):
-            seed = self.random.randint(0, maxsize)
+            seed = self.random.randint(0, MAX_INT)
             current = self.build_algorithm(seed=seed).optimize()
             best = self.objective.best(best, current)
         logger.info('Optimized!')

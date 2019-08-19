@@ -23,8 +23,8 @@ class TestLongestTimePlannedTripCriterion(unittest.TestCase):
                     earliest=0.0,
                     timeout=10.0,
                 ),
-                collection_time=0.0,
-                delivery_time=2.0
+                initial=vehicle.initial,
+                route_idx=0,
             ),
             jit.PlannedTrip(
                 route=route,
@@ -33,10 +33,10 @@ class TestLongestTimePlannedTripCriterion(unittest.TestCase):
                     origin=surface.get_or_create_position([1, 1]),
                     destination=surface.get_or_create_position([10, 10]),
                     earliest=0.0,
-                    timeout=10.0,
+                    timeout=20.0,
                 ),
-                collection_time=2.0,
-                delivery_time=20.0
+                initial=vehicle.initial,
+                route_idx=0,
             )
         ]
 

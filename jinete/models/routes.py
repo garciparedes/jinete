@@ -51,6 +51,8 @@ class Route(Model):
         self.planned_trips = list(planned_trips)
         self.uuid = uuid
 
+        self._loaded_planned_trips_count = 0
+
     def __iter__(self):
         yield from self.planned_trips
 
@@ -82,6 +84,10 @@ class Route(Model):
     @property
     def loaded_planned_trips(self) -> Tuple[PlannedTrip]:
         return tuple(planned_trip for planned_trip in self.planned_trips if not planned_trip.empty)
+
+    @property
+    def loaded_planned_trips_count(self) -> int:
+        return self._loaded_planned_trips_count
 
     @property
     def loaded_trips(self) -> Tuple[Trip]:
@@ -121,11 +127,21 @@ class Route(Model):
             return self.vehicle.initial
         return self.last_trip.destination
 
+    def position_at(self, idx: int) -> Position:
+        if idx < 0:
+            return self.vehicle.initial
+        return self.loaded_planned_trips[idx].trip.destination
+
     @property
     def last_time(self) -> float:
         if len(self.planned_trips) == 0:
             return self.vehicle.earliest
         return self.last_planned_trip.delivery_time
+
+    def time_at(self, idx: int) -> float:
+        if idx < 0:
+            return self.vehicle.earliest
+        return self.loaded_planned_trips[idx].delivery_time
 
     @property
     def vehicle_uuid(self) -> Optional[UUID]:
@@ -139,44 +155,20 @@ class Route(Model):
             'vehicle_uuid': self.vehicle_uuid,
         }
 
-    def feasible_trip(self, trip: Trip) -> Optional[PlannedTrip]:
-        if not self.last_time <= trip.latest:
-            return None
-
-        time_to_origin = self.last_position.distance_to(trip.origin)
-        time_to_travel = trip.duration(time_to_origin)
-        trip_start_time = max(self.last_time + time_to_origin, trip.earliest)
-        trip_finish_time = trip_start_time + time_to_travel + trip.load_time
-
-        if trip.inbound:
-            if not trip_finish_time <= trip.latest:
-                return None
-        else:
-            if not trip_start_time <= trip.latest:
-                return None
-
-        time_to_return = trip.destination.time_to(self.vehicle.final, trip_finish_time)
-        vehicle_finish_time = trip_finish_time + time_to_return
-        if not vehicle_finish_time <= self.vehicle.latest:
-            return None
-
-        if self.vehicle.vehicle_timeout is not None:
-            if not self.duration <= self.vehicle.vehicle_timeout:
-                return None
-
-        if self.vehicle.trip_timeout is not None:
-            if not trip_finish_time - trip_start_time <= self.vehicle.trip_timeout:
-                return None
-
-        return PlannedTrip(self, trip, trip_start_time, trip_finish_time)
+    def conjecture_trip(self, trip: Trip) -> Optional[PlannedTrip]:
+        return PlannedTrip(
+            route=self,
+            trip=trip,
+            initial=self.last_position,
+            route_idx=self.loaded_planned_trips_count,
+        )
 
     def _append_empty_planned_trip(self, destination: Position) -> PlannedTrip:
         planned_trip = PlannedTrip.build_empty(
             route=self,
-            collection_time=self.last_time,
-            delivery_time=self.last_time + self.last_position.time_to(destination, self.last_time),
             origin=self.last_position,
             destination=destination,
+            route_idx=self.loaded_planned_trips_count,
         )
         self.append_planned_trip(planned_trip)
         return planned_trip
@@ -191,5 +183,6 @@ class Route(Model):
     def append_planned_trip(self, planned_trip: PlannedTrip):
         if not self.last_position.is_equal(planned_trip.origin):
             self._append_empty_planned_trip(planned_trip.origin)
+            self._loaded_planned_trips_count += 1
         self.planned_trips.append(planned_trip)
         logger.info(f'Append trip "{planned_trip.trip.identifier}" identifier to route "{self.uuid}".')

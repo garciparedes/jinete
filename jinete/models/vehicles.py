@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import logging
-from sys import maxsize
 from typing import (
     TYPE_CHECKING,
     Set,
@@ -11,7 +10,9 @@ from typing import (
 from uuid import (
     uuid4,
 )
-
+from .constants import (
+    MAX_FLOAT,
+)
 from .abc import (
     Model,
 )
@@ -35,7 +36,8 @@ class Vehicle(Model):
     timeout: float
     uuid: UUID
 
-    def __init__(self, identifier: str, initial: Position, final: Position = None, capacity: float = 1.0, earliest: float = 0.0,
+    def __init__(self, identifier: str, initial: Position, final: Position = None, capacity: float = 1.0,
+                 earliest: float = 0.0,
                  timeout: float = None, vehicle_timeout: float = None, trip_timeout: float = None, uuid: UUID = None):
 
         if uuid is None:
@@ -55,7 +57,7 @@ class Vehicle(Model):
     @property
     def latest(self) -> float:
         if self.timeout is None:
-            return maxsize
+            return MAX_FLOAT
         return self.earliest + self.timeout
 
     @property

@@ -30,6 +30,11 @@ from .models import (
     LongestTimePlannedTripCriterion,
     LongestUtilTimePlannedTripCriterion,
     HashCodePlannedTripCriterion,
+
+    MAX_INT,
+    MIN_INT,
+    MAX_FLOAT,
+    MIN_FLOAT,
 )
 
 from .loaders import (

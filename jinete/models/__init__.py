@@ -25,6 +25,10 @@ from .criterions import (
 from .constants import (
     OptimizationDirection,
     DistanceMetric,
+    MAX_INT,
+    MIN_INT,
+    MAX_FLOAT,
+    MIN_FLOAT,
 )
 from .jobs import (
     Job

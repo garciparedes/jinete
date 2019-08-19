@@ -6,6 +6,8 @@ labels: ''
 assignees: ''
 
 ---
+**Reference related Issues**
+Include a list of related issues.
 
 **Set a release date**
 A date and time specifying the release of the new version.

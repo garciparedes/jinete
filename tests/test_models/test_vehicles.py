@@ -1,5 +1,4 @@
 import unittest
-from sys import maxsize
 from uuid import UUID
 
 import jinete as jit
@@ -21,7 +20,7 @@ class TestVehicles(unittest.TestCase):
         self.assertEqual(vehicle.initial, initial)
         self.assertEqual(vehicle.final, vehicle.initial)
         self.assertEqual(vehicle.earliest, 0)
-        self.assertEqual(vehicle.latest, maxsize)
+        self.assertEqual(vehicle.latest, jit.MAX_FLOAT)
         self.assertIsNone(vehicle.timeout)
         self.assertIsInstance(vehicle.uuid, UUID)
 
@@ -35,7 +34,7 @@ class TestVehicles(unittest.TestCase):
         self.assertEqual(vehicle.initial, initial)
         self.assertEqual(vehicle.final, vehicle.initial)
         self.assertEqual(vehicle.earliest, 0)
-        self.assertEqual(vehicle.latest, maxsize)
+        self.assertEqual(vehicle.latest, jit.MAX_FLOAT)
         self.assertIsNone(vehicle.timeout)
         self.assertIsInstance(vehicle.uuid, UUID)
 
@@ -51,7 +50,7 @@ class TestVehicles(unittest.TestCase):
         self.assertEqual(vehicle.initial, initial)
         self.assertEqual(vehicle.final, final)
         self.assertEqual(vehicle.earliest, 0)
-        self.assertEqual(vehicle.latest, maxsize)
+        self.assertEqual(vehicle.latest, jit.MAX_FLOAT)
         self.assertIsNone(vehicle.timeout)
         self.assertIsInstance(vehicle.uuid, UUID)
 
@@ -66,7 +65,7 @@ class TestVehicles(unittest.TestCase):
         self.assertEqual(vehicle.initial, initial)
         self.assertEqual(vehicle.final, vehicle.initial)
         self.assertEqual(vehicle.earliest, earliest)
-        self.assertEqual(vehicle.latest, maxsize)
+        self.assertEqual(vehicle.latest, jit.MAX_FLOAT)
         self.assertIsNone(vehicle.timeout)
         self.assertIsInstance(vehicle.uuid, UUID)
 
