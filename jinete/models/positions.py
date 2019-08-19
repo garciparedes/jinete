@@ -47,6 +47,8 @@ class Position(ABC):
     def is_equal(self, other: Position) -> bool:
         pass
 
+    def __eq__(self, other):
+        return hash(self) == hash(other)
 
 class GeometricPosition(Position):
     coordinates: Tuple[float]

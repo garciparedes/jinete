@@ -13,6 +13,11 @@ from .abc import (
 from .planned_trips import (
     PlannedTrip,
 )
+from .stops import (
+    Stop,
+    StopKind,
+    StopCause,
+)
 
 if TYPE_CHECKING:
     from typing import (
@@ -41,7 +46,8 @@ class Route(Model):
     vehicle: Vehicle
     uuid: UUID
 
-    def __init__(self, vehicle: Vehicle, planned_trips: Iterable[PlannedTrip] = None, uuid=None):
+    def __init__(self, vehicle: Vehicle, planned_trips: Iterable[PlannedTrip] = None, stops: Iterable[Stop] = None,
+                 uuid: UUID = None):
         if planned_trips is None:
             planned_trips = tuple()
         if uuid is None:
@@ -49,9 +55,31 @@ class Route(Model):
 
         self.vehicle = vehicle
         self.planned_trips = list(planned_trips)
-        self.uuid = uuid
 
-        self._loaded_planned_trips_count = 0
+        if stops is None:
+            # planned_trip = PlannedTrip.build_empty(
+            #     route=self,
+            #     origin=vehicle.initial,
+            #     destination=vehicle.final,
+            # )
+            #
+            # initial = Stop(self, vehicle.initial)
+            # initial.append_stop_cause(
+            #     StopCause(planned_trip, StopKind.PICKUP)
+            # )
+            #
+            # final = Stop(self, vehicle.final)
+            # final.append_stop_cause(
+            #     StopCause(planned_trip, StopKind.DELIVERY)
+            # )
+            #
+            # stops = (
+            #     initial,
+            #     final,
+            # )
+            stops = tuple()
+        self.stops = list(stops)
+        self.uuid = uuid
 
     def __iter__(self):
         yield from self.planned_trips
@@ -61,7 +89,7 @@ class Route(Model):
         if len(self.planned_trips) > 0:
             if not self.first_trip.origin == self.vehicle.initial:
                 return False
-            if not self.vehicle.earliest <= self.first_planned_trip.collection_time:
+            if not self.vehicle.earliest <= self.first_planned_trip.pickup_time:
                 return False
             if not self.last_trip.destination == self.vehicle.final:
                 return False
@@ -86,10 +114,6 @@ class Route(Model):
         return tuple(planned_trip for planned_trip in self.planned_trips if not planned_trip.empty)
 
     @property
-    def loaded_planned_trips_count(self) -> int:
-        return self._loaded_planned_trips_count
-
-    @property
     def loaded_trips(self) -> Tuple[Trip]:
         return tuple(planned_trip.trip for planned_trip in self.planned_trips if not planned_trip.empty)
 
@@ -97,7 +121,7 @@ class Route(Model):
     def first_planned_trip(self) -> Optional[PlannedTrip]:
         if len(self.planned_trips) == 0:
             return None
-        # return min(self.planned_trips, key=lambda pt: pt.collection_time)
+        # return min(self.planned_trips, key=lambda pt: pt.pickup_time)
         return self.planned_trips[0]
 
     @property
@@ -119,13 +143,22 @@ class Route(Model):
     def duration(self) -> float:
         if len(self.planned_trips) == 0:
             return 0.0
-        return self.last_planned_trip.delivery_time - self.first_planned_trip.collection_time
+        return self.last_planned_trip.delivery_time - self.first_planned_trip.pickup_time
 
     @property
     def last_position(self) -> Position:
         if len(self.planned_trips) == 0:
             return self.vehicle.initial
         return self.last_trip.destination
+
+    @property
+    def last_stop(self) -> Optional[Stop]:
+        return self.get_stop(-1)
+
+    def get_stop(self, idx: int) -> Optional[Stop]:
+        if (idx < 0 and len(self.stops) < abs(idx)) or len(self.stops) <= idx:
+            return None
+        return self.stops[idx]
 
     def position_at(self, idx: int) -> Position:
         if idx < 0:
@@ -156,25 +189,44 @@ class Route(Model):
         }
 
     def conjecture_trip(self, trip: Trip) -> Optional[PlannedTrip]:
-        return PlannedTrip(
+
+        first = self.get_stop(-2)
+        if first is None:
+            first = Stop(self, self.vehicle.initial)
+
+        last = self.get_stop(-1)
+        if last is None:
+            last = Stop(self, self.vehicle.final)
+
+        planned_trip = PlannedTrip(
             route=self,
             trip=trip,
-            initial=self.last_position,
-            route_idx=self.loaded_planned_trips_count,
+            first=first,
+            last=last,
         )
+        return planned_trip
 
-    def _append_empty_planned_trip(self, destination: Position) -> PlannedTrip:
+    def _append_empty_planned_trip(self, destination: Position, first, initial, final, last) -> PlannedTrip:
         planned_trip = PlannedTrip.build_empty(
             route=self,
+            first=first,
+            initial=initial,
+            final=final,
+            last=last,
             origin=self.last_position,
             destination=destination,
-            route_idx=self.loaded_planned_trips_count,
         )
         self.append_planned_trip(planned_trip)
         return planned_trip
 
     def _append_finish_planned_trip(self) -> PlannedTrip:
-        return self._append_empty_planned_trip(self.vehicle.final)
+        return self._append_empty_planned_trip(
+            self.vehicle.final,
+            self.get_stop(-2),
+            self.get_stop(-2),
+            self.get_stop(-1),
+            self.get_stop(-1),
+        )
 
     def finish(self):
         if self.loaded:
@@ -182,7 +234,31 @@ class Route(Model):
 
     def append_planned_trip(self, planned_trip: PlannedTrip):
         if not self.last_position.is_equal(planned_trip.origin):
-            self._append_empty_planned_trip(planned_trip.origin)
-            self._loaded_planned_trips_count += 1
+            first = self.get_stop(-2)
+            if first is None:
+                first = planned_trip.stops[0]
+            last = self.get_stop(-1)
+            if last is None:
+                last = planned_trip.stops[-1]
+            self._append_empty_planned_trip(
+                planned_trip.origin,
+                first,
+                planned_trip.stops[0],
+                planned_trip.stops[1],
+                last,
+            )
+
+        if len(self.stops) > 0:
+            for pt in self.last_stop.planned_trips:
+                pt.stops[-1] = planned_trip.first_stop
+
+            if self.get_stop(-2) != planned_trip.pickup_stop:
+                self.stops.insert(-1, planned_trip.pickup_stop)
+            if self.get_stop(-2) != planned_trip.delivery_stop:
+                self.stops.insert(-1, planned_trip.delivery_stop)
+        else:
+            self.stops += planned_trip.stops
+
         self.planned_trips.append(planned_trip)
+
         logger.info(f'Append trip "{planned_trip.trip.identifier}" identifier to route "{self.uuid}".')
