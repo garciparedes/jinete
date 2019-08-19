@@ -6,6 +6,8 @@ from typing import TYPE_CHECKING
 
 from .constants import (
     OptimizationDirection,
+    MIN_FLOAT,
+    MAX_FLOAT,
 )
 
 if TYPE_CHECKING:
@@ -50,6 +52,9 @@ class ShortestTimePlannedTripCriterion(PlannedTripCriterion):
         )
 
     def scoring(self, planned_trip: PlannedTrip) -> float:
+        if not planned_trip.feasible:
+            return MAX_FLOAT
+
         return planned_trip.delivery_time - planned_trip.route.last_time
 
 
@@ -62,6 +67,9 @@ class LongestTimePlannedTripCriterion(PlannedTripCriterion):
         )
 
     def scoring(self, planned_trip: PlannedTrip) -> float:
+        if not planned_trip.feasible:
+            return MIN_FLOAT
+
         return planned_trip.delivery_time - planned_trip.route.last_time
 
 
@@ -74,6 +82,9 @@ class LongestUtilTimePlannedTripCriterion(PlannedTripCriterion):
         )
 
     def scoring(self, planned_trip: PlannedTrip) -> float:
+        if not planned_trip.feasible:
+            return MIN_FLOAT
+
         return planned_trip.duration - planned_trip.trip.origin.distance_to(planned_trip.route.last_position)
 
 
@@ -86,6 +97,9 @@ class HashCodePlannedTripCriterion(PlannedTripCriterion):
         )
 
     def scoring(self, planned_trip: PlannedTrip) -> float:
+        if not planned_trip.feasible:
+            return MIN_FLOAT
+
         scoring = planned_trip.distance
         if planned_trip.collection_time == planned_trip.trip.earliest:
             scoring += planned_trip.trip.on_time_bonus
