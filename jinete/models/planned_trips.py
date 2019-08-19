@@ -204,8 +204,7 @@ class PlannedTrip(Model):
         self._feasible = None
 
     def _calculate_pickup_time(self) -> float:
-        time_to_origin = self.first_position.distance_to(self.trip.origin)
-        trip_start_time = max(self.first_delivery_time + time_to_origin, self.trip.earliest)
+        trip_start_time = max(self.first_delivery_time, self.trip.earliest)
         trip_start_time += self.down_time
         return trip_start_time
 

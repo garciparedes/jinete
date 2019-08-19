@@ -13,6 +13,8 @@ class TestShortestTimePlannedTripCriterion(unittest.TestCase):
             initial=surface.get_or_create_position([0, 0]),
         )
         route = jit.Route(vehicle)
+        first = jit.Stop(route, vehicle.initial)
+        last = jit.Stop(route, vehicle.initial)
         cls.planned_trips = [
             jit.PlannedTrip(
                 route=route,
@@ -23,8 +25,8 @@ class TestShortestTimePlannedTripCriterion(unittest.TestCase):
                     earliest=0.0,
                     timeout=10.0,
                 ),
-                initial=vehicle.initial,
-                route_idx=0,
+                first=first,
+                last=last,
             ),
             jit.PlannedTrip(
                 route=route,
@@ -35,8 +37,8 @@ class TestShortestTimePlannedTripCriterion(unittest.TestCase):
                     earliest=0.0,
                     timeout=20.0,
                 ),
-                initial=vehicle.initial,
-                route_idx=0,
+                first=first,
+                last=last,
             )
         ]
 
