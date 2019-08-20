@@ -32,7 +32,7 @@ class ColumnarStorerFormatter(StorerFormatter):
                 f'ID: {planned_trip.trip.identifier:6}',
                 f'Position: {planned_trip.origin} to {planned_trip.destination}',
                 f'Duration: {planned_trip.duration:7.02f}',
-                f'Time: {planned_trip.collection_time:8.02f} to {planned_trip.delivery_time:8.02f}',
+                f'Time: {planned_trip.pickup_time:8.02f} to {planned_trip.delivery_time:8.02f}',
                 f'Load: {planned_trip.capacity}',
             )),
         ]

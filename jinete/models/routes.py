@@ -61,7 +61,7 @@ class Route(Model):
         if len(self.planned_trips) > 0:
             if not self.first_trip.origin == self.vehicle.initial:
                 return False
-            if not self.vehicle.earliest <= self.first_planned_trip.collection_time:
+            if not self.vehicle.earliest <= self.first_planned_trip.pickup_time:
                 return False
             if not self.last_trip.destination == self.vehicle.final:
                 return False
@@ -97,7 +97,7 @@ class Route(Model):
     def first_planned_trip(self) -> Optional[PlannedTrip]:
         if len(self.planned_trips) == 0:
             return None
-        # return min(self.planned_trips, key=lambda pt: pt.collection_time)
+        # return min(self.planned_trips, key=lambda pt: pt.pickup_time)
         return self.planned_trips[0]
 
     @property
@@ -119,7 +119,7 @@ class Route(Model):
     def duration(self) -> float:
         if len(self.planned_trips) == 0:
             return 0.0
-        return self.last_planned_trip.delivery_time - self.first_planned_trip.collection_time
+        return self.last_planned_trip.delivery_time - self.first_planned_trip.pickup_time
 
     @property
     def last_position(self) -> Position:

@@ -49,7 +49,7 @@ class PlannedTrip(Model):
         self.route_idx = route_idx
         self.down_time = down_time
 
-        self._collection_time = None
+        self._pickup_time = None
         self._delivery_time = None
         self._feasible = None
 
@@ -65,10 +65,10 @@ class PlannedTrip(Model):
         )
 
     @property
-    def collection_time(self) -> float:
-        if self._collection_time is None:
-            self._collection_time = self._calculate_collection_time()
-        return self._collection_time
+    def pickup_time(self) -> float:
+        if self._pickup_time is None:
+            self._pickup_time = self._calculate_pickup_time()
+        return self._pickup_time
 
     @property
     def delivery_time(self) -> float:
@@ -102,7 +102,7 @@ class PlannedTrip(Model):
 
     @property
     def duration(self) -> float:
-        return self.delivery_time - self.collection_time
+        return self.delivery_time - self.pickup_time
 
     @property
     def capacity(self):
@@ -129,19 +129,19 @@ class PlannedTrip(Model):
         }
 
     def flush(self) -> None:
-        self._collection_time = None
+        self._pickup_time = None
         self._delivery_time = None
         self._feasible = None
 
-    def _calculate_collection_time(self) -> float:
+    def _calculate_pickup_time(self) -> float:
         time_to_origin = self.route.position_at(self.route_idx - 1).distance_to(self.trip.origin)
         trip_start_time = max(self.route.time_at(self.route_idx - 1) + time_to_origin, self.trip.earliest)
         trip_start_time += self.down_time
         return trip_start_time
 
     def _calculate_delivery_time(self) -> float:
-        time_to_travel = self.trip.duration(self.collection_time)
-        trip_finish_time = self.collection_time + time_to_travel + self.trip.load_time
+        time_to_travel = self.trip.duration(self.pickup_time)
+        trip_finish_time = self.pickup_time + time_to_travel + self.trip.load_time
         return trip_finish_time
 
     def _calculate_feasible(self) -> bool:
@@ -152,7 +152,7 @@ class PlannedTrip(Model):
             if not self.trip.earliest <= self.delivery_time <= self.trip.latest:
                 return False
         else:
-            if not self.trip.earliest <= self.collection_time <= self.trip.latest:
+            if not self.trip.earliest <= self.pickup_time <= self.trip.latest:
                 return False
 
         time_to_return = self.trip.destination.time_to(self.vehicle.final, self.delivery_time)
