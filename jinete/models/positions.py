@@ -37,15 +37,14 @@ class Position(ABC):
         self.surface = surface
         self.uuid = uuid
 
+    def __eq__(self, other):
+        return hash(self) == hash(other)
+
     def distance_to(self, other: Position) -> float:
         return self.surface.distance(self, other)
 
     def time_to(self, other: Position, now: float) -> float:
         return self.surface.time(self, other, now)
-
-    @abstractmethod
-    def is_equal(self, other: Position) -> bool:
-        pass
 
 
 class GeometricPosition(Position):
@@ -64,6 +63,3 @@ class GeometricPosition(Position):
 
     def __getitem__(self, item):
         return self.coordinates[item]
-
-    def is_equal(self, other: GeometricPosition) -> bool:
-        return self.coordinates == other.coordinates

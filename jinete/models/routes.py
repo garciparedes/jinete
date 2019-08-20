@@ -181,7 +181,7 @@ class Route(Model):
             self._append_finish_planned_trip()
 
     def append_planned_trip(self, planned_trip: PlannedTrip):
-        if not self.last_position.is_equal(planned_trip.origin):
+        if not self.last_position == planned_trip.origin:
             self._append_empty_planned_trip(planned_trip.origin)
             self._loaded_planned_trips_count += 1
         self.planned_trips.append(planned_trip)
