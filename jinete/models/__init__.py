@@ -15,6 +15,11 @@ from .trips import (
 from .planned_trips import (
     PlannedTrip,
 )
+from .stops import (
+    Stop,
+    StopCause,
+    StopKind,
+)
 from .criterions import (
     PlannedTripCriterion,
     ShortestTimePlannedTripCriterion,

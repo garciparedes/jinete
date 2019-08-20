@@ -16,6 +16,11 @@ from .models import (
     Route,
     Planning,
     PlannedTrip,
+
+    Stop,
+    StopCause,
+    StopKind,
+
     Result,
 
     OptimizationDirection,
