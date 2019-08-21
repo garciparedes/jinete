@@ -117,11 +117,24 @@ class Stop(Model):
         return self.previous.position
 
     @property
+    def navigation_time(self):
+        return self.previous_position.time_to(self.position, None)
+
+    @property
+    def waiting_time(self):
+        earliest = 0.0
+        if self.planned_trips:
+            earliest = max(planned_trip.trip.earliest for planned_trip in self.planned_trips)
+
+        arrival_time = self.arrival_time
+        return max(arrival_time, earliest) - arrival_time
+
+    @property
     def arrival_time(self):
         before_earliest = self.previous_time
         if self.planned_trips:
             before_earliest += max(planned_trip.down_time for planned_trip in self.planned_trips)
-        before_earliest += self.previous_position.time_to(self.position, before_earliest)
+        before_earliest += self.navigation_time
         return before_earliest
 
     @property
