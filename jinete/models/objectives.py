@@ -46,11 +46,11 @@ class Objective(ABC):
     def _route_optimization_function(self, route: Route) -> float:
         scoring = 0.0
         for planned_trip in route:
-            scoring += self._planned_trip_optimization_function(planned_trip)
+            scoring += self.planned_trip_scoring(planned_trip)
         return scoring
 
     @abstractmethod
-    def _planned_trip_optimization_function(self, planned_trip: PlannedTrip) -> float:
+    def planned_trip_scoring(self, planned_trip: PlannedTrip) -> float:
         pass
 
 
@@ -62,7 +62,7 @@ class DialARideObjective(Objective):
             direction=OptimizationDirection.MINIMIZATION,
         )
 
-    def _planned_trip_optimization_function(self, planned_trip: PlannedTrip) -> float:
+    def planned_trip_scoring(self, planned_trip: PlannedTrip) -> float:
         return planned_trip.distance
 
 
@@ -74,7 +74,7 @@ class TaxiSharingObjective(Objective):
             direction=OptimizationDirection.MAXIMIZATION,
         )
 
-    def _planned_trip_optimization_function(self, planned_trip: PlannedTrip) -> float:
+    def planned_trip_scoring(self, planned_trip: PlannedTrip) -> float:
         if planned_trip.capacity == 0:
             return 0.0
         return planned_trip.duration
@@ -87,7 +87,7 @@ class HashCodeObjective(Objective):
             direction=OptimizationDirection.MAXIMIZATION,
         )
 
-    def _planned_trip_optimization_function(self, planned_trip: PlannedTrip) -> float:
+    def planned_trip_scoring(self, planned_trip: PlannedTrip) -> float:
         if planned_trip.capacity == 0:
             return 0.0
         trip = planned_trip.trip

@@ -34,6 +34,7 @@ class ColumnarStorerFormatter(StorerFormatter):
                 f'Duration: {planned_trip.duration:7.02f}',
                 f'Time: {planned_trip.pickup_time:8.02f} to {planned_trip.delivery_time:8.02f}',
                 f'Load: {planned_trip.capacity}',
+                f'Scoring: {self.objective.planned_trip_scoring(planned_trip):7.02f}'
             )),
         ]
 
