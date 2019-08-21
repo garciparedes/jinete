@@ -6,7 +6,7 @@ from enum import (
 )
 from typing import (
     TYPE_CHECKING,
-)
+    Optional)
 from uuid import (
     uuid4,
 )
@@ -78,7 +78,7 @@ class Stop(Model):
     route: Route
     position: Position
 
-    def __init__(self, route: Route, position: Position, previous: Stop, following: Stop = None,
+    def __init__(self, route: Route, position: Position, previous: Optional[Stop], following: Stop = None,
                  changes: Iterable[StopCause] = None):
         if changes is None:
             changes = tuple()
@@ -108,7 +108,7 @@ class Stop(Model):
     def previous_time(self) -> float:
         if self.previous is None:
             return self.vehicle.earliest
-        return self.previous.time
+        return self.previous.latest
 
     @property
     def previous_position(self) -> Position:
@@ -117,11 +117,30 @@ class Stop(Model):
         return self.previous.position
 
     @property
-    def time(self) -> float:
-        if len(self.causes) == 0:
-            return 0.0
-        previous_time = self.previous_time
-        return previous_time + self.previous_position.time_to(self.position, previous_time)
+    def arrival_time(self):
+        before_earliest = self.previous_time
+        if self.planned_trips:
+            before_earliest += max(planned_trip.down_time for planned_trip in self.planned_trips)
+        before_earliest += self.previous_position.time_to(self.position, before_earliest)
+        return before_earliest
+
+    @property
+    def earliest(self):
+        earliest = 0.0
+        if self.planned_trips:
+            earliest = max(planned_trip.trip.earliest for planned_trip in self.planned_trips)
+        time = max(self.arrival_time, earliest)
+        return time
+
+    @property
+    def load_time(self) -> float:
+        if self.planned_trips:
+            return max(planned_trip.trip.load_time for planned_trip in self.planned_trips)
+        return 0.0
+
+    @property
+    def latest(self) -> float:
+        return self.earliest + self.load_time
 
     @property
     def planned_trips(self) -> Set[PlannedTrip]:

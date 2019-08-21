@@ -30,17 +30,23 @@ def generate_positions(n: int, surface: jit.Surface = None, *args, **kwargs) -> 
     }
 
 
-def generate_one_trip(identifier: str = None, earliest_min: float = 0, earliest_max: float = 86400,
-                      timeout_min: float = 1800,
-                      timeout_max: float = 7200, load_time_min: float = 300, load_time_max: float = 900,
-                      capacity_min: int = 1, capacity_max: int = 3, *args, **kwargs) -> jit.Trip:
+def generate_one_trip(identifier: str = None,
+                      earliest: float = None, earliest_min: float = 0, earliest_max: float = 86400,
+                      timeout: float = None, timeout_min: float = 1800, timeout_max: float = 7200,
+                      load_time: float = None, load_time_min: float = 300, load_time_max: float = 900,
+                      capacity: float = None, capacity_min: int = 1, capacity_max: int = 3,
+                      *args, **kwargs) -> jit.Trip:
     if identifier is None:
         identifier = str()
     origin, destination = tuple(generate_positions(2, *args, **kwargs))
-    earliest = uniform(earliest_min, earliest_max)
-    timeout = uniform(timeout_min, timeout_max)
-    capacity = randint(capacity_min, capacity_max)
-    load_time = uniform(load_time_min, load_time_max)
+    if earliest is None:
+        earliest = uniform(earliest_min, earliest_max)
+    if timeout is None:
+        timeout = uniform(timeout_min, timeout_max)
+    if capacity is None:
+        capacity = randint(capacity_min, capacity_max)
+    if load_time is None:
+        load_time = uniform(load_time_min, load_time_max)
     return jit.Trip(identifier, origin, destination, earliest, timeout, load_time, capacity)
 
 
@@ -59,19 +65,14 @@ def generate_one_planned_trip(feasible: bool, route: jit.Route = None, *args, **
     else:
         down_time = jit.MAX_FLOAT
 
-    initial = route.last_position
-
-    if route is None:
-        route_idx = None
-    else:
-        # route_idx = len(route.loaded_planned_trips)
-        route_idx = route.loaded_planned_trips_count
+    pickup_stop = jit.Stop(route, trip.origin, route.last_stop)
+    delivery_stop = jit.Stop(route, trip.destination, pickup_stop)
 
     return jit.PlannedTrip(
         route=route,
         trip=trip,
-        initial=initial,
-        route_idx=route_idx,
+        pickup_stop=pickup_stop,
+        delivery_stop=delivery_stop,
         down_time=down_time,
     )
 
@@ -109,32 +110,17 @@ def generate_one_route(feasible: bool, planned_trips_min: int = 1, planned_trips
     planned_trips_len = randint(planned_trips_min, planned_trips_max)
     cut_len = vehicle.timeout / planned_trips_len
 
-    planned_trip = generate_one_planned_trip(
-        feasible=feasible,
-        route=route,
-        earliest_min=vehicle.earliest,
-        earliest_max=vehicle.earliest,
-        timeout_min=cut_len,
-        timeout_max=cut_len,
-        surface=surface,
-    )
-
-    route.append_planned_trip(planned_trip)
-
     for i in range(planned_trips_len):
         planned_trip = generate_one_planned_trip(
             feasible=feasible,
             route=route,
-            earliest_min=route.last_time,
-            earliest_max=route.last_time,
-            timeout_min=cut_len,
-            timeout_max=cut_len,
+            earliest=route.last_time,
+            timeout=cut_len,
             surface=surface,
         )
 
         route.append_planned_trip(planned_trip)
     route.finish()
-    vehicle.timeout = route.last_time - vehicle.earliest
     return route
 
 

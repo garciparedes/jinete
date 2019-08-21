@@ -101,6 +101,7 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
             inbound=inbound,
             earliest=earliest,
             timeout=timeout,
+            load_time=10.0,
         )
         return trip
 

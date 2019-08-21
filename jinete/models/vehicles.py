@@ -37,8 +37,8 @@ class Vehicle(Model):
     uuid: UUID
 
     def __init__(self, identifier: str, initial: Position, final: Position = None, capacity: float = 1.0,
-                 earliest: float = 0.0,
-                 timeout: float = None, vehicle_timeout: float = None, trip_timeout: float = None, uuid: UUID = None):
+                 earliest: float = 0.0, timeout: float = None, vehicle_timeout: float = None,
+                 trip_timeout: float = None, uuid: UUID = None):
 
         if uuid is None:
             uuid = uuid4()

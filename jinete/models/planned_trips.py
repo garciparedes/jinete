@@ -11,6 +11,11 @@ from .abc import (
 from .trips import (
     Trip,
 )
+from .stops import (
+    Stop,
+    StopCause,
+    StopKind,
+)
 
 if TYPE_CHECKING:
     from typing import (
@@ -41,27 +46,37 @@ class PlannedTrip(Model):
     route_idx: int
     down_time: float
 
-    def __init__(self, route: Route, trip: Trip, initial: Position, route_idx: int, down_time: float = 0.0):
+    def __init__(self, route: Route, trip: Trip, pickup_stop: Stop, delivery_stop: Stop, down_time: float = 0.0):
         self.uuid = uuid4()
         self.route = route
         self.trip = trip
-        self.initial = initial
-        self.route_idx = route_idx
         self.down_time = down_time
+
+        assert pickup_stop == delivery_stop.previous
+
+        pickup_stop.append_stop_cause(
+            StopCause(self, StopKind.PICKUP)
+        )
+        delivery_stop.append_stop_cause(
+            StopCause(self, StopKind.DELIVERY)
+        )
+        self.pickup_stop = pickup_stop
+        self.delivery_stop = delivery_stop
 
         self._pickup_time = None
         self._delivery_time = None
         self._feasible = None
 
     @staticmethod
-    def build_empty(route: Route, route_idx: int,
-                    *args, **kwargs) -> 'PlannedTrip':
-        trip = Trip.build_empty(*args, **kwargs)
+    def build_empty(route: Route, pickup_stop: Stop, delivery_stop: Stop, *args, **kwargs) -> 'PlannedTrip':
+        trip = Trip.build_empty(
+            *args, **kwargs,
+        )
         return PlannedTrip(
             route=route,
             trip=trip,
-            initial=route.last_position,
-            route_idx=route_idx,
+            pickup_stop=pickup_stop,
+            delivery_stop=delivery_stop,
         )
 
     @property
@@ -123,7 +138,8 @@ class PlannedTrip(Model):
             'uuid': self.uuid,
             'route_uuid': self.route_uuid,
             'trip_uuid': self.trip_uuid,
-            'initial': self.initial,
+            'pickup_stop': self.pickup_stop,
+            'delivery_stop': self.delivery_stop,
             'down_time': self.down_time,
             'feasible': self.feasible,
         }
@@ -134,18 +150,13 @@ class PlannedTrip(Model):
         self._feasible = None
 
     def _calculate_pickup_time(self) -> float:
-        time_to_origin = self.route.position_at(self.route_idx - 1).distance_to(self.trip.origin)
-        trip_start_time = max(self.route.time_at(self.route_idx - 1) + time_to_origin, self.trip.earliest)
-        trip_start_time += self.down_time
-        return trip_start_time
+        return self.pickup_stop.earliest
 
     def _calculate_delivery_time(self) -> float:
-        time_to_travel = self.trip.duration(self.pickup_time)
-        trip_finish_time = self.pickup_time + time_to_travel + self.trip.load_time
-        return trip_finish_time
+        return self.delivery_stop.earliest
 
     def _calculate_feasible(self) -> bool:
-        if not self.route.time_at(self.route_idx - 1) <= self.trip.latest:
+        if not self.pickup_stop.previous_time <= self.trip.latest:
             return False
 
         if self.trip.inbound:

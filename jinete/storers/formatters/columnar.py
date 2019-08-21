@@ -31,6 +31,7 @@ class ColumnarStorerFormatter(StorerFormatter):
             self.tab_character.join((
                 f'ID: {planned_trip.trip.identifier:6}',
                 f'Position: {planned_trip.origin} to {planned_trip.destination}',
+                f'Range: {planned_trip.trip.earliest:7.02f} to {planned_trip.trip.latest:7.02f}',
                 f'Duration: {planned_trip.duration:7.02f}',
                 f'Time: {planned_trip.pickup_time:8.02f} to {planned_trip.delivery_time:8.02f}',
                 f'Load: {planned_trip.capacity}',
