@@ -53,7 +53,6 @@ class Trip(object):
 
         self.with_caching = with_caching
         self._distance = None
-        # self._duration = dict()
         self._duration = None
 
     @staticmethod

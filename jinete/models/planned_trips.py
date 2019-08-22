@@ -2,9 +2,6 @@ from __future__ import annotations
 
 import logging
 from typing import TYPE_CHECKING
-from uuid import (
-    uuid4,
-)
 from .abc import (
     Model,
 )
@@ -39,15 +36,13 @@ logger = logging.getLogger(__name__)
 
 
 class PlannedTrip(Model):
-    uuid: UUID
     route: Route
     trip: Trip
     initial: Position
-    route_idx: int
     down_time: float
 
-    def __init__(self, route: Route, trip: Trip, pickup_stop: Stop, delivery_stop: Stop, down_time: float = 0.0):
-        self.uuid = uuid4()
+    def __init__(self, route: Route, trip: Trip, pickup_stop: Stop, delivery_stop: Stop, down_time: float = 0.0,
+                 with_caching: bool = True):
         self.route = route
         self.trip = trip
         self.down_time = down_time
@@ -60,11 +55,11 @@ class PlannedTrip(Model):
         delivery_stop.append_stop_cause(
             StopCause(self, StopKind.DELIVERY)
         )
+
         self.pickup_stop = pickup_stop
         self.delivery_stop = delivery_stop
 
-        self._pickup_time = None
-        self._delivery_time = None
+        self.with_caching = with_caching
         self._feasible = None
 
     @staticmethod
@@ -81,15 +76,11 @@ class PlannedTrip(Model):
 
     @property
     def pickup_time(self) -> float:
-        if self._pickup_time is None:
-            self._pickup_time = self._calculate_pickup_time()
-        return self._pickup_time
+        return self.pickup_stop.earliest
 
     @property
     def delivery_time(self) -> float:
-        if self._delivery_time is None:
-            self._delivery_time = self._calculate_delivery_time()
-        return self._delivery_time
+        return self.delivery_stop.earliest
 
     @property
     def vehicle(self) -> Vehicle:
@@ -125,7 +116,7 @@ class PlannedTrip(Model):
 
     @property
     def feasible(self) -> bool:
-        if self._feasible is None:
+        if not self.with_caching or self._feasible is None:
             self._feasible = self._calculate_feasible()
         return self._feasible
 
@@ -135,7 +126,6 @@ class PlannedTrip(Model):
 
     def as_dict(self) -> Dict[str, Any]:
         return {
-            'uuid': self.uuid,
             'route_uuid': self.route_uuid,
             'trip_uuid': self.trip_uuid,
             'pickup_stop': self.pickup_stop,
@@ -145,15 +135,7 @@ class PlannedTrip(Model):
         }
 
     def flush(self) -> None:
-        self._pickup_time = None
-        self._delivery_time = None
         self._feasible = None
-
-    def _calculate_pickup_time(self) -> float:
-        return self.pickup_stop.earliest
-
-    def _calculate_delivery_time(self) -> float:
-        return self.delivery_stop.earliest
 
     def _calculate_feasible(self) -> bool:
         if not self.pickup_stop.previous_time <= self.trip.latest:

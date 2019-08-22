@@ -3,6 +3,7 @@ import logging
 from abc import (
     ABC,
     abstractmethod)
+from collections import defaultdict
 
 from typing import (
     TYPE_CHECKING,
@@ -77,25 +78,25 @@ class Surface(Model, ABC):
 
 class GeometricSurface(Surface):
     positions: Set[GeometricPosition]
+    cached_distance: Dict[Position, Dict[Position, float]]
 
-    def __init__(self, metric: DistanceMetric, *args, **kwargs):
+    def __init__(self, metric: DistanceMetric, with_caching: bool = True, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.metric = metric
+
+        self.cached_distance = defaultdict(dict)
+        self.with_caching = with_caching
 
     def _build_position(self, *args, **kwargs):
         return GeometricPosition(surface=self, *args, **kwargs)
 
-    def distance(self, position_a: GeometricPosition, position_b: GeometricPosition, auto_add: bool = False) -> float:
-        if position_a not in self.positions:
-            logger.warning(f'"position_a"="{position_a}" is not on "self.positions".')
-            if auto_add:
-                self.positions.add(position_a)
+    def is_cached(self, position_a: GeometricPosition, position_b: GeometricPosition) -> bool:
+        return position_a in self.cached_distance and position_b in self.cached_distance[position_a]
 
-        if position_b not in self.positions:
-            logger.warning(f'"position_b"="{position_b}" is not on "self.positions".')
-            if auto_add:
-                self.positions.add(position_b)
-        return self.metric(position_a, position_b)
+    def distance(self, position_a: GeometricPosition, position_b: GeometricPosition) -> float:
+        if self.with_caching and not self.is_cached(position_a, position_b):
+            self.cached_distance[position_a][position_b] = self.metric(position_a, position_b)
+        return self.cached_distance[position_a][position_b]
 
     def time(self, position_a: GeometricPosition, position_b: GeometricPosition, now: float) -> float:
         return self.distance(position_a, position_b)

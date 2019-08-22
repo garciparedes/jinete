@@ -47,7 +47,7 @@ class ColumnarStorerFormatter(StorerFormatter):
         return [
             f'Vehicle: ',
             *(f'{self.tab_character}{row}' for row in self.vehicle_to_str(route.vehicle)),
-            f'Planned Trips: "{len(route.planned_trips)}"',
+            f'Planned Trips: "{sum(1 for _ in route.planned_trips)}"',
             *(f'{self.tab_character}{row}' for row in rows)
         ]
 

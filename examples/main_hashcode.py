@@ -26,7 +26,7 @@ def main():
         'e': 'e_high_bonus.in',
     }
 
-    file_path = DATASETS_PATH / 'hashcode' / FILES['a']
+    file_path = DATASETS_PATH / 'hashcode' / FILES['b']
 
     class MyLoader(jit.FileLoader):
         def __init__(self, *args, **kwargs):
