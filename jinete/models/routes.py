@@ -88,7 +88,7 @@ class Route(Model):
         if any(self.planned_trips):
             if not self.first_stop.position == self.vehicle.initial:
                 return False
-            if not self.vehicle.earliest <= self.first_planned_trip.pickup_time:
+            if not self.vehicle.earliest <= self.first_stop.earliest:
                 return False
             if not self.last_position == self.vehicle.final:
                 return False
@@ -222,7 +222,7 @@ class Route(Model):
         assert planned_trip.delivery_stop is not None
         assert planned_trip.pickup_stop is not None
         assert planned_trip.delivery_stop.previous is not None
-        if any(self.planned_trips):
+        if len(self.stops) > 1:
             assert planned_trip.pickup_stop.previous is not None
             assert self.last_planned_trip.delivery_time <= planned_trip.pickup_time
         assert planned_trip.pickup_stop == planned_trip.delivery_stop.previous
