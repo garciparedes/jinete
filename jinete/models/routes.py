@@ -73,7 +73,7 @@ class Route(Model):
 
     @property
     def planned_trips(self) -> Iterator[PlannedTrip]:
-        return iter(
+        yield from (
             stop_cause.planned_trip
             for stop_cause in self.stop_causes
             if stop_cause.kind == StopKind.DELIVERY
@@ -92,7 +92,7 @@ class Route(Model):
                 return False
             if not self.last_position == self.vehicle.final:
                 return False
-            if not self.last_planned_trip.delivery_time <= self.vehicle.latest:
+            if not self.latest <= self.vehicle.latest:
                 return False
 
         for planned_trip in self.planned_trips:
@@ -105,38 +105,16 @@ class Route(Model):
         return any(self.planned_trips)
 
     @property
-    def trips(self) -> Tuple[Trip]:
-        return tuple(planned_trip.trip for planned_trip in self.planned_trips)
+    def trips(self) -> Iterator[Trip]:
+        yield from (planned_trip.trip for planned_trip in self.planned_trips)
 
     @property
-    def loaded_planned_trips(self) -> Tuple[PlannedTrip]:
-        return tuple(planned_trip for planned_trip in self.planned_trips if not planned_trip.empty)
+    def loaded_planned_trips(self) -> Iterator[PlannedTrip]:
+        yield from (planned_trip for planned_trip in self.planned_trips if not planned_trip.empty)
 
     @property
-    def loaded_trips(self) -> Tuple[Trip]:
-        return tuple(planned_trip.trip for planned_trip in self.planned_trips if not planned_trip.empty)
-
-    @property
-    def first_planned_trip(self) -> Optional[PlannedTrip]:
-        if any(self.planned_trips):
-            return None
-        # return min(self.planned_trips, key=lambda pt: pt.pickup_time)
-        return next(self.planned_trips)
-
-    @property
-    def first_trip(self) -> Trip:
-        return self.first_planned_trip.trip
-
-    @property
-    def last_planned_trip(self) -> Optional[PlannedTrip]:
-        if not any(self.planned_trips):
-            return None
-        # return max(self.planned_trips, key=lambda pt: pt.delivery_time)
-        return deque(self.planned_trips, maxlen=1).pop()
-
-    @property
-    def last_trip(self) -> Trip:
-        return self.last_planned_trip.trip
+    def loaded_trips(self) -> Iterator[Trip]:
+        yield from (planned_trip.trip for planned_trip in self.loaded_planned_trips)
 
     @property
     def earliest(self) -> float:
@@ -161,17 +139,6 @@ class Route(Model):
     @property
     def last_stop(self) -> Stop:
         return self.stops[-1]
-
-    @property
-    def last_time(self) -> float:
-        if not any(self.planned_trips):
-            return self.vehicle.earliest
-        return self.last_planned_trip.delivery_time
-
-    def time_at(self, idx: int) -> float:
-        if idx < 0:
-            return self.vehicle.earliest
-        return self.loaded_planned_trips[idx].delivery_time
 
     @property
     def vehicle_uuid(self) -> Optional[UUID]:
@@ -224,7 +191,7 @@ class Route(Model):
         assert planned_trip.delivery_stop.previous is not None
         if len(self.stops) > 1:
             assert planned_trip.pickup_stop.previous is not None
-            assert self.last_planned_trip.delivery_time <= planned_trip.pickup_time
+            assert self.latest <= planned_trip.pickup_time
         assert planned_trip.pickup_stop == planned_trip.delivery_stop.previous
         assert planned_trip.pickup_stop.latest <= planned_trip.delivery_stop.earliest
         assert isnan(planned_trip.duration) or planned_trip.duration > 0
