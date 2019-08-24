@@ -138,9 +138,8 @@ class PlannedTrip(Model):
         self._feasible = None
 
     def _calculate_feasible(self) -> bool:
-        if not self.pickup_stop.previous_time <= self.trip.latest:
+        if not self.pickup_stop.previous_departure_time <= self.trip.latest:
             return False
-
         if self.trip.inbound:
             if not self.trip.earliest <= self.delivery_time <= self.trip.latest:
                 return False

@@ -105,6 +105,7 @@ class Stop(Model):
         self._down_time = None
         self._load_time = None
         self._earliest = None
+        self._arrival_time = None
 
     def append_stop_cause(self, stop_cause: StopCause) -> None:
         stop_cause.stop = self
@@ -137,7 +138,7 @@ class Stop(Model):
         return self.vehicle.uuid
 
     @property
-    def previous_time(self) -> float:
+    def previous_departure_time(self) -> float:
         if self.previous is None:
             return self.vehicle.earliest
         if self._previous_time is None:
@@ -152,7 +153,7 @@ class Stop(Model):
 
     @property
     def navigation_time(self):
-        return self.previous_position.time_to(self.position, self.previous_time)
+        return self.previous_position.time_to(self.position, self.previous_departure_time)
 
     @property
     def waiting_time(self):
@@ -160,8 +161,10 @@ class Stop(Model):
 
     @property
     def arrival_time(self):
-        arrival_time = self.previous_time + self.down_time + self.navigation_time
-        return max(arrival_time, self.earliest)
+        if self._arrival_time is None:
+            arrival_time = self.previous_departure_time + self.down_time + self.navigation_time
+            self._arrival_time = max(arrival_time, self.earliest)
+        return self._arrival_time
 
     @property
     def departure_time(self) -> float:
