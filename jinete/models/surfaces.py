@@ -90,13 +90,17 @@ class GeometricSurface(Surface):
     def _build_position(self, *args, **kwargs):
         return GeometricPosition(surface=self, *args, **kwargs)
 
-    def is_cached(self, position_a: GeometricPosition, position_b: GeometricPosition) -> bool:
-        return position_a in self.cached_distance and position_b in self.cached_distance[position_a]
-
     def distance(self, position_a: GeometricPosition, position_b: GeometricPosition) -> float:
-        if self.with_caching and not self.is_cached(position_a, position_b):
-            self.cached_distance[position_a][position_b] = self.metric(position_a, position_b)
-        return self.cached_distance[position_a][position_b]
+        if not self.with_caching:
+            return self.metric(position_a, position_b)
+
+        try:
+            distance = self.cached_distance[position_a][position_b]
+        except KeyError:
+            distance = self.metric(position_a, position_b)
+            self.cached_distance[position_a][position_b] = distance
+
+        return distance
 
     def time(self, position_a: GeometricPosition, position_b: GeometricPosition, now: float) -> float:
         return self.distance(position_a, position_b)
