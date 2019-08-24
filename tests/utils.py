@@ -108,14 +108,12 @@ def generate_one_route(feasible: bool, planned_trips_min: int = 1, planned_trips
     route = jit.Route(vehicle)
 
     planned_trips_len = randint(planned_trips_min, planned_trips_max)
-    cut_len = vehicle.timeout / planned_trips_len
 
     for i in range(planned_trips_len):
         planned_trip = generate_one_planned_trip(
             feasible=feasible,
             route=route,
-            earliest=route.last_time,
-            timeout=cut_len,
+            earliest=route.last_departure_time,
             surface=surface,
         )
 

@@ -1,12 +1,10 @@
 from __future__ import annotations
 
 import logging
-from collections import deque
 from math import isnan
 from typing import (
     TYPE_CHECKING,
-    Iterator)
-import itertools as it
+)
 from uuid import (
     uuid4,
 )
@@ -18,12 +16,13 @@ from .planned_trips import (
 )
 from .stops import (
     Stop,
-    StopKind)
+    StopKind,
+)
 
 if TYPE_CHECKING:
     from typing import (
-        Tuple,
         List,
+        Iterator,
         Any,
         Dict,
         Optional,
@@ -81,18 +80,19 @@ class Route(Model):
 
     @property
     def stop_causes(self) -> Iterator[StopCause]:
-        return it.chain.from_iterable(stop.causes for stop in self.stops)
+        for stop in self.stops:
+            yield from stop.causes
 
     @property
     def feasible(self) -> bool:
         if any(self.planned_trips):
             if not self.first_stop.position == self.vehicle.initial:
                 return False
-            if not self.vehicle.earliest <= self.first_stop.earliest:
+            if not self.vehicle.earliest <= self.first_stop.arrival_time:
                 return False
             if not self.last_position == self.vehicle.final:
                 return False
-            if not self.latest <= self.vehicle.latest:
+            if not self.last_departure_time <= self.vehicle.latest:
                 return False
 
         for planned_trip in self.planned_trips:
@@ -117,16 +117,24 @@ class Route(Model):
         yield from (planned_trip.trip for planned_trip in self.loaded_planned_trips)
 
     @property
-    def earliest(self) -> float:
+    def first_arrival_time(self) -> float:
         return self.first_stop.arrival_time
 
     @property
-    def latest(self) -> float:
+    def first_departure_time(self) -> float:
+        return self.first_stop.departure_time
+
+    @property
+    def last_arrival_time(self) -> float:
+        return self.last_stop.arrival_time
+
+    @property
+    def last_departure_time(self) -> float:
         return self.last_stop.departure_time
 
     @property
     def duration(self) -> float:
-        return self.latest - self.earliest
+        return self.last_departure_time - self.first_arrival_time
 
     @property
     def last_position(self) -> Position:
@@ -191,10 +199,13 @@ class Route(Model):
         assert planned_trip.delivery_stop.previous is not None
         if len(self.stops) > 1:
             assert planned_trip.pickup_stop.previous is not None
-            assert self.latest <= planned_trip.pickup_time
+            assert self.last_arrival_time <= planned_trip.pickup_time,\
+                f'{self.last_arrival_time}, {planned_trip.pickup_time}'
         assert planned_trip.pickup_stop == planned_trip.delivery_stop.previous
-        assert planned_trip.pickup_stop.latest <= planned_trip.delivery_stop.earliest
-        assert isnan(planned_trip.duration) or planned_trip.duration > 0
+        assert planned_trip.pickup_time <= planned_trip.delivery_time, \
+            f'{planned_trip.pickup_time}, {planned_trip.delivery_time}'
+        assert isnan(planned_trip.duration) or planned_trip.duration > 0, \
+            f'{planned_trip.duration}'
 
         if not self.last_stop.position == planned_trip.origin:
             self._append_empty_planned_trip(
