@@ -25,7 +25,6 @@ class TestTrips(unittest.TestCase):
         self.assertEqual(trip.latest, jit.MAX_FLOAT)
         self.assertEqual(0, trip.load_time)
         self.assertEqual(1, trip.capacity)
-        self.assertIsInstance(trip.uuid, UUID)
 
     def test_trip_with_capacity(self):
         identifier = str()
@@ -44,7 +43,6 @@ class TestTrips(unittest.TestCase):
         self.assertEqual(trip.latest, jit.MAX_FLOAT)
         self.assertEqual(0, trip.load_time)
         self.assertEqual(capacity, trip.capacity)
-        self.assertIsInstance(trip.uuid, UUID)
 
     def test_trip_with_timeout(self):
         identifier = str()
@@ -62,7 +60,6 @@ class TestTrips(unittest.TestCase):
         self.assertEqual(earliest + timeout, trip.latest)
         self.assertEqual(0, trip.load_time)
         self.assertEqual(1, trip.capacity)
-        self.assertIsInstance(trip.uuid, UUID)
 
     def test_trip_with_load_time(self):
         identifier = str()
@@ -80,7 +77,6 @@ class TestTrips(unittest.TestCase):
         self.assertEqual(trip.latest, jit.MAX_FLOAT)
         self.assertEqual(load_time, trip.load_time)
         self.assertEqual(1, trip.capacity)
-        self.assertIsInstance(trip.uuid, UUID)
 
 
 if __name__ == '__main__':
