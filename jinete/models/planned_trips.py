@@ -45,15 +45,12 @@ class PlannedTrip(Model):
 
     route: Route
     trip: Trip
-    initial: Position
     down_time: float
 
     def __init__(self, route: Route, trip: Trip, pickup: Stop, delivery: Stop, down_time: float = 0.0):
         self.route = route
         self.trip = trip
         self.down_time = down_time
-
-        assert pickup == delivery.previous
 
         self.pickup = pickup
         pickup.append_pickup(self)
@@ -88,8 +85,8 @@ class PlannedTrip(Model):
         return self.route.vehicle
 
     @property
-    def trip_uuid(self) -> UUID:
-        return self.trip.uuid
+    def trip_identifier(self) -> str:
+        return self.trip.identifier
 
     @property
     def route_uuid(self) -> UUID:
@@ -128,7 +125,7 @@ class PlannedTrip(Model):
     def as_dict(self) -> Dict[str, Any]:
         return {
             'route_uuid': self.route_uuid,
-            'trip_uuid': self.trip_uuid,
+            'trip_identifier': self.trip_identifier,
             'pickup_stop': self.pickup,
             'delivery_stop': self.delivery,
             'down_time': self.down_time,

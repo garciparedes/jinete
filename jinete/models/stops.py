@@ -54,8 +54,8 @@ class Stop(Model):
         self.route = route
         self.position = position
 
-        self.pickups = set()
-        self.deliveries = set()
+        self.pickups = tuple()
+        self.deliveries = tuple()
 
         self.previous = previous
 
@@ -67,10 +67,10 @@ class Stop(Model):
         self._arrival_time = None
 
     def append_pickup(self, planned_trip: PlannedTrip) -> None:
-        self.pickups.add(planned_trip)
+        self.pickups = (*self.pickups, planned_trip)
 
     def append_delivery(self, planned_trip: PlannedTrip) -> None:
-        self.deliveries.add(planned_trip)
+        self.deliveries = (*self.deliveries, planned_trip)
 
     @property
     def down_time(self) -> float:
