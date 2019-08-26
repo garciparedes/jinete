@@ -80,20 +80,16 @@ class GeometricSurface(Surface):
     positions: Set[GeometricPosition]
     cached_distance: Dict[Position, Dict[Position, float]]
 
-    def __init__(self, metric: DistanceMetric, with_caching: bool = True, *args, **kwargs):
+    def __init__(self, metric: DistanceMetric, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.metric = metric
 
         self.cached_distance = defaultdict(dict)
-        self.with_caching = with_caching
 
     def _build_position(self, *args, **kwargs):
         return GeometricPosition(surface=self, *args, **kwargs)
 
     def distance(self, position_a: GeometricPosition, position_b: GeometricPosition) -> float:
-        if not self.with_caching:
-            return self.metric(position_a, position_b)
-
         try:
             distance = self.cached_distance[position_a][position_b]
         except KeyError:

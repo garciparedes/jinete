@@ -10,8 +10,6 @@ from .trips import (
 )
 from .stops import (
     Stop,
-    StopCause,
-    StopKind,
 )
 
 if TYPE_CHECKING:
@@ -36,30 +34,33 @@ logger = logging.getLogger(__name__)
 
 
 class PlannedTrip(Model):
+    __slots__ = [
+        'route',
+        'trip',
+        'down_time',
+        'pickup_stop',
+        'delivery_stop',
+        '_feasible',
+    ]
+
     route: Route
     trip: Trip
     initial: Position
     down_time: float
 
-    def __init__(self, route: Route, trip: Trip, pickup_stop: Stop, delivery_stop: Stop, down_time: float = 0.0,
-                 with_caching: bool = True):
+    def __init__(self, route: Route, trip: Trip, pickup_stop: Stop, delivery_stop: Stop, down_time: float = 0.0):
         self.route = route
         self.trip = trip
         self.down_time = down_time
 
         assert pickup_stop == delivery_stop.previous
 
-        pickup_stop.append_stop_cause(
-            StopCause(self, StopKind.PICKUP)
-        )
-        delivery_stop.append_stop_cause(
-            StopCause(self, StopKind.DELIVERY)
-        )
-
         self.pickup_stop = pickup_stop
-        self.delivery_stop = delivery_stop
+        pickup_stop.append_pickup(self)
 
-        self.with_caching = with_caching
+        self.delivery_stop = delivery_stop
+        delivery_stop.append_delivery(self)
+
         self._feasible = None
 
     @staticmethod
@@ -116,7 +117,7 @@ class PlannedTrip(Model):
 
     @property
     def feasible(self) -> bool:
-        if not self.with_caching or self._feasible is None:
+        if self._feasible is None:
             self._feasible = self._calculate_feasible()
         return self._feasible
 

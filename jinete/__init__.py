@@ -18,8 +18,6 @@ from .models import (
     PlannedTrip,
 
     Stop,
-    StopCause,
-    StopKind,
 
     Result,
 

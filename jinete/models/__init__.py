@@ -17,8 +17,6 @@ from .planned_trips import (
 )
 from .stops import (
     Stop,
-    StopCause,
-    StopKind,
 )
 from .criterions import (
     PlannedTripCriterion,

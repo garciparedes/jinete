@@ -16,7 +16,6 @@ from .planned_trips import (
 )
 from .stops import (
     Stop,
-    StopKind,
 )
 
 if TYPE_CHECKING:
@@ -32,9 +31,6 @@ if TYPE_CHECKING:
     )
     from .vehicles import (
         Vehicle,
-    )
-    from .stops import (
-        StopCause,
     )
     from .trips import (
         Trip,
@@ -72,16 +68,17 @@ class Route(Model):
 
     @property
     def planned_trips(self) -> Iterator[PlannedTrip]:
-        yield from (
-            stop_cause.planned_trip
-            for stop_cause in self.stop_causes
-            if stop_cause.kind == StopKind.DELIVERY
-        )
+        yield from self.deliveries
 
     @property
-    def stop_causes(self) -> Iterator[StopCause]:
+    def pickups(self) -> Iterator[PlannedTrip]:
         for stop in self.stops:
-            yield from stop.causes
+            yield from stop.pickups
+
+    @property
+    def deliveries(self) -> Iterator[PlannedTrip]:
+        for stop in self.stops:
+            yield from stop.deliveries
 
     @property
     def feasible(self) -> bool:

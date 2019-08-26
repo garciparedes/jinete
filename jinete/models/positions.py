@@ -56,6 +56,12 @@ class GeometricPosition(Position):
     def __hash__(self):
         return hash(self.coordinates)
 
+    def __eq__(self, other) -> bool:
+        return self.coordinates == other.coordinates
+
+    def __ne__(self, other) -> bool:
+        return self.coordinates != other.coordinates
+
     def __str__(self):
         c = ",".join(f"{x:07.3f}" for x in self)
         return f'({c})'
