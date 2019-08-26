@@ -7,17 +7,11 @@ from abc import (
 from typing import (
     TYPE_CHECKING,
 )
-from uuid import (
-    uuid4,
-)
 
 if TYPE_CHECKING:
     from typing import (
         Tuple,
         Sequence,
-    )
-    from uuid import (
-        UUID,
     )
     from .surfaces import (
         Surface,
@@ -27,14 +21,8 @@ logger = logging.getLogger(__name__)
 
 
 class Position(ABC):
-    uuid: UUID
-
-    def __init__(self, surface: Surface = None, uuid: UUID = None):
-        if uuid is None:
-            uuid = uuid4()
-
+    def __init__(self, surface: Surface = None):
         self.surface = surface
-        self.uuid = uuid
 
     def __eq__(self, other):
         return hash(self) == hash(other)
@@ -47,6 +35,10 @@ class Position(ABC):
 
 
 class GeometricPosition(Position):
+    __slots__ = (
+        'coordinates',
+    )
+
     coordinates: Tuple[float]
 
     def __init__(self, coordinates: Sequence[float], *args, **kwargs):

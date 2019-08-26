@@ -1,13 +1,9 @@
 from __future__ import annotations
 
 import logging
-from enum import (
-    Enum,
-)
 from typing import (
     TYPE_CHECKING,
-    Optional,
-    Iterator)
+)
 from .abc import (
     Model,
 )
@@ -19,6 +15,7 @@ if TYPE_CHECKING:
     from typing import (
         Dict,
         Any,
+        Optional,
     )
     from .positions import (
         Position,
@@ -40,7 +37,6 @@ class Stop(Model):
     __slots__ = [
         'route',
         'position',
-        'causes',
         'pickups',
         'deliveries',
         'previous',
