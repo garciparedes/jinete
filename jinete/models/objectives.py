@@ -29,10 +29,7 @@ class Objective(ABC):
         self.direction = direction
 
     def best(self, *args: Result) -> Result:
-        return self.direction.fn(
-            (arg for arg in args if arg is not None),
-            key=lambda pt: self.scoring(pt)
-        )
+        return self.direction.fn((arg for arg in args if arg is not None), key=self.scoring)
 
     def scoring(self, result: Result) -> float:
         return self._planning_optimization_function(result.planning)

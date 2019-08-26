@@ -3,17 +3,17 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from jinete.models import (
+from ...models import (
     Planning,
 )
-from jinete.algorithms.abc import (
+from ...exceptions import (
+    NonFeasiblePlannedTripFoundException,
+)
+from ..abc import (
     Algorithm,
 )
 from ..utils import (
     OrderedCrosser,
-)
-from jinete.exceptions import (
-    NonFeasiblePlannedTripFoundException,
 )
 
 if TYPE_CHECKING:
