@@ -2,13 +2,24 @@ from __future__ import annotations
 
 import logging
 from typing import TYPE_CHECKING
-from uuid import UUID
-
+from .abc import (
+    Model,
+)
 from .trips import (
     Trip,
 )
+from .stops import (
+    Stop,
+)
 
 if TYPE_CHECKING:
+    from typing import (
+        Dict,
+        Any,
+    )
+    from uuid import (
+        UUID,
+    )
     from .routes import (
         Route,
     )
@@ -22,54 +33,60 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class PlannedTrip(object):
+class PlannedTrip(Model):
+    __slots__ = [
+        'route',
+        'trip',
+        'down_time',
+        'pickup',
+        'delivery',
+        '_feasible',
+    ]
+
     route: Route
     trip: Trip
-    initial: Position
-    route_idx: int
     down_time: float
 
-    def __init__(self, route: Route, trip: Trip, initial: Position, route_idx: int, down_time: float = 0.0):
+    def __init__(self, route: Route, trip: Trip, pickup: Stop, delivery: Stop, down_time: float = 0.0):
         self.route = route
         self.trip = trip
-        self.initial = initial
-        self.route_idx = route_idx
         self.down_time = down_time
 
-        self._collection_time = None
-        self._delivery_time = None
+        self.pickup = pickup
+        pickup.append_pickup(self)
+
+        self.delivery = delivery
+        delivery.append_delivery(self)
+
         self._feasible = None
 
     @staticmethod
-    def build_empty(route: Route, route_idx: int,
-                    *args, **kwargs) -> 'PlannedTrip':
-        trip = Trip.build_empty(*args, **kwargs)
+    def build_empty(route: Route, pickup: Stop, delivery: Stop, *args, **kwargs) -> 'PlannedTrip':
+        trip = Trip.build_empty(
+            *args, **kwargs,
+        )
         return PlannedTrip(
             route=route,
             trip=trip,
-            initial=route.last_position,
-            route_idx=route_idx,
+            pickup=pickup,
+            delivery=delivery,
         )
 
     @property
-    def collection_time(self) -> float:
-        if self._collection_time is None:
-            self._collection_time = self._calculate_collection_time()
-        return self._collection_time
+    def pickup_time(self) -> float:
+        return self.pickup.arrival_time
 
     @property
     def delivery_time(self) -> float:
-        if self._delivery_time is None:
-            self._delivery_time = self._calculate_delivery_time()
-        return self._delivery_time
+        return self.delivery.arrival_time
 
     @property
     def vehicle(self) -> Vehicle:
         return self.route.vehicle
 
     @property
-    def trip_uuid(self) -> UUID:
-        return self.trip.uuid
+    def trip_identifier(self) -> str:
+        return self.trip.identifier
 
     @property
     def route_uuid(self) -> UUID:
@@ -89,7 +106,7 @@ class PlannedTrip(object):
 
     @property
     def duration(self) -> float:
-        return self.delivery_time - self.collection_time
+        return self.delivery_time - self.pickup_time
 
     @property
     def capacity(self):
@@ -105,31 +122,25 @@ class PlannedTrip(object):
     def empty(self) -> bool:
         return self.trip.empty
 
+    def as_dict(self) -> Dict[str, Any]:
+        return {
+            'route_uuid': self.route_uuid,
+            'trip_identifier': self.trip_identifier,
+            'pickup_stop': self.pickup,
+            'delivery_stop': self.delivery,
+            'down_time': self.down_time,
+            'feasible': self.feasible,
+        }
+
     def flush(self) -> None:
-        self._collection_time = None
-        self._delivery_time = None
         self._feasible = None
 
-    def _calculate_collection_time(self) -> float:
-        time_to_origin = self.route.position_at(self.route_idx - 1).distance_to(self.trip.origin)
-        trip_start_time = max(self.route.time_at(self.route_idx - 1) + time_to_origin, self.trip.earliest)
-        trip_start_time += self.down_time
-        return trip_start_time
-
-    def _calculate_delivery_time(self) -> float:
-        time_to_travel = self.trip.duration(self.collection_time)
-        trip_finish_time = self.collection_time + time_to_travel + self.trip.load_time
-        return trip_finish_time
-
     def _calculate_feasible(self) -> bool:
-        if not self.route.time_at(self.route_idx - 1) <= self.trip.latest:
-            return False
-
         if self.trip.inbound:
             if not self.trip.earliest <= self.delivery_time <= self.trip.latest:
                 return False
         else:
-            if not self.trip.earliest <= self.collection_time <= self.trip.latest:
+            if not self.trip.earliest <= self.pickup_time <= self.trip.latest:
                 return False
 
         time_to_return = self.trip.destination.time_to(self.vehicle.final, self.delivery_time)
@@ -137,8 +148,8 @@ class PlannedTrip(object):
         if not vehicle_finish_time <= self.vehicle.latest:
             return False
 
-        if self.vehicle.vehicle_timeout is not None:
-            if not self.duration <= self.vehicle.vehicle_timeout:
+        if self.vehicle.route_timeout is not None:
+            if not self.duration <= self.vehicle.route_timeout:
                 return False
 
         if self.vehicle.trip_timeout is not None:

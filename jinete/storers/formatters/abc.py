@@ -14,6 +14,7 @@ if TYPE_CHECKING:
         Planning,
         Job,
         Route,
+        Objective,
     )
 
 
@@ -35,6 +36,10 @@ class StorerFormatter(ABC):
         if self.remove_empty_routes:
             return self.planning.loaded_routes
         return self.planning.routes
+
+    @property
+    def objective(self) -> Objective:
+        return self.result.objective
 
     @abstractmethod
     def format(self) -> str:

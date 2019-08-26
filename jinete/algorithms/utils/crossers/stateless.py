@@ -48,8 +48,8 @@ class StatelessCrosser(Crosser):
 
     @property
     def attractive_routes(self) -> Set[Route]:
-        routes = set(route for route in self.routes if len(route.planned_trips) > 0)
-        empty_route = next((route for route in self.routes if len(route.planned_trips) == 0), None)
+        routes = set(route for route in self.routes if any(route.planned_trips))
+        empty_route = next((route for route in self.routes if not any(route.planned_trips)), None)
         if empty_route is not None:
             routes.add(empty_route)
         return routes

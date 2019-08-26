@@ -42,6 +42,9 @@ class PlannedTripCriterion(ABC):
     def sorted(self, planned_trips: Iterable[PlannedTrip], inplace: bool = False) -> List[PlannedTrip]:
         return self.direction.sorted(planned_trips, key=self.scoring, inplace=inplace)
 
+    def nbest(self, n: int, planned_trips: Iterable[PlannedTrip], inplace: bool = False):
+        return self.direction.nbest(n, planned_trips, key=self.scoring, inplace=inplace)
+
 
 class ShortestTimePlannedTripCriterion(PlannedTripCriterion):
 
@@ -55,7 +58,7 @@ class ShortestTimePlannedTripCriterion(PlannedTripCriterion):
         if not planned_trip.feasible:
             return MAX_FLOAT
 
-        return planned_trip.delivery_time - planned_trip.route.last_time
+        return planned_trip.delivery_time - planned_trip.route.last_departure_time
 
 
 class LongestTimePlannedTripCriterion(PlannedTripCriterion):
@@ -70,7 +73,7 @@ class LongestTimePlannedTripCriterion(PlannedTripCriterion):
         if not planned_trip.feasible:
             return MIN_FLOAT
 
-        return planned_trip.delivery_time - planned_trip.route.last_time
+        return planned_trip.delivery_time - planned_trip.route.last_departure_time
 
 
 class LongestUtilTimePlannedTripCriterion(PlannedTripCriterion):
@@ -101,7 +104,7 @@ class HashCodePlannedTripCriterion(PlannedTripCriterion):
             return MIN_FLOAT
 
         scoring = planned_trip.distance
-        if planned_trip.collection_time == planned_trip.trip.earliest:
+        if planned_trip.pickup_time == planned_trip.trip.earliest:
             scoring += planned_trip.trip.on_time_bonus
 
         # TODO: Optimize this call

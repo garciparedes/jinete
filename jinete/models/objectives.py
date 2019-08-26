@@ -29,10 +29,7 @@ class Objective(ABC):
         self.direction = direction
 
     def best(self, *args: Result) -> Result:
-        return self.direction.fn(
-            (arg for arg in args if arg is not None),
-            key=lambda pt: self.scoring(pt)
-        )
+        return self.direction.fn((arg for arg in args if arg is not None), key=self.scoring)
 
     def scoring(self, result: Result) -> float:
         return self._planning_optimization_function(result.planning)
@@ -46,11 +43,11 @@ class Objective(ABC):
     def _route_optimization_function(self, route: Route) -> float:
         scoring = 0.0
         for planned_trip in route:
-            scoring += self._planned_trip_optimization_function(planned_trip)
+            scoring += self.planned_trip_scoring(planned_trip)
         return scoring
 
     @abstractmethod
-    def _planned_trip_optimization_function(self, planned_trip: PlannedTrip) -> float:
+    def planned_trip_scoring(self, planned_trip: PlannedTrip) -> float:
         pass
 
 
@@ -62,7 +59,7 @@ class DialARideObjective(Objective):
             direction=OptimizationDirection.MINIMIZATION,
         )
 
-    def _planned_trip_optimization_function(self, planned_trip: PlannedTrip) -> float:
+    def planned_trip_scoring(self, planned_trip: PlannedTrip) -> float:
         return planned_trip.distance
 
 
@@ -74,7 +71,7 @@ class TaxiSharingObjective(Objective):
             direction=OptimizationDirection.MAXIMIZATION,
         )
 
-    def _planned_trip_optimization_function(self, planned_trip: PlannedTrip) -> float:
+    def planned_trip_scoring(self, planned_trip: PlannedTrip) -> float:
         if planned_trip.capacity == 0:
             return 0.0
         return planned_trip.duration
@@ -87,11 +84,11 @@ class HashCodeObjective(Objective):
             direction=OptimizationDirection.MAXIMIZATION,
         )
 
-    def _planned_trip_optimization_function(self, planned_trip: PlannedTrip) -> float:
+    def planned_trip_scoring(self, planned_trip: PlannedTrip) -> float:
         if planned_trip.capacity == 0:
             return 0.0
         trip = planned_trip.trip
         scoring = trip.distance
-        if trip.earliest == planned_trip.collection_time:
+        if trip.earliest == planned_trip.pickup_time:
             scoring += trip.on_time_bonus
         return scoring

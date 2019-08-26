@@ -3,6 +3,7 @@ import logging
 from abc import (
     ABC,
     abstractmethod)
+from collections import defaultdict
 
 from typing import (
     TYPE_CHECKING,
@@ -51,7 +52,8 @@ class Surface(Model, ABC):
 
     def get_or_create_position(self, *args, **kwargs) -> Position:
         position = self._build_position(*args, **kwargs)
-        self.positions.add(position)
+        if not position in self.positions:
+            self.positions.add(position)
         return position
 
     @abstractmethod
@@ -76,25 +78,25 @@ class Surface(Model, ABC):
 
 class GeometricSurface(Surface):
     positions: Set[GeometricPosition]
+    cached_distance: Dict[Position, Dict[Position, float]]
 
     def __init__(self, metric: DistanceMetric, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.metric = metric
 
+        self.cached_distance = defaultdict(dict)
+
     def _build_position(self, *args, **kwargs):
         return GeometricPosition(surface=self, *args, **kwargs)
 
-    def distance(self, position_a: GeometricPosition, position_b: GeometricPosition, auto_add: bool = False) -> float:
-        if position_a not in self.positions:
-            logger.warning(f'"position_a"="{position_a}" is not on "self.positions".')
-            if auto_add:
-                self.positions.add(position_a)
+    def distance(self, position_a: GeometricPosition, position_b: GeometricPosition) -> float:
+        try:
+            distance = self.cached_distance[position_a][position_b]
+        except KeyError:
+            distance = self.metric(position_a, position_b)
+            self.cached_distance[position_a][position_b] = distance
 
-        if position_b not in self.positions:
-            logger.warning(f'"position_b"="{position_b}" is not on "self.positions".')
-            if auto_add:
-                self.positions.add(position_b)
-        return self.metric(position_a, position_b)
+        return distance
 
     def time(self, position_a: GeometricPosition, position_b: GeometricPosition, now: float) -> float:
         return self.distance(position_a, position_b)

@@ -29,11 +29,16 @@ class ColumnarStorerFormatter(StorerFormatter):
     def planned_trip_to_str(self, planned_trip: PlannedTrip) -> List[str]:
         return [
             self.tab_character.join((
-                f'ID: {planned_trip.trip.identifier:6}',
-                f'Position: {planned_trip.origin} to {planned_trip.destination}',
-                f'Duration: {planned_trip.duration:7.02f}',
-                f'Time: {planned_trip.collection_time:8.02f} to {planned_trip.delivery_time:8.02f}',
-                f'Load: {planned_trip.capacity}',
+                f'ID: {planned_trip.trip.identifier:5}',
+                f'P: {planned_trip.origin} to {planned_trip.destination}',
+                f'TW: {planned_trip.trip.earliest:6.01f} to {planned_trip.trip.latest:6.01f}',
+                f'WT: {planned_trip.pickup.waiting_time:5.01f}',
+                f'NT: {planned_trip.pickup.navigation_time:5.01f}',
+                f'LT: {planned_trip.trip.load_time:4.01f}',
+                f'TT: {planned_trip.duration:6.01f}',
+                f'T: {planned_trip.pickup_time:6.01f} to {planned_trip.delivery_time:6.01f}',
+                f'L: {planned_trip.capacity}',
+                f'S: {self.objective.planned_trip_scoring(planned_trip):7.02f}'
             )),
         ]
 
@@ -42,7 +47,7 @@ class ColumnarStorerFormatter(StorerFormatter):
         return [
             f'Vehicle: ',
             *(f'{self.tab_character}{row}' for row in self.vehicle_to_str(route.vehicle)),
-            f'Planned Trips: "{len(route.planned_trips)}"',
+            f'Planned Trips: "{sum(1 for _ in route.planned_trips)}"',
             *(f'{self.tab_character}{row}' for row in rows)
         ]
 
