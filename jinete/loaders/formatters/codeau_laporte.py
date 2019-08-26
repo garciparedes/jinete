@@ -38,7 +38,7 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
         final = None
 
         capacity = row[3]
-        vehicle_timeout = row[2]
+        route_timeout = row[2]
         trip_timeout = row[4]
 
         vehicles = set()
@@ -48,7 +48,7 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
                 initial,
                 final,
                 capacity=capacity,
-                vehicle_timeout=vehicle_timeout,
+                route_timeout=route_timeout,
                 trip_timeout=trip_timeout,
             )
 

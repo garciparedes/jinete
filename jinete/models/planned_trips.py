@@ -153,8 +153,8 @@ class PlannedTrip(Model):
         if not vehicle_finish_time <= self.vehicle.latest:
             return False
 
-        if self.vehicle.vehicle_timeout is not None:
-            if not self.duration <= self.vehicle.vehicle_timeout:
+        if self.vehicle.route_timeout is not None:
+            if not self.duration <= self.vehicle.route_timeout:
                 return False
 
         if self.vehicle.trip_timeout is not None:
