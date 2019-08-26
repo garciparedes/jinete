@@ -158,26 +158,26 @@ class Route(Model):
         }
 
     def conjecture_trip(self, trip: Trip) -> Optional[PlannedTrip]:
-        pickup_stop = self.last_stop
-        if pickup_stop.position != trip.origin:
-            pickup_stop = Stop(self, trip.origin, self.last_stop)
+        pickup = self.last_stop
+        if pickup.position != trip.origin:
+            pickup = Stop(self, trip.origin, self.last_stop)
 
-        delivery_stop = Stop(self, trip.destination, pickup_stop)
+        delivery = Stop(self, trip.destination, pickup)
 
         return PlannedTrip(
             route=self,
             trip=trip,
-            pickup_stop=pickup_stop,
-            delivery_stop=delivery_stop,
+            pickup=pickup,
+            delivery=delivery,
         )
 
-    def _append_empty_planned_trip(self, destination: Position, pickup_stop: Stop, delivery_stop: Stop) -> PlannedTrip:
+    def _append_empty_planned_trip(self, destination: Position, pickup: Stop, delivery: Stop) -> PlannedTrip:
         planned_trip = PlannedTrip.build_empty(
             route=self,
             origin=self.last_position,
             destination=destination,
-            pickup_stop=pickup_stop,
-            delivery_stop=delivery_stop,
+            pickup=pickup,
+            delivery=delivery,
         )
         self.append_planned_trip(planned_trip)
         return planned_trip
@@ -186,19 +186,19 @@ class Route(Model):
         if self.loaded and self.last_stop.position != self.vehicle.final:
             self._append_empty_planned_trip(
                 self.vehicle.final,
-                pickup_stop=self.last_stop,
-                delivery_stop=Stop(self, self.vehicle.final, self.last_stop),
+                pickup=self.last_stop,
+                delivery=Stop(self, self.vehicle.final, self.last_stop),
             )
 
     def append_planned_trip(self, planned_trip: PlannedTrip):
-        assert planned_trip.delivery_stop is not None
-        assert planned_trip.pickup_stop is not None
-        assert planned_trip.delivery_stop.previous is not None
+        assert planned_trip.delivery is not None
+        assert planned_trip.pickup is not None
+        assert planned_trip.delivery.previous is not None
         if len(self.stops) > 1:
-            assert planned_trip.pickup_stop.previous is not None
-            assert self.last_arrival_time <= planned_trip.pickup_time,\
+            assert planned_trip.pickup.previous is not None
+            assert self.last_arrival_time <= planned_trip.pickup_time, \
                 f'{self.last_arrival_time}, {planned_trip.pickup_time}'
-        assert planned_trip.pickup_stop == planned_trip.delivery_stop.previous
+        assert planned_trip.pickup == planned_trip.delivery.previous
         assert planned_trip.pickup_time <= planned_trip.delivery_time, \
             f'{planned_trip.pickup_time}, {planned_trip.delivery_time}'
         assert isnan(planned_trip.duration) or planned_trip.duration > 0, \
@@ -207,10 +207,10 @@ class Route(Model):
         if not self.last_stop.position == planned_trip.origin:
             self._append_empty_planned_trip(
                 planned_trip.origin,
-                pickup_stop=self.last_stop,
-                delivery_stop=planned_trip.pickup_stop,
+                pickup=self.last_stop,
+                delivery=planned_trip.pickup,
             )
 
-        self.stops.append(planned_trip.delivery_stop)
+        self.stops.append(planned_trip.delivery)
 
         logger.info(f'Append trip "{planned_trip.trip.identifier}" identifier to route "{self.uuid}".')

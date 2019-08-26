@@ -30,8 +30,8 @@ class TestShortestTimePlannedTripCriterion(unittest.TestCase):
                     earliest=0.0,
                     timeout=10.0,
                 ),
-                pickup_stop=pickup_stop_1,
-                delivery_stop=delivery_stop_1,
+                pickup=pickup_stop_1,
+                delivery=delivery_stop_1,
             ),
             jit.PlannedTrip(
                 route=route,
@@ -42,8 +42,8 @@ class TestShortestTimePlannedTripCriterion(unittest.TestCase):
                     earliest=0.0,
                     timeout=20.0,
                 ),
-                pickup_stop=pickup_stop_2,
-                delivery_stop=delivery_stop_2,
+                pickup=pickup_stop_2,
+                delivery=delivery_stop_2,
             )
         ]
 

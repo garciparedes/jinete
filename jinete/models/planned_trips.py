@@ -38,8 +38,8 @@ class PlannedTrip(Model):
         'route',
         'trip',
         'down_time',
-        'pickup_stop',
-        'delivery_stop',
+        'pickup',
+        'delivery',
         '_feasible',
     ]
 
@@ -48,40 +48,40 @@ class PlannedTrip(Model):
     initial: Position
     down_time: float
 
-    def __init__(self, route: Route, trip: Trip, pickup_stop: Stop, delivery_stop: Stop, down_time: float = 0.0):
+    def __init__(self, route: Route, trip: Trip, pickup: Stop, delivery: Stop, down_time: float = 0.0):
         self.route = route
         self.trip = trip
         self.down_time = down_time
 
-        assert pickup_stop == delivery_stop.previous
+        assert pickup == delivery.previous
 
-        self.pickup_stop = pickup_stop
-        pickup_stop.append_pickup(self)
+        self.pickup = pickup
+        pickup.append_pickup(self)
 
-        self.delivery_stop = delivery_stop
-        delivery_stop.append_delivery(self)
+        self.delivery = delivery
+        delivery.append_delivery(self)
 
         self._feasible = None
 
     @staticmethod
-    def build_empty(route: Route, pickup_stop: Stop, delivery_stop: Stop, *args, **kwargs) -> 'PlannedTrip':
+    def build_empty(route: Route, pickup: Stop, delivery: Stop, *args, **kwargs) -> 'PlannedTrip':
         trip = Trip.build_empty(
             *args, **kwargs,
         )
         return PlannedTrip(
             route=route,
             trip=trip,
-            pickup_stop=pickup_stop,
-            delivery_stop=delivery_stop,
+            pickup=pickup,
+            delivery=delivery,
         )
 
     @property
     def pickup_time(self) -> float:
-        return self.pickup_stop.arrival_time
+        return self.pickup.arrival_time
 
     @property
     def delivery_time(self) -> float:
-        return self.delivery_stop.arrival_time
+        return self.delivery.arrival_time
 
     @property
     def vehicle(self) -> Vehicle:
@@ -129,8 +129,8 @@ class PlannedTrip(Model):
         return {
             'route_uuid': self.route_uuid,
             'trip_uuid': self.trip_uuid,
-            'pickup_stop': self.pickup_stop,
-            'delivery_stop': self.delivery_stop,
+            'pickup_stop': self.pickup,
+            'delivery_stop': self.delivery,
             'down_time': self.down_time,
             'feasible': self.feasible,
         }
@@ -139,7 +139,7 @@ class PlannedTrip(Model):
         self._feasible = None
 
     def _calculate_feasible(self) -> bool:
-        if not self.pickup_stop.previous_departure_time <= self.trip.latest:
+        if not self.pickup.previous_departure_time <= self.trip.latest:
             return False
         if self.trip.inbound:
             if not self.trip.earliest <= self.delivery_time <= self.trip.latest:

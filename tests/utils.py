@@ -71,8 +71,8 @@ def generate_one_planned_trip(feasible: bool, route: jit.Route = None, *args, **
     return jit.PlannedTrip(
         route=route,
         trip=trip,
-        pickup_stop=pickup_stop,
-        delivery_stop=delivery_stop,
+        pickup=pickup_stop,
+        delivery=delivery_stop,
         down_time=down_time,
     )
 
