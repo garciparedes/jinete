@@ -42,6 +42,9 @@ class PlannedTripCriterion(ABC):
     def sorted(self, planned_trips: Iterable[PlannedTrip], inplace: bool = False) -> List[PlannedTrip]:
         return self.direction.sorted(planned_trips, key=self.scoring, inplace=inplace)
 
+    def nbest(self, n: int, planned_trips: Iterable[PlannedTrip], inplace: bool = False):
+        return self.direction.nbest(n, planned_trips, key=self.scoring, inplace=inplace)
+
 
 class ShortestTimePlannedTripCriterion(PlannedTripCriterion):
 

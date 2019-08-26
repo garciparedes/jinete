@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import heapq
 import logging
 from math import sqrt
 import functools as ft
@@ -54,6 +55,12 @@ class OptimizationDirection(Enum):
                 logger.warning('"inplace" sorting is possible only over list objects.')
             iterable = sorted(iterable, key=key, reverse=self._reverse)
         return iterable
+
+    def nbest(self, n: int, iterable: Iterable[T], key: Callable[[T], float], inplace: bool = False) -> List[T]:
+        if self._reverse:
+            return heapq.nlargest(n, iterable, key=key)
+        else:
+            return heapq.nsmallest(n, iterable, key=key)
 
 
 @unique
