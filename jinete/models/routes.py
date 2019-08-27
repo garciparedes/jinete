@@ -176,21 +176,11 @@ class Route(Model):
     def conjecture_trip_in_batch(self, iterable: Iterable[Trip]) -> List[PlannedTrip]:
         return [self.conjecture_trip(trip) for trip in iterable]
 
-    def _append_empty_planned_trip(self, pickup: Stop, delivery: Stop) -> PlannedTrip:
-        planned_trip = PlannedTrip.build_empty(
-            route=self,
-            pickup=pickup,
-            delivery=delivery,
-        )
-        self.append_planned_trip(planned_trip)
-        return planned_trip
-
     def finish(self):
         if self.loaded and self.last_stop.position != self.vehicle.final:
-            self._append_empty_planned_trip(
-                pickup=self.last_stop,
-                delivery=Stop(self, self.vehicle.final, self.last_stop),
-            )
+            finish_stop = Stop(self, self.vehicle.final, self.last_stop)
+            if not self.last_stop.position == finish_stop.position:
+                self.append_stop(finish_stop)
 
     def append_stop(self, stop: Stop) -> None:
         assert stop.previous == self.last_stop
@@ -210,14 +200,11 @@ class Route(Model):
         assert planned_trip.pickup_time <= planned_trip.delivery_time
         assert isnan(planned_trip.duration) or planned_trip.duration > 0
 
-        if not self.last_stop == planned_trip.pickup:
-            self._append_empty_planned_trip(
-                pickup=self.last_stop,
-                delivery=planned_trip.pickup,
-            )
-
         if not planned_trip.pickup == self.last_stop:
-            self.last_stop.merge(planned_trip.pickup)
+            if self.last_stop.position == planned_trip.pickup.position:
+                self.last_stop.merge(planned_trip.pickup)
+            else:
+                self.append_stop(planned_trip.pickup)
 
         self.append_stop(planned_trip.delivery)
 

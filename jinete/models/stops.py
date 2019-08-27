@@ -125,6 +125,10 @@ class Stop(Model):
         return self.previous.position
 
     @property
+    def distance(self) -> float:
+        return self.position.distance_to(self.previous_position)
+
+    @property
     def navigation_time(self):
         return self.previous_position.time_to(self.position, self.previous_departure_time)
 

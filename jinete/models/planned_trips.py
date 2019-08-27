@@ -60,19 +60,6 @@ class PlannedTrip(Model):
 
         self._feasible = None
 
-    @staticmethod
-    def build_empty(route: Route, pickup: Stop, delivery: Stop) -> 'PlannedTrip':
-        trip = Trip.build_empty(
-            origin=pickup.position,
-            destination=delivery.position,
-        )
-        return PlannedTrip(
-            route=route,
-            trip=trip,
-            pickup=pickup,
-            delivery=delivery,
-        )
-
     @property
     def pickup_time(self) -> float:
         return self.pickup.arrival_time
