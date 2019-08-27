@@ -134,7 +134,7 @@ class Stop(Model):
 
     @property
     def waiting_time(self):
-        return self.arrival_time - self.earliest
+        return max(self.earliest - self.arrival_time, 0.0)
 
     @property
     def arrival_time(self):
