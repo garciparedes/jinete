@@ -30,10 +30,14 @@ class TestStop(unittest.TestCase):
 
         position = generate_one_position()
         stop = jit.Stop(route, position, previous_stop)
+        previous_stop.following = stop
+
+        self.assertEqual(previous_stop.following, stop)
 
         self.assertEqual(stop.route, route)
         self.assertEqual(stop.position, position)
         self.assertEqual(stop.previous, previous_stop)
+        self.assertEqual(stop.distance, stop.position.distance_to(previous_stop.position))
 
 
 if __name__ == '__main__':
