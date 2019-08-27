@@ -24,6 +24,8 @@ class TestStop(unittest.TestCase):
         self.assertEqual(stop.previous_departure_time, vehicle.earliest)
         self.assertEqual(stop.navigation_time, stop.position.time_to(vehicle.initial, stop.previous_departure_time))
         self.assertEqual(stop.waiting_time, 0.0)
+        self.assertEqual(stop.down_time, 0.0)
+        self.assertEqual(stop.load_time, 0.0)
 
     def test_creation_with_previous(self):
         vehicle = generate_one_vehicle()
