@@ -16,6 +16,8 @@ if TYPE_CHECKING:
         Dict,
         Any,
         Optional,
+        Iterable,
+        Tuple,
     )
     from .positions import (
         Position,
@@ -40,6 +42,7 @@ class Stop(Model):
         'pickups',
         'deliveries',
         'previous',
+        'following',
         '_previous_departure_time',
         '_down_time',
         '_load_time',
@@ -48,8 +51,10 @@ class Stop(Model):
     ]
     route: Route
     position: Position
+    pickups: Tuple[PlannedTrip]
+    deliveries: Tuple[PlannedTrip]
 
-    def __init__(self, route: Route, position: Position, previous: Optional[Stop]):
+    def __init__(self, route: Route, position: Position, previous: Optional[Stop], following: Optional[Stop] = None):
 
         self.route = route
         self.position = position
@@ -58,6 +63,7 @@ class Stop(Model):
         self.deliveries = tuple()
 
         self.previous = previous
+        self.following = following
 
         self._previous_departure_time = None
 
@@ -67,10 +73,16 @@ class Stop(Model):
         self._arrival_time = None
 
     def append_pickup(self, planned_trip: PlannedTrip) -> None:
-        self.pickups = (*self.pickups, planned_trip)
+        self.extend_pickups((planned_trip,))
 
     def append_delivery(self, planned_trip: PlannedTrip) -> None:
-        self.deliveries = (*self.deliveries, planned_trip)
+        self.extend_deliveries((planned_trip,))
+
+    def extend_pickups(self, iterable: Iterable[PlannedTrip]) -> None:
+        self.pickups = (*self.pickups, *iterable)
+
+    def extend_deliveries(self, iterable: Iterable[PlannedTrip]) -> None:
+        self.deliveries = (*self.deliveries, *iterable)
 
     @property
     def down_time(self) -> float:
@@ -136,3 +148,49 @@ class Stop(Model):
             'vehicle_uuid': self.vehicle_uuid,
             'position': self.position,
         }
+
+    def flush(self) -> None:
+        self._down_time = None
+        self._load_time = None
+        self._earliest = None
+        self._arrival_time = None
+
+    def flush_all_previous(self):
+        self.flush()
+        if self.previous is not None:
+            self.previous.flush_all_previous()
+
+    def flush_all_following(self):
+        self.flush()
+        if self.following is not None:
+            self.following.flush_all_following()
+
+    def merge(self, other: Stop) -> None:
+        if self == other:
+            return
+        assert self.route == other.route
+        assert self.position == other.position
+        assert self.following == other.following
+
+        self.extend_pickups(other.pickups)
+        for planned_trip in other.pickups:
+            planned_trip.pickup = self
+
+        self.extend_deliveries(other.deliveries)
+        for planned_trip in other.deliveries:
+            planned_trip.delivery = self
+
+        self.flush()
+
+    def flip(self, other: Stop) -> None:
+        assert other.previous == self
+
+        following = other.following
+        other.following = self
+        self.following = following
+
+        previous = self.previous
+        other.previous = previous
+        self.previous = other
+
+        other.flush_all_following()

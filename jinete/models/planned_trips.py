@@ -61,9 +61,10 @@ class PlannedTrip(Model):
         self._feasible = None
 
     @staticmethod
-    def build_empty(route: Route, pickup: Stop, delivery: Stop, *args, **kwargs) -> 'PlannedTrip':
+    def build_empty(route: Route, pickup: Stop, delivery: Stop) -> 'PlannedTrip':
         trip = Trip.build_empty(
-            *args, **kwargs,
+            origin=pickup.position,
+            destination=delivery.position,
         )
         return PlannedTrip(
             route=route,
@@ -126,8 +127,8 @@ class PlannedTrip(Model):
         return {
             'route_uuid': self.route_uuid,
             'trip_identifier': self.trip_identifier,
-            'pickup_stop': self.pickup,
-            'delivery_stop': self.delivery,
+            'pickup': self.pickup,
+            'delivery': self.delivery,
             'down_time': self.down_time,
             'feasible': self.feasible,
         }
