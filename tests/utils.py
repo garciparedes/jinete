@@ -31,6 +31,7 @@ def generate_positions(n: int, surface: jit.Surface = None, *args, **kwargs) -> 
 
 
 def generate_one_trip(identifier: str = None,
+                      origin: jit.Position = None, destination: jit.Position = None,
                       earliest: float = None, earliest_min: float = 0, earliest_max: float = 86400,
                       timeout: float = None, timeout_min: float = 1800, timeout_max: float = 7200,
                       load_time: float = None, load_time_min: float = 300, load_time_max: float = 900,
@@ -38,7 +39,10 @@ def generate_one_trip(identifier: str = None,
                       *args, **kwargs) -> jit.Trip:
     if identifier is None:
         identifier = str()
-    origin, destination = tuple(generate_positions(2, *args, **kwargs))
+    if origin is None:
+        origin = generate_one_position(*args, **kwargs)
+    if destination is None:
+        destination = generate_one_position(*args, **kwargs)
     if earliest is None:
         earliest = uniform(earliest_min, earliest_max)
     if timeout is None:
@@ -57,13 +61,14 @@ def generate_trips(n: int, *args, **kwargs) -> Set[jit.Trip]:
 
 
 def generate_one_planned_trip(feasible: bool, route: jit.Route = None, *args, **kwargs) -> jit.PlannedTrip:
-    trip = generate_one_trip(*args, **kwargs)
-
-    # TODO: Improve feasible randomness.
     if feasible:
         down_time = 0
+        kwargs['earliest'] = 0.0
+        kwargs['timeout'] = float('inf')
     else:
         down_time = jit.MAX_FLOAT
+
+    trip = generate_one_trip(*args, **kwargs)
 
     pickup_stop = jit.Stop(route, trip.origin, route.last_stop)
     delivery_stop = jit.Stop(route, trip.destination, pickup_stop)

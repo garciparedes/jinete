@@ -46,10 +46,8 @@ class OrderedCrosser(Crosser):
 
     def create_sub_ranking(self, route: Route) -> OrderedDict[Trip, PlannedTrip]:
         logger.debug("Creating sub_ranking...")
-        raw_sub_ranking = [
-            route.conjecture_trip(trip)
-            for trip in it.islice(self.pending_trips, self.neighborhood_max_size)
-        ]
+        raw_sub_ranking = route.conjecture_trip_in_batch(it.islice(self.pending_trips, self.neighborhood_max_size))
+
         self.criterion.sorted(raw_sub_ranking, inplace=True)
         return OrderedDict((item.trip, item) for item in raw_sub_ranking)
 

@@ -1,24 +1,30 @@
 from __future__ import annotations
-from abc import ABC, abstractmethod
+from abc import ABC
 
-from typing import TYPE_CHECKING
 from .constants import (
     OptimizationDirection,
 )
 
-if TYPE_CHECKING:
-    from .routes import (
-        Route,
-    )
-    from .plannings import (
-        Planning,
-    )
-    from .planned_trips import (
-        PlannedTrip,
-    )
-    from .results import (
-        Result,
-    )
+from typing import (
+    Union,
+)
+from .routes import (
+    Route,
+)
+from .plannings import (
+    Planning,
+)
+from .planned_trips import (
+    PlannedTrip,
+)
+from .results import (
+    Result,
+)
+from .stops import (
+    Stop,
+)
+
+Optimizable = Union[Result, Planning, Route, Stop, PlannedTrip]
 
 
 class Objective(ABC):
@@ -28,10 +34,24 @@ class Objective(ABC):
         self.name = name
         self.direction = direction
 
-    def best(self, *args: Result) -> Result:
-        return self.direction.fn((arg for arg in args if arg is not None), key=self.scoring)
+    def best(self, *args: Optimizable) -> Optimizable:
+        return self.direction((arg for arg in args if arg is not None), key=self.optimization_function)
 
-    def scoring(self, result: Result) -> float:
+    def optimization_function(self, value: Optimizable) -> float:
+        if isinstance(value, Result):
+            return self._result_optimization_function(value)
+        elif isinstance(value, Planning):
+            return self._planning_optimization_function(value)
+        elif isinstance(value, Route):
+            return self._route_optimization_function(value)
+        elif isinstance(value, Stop):
+            return self._stop_optimization_function(value)
+        elif isinstance(value, PlannedTrip):
+            return self._planned_trip_optimization_function(value)
+        else:
+            raise ValueError
+
+    def _result_optimization_function(self, result: Result) -> float:
         return self._planning_optimization_function(result.planning)
 
     def _planning_optimization_function(self, planning: Planning) -> float:
@@ -42,13 +62,18 @@ class Objective(ABC):
 
     def _route_optimization_function(self, route: Route) -> float:
         scoring = 0.0
-        for planned_trip in route:
-            scoring += self.planned_trip_scoring(planned_trip)
+        for stop in route.stops:
+            scoring += self._stop_optimization_function(stop)
         return scoring
 
-    @abstractmethod
-    def planned_trip_scoring(self, planned_trip: PlannedTrip) -> float:
-        pass
+    def _stop_optimization_function(self, stop: Stop) -> float:
+        scoring = 0.0
+        for planned_trip in stop.pickups:
+            scoring += self._planned_trip_optimization_function(planned_trip)
+        return scoring
+
+    def _planned_trip_optimization_function(self, planned_trip: PlannedTrip) -> float:
+        raise NotImplementedError
 
 
 class DialARideObjective(Objective):
@@ -59,8 +84,19 @@ class DialARideObjective(Objective):
             direction=OptimizationDirection.MINIMIZATION,
         )
 
-    def planned_trip_scoring(self, planned_trip: PlannedTrip) -> float:
-        return planned_trip.distance
+    def _route_optimization_function(self, route: Route) -> float:
+        scoring = 0.0
+        for stop in route.stops:
+            scoring += stop.distance
+        return scoring
+
+    def _planned_trip_optimization_function(self, planned_trip: PlannedTrip) -> float:
+        scoring = 0.0
+        current = planned_trip.pickup
+        while current != planned_trip.delivery:
+            current = current.following
+            scoring += current.distance
+        return scoring
 
 
 class TaxiSharingObjective(Objective):
@@ -71,7 +107,7 @@ class TaxiSharingObjective(Objective):
             direction=OptimizationDirection.MAXIMIZATION,
         )
 
-    def planned_trip_scoring(self, planned_trip: PlannedTrip) -> float:
+    def _planned_trip_optimization_function(self, planned_trip: PlannedTrip) -> float:
         if planned_trip.capacity == 0:
             return 0.0
         return planned_trip.duration
@@ -84,7 +120,7 @@ class HashCodeObjective(Objective):
             direction=OptimizationDirection.MAXIMIZATION,
         )
 
-    def planned_trip_scoring(self, planned_trip: PlannedTrip) -> float:
+    def _planned_trip_optimization_function(self, planned_trip: PlannedTrip) -> float:
         if planned_trip.capacity == 0:
             return 0.0
         trip = planned_trip.trip

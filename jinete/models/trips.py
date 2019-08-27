@@ -52,10 +52,6 @@ class Trip(object):
         self.inbound = inbound
         self.capacity = capacity
 
-    @staticmethod
-    def build_empty(origin: Position, destination: Position) -> 'Trip':
-        return Trip('EMPTY', origin, destination, capacity=0)
-
     @property
     def latest(self) -> float:
         if self.timeout is None:

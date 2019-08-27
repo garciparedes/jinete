@@ -43,8 +43,8 @@ class Result(object):
         return self.job.objective
 
     @property
-    def scoring(self) -> float:
-        return self.objective.scoring(self)
+    def optimization_function(self) -> float:
+        return self.objective.optimization_function(self)
 
     @property
     def direction(self) -> OptimizationDirection:
