@@ -35,7 +35,7 @@ class Objective(ABC):
         self.direction = direction
 
     def best(self, *args: Optimizable) -> Optimizable:
-        return self.direction.fn((arg for arg in args if arg is not None), key=self.optimization_function)
+        return self.direction((arg for arg in args if arg is not None), key=self.optimization_function)
 
     def optimization_function(self, value: Optimizable) -> float:
         if isinstance(value, Result):
@@ -91,7 +91,12 @@ class DialARideObjective(Objective):
         return scoring
 
     def _planned_trip_optimization_function(self, planned_trip: PlannedTrip) -> float:
-        return planned_trip.pickup.distance
+        scoring = 0.0
+        current = planned_trip.pickup
+        while current != planned_trip.delivery:
+            current = current.following
+            scoring += current.distance
+        return scoring
 
 
 class TaxiSharingObjective(Objective):

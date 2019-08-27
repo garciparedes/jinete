@@ -203,6 +203,7 @@ class Route(Model):
         if not planned_trip.pickup == self.last_stop:
             if self.last_stop.position == planned_trip.pickup.position:
                 self.last_stop.merge(planned_trip.pickup)
+                planned_trip.delivery.previous = self.last_stop  # FIXME: should be inside merge?
             else:
                 self.append_stop(planned_trip.pickup)
 
