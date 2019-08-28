@@ -41,7 +41,6 @@ class InsertionAlgorithm(Algorithm):
         return self.crosser_cls(*self.args, **self.kwargs)
 
     def _optimize(self) -> Planning:
-        logger.info('Optimizing...')
         crosser = self.build_crosser()
 
         while not crosser.completed:
@@ -56,5 +55,4 @@ class InsertionAlgorithm(Algorithm):
         for route in crosser.routes:
             route.finish()
         planning = Planning(crosser.routes)
-        logger.info('Optimized!')
         return planning

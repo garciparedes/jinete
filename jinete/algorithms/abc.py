@@ -30,6 +30,8 @@ class Algorithm(ABC):
         return self.job.objective
 
     def optimize(self) -> Result:
+        logger.info(f'Optimizing with {self.__class__.__name__}...')
+
         start_time = time()
         planning = self._optimize()
         end_time = time()
@@ -42,6 +44,7 @@ class Algorithm(ABC):
             planning=planning,
             computation_time=computation_time,
         )
+        logger.info(f'Optimized with {self.__class__.__name__}!')
         return result
 
     @abstractmethod
