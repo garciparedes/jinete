@@ -34,12 +34,12 @@ class LocalSearchAlgorithm(Algorithm):
         self.kwargs = kwargs
 
     @property
-    def base_planning(self) -> Planning:
+    def initial_planning(self) -> Planning:
         return self.initial.planning
 
     @property
-    def base_routes(self) -> Set[Route]:
-        return self.base_planning.routes
+    def initial_routes(self) -> Set[Route]:
+        return self.initial_planning.routes
 
     def _optimize(self) -> Planning:
         raise NotImplementedError

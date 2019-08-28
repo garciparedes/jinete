@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from copy import deepcopy
 from math import isnan
 from typing import (
     TYPE_CHECKING,
@@ -49,8 +50,7 @@ class Route(Model):
     uuid: UUID
     stops: List[Stop]
 
-    def __init__(self, vehicle: Vehicle, stops: List[Stop] = None,
-                 uuid: UUID = None):
+    def __init__(self, vehicle: Vehicle, stops: List[Stop] = None, uuid: UUID = None):
 
         if uuid is None:
             uuid = uuid4()
@@ -66,6 +66,9 @@ class Route(Model):
 
     def __iter__(self):
         yield from self.planned_trips
+
+    def __deepcopy__(self, memo):
+        return Route(deepcopy(self.vehicle, memo), deepcopy(self.stops, memo))
 
     @property
     def planned_trips(self) -> Iterator[PlannedTrip]:

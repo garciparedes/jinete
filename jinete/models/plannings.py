@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from copy import deepcopy
 from typing import TYPE_CHECKING
 from uuid import (
     uuid4,
@@ -47,3 +48,6 @@ class Planning(Model):
         return {
             'uuid': self.uuid,
         }
+
+    def __deepcopy__(self, memo):
+        return Planning(deepcopy(self.routes, memo))

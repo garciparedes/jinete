@@ -68,3 +68,6 @@ class Trip(object):
 
     def duration(self, now: float):
         return self.origin.time_to(self.destination, now)
+
+    def __deepcopy__(self, memodict={}):
+        return self

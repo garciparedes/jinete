@@ -33,6 +33,9 @@ class Position(ABC):
     def time_to(self, other: Position, now: float) -> float:
         return self.surface.time(self, other, now)
 
+    def __deepcopy__(self, memo):
+        return self
+
 
 class GeometricPosition(Position):
     __slots__ = (

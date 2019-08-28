@@ -51,16 +51,19 @@ class Stop(Model):
     ]
     route: Route
     position: Position
+    previous: Optional[Stop]
+    following: Optional[Stop]
     pickups: Tuple[PlannedTrip]
     deliveries: Tuple[PlannedTrip]
 
-    def __init__(self, route: Route, position: Position, previous: Optional[Stop], following: Optional[Stop] = None):
+    def __init__(self, route: Route, position: Position, previous: Optional[Stop], following: Optional[Stop] = None,
+                 pickups: Tuple[PlannedTrip] = tuple(), deliveries: Tuple[PlannedTrip] = tuple()):
 
         self.route = route
         self.position = position
 
-        self.pickups = tuple()
-        self.deliveries = tuple()
+        self.pickups = pickups
+        self.deliveries = deliveries
 
         self.previous = previous
         self.following = following

@@ -52,7 +52,7 @@ class Surface(Model, ABC):
 
     def get_or_create_position(self, *args, **kwargs) -> Position:
         position = self._build_position(*args, **kwargs)
-        if not position in self.positions:
+        if position not in self.positions:
             self.positions.add(position)
         return position
 
