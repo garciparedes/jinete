@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from copy import deepcopy
 from typing import TYPE_CHECKING
 
 from ...exceptions import (
@@ -11,6 +12,9 @@ from ...models import (
 )
 from ..abc import (
     Algorithm,
+)
+from ..utils.breeders import (
+    FlipBreeder
 )
 
 if TYPE_CHECKING:
@@ -32,6 +36,7 @@ class LocalSearchAlgorithm(Algorithm):
         self.initial = initial
         self.args = args
         self.kwargs = kwargs
+        self.breeder_cls = FlipBreeder
 
     @property
     def initial_planning(self) -> Planning:
@@ -42,4 +47,12 @@ class LocalSearchAlgorithm(Algorithm):
         return self.initial_planning.routes
 
     def _optimize(self) -> Planning:
-        raise NotImplementedError
+        best = self.initial
+
+        again = True
+        while again:
+            current = self.breeder_cls(best).improve()
+            best = self.objective.best(best, current)
+            again = best == current
+
+        return best.planning

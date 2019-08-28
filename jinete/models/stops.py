@@ -190,14 +190,21 @@ class Stop(Model):
         self.flush()
 
     def flip(self, other: Stop) -> None:
-        assert other.previous == self
+        # assert other.previous == self
 
         following = other.following
         other.following = self
+        if following is not None:
+            following.previous = self
         self.following = following
 
         previous = self.previous
         other.previous = previous
+        if previous is not None:
+            previous.following = other
         self.previous = other
 
         other.flush_all_following()
+
+    def flip_with_following(self):
+        self.flip(self.following)
