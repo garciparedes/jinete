@@ -67,8 +67,15 @@ class Route(Model):
     def __iter__(self):
         yield from self.planned_trips
 
-    def __deepcopy__(self, memo):
-        return Route(deepcopy(self.vehicle, memo), deepcopy(self.stops, memo))
+    def __deepcopy__(self, memo: Dict[int, Any]) -> Route:
+        vehicle = deepcopy(self.vehicle, memo)
+
+        route = Route(vehicle)
+        memo[id(self)] = route
+
+        route.stops = deepcopy(self.stops, memo)
+
+        return route
 
     @property
     def planned_trips(self) -> Iterator[PlannedTrip]:
@@ -96,10 +103,14 @@ class Route(Model):
             if not self.last_departure_time <= self.vehicle.latest:
                 return False
 
-        for one, two in zip(self.stops[:-1], self.stops[1:]):
-            assert one.following == two
-            assert two.previous == one
-            assert one.position != two.position
+        if __debug__:
+            for stop in self.stops:
+                assert stop.route == self
+
+            for one, two in zip(self.stops[:-1], self.stops[1:]):
+                assert one.following == two
+                assert two.previous == one
+                assert one.position != two.position
 
         for planned_trip in self.planned_trips:
             if not planned_trip.feasible:

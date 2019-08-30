@@ -12,6 +12,8 @@ if TYPE_CHECKING:
     from typing import (
         Tuple,
         Sequence,
+        Dict,
+        Any,
     )
     from .surfaces import (
         Surface,
@@ -33,7 +35,7 @@ class Position(ABC):
     def time_to(self, other: Position, now: float) -> float:
         return self.surface.time(self, other, now)
 
-    def __deepcopy__(self, memo):
+    def __deepcopy__(self, memo: Dict[int, Any]) -> Position:
         return self
 
 

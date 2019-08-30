@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from typing import (
     TYPE_CHECKING,
-)
+    List)
 from .abc import (
     Model,
 )
@@ -114,6 +114,14 @@ class Stop(Model):
         return self.vehicle.uuid
 
     @property
+    def stops(self) -> List[Stop]:
+        return self.route.stops
+
+    @property
+    def index(self) -> int:
+        return self.stops.index(self)
+
+    @property
     def previous_departure_time(self) -> float:
         if self.previous is None:
             return self.vehicle.earliest
@@ -191,6 +199,11 @@ class Stop(Model):
 
     def flip(self, other: Stop) -> None:
         # assert other.previous == self
+        assert self.route == other.route
+
+        self_index = self.index
+        other_index = other.index
+        self.stops[self_index], self.stops[other_index] = self.stops[other_index], self.stops[self_index]
 
         following = other.following
         other.following = self

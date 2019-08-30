@@ -79,7 +79,7 @@ class Vehicle(Model):
             'uuid': self.uuid,
         }
 
-    def __deepcopy__(self, memo):
+    def __deepcopy__(self, memo: Dict[int, Any]) -> Vehicle:
         return self
 
 
@@ -99,5 +99,5 @@ class Fleet(Model):
         }
         return dict_values
 
-    def __deepcopy__(self, memo):
+    def __deepcopy__(self, memo: Dict[int, Any]) -> Fleet:
         return self

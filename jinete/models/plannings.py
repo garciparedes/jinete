@@ -30,7 +30,7 @@ class Planning(Model):
     routes: Set[Route]
     uuid: UUID
 
-    def __init__(self, routes: Set[Route], uuid: UUID = None):
+    def __init__(self, routes: Set[Route] = None, uuid: UUID = None):
         if uuid is None:
             uuid = uuid4()
 
@@ -49,5 +49,10 @@ class Planning(Model):
             'uuid': self.uuid,
         }
 
-    def __deepcopy__(self, memo):
-        return Planning(deepcopy(self.routes, memo))
+    def __deepcopy__(self, memo: Dict[int, Any]) -> Planning:
+        planning = Planning()
+        memo[id(self)] = planning
+
+        planning.routes = deepcopy(self.routes, memo)
+
+        return planning

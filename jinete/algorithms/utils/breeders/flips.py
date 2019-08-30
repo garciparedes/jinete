@@ -23,11 +23,9 @@ class FlipBreeder(Breeder):
 
                 if not set(first.pickups).isdisjoint(second.deliveries):
                     continue
-                route.stops[i], route.stops[j] = route.stops[j], route.stops[i]
                 first.flip(second)
 
                 if not route.feasible or cost < self.objective.optimization_function(route):
-                    route.stops[i], route.stops[j] = route.stops[j], route.stops[i]
                     second.flip(first)
                     continue
 

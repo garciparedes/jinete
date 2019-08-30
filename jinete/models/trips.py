@@ -10,6 +10,10 @@ from .constants import (
 )
 
 if TYPE_CHECKING:
+    from typing import (
+        Dict,
+        Any,
+    )
     from .positions import (
         Position,
     )
@@ -69,5 +73,5 @@ class Trip(object):
     def duration(self, now: float):
         return self.origin.time_to(self.destination, now)
 
-    def __deepcopy__(self, memodict={}):
+    def __deepcopy__(self, memo: Dict[int, Any]) -> Trip:
         return self
