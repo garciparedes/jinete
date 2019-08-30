@@ -2,7 +2,7 @@ import unittest
 from pathlib import Path
 
 import jinete as jit
-from ..utils import (
+from tests.utils import (
     generate_one_result,
 )
 

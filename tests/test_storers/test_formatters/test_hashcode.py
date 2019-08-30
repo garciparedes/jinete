@@ -1,7 +1,7 @@
 import unittest
 
 import jinete as jit
-from ...utils import (
+from tests.utils import (
     generate_one_result,
 )
 
@@ -17,7 +17,7 @@ class TestHashCodeStorerFormatter(unittest.TestCase):
         ])
 
     def test_creation(self):
-        storer = jit.HashCodeStorerFormatter(self.result)
+        storer = jit.HashCodeStorerFormatter(result=self.result)
         self.assertEqual(self.expected_result, storer.format())
 
 
