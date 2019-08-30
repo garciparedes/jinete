@@ -42,10 +42,20 @@ def main():
                 *args, **kwargs,
             )
 
+    class MyStorerSet(jit.StorerSet):
+        def __init__(self, *args, **kwargs):
+            super().__init__(
+                storer_cls_set={
+                    MyStorer,
+                    jit.GraphPlotStorer,
+                },
+                *args, **kwargs,
+            )
+
     dispatcher = jit.StaticDispatcher(
         MyLoader,
         MyAlgorithm,
-        jit.GraphPlotStorer,
+        MyStorerSet,
     )
 
     result = dispatcher.run()

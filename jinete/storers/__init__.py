@@ -19,3 +19,6 @@ from .naive import (
 from .plots import (
     GraphPlotStorer,
 )
+from .sets import (
+    StorerSet,
+)
