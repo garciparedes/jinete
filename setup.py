@@ -23,6 +23,7 @@ description = (
 dependencies = [
     "networkx>=2.3",
     "matplotlib>=3.1.1",
+    'seaborn>=0.9.0',
 ]
 
 extra_dependencies = {
