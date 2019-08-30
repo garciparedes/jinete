@@ -10,7 +10,7 @@ from tests.utils import (
 )
 
 
-class TestFileStorer(unittest.TestCase):
+class TestGraphPlotStorer(unittest.TestCase):
     file_path: Path
 
     @classmethod
