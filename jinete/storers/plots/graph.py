@@ -35,12 +35,6 @@ class GraphPlotStorer(Storer):
             nodes[edge[0]] = edge[0]
             nodes[edge[1]] = edge[1]
 
-        # edges = {
-        #    (0, 1): "red",
-        #    (1, 2): "red",
-        #     (0, 2): "blue",
-        #    (2, 3): "red",
-        # }
         X = nx.DiGraph()
         X.add_nodes_from(nodes.keys())
         X.add_edges_from(edges.keys())
