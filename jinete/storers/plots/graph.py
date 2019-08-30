@@ -11,12 +11,6 @@ from ..abc import (
 class GraphPlotStorer(Storer):
 
     def store(self) -> None:
-        nodes = {
-            0: (40, 20),
-            1: (20, 30),
-            2: (40, 30),
-            3: (30, 10),
-        }
 
         nodes = dict(
             it.chain.from_iterable(
