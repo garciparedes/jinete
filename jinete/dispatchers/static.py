@@ -9,9 +9,6 @@ from ..models import (
 
 class StaticDispatcher(Dispatcher):
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
     def run(self) -> Result:
         loader = self.loader_cls()
 
@@ -21,6 +18,8 @@ class StaticDispatcher(Dispatcher):
 
         result = algorithm.optimize()
 
-        storer = self.storer_cls(result=result)
-        storer.store()
+        if self.storer_cls is not None:
+            storer = self.storer_cls(result=result)
+            storer.store()
+
         return result

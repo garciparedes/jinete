@@ -131,3 +131,32 @@ def generate_routes(n: int, *args, **kwargs) -> Set[jit.Route]:
     return {
         generate_one_route(*args, **kwargs) for _ in range(n)
     }
+
+
+def generate_one_result():
+    from pathlib import Path
+    file_path = Path(__file__).parents[1] / 'res' / 'datasets' / 'hashcode' / 'a_example.in'
+
+    class MyLoader(jit.FileLoader):
+        def __init__(self, *args, **kwargs):
+            super().__init__(
+                file_path=file_path,
+                formatter_cls=jit.HashCodeLoaderFormatter,
+                *args, **kwargs,
+            )
+
+    class MyAlgorithm(jit.InsertionAlgorithm):
+        def __init__(self, *args, **kwargs):
+            super().__init__(
+                neighborhood_max_size=None,
+                criterion_cls=jit.HashCodePlannedTripCriterion,
+                *args, **kwargs,
+            )
+
+    dispatcher = jit.StaticDispatcher(
+        MyLoader,
+        MyAlgorithm,
+    )
+    result = dispatcher.run()
+
+    return result
