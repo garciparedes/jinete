@@ -45,7 +45,7 @@ def main():
     dispatcher = jit.StaticDispatcher(
         MyLoader,
         MyAlgorithm,
-        MyStorer,
+        jit.GraphPlotStorer,
     )
 
     result = dispatcher.run()

@@ -24,6 +24,10 @@ class Result(object):
         self.computation_time = computation_time
 
     @property
+    def trips(self) -> Set[Trip]:
+        return self.job.trips
+
+    @property
     def routes(self) -> Set[Route]:
         return self.planning.routes
 

@@ -21,7 +21,8 @@ description = (
 )
 
 dependencies = [
-
+    "networkx>=2.3",
+    "matplotlib>=3.1.1",
 ]
 
 extra_dependencies = {

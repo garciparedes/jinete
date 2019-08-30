@@ -16,3 +16,6 @@ from .prompt import (
 from .naive import (
     NaiveStorer,
 )
+from .plots import (
+    GraphPlotStorer,
+)
