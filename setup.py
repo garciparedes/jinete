@@ -38,6 +38,7 @@ extra_dependencies = {
     ],
     'syntax': [
         'flake8',
+        'mypy',
     ],
     'logs': [
         'coloredlogs',

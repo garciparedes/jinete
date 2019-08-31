@@ -17,5 +17,6 @@ class HashCodeStorerFormatter(StorerFormatter):
 
     def format(self) -> str:
         result = str()
-        result += '\n'.join(self.route_to_str(route) for route in self.routes)
+        lines = sorted(self.route_to_str(route) for route in self.routes)
+        result += '\n'.join(lines)
         return result

@@ -64,9 +64,12 @@ class OptimizationDirection(Enum):
 
 @unique
 class DistanceMetric(Enum):
+
+    @staticmethod
     def _euclidean_distance(a: Iterable[Number], b: Iterable[Number]) -> float:
         return sqrt(sum(pow(a_i - b_i, 2) for a_i, b_i in zip(a, b)))
 
+    @staticmethod
     def _manhattan_distance(a: Iterable[Number], b: Iterable[Number]) -> float:
         return sum(abs(a_i - b_i) for a_i, b_i in zip(a, b))
 

@@ -8,7 +8,9 @@ from tests.utils import (
 
 
 class TestFileStorer(unittest.TestCase):
+    directory_path: Path
     file_path: Path
+    result: jit.Result
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -39,8 +41,8 @@ class TestFileStorer(unittest.TestCase):
         storer.store()
 
         expected_result = '\n'.join([
-            "2 0 1",
             "1 2",
+            "2 0 1",
         ])
 
         self.assertEqual(self.file_path.exists(), True)

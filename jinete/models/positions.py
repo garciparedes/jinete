@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 class Position(ABC):
-    def __init__(self, surface: Surface = None):
+    def __init__(self, surface: Surface):
         self.surface = surface
 
     def __eq__(self, other):

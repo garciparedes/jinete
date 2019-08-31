@@ -8,6 +8,7 @@ install:
   - 'pipenv sync'
 script:
   - 'pipenv run flake8'
+  - 'pipenv run flake8'
   - 'pipenv run coverage run --source=jinete --module unittest discover tests'
 after_success:
   - 'pipenv run codecov'

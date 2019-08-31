@@ -11,7 +11,8 @@ from tests.utils import (
 
 
 class TestGraphPlotStorer(unittest.TestCase):
-    file_path: Path
+    directory_path: Path
+    result: jit.Result
 
     @classmethod
     def setUpClass(cls) -> None:
