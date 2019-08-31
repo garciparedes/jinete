@@ -48,9 +48,9 @@ class HashCodeLoaderFormatter(LoaderFormatter):
         return trip
 
     def surface(self, *args, **kwargs) -> Surface:
-        row = self.data[0]
-        rows = row[0]
-        columns = row[1]
+        # row = self.data[0]
+        # rows = row[0]
+        # columns = row[1]
         surface = GeometricSurface(DistanceMetric.MANHATTAN)
         logger.info(f'Created surface!')
         return surface

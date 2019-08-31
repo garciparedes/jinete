@@ -3,7 +3,6 @@ from __future__ import annotations
 import heapq
 import logging
 from math import sqrt
-import functools as ft
 from sys import maxsize
 from typing import TYPE_CHECKING
 from enum import (

@@ -1,5 +1,4 @@
 import unittest
-from uuid import UUID
 
 import jinete as jit
 
