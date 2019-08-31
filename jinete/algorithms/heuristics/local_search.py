@@ -5,7 +5,7 @@ from copy import deepcopy
 from typing import TYPE_CHECKING
 
 from ...exceptions import (
-    NonFeasiblePlannedTripFoundException,
+    NonFeasiblePlannedTripException,
 )
 from ...models import (
     Planning,

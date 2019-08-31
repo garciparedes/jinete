@@ -61,6 +61,8 @@ def generate_trips(n: int, *args, **kwargs) -> Set[jit.Trip]:
 
 
 def generate_one_planned_trip(feasible: bool, route: jit.Route = None, *args, **kwargs) -> jit.PlannedTrip:
+    if route is None:
+        route = generate_one_route()
     if feasible:
         down_time = 0
         kwargs['earliest'] = 0.0
@@ -105,16 +107,18 @@ def generate_vehicles(n: int, *args, **kwargs) -> Set[jit.Vehicle]:
     }
 
 
-def generate_one_route(feasible: bool, planned_trips_min: int = 1, planned_trips_max: int = 20,
+def generate_one_route(feasible: bool = True,
+                       planned_trips_count: int = None, planned_trips_min: int = 1, planned_trips_max: int = 20,
                        surface: jit.Surface = None, *args, **kwargs) -> jit.Route:
     if surface is None:
         surface = generate_one_surface(*args, **kwargs)
     vehicle = generate_one_vehicle(surface=surface, *args, **kwargs)
     route = jit.Route(vehicle)
 
-    planned_trips_len = randint(planned_trips_min, planned_trips_max)
+    if planned_trips_count is None:
+        planned_trips_count = randint(planned_trips_min, planned_trips_max)
 
-    for i in range(planned_trips_len):
+    for i in range(planned_trips_count):
         planned_trip = generate_one_planned_trip(
             feasible=feasible,
             route=route,

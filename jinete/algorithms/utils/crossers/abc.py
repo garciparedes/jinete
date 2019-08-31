@@ -10,7 +10,7 @@ from typing import (
 )
 
 from ....exceptions import (
-    NonFeasiblePlannedTripFoundException,
+    StopPlannedTripIterationException,
 )
 from ....models import (
     Route,
@@ -70,7 +70,7 @@ class Crosser(ABC):
         while True:
             planned_trip = self.get_planned_trip()
             if planned_trip is None:
-                raise NonFeasiblePlannedTripFoundException('Remaining Planned Trips are not feasible.')
+                raise StopPlannedTripIterationException()
             logger.debug(f'Yielding {planned_trip}...')
             return planned_trip
 

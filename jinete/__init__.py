@@ -82,6 +82,7 @@ from .algorithms import (
 
 from .exceptions import (
     JineteException,
-    NonFeasiblePlannedTripFoundException,
-    PlannedTripNotFeasibleException,
+    StopPlannedTripIterationException,
+    NonFeasiblePlannedTripException,
+    NonFeasibleRouteException,
 )
