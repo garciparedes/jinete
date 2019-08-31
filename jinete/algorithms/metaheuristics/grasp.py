@@ -19,7 +19,13 @@ from .iterative import (
 )
 
 if TYPE_CHECKING:
-    pass
+    from typing import (
+        Type,
+        Optional,
+    )
+    from ...models import (
+        Result,
+    )
 
 logger = logging.getLogger(__name__)
 
@@ -38,18 +44,22 @@ class GraspAlgorithm(Algorithm):
         self.kwargs = kwargs
 
     def build_first_solution_algorithm(self, *args, **kwargs) -> Algorithm:
+        args = (*self.args, *args)
+        kwargs.update(self.kwargs)
+
         return IterativeAlgorithm(
             episodes=self.first_solution_episodes,
             seed=self.random.randint(0, MAX_INT),
-            *args, *self.args,
-            **kwargs, **self.kwargs,
+            *args, **kwargs,
         )
 
     def build_local_search_algorithm(self, *args, **kwargs) -> Algorithm:
+        args = (*self.args, *args)
+        kwargs.update(self.kwargs)
+
         return LocalSearchAlgorithm(
             seed=self.random.randint(0, MAX_INT),
-            *args, *self.args,
-            **kwargs, **self.kwargs,
+            *args, **kwargs,
         )
 
     def again(self, episode_count: int, *args, **kwargs):

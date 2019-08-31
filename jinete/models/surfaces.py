@@ -41,6 +41,7 @@ logger = logging.getLogger(__name__)
 
 class Surface(Model, ABC):
     uuid: UUID
+    positions: Set[Position]
 
     def __init__(self, positions: Set[Position] = None, uuid: UUID = None, *args, **kwargs):
         if uuid is None:
@@ -77,7 +78,6 @@ class Surface(Model, ABC):
 
 
 class GeometricSurface(Surface):
-    positions: Set[GeometricPosition]
     cached_distance: Dict[Position, Dict[Position, float]]
 
     def __init__(self, metric: DistanceMetric, *args, **kwargs):
@@ -89,7 +89,7 @@ class GeometricSurface(Surface):
     def _build_position(self, *args, **kwargs):
         return GeometricPosition(surface=self, *args, **kwargs)
 
-    def distance(self, position_a: GeometricPosition, position_b: GeometricPosition) -> float:
+    def distance(self, position_a: Position, position_b: Position) -> float:
         try:
             distance = self.cached_distance[position_a][position_b]
         except KeyError:
@@ -98,5 +98,5 @@ class GeometricSurface(Surface):
 
         return distance
 
-    def time(self, position_a: GeometricPosition, position_b: GeometricPosition, now: float) -> float:
+    def time(self, position_a: Position, position_b: Position, now: float) -> float:
         return self.distance(position_a, position_b)

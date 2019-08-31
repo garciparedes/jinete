@@ -13,11 +13,11 @@ class LoaderFormatter(ABC):
         self.data = data
 
     @abstractmethod
-    def fleet(self, *args, **kwargs) -> Fleet:
+    def fleet(self, surface: Surface, *args, **kwargs) -> Fleet:
         pass
 
     @abstractmethod
-    def job(self, *args, **kwargs) -> Job:
+    def job(self, surface: Surface, *args, **kwargs) -> Job:
         pass
 
     @abstractmethod

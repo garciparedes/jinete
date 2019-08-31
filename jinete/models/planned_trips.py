@@ -16,6 +16,7 @@ if TYPE_CHECKING:
     from typing import (
         Dict,
         Any,
+        Optional,
     )
     from uuid import (
         UUID,
@@ -46,6 +47,8 @@ class PlannedTrip(Model):
     route: Route
     trip: Trip
     down_time: float
+
+    _feasible: Optional[bool]
 
     def __init__(self, route: Route, trip: Trip, pickup: Stop, delivery: Stop, down_time: float = 0.0):
         self.route = route

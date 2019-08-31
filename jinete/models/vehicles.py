@@ -42,6 +42,8 @@ class Vehicle(Model):
 
         if uuid is None:
             uuid = uuid4()
+        if timeout is None:
+            timeout = MAX_FLOAT
 
         self.identifier = identifier
         self.initial = initial
@@ -56,8 +58,6 @@ class Vehicle(Model):
 
     @property
     def latest(self) -> float:
-        if self.timeout is None:
-            return MAX_FLOAT
         return self.earliest + self.timeout
 
     @property

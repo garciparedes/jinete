@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 class Position(ABC):
-    def __init__(self, surface: Surface = None):
+    def __init__(self, surface: Surface):
         self.surface = surface
 
     def __eq__(self, other):
@@ -44,7 +44,7 @@ class GeometricPosition(Position):
         'coordinates',
     )
 
-    coordinates: Tuple[float]
+    coordinates: Tuple[float, ...]
 
     def __init__(self, coordinates: Sequence[float], *args, **kwargs):
         super().__init__(*args, **kwargs)

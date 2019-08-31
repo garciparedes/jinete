@@ -8,17 +8,17 @@ from tests.utils import (
 )
 
 
-class TestInsertionAlgorithm(unittest.TestCase):
+class TestGraspAlgorithm(unittest.TestCase):
 
     def test_creation(self):
         job = jit.Job(generate_trips(10), objective_cls=jit.DialARideObjective)
         fleet = jit.Fleet(generate_vehicles(10))
-        algorithm = jit.InsertionAlgorithm(
-            crosser_cls=jit.Crosser,
+        algorithm = jit.GraspAlgorithm(
+            algorithm_cls=jit.InsertionAlgorithm,
             job=job,
             fleet=fleet,
         )
-        self.assertEqual(algorithm.crosser_cls, jit.Crosser)
+        self.assertEqual(algorithm.algorithm_cls, jit.InsertionAlgorithm)
         self.assertEqual(algorithm.job, job)
         self.assertEqual(algorithm.fleet, fleet)
 
