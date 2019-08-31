@@ -60,6 +60,24 @@ def generate_trips(n: int, *args, **kwargs) -> Set[jit.Trip]:
     }
 
 
+def generate_one_job(trips_count: int = None, trips_count_min: int = 1, trips_count_max: int = 100,
+                     objective_cls: jit.Objective = None, *args, **kwargs) -> jit.Job:
+    if trips_count is None:
+        trips_count = randint(trips_count_min, trips_count_max)
+    if objective_cls is None:
+        objective_cls = jit.DialARideObjective
+
+    trips = generate_trips(trips_count, *args, **kwargs)
+    job = jit.Job(trips, objective_cls)
+    return job
+
+
+def generate_jobs(n: int, *args, **kwargs) -> Set[jit.Job]:
+    return {
+        generate_one_job(*args, **kwargs) for _ in range(n)
+    }
+
+
 def generate_one_planned_trip(feasible: bool, route: jit.Route = None, *args, **kwargs) -> jit.PlannedTrip:
     if route is None:
         route = generate_one_route()
