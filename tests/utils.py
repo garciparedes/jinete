@@ -1,7 +1,16 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 from random import uniform, randint
-from typing import Set
 
 import jinete as jit
+
+if TYPE_CHECKING:
+    from typing import (
+        Set,
+        Type,
+        Optional,
+    )
 
 
 def generate_one_surface(*args, **kwargs) -> jit.Surface:
@@ -63,7 +72,7 @@ def generate_trips(n: int, *args, **kwargs) -> Set[jit.Trip]:
 
 
 def generate_one_job(trips_count: int = None, trips_count_min: int = 1, trips_count_max: int = 100,
-                     objective_cls: jit.Objective = None, *args, **kwargs) -> jit.Job:
+                     objective_cls: Optional[Type[jit.Objective]] = None, *args, **kwargs) -> jit.Job:
     if trips_count is None:
         trips_count = randint(trips_count_min, trips_count_max)
     if objective_cls is None:

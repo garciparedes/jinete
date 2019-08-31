@@ -18,6 +18,10 @@ from ..heuristics import (
 if TYPE_CHECKING:
     from typing import (
         Type,
+        Optional,
+    )
+    from ...models import (
+        Result,
     )
 
 logger = logging.getLogger(__name__)
@@ -37,12 +41,17 @@ class IterativeAlgorithm(Algorithm):
         self.kwargs = kwargs
 
     def build_algorithm(self, *args, **kwargs) -> Algorithm:
-        return self.algorithm_cls(*self.args, *args, **self.kwargs, **kwargs)
+        args = (*self.args, *args)
+        kwargs.update(self.kwargs)
+
+        return self.algorithm_cls(*args, **kwargs)
 
     def _optimize(self) -> Planning:
-        best = None
+        best: Optional[Result] = None
         for i in range(self.episodes):
             seed = self.random.randint(0, MAX_INT)
             current = self.build_algorithm(seed=seed).optimize()
             best = self.objective.best(best, current)
+
+        assert best is not None
         return best.planning

@@ -55,4 +55,6 @@ class LocalSearchAlgorithm(Algorithm):
             best = self.objective.best(best, current)
             again = best == current
 
+        assert best is not None
+
         return best.planning

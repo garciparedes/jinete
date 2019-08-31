@@ -33,6 +33,8 @@ class Planning(Model):
     def __init__(self, routes: Set[Route] = None, uuid: UUID = None):
         if uuid is None:
             uuid = uuid4()
+        if routes is None:
+            routes = set()
 
         self.routes = routes
         self.uuid = uuid

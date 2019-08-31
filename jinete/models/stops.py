@@ -64,7 +64,7 @@ class Stop(Model):
     _previous_departure_time: Optional[float]
 
     def __init__(self, route: Route, position: Position, previous: Optional[Stop], following: Optional[Stop] = None,
-                 pickups: Tuple[PlannedTrip] = tuple(), deliveries: Tuple[PlannedTrip] = tuple()):
+                 pickups: Tuple[PlannedTrip, ...] = tuple(), deliveries: Tuple[PlannedTrip, ...] = tuple()):
 
         self.route = route
         self.position = position

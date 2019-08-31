@@ -47,20 +47,18 @@ class GraspAlgorithm(Algorithm):
         args = (*self.args, *args)
         kwargs.update(self.kwargs)
 
-        return IterativeAlgorithm(
-            episodes=self.first_solution_episodes,
-            seed=self.random.randint(0, MAX_INT),
-            *args, **kwargs,
-        )
+        kwargs['episodes'] = self.first_solution_episodes,
+        kwargs['seed'] = self.random.randint(0, MAX_INT),
+
+        return IterativeAlgorithm(*args, **kwargs)
 
     def build_local_search_algorithm(self, *args, **kwargs) -> Algorithm:
         args = (*self.args, *args)
         kwargs.update(self.kwargs)
 
-        return LocalSearchAlgorithm(
-            seed=self.random.randint(0, MAX_INT),
-            *args, **kwargs,
-        )
+        kwargs['seed'] = self.random.randint(0, MAX_INT),
+
+        return LocalSearchAlgorithm(*args, **kwargs)
 
     def again(self, episode_count: int, *args, **kwargs):
         return episode_count < self.first_solution_episodes
