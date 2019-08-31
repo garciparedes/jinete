@@ -43,7 +43,7 @@ class FileLoader(Loader):
     @property
     def data(self):
         with self.file_path.open() as file:
-            data = tuple(tuple(float(v) for v in line.split()) for line in file.readlines())
+            data = list(list(float(v) for v in line.split()) for line in file.readlines())
         return data
 
     @property
