@@ -36,8 +36,12 @@ logger = logging.getLogger(__name__)
 
 
 class Crosser(ABC):
+    fleet: Fleet
+    job: Job
+    criterion_cls: Type[PlannedTripCriterion]
+    _criterion: Optional[PlannedTripCriterion]
 
-    def __init__(self, fleet: Fleet, job: Job, criterion_cls: Type[PlannedTripCriterion] = None):
+    def __init__(self, fleet: Fleet, job: Job, criterion_cls: Type[PlannedTripCriterion] = None, *args, **kwargs):
         if criterion_cls is None:
             criterion_cls = ShortestTimePlannedTripCriterion
 
@@ -49,10 +53,13 @@ class Crosser(ABC):
         self.criterion_cls = criterion_cls
         self._criterion = None
 
+        self.args = args
+        self.kwargs = kwargs
+
     @property
     def criterion(self) -> PlannedTripCriterion:
         if self._criterion is None:
-            self._criterion = self.criterion_cls()
+            self._criterion = self.criterion_cls(*self.args, **self.kwargs)
         return self._criterion
 
     @property

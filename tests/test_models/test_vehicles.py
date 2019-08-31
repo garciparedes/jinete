@@ -21,7 +21,7 @@ class TestVehicles(unittest.TestCase):
         self.assertEqual(vehicle.final, vehicle.initial)
         self.assertEqual(vehicle.earliest, 0)
         self.assertEqual(vehicle.latest, jit.MAX_FLOAT)
-        self.assertIsNone(vehicle.timeout)
+        self.assertEqual(vehicle.timeout, jit.MAX_FLOAT)
         self.assertIsInstance(vehicle.uuid, UUID)
 
     def test_vehicle_with_capacity(self):
@@ -35,7 +35,7 @@ class TestVehicles(unittest.TestCase):
         self.assertEqual(vehicle.final, vehicle.initial)
         self.assertEqual(vehicle.earliest, 0)
         self.assertEqual(vehicle.latest, jit.MAX_FLOAT)
-        self.assertIsNone(vehicle.timeout)
+        self.assertEqual(vehicle.timeout, jit.MAX_FLOAT)
         self.assertIsInstance(vehicle.uuid, UUID)
 
     def test_vehicle_with_final(self):
@@ -51,7 +51,7 @@ class TestVehicles(unittest.TestCase):
         self.assertEqual(vehicle.final, final)
         self.assertEqual(vehicle.earliest, 0)
         self.assertEqual(vehicle.latest, jit.MAX_FLOAT)
-        self.assertIsNone(vehicle.timeout)
+        self.assertEqual(vehicle.timeout, jit.MAX_FLOAT)
         self.assertIsInstance(vehicle.uuid, UUID)
 
     def test_vehicle_with_earliest(self):
@@ -66,7 +66,7 @@ class TestVehicles(unittest.TestCase):
         self.assertEqual(vehicle.final, vehicle.initial)
         self.assertEqual(vehicle.earliest, earliest)
         self.assertEqual(vehicle.latest, jit.MAX_FLOAT)
-        self.assertIsNone(vehicle.timeout)
+        self.assertEqual(vehicle.timeout, jit.MAX_FLOAT)
         self.assertIsInstance(vehicle.uuid, UUID)
 
     def test_vehicle_with_timeout(self):

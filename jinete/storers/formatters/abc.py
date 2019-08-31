@@ -19,9 +19,9 @@ if TYPE_CHECKING:
 
 
 class StorerFormatter(ABC):
-    def __init__(self, result: Result, remove_empty_routs: bool = False):
+    def __init__(self, result: Result, remove_empty_routes: bool = False):
         self.result = result
-        self.remove_empty_routes = remove_empty_routs
+        self.remove_empty_routes = remove_empty_routes
 
     @property
     def job(self) -> Job:

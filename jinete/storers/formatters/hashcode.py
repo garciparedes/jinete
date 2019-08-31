@@ -4,9 +4,9 @@ from .abc import StorerFormatter
 
 
 class HashCodeStorerFormatter(StorerFormatter):
-    def __init__(self, remove_empty_routs: bool = True, *args, **kwargs):
+    def __init__(self, remove_empty_routes: bool = True, *args, **kwargs):
+        kwargs['remove_empty_routes'] = remove_empty_routes
         super().__init__(
-            remove_empty_routs=remove_empty_routs,
             *args, **kwargs,
         )
 

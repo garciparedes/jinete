@@ -1,13 +1,13 @@
 from __future__ import annotations
 from abc import ABC
 
+from typing import (
+    TYPE_CHECKING,
+    TypeVar)
 from .constants import (
     OptimizationDirection,
 )
 
-from typing import (
-    Union,
-)
 from .routes import (
     Route,
 )
@@ -24,7 +24,13 @@ from .stops import (
     Stop,
 )
 
-Optimizable = Union[Result, Planning, Route, Stop, PlannedTrip]
+if TYPE_CHECKING:
+    from typing import (
+        Union,
+        Optional
+    )
+
+    Optimizable = TypeVar('Optimizable', Result, Planning, Route, Stop, PlannedTrip)
 
 
 class Objective(ABC):
@@ -34,8 +40,12 @@ class Objective(ABC):
         self.name = name
         self.direction = direction
 
-    def best(self, *args: Optimizable) -> Optimizable:
-        return self.direction((arg for arg in args if arg is not None), key=self.optimization_function)
+    def best(self, *args: Optional[Optimizable]) -> Optional[Optimizable]:
+        return self.direction(
+            (arg for arg in args if arg is not None),
+            key=self.optimization_function,
+            default=None,
+        )
 
     def optimization_function(self, value: Optimizable) -> float:
         if isinstance(value, Result):

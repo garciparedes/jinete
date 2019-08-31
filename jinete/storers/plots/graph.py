@@ -24,7 +24,7 @@ if TYPE_CHECKING:
 class GraphPlotStorer(Storer):
 
     def _generate_nodes(self, edges: Dict[Tuple[Position, Position], Dict[str, Any]]) -> Dict[Position, Dict[str, Any]]:
-        nodes = dict()
+        nodes: Dict[Position, Dict[str, Any]] = dict()
         for trip in self.trips:
             nodes[trip.origin] = dict()
             nodes[trip.destination] = dict()
