@@ -10,3 +10,7 @@ script:
   - 'pipenv run coverage run --source=jinete --module unittest discover tests'
 after_success:
   - 'pipenv run codecov'
+
+branches:
+  only:
+    - master
