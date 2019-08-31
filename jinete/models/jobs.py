@@ -16,6 +16,7 @@ if TYPE_CHECKING:
         Any,
         Dict,
         Type,
+        Optional,
     )
     from .trips import (
         Trip,
@@ -24,7 +25,8 @@ if TYPE_CHECKING:
 
 class Job(Model):
     trips: Set[Trip]
-    objective: Objective
+    objective_cls: Type[Objective]
+    _objective: Optional[Objective]
 
     def __init__(self, trips: Set[Trip], objective_cls: Type[Objective], *args, **kwargs):
         if objective_cls is None:
@@ -34,10 +36,13 @@ class Job(Model):
         self.objective_cls = objective_cls
         self._objective = None
 
+        self.args = args
+        self.kwargs = kwargs
+
     @property
     def objective(self) -> Objective:
         if self._objective is None:
-            self._objective = self.objective_cls()
+            self._objective = self.objective_cls(*self.args, **self.kwargs)
         return self._objective
 
     def __iter__(self):

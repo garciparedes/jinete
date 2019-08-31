@@ -44,7 +44,6 @@ logger = logging.getLogger(__name__)
 
 
 class Route(Model):
-    planned_trips: List[PlannedTrip]
     vehicle: Vehicle
     uuid: UUID
     stops: List[Stop]
@@ -59,10 +58,11 @@ class Route(Model):
         self.vehicle = vehicle
 
         if stops is None:
-            stops = (
+            self.stops = [
                 Stop(self, self.vehicle.initial, None),
-            )
-        self.stops = list(stops)
+            ]
+        else:
+            self.stops = list(stops)
 
     def __iter__(self):
         yield from self.planned_trips

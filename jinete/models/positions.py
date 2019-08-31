@@ -39,7 +39,7 @@ class GeometricPosition(Position):
         'coordinates',
     )
 
-    coordinates: Tuple[float]
+    coordinates: Tuple[float, ...]
 
     def __init__(self, coordinates: Sequence[float], *args, **kwargs):
         super().__init__(*args, **kwargs)

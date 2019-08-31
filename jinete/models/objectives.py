@@ -93,7 +93,7 @@ class DialARideObjective(Objective):
     def _planned_trip_optimization_function(self, planned_trip: PlannedTrip) -> float:
         scoring = 0.0
         current = planned_trip.pickup
-        while current != planned_trip.delivery:
+        while current != planned_trip.delivery and current.following is not None:
             current = current.following
             scoring += current.distance
         return scoring
