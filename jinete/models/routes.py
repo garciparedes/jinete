@@ -134,6 +134,10 @@ class Route(Model):
         yield from (planned_trip.trip for planned_trip in self.loaded_planned_trips)
 
     @property
+    def loaded_trips_count(self) -> int:
+        return sum(1 for _ in self.loaded_trips)
+
+    @property
     def first_arrival_time(self) -> float:
         return self.first_stop.arrival_time
 

@@ -13,7 +13,7 @@ class HashCodeStorerFormatter(StorerFormatter):
     @staticmethod
     def route_to_str(route) -> str:
         trips_str = ' '.join(trip.identifier for trip in route.loaded_trips)
-        return f'{len(route.loaded_trips)} {trips_str}'
+        return f'{route.loaded_trips_count} {trips_str}'
 
     def format(self) -> str:
         result = str()

@@ -62,6 +62,8 @@ from .storers import (
     Storer,
     FileStorer,
     PromptStorer,
+    GraphPlotStorer,
+    StorerSet,
 )
 
 from .algorithms import (
