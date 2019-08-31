@@ -26,7 +26,6 @@ from .stops import (
 
 if TYPE_CHECKING:
     from typing import (
-        Union,
         Optional
     )
 
