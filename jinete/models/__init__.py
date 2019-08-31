@@ -50,7 +50,6 @@ from .results import (
     Result,
 )
 from .objectives import (
-    OptimizationDirection,
     Objective,
     DialARideObjective,
     TaxiSharingObjective,

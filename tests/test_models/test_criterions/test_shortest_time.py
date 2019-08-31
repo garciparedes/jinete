@@ -1,9 +1,18 @@
+from __future__ import annotations
+
 import unittest
+from typing import TYPE_CHECKING
 
 import jinete as jit
 
+if TYPE_CHECKING:
+    from typing import (
+        List,
+    )
+
 
 class TestShortestTimePlannedTripCriterion(unittest.TestCase):
+    planned_trips: List[jit.PlannedTrip]
 
     @classmethod
     def setUpClass(cls) -> None:

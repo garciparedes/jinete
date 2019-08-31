@@ -32,7 +32,7 @@ class PlannedTripCriterion(ABC):
     def scoring(self, planned_trip: PlannedTrip) -> float:
         pass
 
-    def best(self, *args: PlannedTrip) -> Optional[PlannedTrip]:
+    def best(self, *args: Optional[PlannedTrip]) -> Optional[PlannedTrip]:
         return self.direction(
             (arg for arg in args if arg is not None),
             key=self.scoring,

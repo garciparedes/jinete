@@ -36,6 +36,10 @@ extra_dependencies = {
         'coverage',
         'codecov',
     ],
+    'syntax': [
+        'flake8',
+        'mypy',
+    ],
     'logs': [
         'coloredlogs',
     ]

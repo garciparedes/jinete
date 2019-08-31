@@ -4,6 +4,11 @@ import jinete as jit
 
 
 class TestDialARideObjective(unittest.TestCase):
+    planned_trip: jit.PlannedTrip
+    stop: jit.Stop
+    route: jit.Route
+    planning: jit.Planning
+    result: jit.Result
 
     @classmethod
     def setUpClass(cls) -> None:

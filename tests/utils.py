@@ -5,7 +5,8 @@ import jinete as jit
 
 
 def generate_one_surface(*args, **kwargs) -> jit.Surface:
-    return jit.GeometricSurface(metric=jit.DistanceMetric.MANHATTAN, *args, **kwargs)
+    kwargs['metric'] = jit.DistanceMetric.MANHATTAN
+    return jit.GeometricSurface(*args, **kwargs)
 
 
 def generate_surfaces(n: int, *args, **kwargs) -> Set[jit.Surface]:
@@ -25,8 +26,9 @@ def generate_one_position(x_min: float = -100, x_max: float = 100, y_min: float 
 def generate_positions(n: int, surface: jit.Surface = None, *args, **kwargs) -> Set[jit.Position]:
     if surface is None:
         surface = generate_one_surface(*args, **kwargs)
+    kwargs['surface'] = surface
     return {
-        generate_one_position(surface=surface, *args, **kwargs) for _ in range(n)
+        generate_one_position(*args, **kwargs) for _ in range(n)
     }
 
 
@@ -61,8 +63,11 @@ def generate_trips(n: int, *args, **kwargs) -> Set[jit.Trip]:
 
 
 def generate_one_planned_trip(feasible: bool, route: jit.Route = None, *args, **kwargs) -> jit.PlannedTrip:
+    if route is None:
+        vehicle = generate_one_vehicle()
+        route = jit.Route(vehicle)
     if feasible:
-        down_time = 0
+        down_time = 0.0
         kwargs['earliest'] = 0.0
         kwargs['timeout'] = float('inf')
     else:
@@ -100,9 +105,12 @@ def generate_one_vehicle(capacity_min: int = 1, capacity_max: int = 3, earliest_
 
 
 def generate_vehicles(n: int, *args, **kwargs) -> Set[jit.Vehicle]:
-    return {
-        generate_one_vehicle(idx=idx, *args, **kwargs) for idx in range(n)
-    }
+    vehicles = set()
+    for idx in range(n):
+        kwargs['idx'] = idx
+        vehicle = generate_one_vehicle(*args, **kwargs)
+        vehicles.add(vehicle)
+    return vehicles
 
 
 def generate_one_route(feasible: bool, planned_trips_min: int = 1, planned_trips_max: int = 20,

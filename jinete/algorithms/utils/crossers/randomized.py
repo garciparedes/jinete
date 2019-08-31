@@ -10,6 +10,7 @@ from .ordered import (
 if TYPE_CHECKING:
     from typing import (
         Optional,
+        List,
     )
     from ....models import (
         PlannedTrip,
@@ -29,7 +30,7 @@ class RandomizedCrosser(OrderedCrosser):
         if len(self.ranking) == 0:
             return None
 
-        candidates = list()
+        candidates: List[PlannedTrip] = list()
         for sub_ranking in self.ranking.values():
             if len(sub_ranking) == 0:
                 continue

@@ -33,7 +33,7 @@ class Result(object):
 
     @property
     def completed_trips(self) -> Set[Trip]:
-        trips = set()
+        trips: Set[Trip] = set()
         for route in self.routes:
             trips |= set(route.loaded_trips)
         return trips
