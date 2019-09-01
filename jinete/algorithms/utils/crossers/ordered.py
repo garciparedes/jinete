@@ -4,7 +4,6 @@ import logging
 import itertools as it
 from typing import TYPE_CHECKING
 from collections import OrderedDict
-from uuid import UUID
 
 from .abc import (
     Crosser,
@@ -18,13 +17,14 @@ if TYPE_CHECKING:
     from ....models import (
         PlannedTrip,
         Route,
+        Trip,
     )
 
 logger = logging.getLogger(__name__)
 
 
 class OrderedCrosser(Crosser):
-    ranking: Dict[UUID, OrderedDict[UUID, PlannedTrip]]
+    ranking: Dict[Route, OrderedDict[Trip, PlannedTrip]]
 
     def __init__(self, neighborhood_max_size: int = 250, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -41,23 +41,21 @@ class OrderedCrosser(Crosser):
     def initialize_ranking(self) -> None:
         logger.info("Initializing ranking...")
         for route in self.routes:
-            self.ranking[route.uuid] = self.create_sub_ranking(route)
+            self.ranking[route] = self.create_sub_ranking(route)
             logger.info(f"Added sub ranking! Currently {len(self.ranking)}.")
 
-    def create_sub_ranking(self, route: Route) -> OrderedDict[UUID, PlannedTrip]:
+    def create_sub_ranking(self, route: Route) -> OrderedDict[Trip, PlannedTrip]:
         logger.debug("Creating sub_ranking...")
-        raw_sub_ranking = list()
-        for trip in it.islice(self.pending_trips, self.neighborhood_max_size):
-            planned_trip = route.conjecture_trip(trip)
-            raw_sub_ranking.append(planned_trip)
+        raw_sub_ranking = route.conjecture_trip_in_batch(it.islice(self.pending_trips, self.neighborhood_max_size))
+
         self.criterion.sorted(raw_sub_ranking, inplace=True)
-        return OrderedDict((item.trip_uuid, item) for item in raw_sub_ranking)
+        return OrderedDict((item.trip, item) for item in raw_sub_ranking)
 
     def update_ranking(self, planned_trip: PlannedTrip) -> None:
         logger.info("Updating ranking...")
-        for route_uuid in self.ranking:
-            self.ranking[route_uuid].pop(planned_trip.trip_uuid, None)
-        self.ranking[planned_trip.route_uuid] = self.create_sub_ranking(planned_trip.route)
+        for route in self.ranking:
+            self.ranking[route].pop(planned_trip.trip, None)
+        self.ranking[planned_trip.route] = self.create_sub_ranking(planned_trip.route)
 
     def mark_planned_trip_as_done(self, planned_trip: PlannedTrip):
         super().mark_planned_trip_as_done(planned_trip)

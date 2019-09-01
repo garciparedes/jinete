@@ -9,13 +9,10 @@ from .constants import (
     MAX_FLOAT,
 )
 
-from uuid import (
-    uuid4,
-)
-
 if TYPE_CHECKING:
-    from uuid import (
-        UUID,
+    from typing import (
+        Dict,
+        Any,
     )
     from .positions import (
         Position,
@@ -25,6 +22,18 @@ logger = logging.getLogger(__name__)
 
 
 class Trip(object):
+    __slots__ = (
+        'identifier',
+        'origin',
+        'destination',
+        'earliest',
+        'timeout',
+        'on_time_bonus',
+        'load_capacity',
+        'load_time',
+        'inbound',
+        'capacity',
+    )
     identifier: str
     origin: Position
     destination: Position
@@ -33,13 +42,10 @@ class Trip(object):
     on_time_bonus: float
     load_time: float
     capacity: float
-    uuid: UUID
 
     def __init__(self, identifier: str, origin: Position, destination: Position, earliest: float = 0.0,
                  timeout: Optional[float] = None, on_time_bonus: float = 0.0, load_time: float = 0.0,
-                 inbound: bool = True, capacity: float = 1, uuid: UUID = None, with_caching: bool = True):
-        if uuid is None:
-            uuid = uuid4()
+                 inbound: bool = True, capacity: float = 1):
         self.identifier = identifier
         self.origin = origin
         self.destination = destination
@@ -49,16 +55,6 @@ class Trip(object):
         self.load_time = load_time
         self.inbound = inbound
         self.capacity = capacity
-        self.uuid = uuid
-
-        self.with_caching = with_caching
-        self._distance = None
-        # self._duration = dict()
-        self._duration = None
-
-    @staticmethod
-    def build_empty(origin: Position, destination: Position) -> 'Trip':
-        return Trip('EMPTY', origin, destination, capacity=0)
 
     @property
     def latest(self) -> float:
@@ -72,14 +68,10 @@ class Trip(object):
 
     @property
     def distance(self) -> float:
-        if self._distance is None or not self.with_caching:
-            self._distance = self.origin.distance_to(self.destination)
-        return self._distance
+        return self.origin.distance_to(self.destination)
 
     def duration(self, now: float):
-        # if now not in self._duration or not self.with_caching:
-        #     self._duration[now] = self.origin.time_to(self.destination, now)
-        # return self._duration[now]
-        if self._duration is None or not self.with_caching:
-            self._duration = self.origin.time_to(self.destination, now)
-        return self._duration
+        return self.origin.time_to(self.destination, now)
+
+    def __deepcopy__(self, memo: Dict[int, Any]) -> Trip:
+        return self

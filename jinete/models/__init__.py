@@ -15,6 +15,9 @@ from .trips import (
 from .planned_trips import (
     PlannedTrip,
 )
+from .stops import (
+    Stop,
+)
 from .criterions import (
     PlannedTripCriterion,
     ShortestTimePlannedTripCriterion,
@@ -47,7 +50,6 @@ from .results import (
     Result,
 )
 from .objectives import (
-    OptimizationDirection,
     Objective,
     DialARideObjective,
     TaxiSharingObjective,

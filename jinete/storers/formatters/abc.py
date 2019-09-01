@@ -14,13 +14,14 @@ if TYPE_CHECKING:
         Planning,
         Job,
         Route,
+        Objective,
     )
 
 
 class StorerFormatter(ABC):
-    def __init__(self, result: Result, remove_empty_routs: bool = False):
+    def __init__(self, result: Result, remove_empty_routes: bool = False):
         self.result = result
-        self.remove_empty_routes = remove_empty_routs
+        self.remove_empty_routes = remove_empty_routes
 
     @property
     def job(self) -> Job:
@@ -35,6 +36,10 @@ class StorerFormatter(ABC):
         if self.remove_empty_routes:
             return self.planning.loaded_routes
         return self.planning.routes
+
+    @property
+    def objective(self) -> Objective:
+        return self.result.objective
 
     @abstractmethod
     def format(self) -> str:

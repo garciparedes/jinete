@@ -24,12 +24,16 @@ class Result(object):
         self.computation_time = computation_time
 
     @property
+    def trips(self) -> Set[Trip]:
+        return self.job.trips
+
+    @property
     def routes(self) -> Set[Route]:
         return self.planning.routes
 
     @property
     def completed_trips(self) -> Set[Trip]:
-        trips = set()
+        trips: Set[Trip] = set()
         for route in self.routes:
             trips |= set(route.loaded_trips)
         return trips
@@ -43,8 +47,8 @@ class Result(object):
         return self.job.objective
 
     @property
-    def scoring(self) -> float:
-        return self.objective.scoring(self)
+    def optimization_function(self) -> float:
+        return self.objective.optimization_function(self)
 
     @property
     def direction(self) -> OptimizationDirection:

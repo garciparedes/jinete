@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import logging
+from copy import deepcopy
+from math import isnan
 from typing import (
     TYPE_CHECKING,
-    Any, Dict, Optional)
+)
 from uuid import (
     uuid4,
 )
@@ -13,12 +15,18 @@ from .abc import (
 from .planned_trips import (
     PlannedTrip,
 )
+from .stops import (
+    Stop,
+)
 
 if TYPE_CHECKING:
     from typing import (
-        Tuple,
-        Iterable,
         List,
+        Iterator,
+        Any,
+        Dict,
+        Optional,
+        Iterable,
     )
     from uuid import (
         UUID,
@@ -37,36 +45,72 @@ logger = logging.getLogger(__name__)
 
 
 class Route(Model):
-    planned_trips: List[PlannedTrip]
     vehicle: Vehicle
     uuid: UUID
+    stops: List[Stop]
 
-    def __init__(self, vehicle: Vehicle, planned_trips: Iterable[PlannedTrip] = None, uuid=None):
-        if planned_trips is None:
-            planned_trips = tuple()
+    def __init__(self, vehicle: Vehicle, stops: List[Stop] = None, uuid: UUID = None):
+
         if uuid is None:
             uuid = uuid4()
-
-        self.vehicle = vehicle
-        self.planned_trips = list(planned_trips)
         self.uuid = uuid
 
-        self._loaded_planned_trips_count = 0
+        self.vehicle = vehicle
+
+        if stops is None:
+            self.stops = [
+                Stop(self, self.vehicle.initial, None),
+            ]
+        else:
+            self.stops = list(stops)
 
     def __iter__(self):
         yield from self.planned_trips
 
+    def __deepcopy__(self, memo: Dict[int, Any]) -> Route:
+        vehicle = deepcopy(self.vehicle, memo)
+
+        route = Route(vehicle)
+        memo[id(self)] = route
+
+        route.stops = deepcopy(self.stops, memo)
+
+        return route
+
+    @property
+    def planned_trips(self) -> Iterator[PlannedTrip]:
+        yield from self.deliveries
+
+    @property
+    def pickups(self) -> Iterator[PlannedTrip]:
+        for stop in self.stops:
+            yield from stop.pickups
+
+    @property
+    def deliveries(self) -> Iterator[PlannedTrip]:
+        for stop in self.stops:
+            yield from stop.deliveries
+
     @property
     def feasible(self) -> bool:
-        if len(self.planned_trips) > 0:
-            if not self.first_trip.origin == self.vehicle.initial:
+        if any(self.planned_trips):
+            if not self.first_stop.position == self.vehicle.initial:
                 return False
-            if not self.vehicle.earliest <= self.first_planned_trip.collection_time:
+            if not self.vehicle.earliest <= self.first_stop.arrival_time:
                 return False
-            if not self.last_trip.destination == self.vehicle.final:
+            if not self.last_position == self.vehicle.final:
                 return False
-            if not self.last_planned_trip.delivery_time <= self.vehicle.latest:
+            if not self.last_departure_time <= self.vehicle.latest:
                 return False
+
+        if __debug__:
+            for stop in self.stops:
+                assert stop.route == self
+
+            for one, two in zip(self.stops[:-1], self.stops[1:]):
+                assert one.following == two
+                assert two.previous == one
+                assert one.position != two.position
 
         for planned_trip in self.planned_trips:
             if not planned_trip.feasible:
@@ -75,73 +119,59 @@ class Route(Model):
 
     @property
     def loaded(self):
-        return len(self.planned_trips) > 0
+        return any(self.planned_trips)
 
     @property
-    def trips(self) -> Tuple[Trip]:
-        return tuple(planned_trip.trip for planned_trip in self.planned_trips)
+    def trips(self) -> Iterator[Trip]:
+        yield from (planned_trip.trip for planned_trip in self.planned_trips)
 
     @property
-    def loaded_planned_trips(self) -> Tuple[PlannedTrip]:
-        return tuple(planned_trip for planned_trip in self.planned_trips if not planned_trip.empty)
+    def loaded_planned_trips(self) -> Iterator[PlannedTrip]:
+        yield from (planned_trip for planned_trip in self.planned_trips if not planned_trip.empty)
 
     @property
-    def loaded_planned_trips_count(self) -> int:
-        return self._loaded_planned_trips_count
+    def loaded_trips(self) -> Iterator[Trip]:
+        yield from (planned_trip.trip for planned_trip in self.loaded_planned_trips)
 
     @property
-    def loaded_trips(self) -> Tuple[Trip]:
-        return tuple(planned_trip.trip for planned_trip in self.planned_trips if not planned_trip.empty)
+    def loaded_trips_count(self) -> int:
+        return sum(1 for _ in self.loaded_trips)
 
     @property
-    def first_planned_trip(self) -> Optional[PlannedTrip]:
-        if len(self.planned_trips) == 0:
-            return None
-        # return min(self.planned_trips, key=lambda pt: pt.collection_time)
-        return self.planned_trips[0]
+    def first_arrival_time(self) -> float:
+        return self.first_stop.arrival_time
 
     @property
-    def first_trip(self) -> Trip:
-        return self.first_planned_trip.trip
+    def first_departure_time(self) -> float:
+        return self.first_stop.departure_time
 
     @property
-    def last_planned_trip(self) -> Optional[PlannedTrip]:
-        if len(self.planned_trips) is 0:
-            return None
-        # return max(self.planned_trips, key=lambda pt: pt.delivery_time)
-        return self.planned_trips[-1]
+    def last_arrival_time(self) -> float:
+        return self.last_stop.arrival_time
 
     @property
-    def last_trip(self) -> Trip:
-        return self.last_planned_trip.trip
+    def last_departure_time(self) -> float:
+        return self.last_stop.departure_time
 
     @property
     def duration(self) -> float:
-        if len(self.planned_trips) == 0:
-            return 0.0
-        return self.last_planned_trip.delivery_time - self.first_planned_trip.collection_time
+        return self.last_departure_time - self.first_arrival_time
 
     @property
     def last_position(self) -> Position:
-        if len(self.planned_trips) == 0:
-            return self.vehicle.initial
-        return self.last_trip.destination
-
-    def position_at(self, idx: int) -> Position:
-        if idx < 0:
-            return self.vehicle.initial
-        return self.loaded_planned_trips[idx].trip.destination
+        return self.last_stop.position
 
     @property
-    def last_time(self) -> float:
-        if len(self.planned_trips) == 0:
-            return self.vehicle.earliest
-        return self.last_planned_trip.delivery_time
+    def first_stop(self) -> Stop:
+        stop = self.stops[0]
+        assert stop.previous is None
+        return stop
 
-    def time_at(self, idx: int) -> float:
-        if idx < 0:
-            return self.vehicle.earliest
-        return self.loaded_planned_trips[idx].delivery_time
+    @property
+    def last_stop(self) -> Stop:
+        stop = self.stops[-1]
+        assert stop.following is None
+        return stop
 
     @property
     def vehicle_uuid(self) -> Optional[UUID]:
@@ -155,34 +185,46 @@ class Route(Model):
             'vehicle_uuid': self.vehicle_uuid,
         }
 
-    def conjecture_trip(self, trip: Trip) -> Optional[PlannedTrip]:
-        return PlannedTrip(
-            route=self,
-            trip=trip,
-            initial=self.last_position,
-            route_idx=self.loaded_planned_trips_count,
-        )
-
-    def _append_empty_planned_trip(self, destination: Position) -> PlannedTrip:
-        planned_trip = PlannedTrip.build_empty(
-            route=self,
-            origin=self.last_position,
-            destination=destination,
-            route_idx=self.loaded_planned_trips_count,
-        )
-        self.append_planned_trip(planned_trip)
+    def conjecture_trip(self, trip: Trip) -> PlannedTrip:
+        pickup = Stop(self, trip.origin, self.last_stop)
+        delivery = Stop(self, trip.destination, pickup)
+        planned_trip = PlannedTrip(route=self, trip=trip, pickup=pickup, delivery=delivery)
         return planned_trip
 
-    def _append_finish_planned_trip(self) -> PlannedTrip:
-        return self._append_empty_planned_trip(self.vehicle.final)
+    def conjecture_trip_in_batch(self, iterable: Iterable[Trip]) -> List[PlannedTrip]:
+        return [self.conjecture_trip(trip) for trip in iterable]
 
     def finish(self):
-        if self.loaded:
-            self._append_finish_planned_trip()
+        if self.loaded and self.last_stop.position != self.vehicle.final:
+            finish_stop = Stop(self, self.vehicle.final, self.last_stop)
+            if not self.last_stop.position == finish_stop.position:
+                self.append_stop(finish_stop)
+
+    def append_stop(self, stop: Stop) -> None:
+        assert stop.previous == self.last_stop
+        assert set(stop.pickups).isdisjoint(stop.deliveries)
+        if __debug__:
+            for planned_trip in stop.pickups:
+                assert planned_trip.pickup == stop
+            for planned_trip in stop.deliveries:
+                assert planned_trip.delivery == stop
+        self.last_stop.following = stop
+        self.stops.append(stop)
 
     def append_planned_trip(self, planned_trip: PlannedTrip):
-        if not self.last_position.is_equal(planned_trip.origin):
-            self._append_empty_planned_trip(planned_trip.origin)
-            self._loaded_planned_trips_count += 1
-        self.planned_trips.append(planned_trip)
-        logger.info(f'Append trip "{planned_trip.trip.identifier}" identifier to route "{self.uuid}".')
+        assert planned_trip.delivery is not None
+        assert planned_trip.pickup is not None
+        assert planned_trip.delivery.previous is not None
+        assert planned_trip.pickup_time <= planned_trip.delivery_time
+        assert isnan(planned_trip.duration) or planned_trip.duration > 0
+
+        if not planned_trip.pickup == self.last_stop:
+            if self.last_stop.position == planned_trip.pickup.position:
+                self.last_stop.merge(planned_trip.pickup)
+                planned_trip.delivery.previous = self.last_stop  # FIXME: should be inside merge?
+            else:
+                self.append_stop(planned_trip.pickup)
+
+        self.append_stop(planned_trip.delivery)
+
+        logger.info(f'Append trip "{planned_trip.trip_identifier}" identifier to route "{self.uuid}".')

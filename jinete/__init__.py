@@ -16,6 +16,9 @@ from .models import (
     Route,
     Planning,
     PlannedTrip,
+
+    Stop,
+
     Result,
 
     OptimizationDirection,
@@ -59,13 +62,17 @@ from .storers import (
     Storer,
     FileStorer,
     PromptStorer,
+    GraphPlotStorer,
+    StorerSet,
 )
 
 from .algorithms import (
     Algorithm,
     NaiveAlgorithm,
     InsertionAlgorithm,
+    LocalSearchAlgorithm,
     GraspAlgorithm,
+    IterativeAlgorithm,
     Crosser,
     StatelessCrosser,
     BestStatelessCrosser,
@@ -75,6 +82,7 @@ from .algorithms import (
 
 from .exceptions import (
     JineteException,
-    NonFeasiblePlannedTripFoundException,
-    PlannedTripNotFeasibleException,
+    StopPlannedTripIterationException,
+    NonFeasiblePlannedTripException,
+    NonFeasibleRouteException,
 )

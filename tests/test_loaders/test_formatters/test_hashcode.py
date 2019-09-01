@@ -1,9 +1,19 @@
+from __future__ import annotations
+
 import unittest
+
+from typing import TYPE_CHECKING
 
 import jinete as jit
 
+if TYPE_CHECKING:
+    from typing import (
+        Tuple,
+    )
+
 
 class TestHashCodeLoaderFormatter(unittest.TestCase):
+    data: Tuple[Tuple[float, ...], ...]
 
     @classmethod
     def setUpClass(cls) -> None:

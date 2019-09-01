@@ -21,7 +21,7 @@ class TestVehicles(unittest.TestCase):
         self.assertEqual(vehicle.final, vehicle.initial)
         self.assertEqual(vehicle.earliest, 0)
         self.assertEqual(vehicle.latest, jit.MAX_FLOAT)
-        self.assertIsNone(vehicle.timeout)
+        self.assertEqual(vehicle.timeout, jit.MAX_FLOAT)
         self.assertIsInstance(vehicle.uuid, UUID)
 
     def test_vehicle_with_capacity(self):
@@ -35,7 +35,7 @@ class TestVehicles(unittest.TestCase):
         self.assertEqual(vehicle.final, vehicle.initial)
         self.assertEqual(vehicle.earliest, 0)
         self.assertEqual(vehicle.latest, jit.MAX_FLOAT)
-        self.assertIsNone(vehicle.timeout)
+        self.assertEqual(vehicle.timeout, jit.MAX_FLOAT)
         self.assertIsInstance(vehicle.uuid, UUID)
 
     def test_vehicle_with_final(self):
@@ -51,7 +51,7 @@ class TestVehicles(unittest.TestCase):
         self.assertEqual(vehicle.final, final)
         self.assertEqual(vehicle.earliest, 0)
         self.assertEqual(vehicle.latest, jit.MAX_FLOAT)
-        self.assertIsNone(vehicle.timeout)
+        self.assertEqual(vehicle.timeout, jit.MAX_FLOAT)
         self.assertIsInstance(vehicle.uuid, UUID)
 
     def test_vehicle_with_earliest(self):
@@ -66,7 +66,7 @@ class TestVehicles(unittest.TestCase):
         self.assertEqual(vehicle.final, vehicle.initial)
         self.assertEqual(vehicle.earliest, earliest)
         self.assertEqual(vehicle.latest, jit.MAX_FLOAT)
-        self.assertIsNone(vehicle.timeout)
+        self.assertEqual(vehicle.timeout, jit.MAX_FLOAT)
         self.assertIsInstance(vehicle.uuid, UUID)
 
     def test_vehicle_with_timeout(self):
@@ -85,6 +85,24 @@ class TestVehicles(unittest.TestCase):
         self.assertEqual(vehicle.timeout, timeout)
         self.assertIsInstance(vehicle.uuid, UUID)
 
+    def test_as_dict(self):
+        initial = generate_one_position()
+        identifier = str(0)
+        vehicle = jit.Vehicle(identifier, initial)
+
+        expected = {
+            'initial': vehicle.initial,
+            'final': vehicle.final,
+            'capacity': vehicle.capacity,
+            'earliest': vehicle.earliest,
+            'timeout': vehicle.timeout,
+            'route_timeout': vehicle.route_timeout,
+            'trip_timeout': vehicle.trip_timeout,
+            'latest': vehicle.latest,
+            'uuid': vehicle.uuid,
+        }
+
+        self.assertEqual(expected, vehicle.as_dict())
 
 if __name__ == '__main__':
     unittest.main()

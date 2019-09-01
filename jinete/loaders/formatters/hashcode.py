@@ -33,8 +33,10 @@ class HashCodeLoaderFormatter(LoaderFormatter):
         bonus = self.data[0][4]
         rows = self.data[1:]
         trips = set(self._build_trip(surface, str(i), bonus, *row) for i, row in enumerate(rows))
-        objective_cls = HashCodeObjective
-        job = Job(trips, objective_cls=objective_cls, *args, **kwargs)
+
+        kwargs['objective_cls'] = HashCodeObjective
+        job = Job(trips, *args, **kwargs)
+
         logger.info(f'Created job!')
         return job
 
@@ -48,9 +50,9 @@ class HashCodeLoaderFormatter(LoaderFormatter):
         return trip
 
     def surface(self, *args, **kwargs) -> Surface:
-        row = self.data[0]
-        rows = row[0]
-        columns = row[1]
+        # row = self.data[0]
+        # rows = row[0]
+        # columns = row[1]
         surface = GeometricSurface(DistanceMetric.MANHATTAN)
         logger.info(f'Created surface!')
         return surface
