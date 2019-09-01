@@ -7,7 +7,7 @@ from ...models import (
     Planning,
 )
 from ...exceptions import (
-    NonFeasiblePlannedTripException,
+    StopPlannedTripIterationException,
 )
 from ..abc import (
     Algorithm,
@@ -46,7 +46,7 @@ class InsertionAlgorithm(Algorithm):
         while not crosser.completed:
             try:
                 planned_trip = next(crosser)
-            except NonFeasiblePlannedTripException:
+            except StopPlannedTripIterationException:
                 break
             route = planned_trip.route
             route.append_planned_trip(planned_trip)
