@@ -83,6 +83,15 @@ def generate_one_job(trips_count: int = None, trips_count_min: int = 1, trips_co
     return job
 
 
+def generate_one_planning(routes_count: int = None, routes_count_min: int = 1, routes_count_max: int = 100,
+                          *args, **kwargs) -> jit.Planning:
+    if routes_count is None:
+        routes_count = randint(routes_count_min, routes_count_max)
+    trips = generate_routes(routes_count, *args, **kwargs)
+    planning = jit.Planning(trips)
+    return planning
+
+
 def generate_jobs(n: int, *args, **kwargs) -> Set[jit.Job]:
     return {
         generate_one_job(*args, **kwargs) for _ in range(n)

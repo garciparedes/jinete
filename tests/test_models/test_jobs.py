@@ -23,7 +23,7 @@ class TestJob(unittest.TestCase):
     def test_deepcopy(self):
         job = generate_one_job(True)
         copied_job = deepcopy(job)
-        self.assertTrue(job, copied_job)
+        self.assertEqual(job, copied_job)
 
 
 if __name__ == '__main__':

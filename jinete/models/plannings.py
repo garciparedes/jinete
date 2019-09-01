@@ -15,9 +15,16 @@ if TYPE_CHECKING:
         Set,
         Dict,
         Any,
+        Iterator,
     )
     from .routes import (
         Route,
+    )
+    from .trips import (
+        Trip,
+    )
+    from .planned_trips import (
+        PlannedTrip,
     )
     from uuid import (
         UUID,
@@ -45,6 +52,15 @@ class Planning(Model):
     @property
     def loaded_routes(self):
         return set(route for route in self.routes if route.loaded)
+
+    @property
+    def planned_trips(self) -> Iterator[PlannedTrip]:
+        for route in self.routes:
+            yield from route.planned_trips
+
+    @property
+    def trips(self) -> Iterator[Trip]:
+        yield from (planned_trip.trip for planned_trip in self.planned_trips)
 
     def as_dict(self) -> Dict[str, Any]:
         return {
