@@ -1,11 +1,13 @@
 import unittest
+from copy import deepcopy
 
 import jinete as jit
 
 from tests.utils import (
     generate_one_vehicle,
     generate_one_position,
-    generate_one_route)
+    generate_one_route,
+)
 
 
 class TestStop(unittest.TestCase):
@@ -17,8 +19,32 @@ class TestStop(unittest.TestCase):
 
         cls.position = generate_one_position()
 
+    def setUp(self) -> None:
+        stop0 = jit.Stop(self.route, self.position, None)
+
+        stop1 = jit.Stop(self.route, generate_one_position(), stop0)
+        stop0.following = stop1
+
+        stop2 = jit.Stop(self.route, generate_one_position(), stop1)
+        stop1.following = stop2
+
+        stop3 = jit.Stop(self.route, generate_one_position(), stop2)
+        stop2.following = stop3
+
+        stop4 = jit.Stop(self.route, generate_one_position(), stop3)
+        stop3.following = stop4
+
+        stops = [stop0, stop1, stop2, stop3, stop4]
+        self.stops = stops
+        self.route.stops = stops
+
     def test_creation(self):
         stop = jit.Stop(self.route, self.position, None)
+
+        self.assertIsNone(stop._down_time)
+        self.assertIsNone(stop._load_time)
+        self.assertIsNone(stop._earliest)
+        self.assertIsNone(stop._arrival_time)
 
         self.assertEqual(stop.route, self.route)
         self.assertEqual(stop.position, self.position)
@@ -80,94 +106,59 @@ class TestStop(unittest.TestCase):
         self.assertIsNone(stop._earliest)
         self.assertIsNone(stop._arrival_time)
 
+    def test_cache(self):
+        self.assertIsInstance(self.stops[-1].departure_time, float)
+        for stop in self.stops:
+            self.assertIsNotNone(stop._down_time)
+            self.assertIsNotNone(stop._load_time)
+            self.assertIsNotNone(stop._earliest)
+            self.assertIsNotNone(stop._arrival_time)
+
     def test_all_following(self):
-        stop0 = jit.Stop(self.route, self.position, None)
+        self.assertIsInstance(self.stops[-1].departure_time, float)
+        self.stops[2].flush_all_following()
 
-        stop1 = jit.Stop(self.route, generate_one_position(), stop0)
-        stop0.following = stop1
-
-        stop2 = jit.Stop(self.route, generate_one_position(), stop1)
-        stop1.following = stop2
-
-        stop3 = jit.Stop(self.route, generate_one_position(), stop2)
-        stop2.following = stop3
-
-        stop4 = jit.Stop(self.route, generate_one_position(), stop3)
-        stop3.following = stop4
-
-        stops = [stop0, stop1, stop2, stop3, stop4]
-
-        for stop in stops:
-            self.assertIsNone(stop._down_time)
-            self.assertIsNone(stop._load_time)
-            self.assertIsNone(stop._earliest)
-            self.assertIsNone(stop._arrival_time)
-
-        self.assertIsInstance(stops[-1].departure_time, float)
-
-        for stop in stops:
+        for stop in self.stops[:2]:
             self.assertIsNotNone(stop._down_time)
             self.assertIsNotNone(stop._load_time)
             self.assertIsNotNone(stop._earliest)
             self.assertIsNotNone(stop._arrival_time)
-
-        stop2.flush_all_following()
-
-        for stop in stops[:2]:
-            self.assertIsNotNone(stop._down_time)
-            self.assertIsNotNone(stop._load_time)
-            self.assertIsNotNone(stop._earliest)
-            self.assertIsNotNone(stop._arrival_time)
-        for stop in stops[2:]:
+        for stop in self.stops[2:]:
             self.assertIsNone(stop._down_time)
             self.assertIsNone(stop._load_time)
             self.assertIsNone(stop._earliest)
             self.assertIsNone(stop._arrival_time)
 
     def test_all_previous(self):
-        stop0 = jit.Stop(self.route, self.position, None)
+        self.assertIsInstance(self.stops[-1].departure_time, float)
 
-        stop1 = jit.Stop(self.route, generate_one_position(), stop0)
-        stop0.following = stop1
+        self.stops[2].flush_all_previous()
 
-        stop2 = jit.Stop(self.route, generate_one_position(), stop1)
-        stop1.following = stop2
-
-        stop3 = jit.Stop(self.route, generate_one_position(), stop2)
-        stop2.following = stop3
-
-        stop4 = jit.Stop(self.route, generate_one_position(), stop3)
-        stop3.following = stop4
-
-        stops = [stop0, stop1, stop2, stop3, stop4]
-
-        for stop in stops:
+        for stop in self.stops[:3]:
             self.assertIsNone(stop._down_time)
             self.assertIsNone(stop._load_time)
             self.assertIsNone(stop._earliest)
             self.assertIsNone(stop._arrival_time)
 
-        self.assertIsInstance(stops[-1].departure_time, float)
-
-        for stop in stops:
+        for stop in self.stops[3:]:
             self.assertIsNotNone(stop._down_time)
             self.assertIsNotNone(stop._load_time)
             self.assertIsNotNone(stop._earliest)
             self.assertIsNotNone(stop._arrival_time)
 
-        stop2.flush_all_previous()
+    def test_flip(self):
+        route = deepcopy(self.route)
+        stops = route.stops
+        stops[1].flip(stops[2])
 
-        for stop in stops[:3]:
-            self.assertIsNone(stop._down_time)
-            self.assertIsNone(stop._load_time)
-            self.assertIsNone(stop._earliest)
-            self.assertIsNone(stop._arrival_time)
+        self.assertEqual(stops[0].position, self.route.stops[0].position)
+        self.assertEqual(stops[1].position, self.route.stops[2].position)
+        self.assertEqual(stops[2].position, self.route.stops[1].position)
+        self.assertEqual(stops[3].position, self.route.stops[3].position)
 
-        for stop in stops[3:]:
-            self.assertIsNotNone(stop._down_time)
-            self.assertIsNotNone(stop._load_time)
-            self.assertIsNotNone(stop._earliest)
-            self.assertIsNotNone(stop._arrival_time)
+        for first, second in zip(stops[:-1], stops[1:]):
+            self.assertEqual(first.following, second)
+            self.assertEqual(second.previous, first)
 
 
 if __name__ == '__main__':
