@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 
 class PlannedTripCriterion(ABC):
-    def __init__(self, name: str, direction: OptimizationDirection):
+    def __init__(self, name: str, direction: OptimizationDirection, *args, **kwargs):
         self.name = name
         self.direction = direction
 
@@ -32,7 +32,7 @@ class PlannedTripCriterion(ABC):
     def scoring(self, planned_trip: PlannedTrip) -> float:
         pass
 
-    def best(self, *args: Optional[PlannedTrip]) -> Optional[PlannedTrip]:
+    def best(self, *args: Optional[PlannedTrip]) -> PlannedTrip:
         return self.direction(
             (arg for arg in args if arg is not None),
             key=self.scoring,
@@ -48,10 +48,11 @@ class PlannedTripCriterion(ABC):
 
 class ShortestTimePlannedTripCriterion(PlannedTripCriterion):
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         super().__init__(
             direction=OptimizationDirection.MINIMIZATION,
             name='Shortest-Time',
+            *args, **kwargs,
         )
 
     def scoring(self, planned_trip: PlannedTrip) -> float:
@@ -63,10 +64,11 @@ class ShortestTimePlannedTripCriterion(PlannedTripCriterion):
 
 class LongestTimePlannedTripCriterion(PlannedTripCriterion):
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         super().__init__(
             direction=OptimizationDirection.MAXIMIZATION,
             name='Longest-Time',
+            *args, **kwargs,
         )
 
     def scoring(self, planned_trip: PlannedTrip) -> float:
@@ -78,10 +80,11 @@ class LongestTimePlannedTripCriterion(PlannedTripCriterion):
 
 class LongestUtilTimePlannedTripCriterion(PlannedTripCriterion):
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         super().__init__(
             direction=OptimizationDirection.MAXIMIZATION,
             name='Longest-Time',
+            *args, **kwargs,
         )
 
     def scoring(self, planned_trip: PlannedTrip) -> float:
@@ -93,10 +96,11 @@ class LongestUtilTimePlannedTripCriterion(PlannedTripCriterion):
 
 class HashCodePlannedTripCriterion(PlannedTripCriterion):
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         super().__init__(
             direction=OptimizationDirection.MAXIMIZATION,
             name='Longest-Time',
+            *args, **kwargs,
         )
 
     def scoring(self, planned_trip: PlannedTrip) -> float:

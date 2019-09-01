@@ -1,5 +1,6 @@
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import jinete as jit
 
@@ -29,7 +30,8 @@ class TestStorerSet(unittest.TestCase):
         self.assertEqual(storer.result, self.result)
         self.assertEqual(storer.storer_cls_set, storer_cls_set)
 
-    def test_store(self):
+    @patch("jinete.storers.plots.graph.plt.show")
+    def test_store(self, mocked_plt):
         storer = jit.StorerSet(
             result=self.result,
             storer_cls_set={

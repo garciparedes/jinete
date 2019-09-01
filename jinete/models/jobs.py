@@ -48,6 +48,9 @@ class Job(Model):
     def __iter__(self):
         yield from self.trips
 
+    def __deepcopy__(self, memo) -> Job:
+        return self
+
     def as_dict(self) -> Dict[str, Any]:
         trips_str = ', '.join(str(trip) for trip in self.trips)
         dict_values = {

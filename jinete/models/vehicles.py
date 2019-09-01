@@ -79,6 +79,9 @@ class Vehicle(Model):
             'uuid': self.uuid,
         }
 
+    def __deepcopy__(self, memo: Dict[int, Any]) -> Vehicle:
+        return self
+
 
 class Fleet(Model):
     vehicles: Set[Vehicle]
@@ -95,3 +98,6 @@ class Fleet(Model):
             'vehicles': f'{{{vehicles_str}}}'
         }
         return dict_values
+
+    def __deepcopy__(self, memo: Dict[int, Any]) -> Fleet:
+        return self

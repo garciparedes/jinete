@@ -6,9 +6,11 @@ from .naive import (
 )
 from .heuristics import (
     InsertionAlgorithm,
+    LocalSearchAlgorithm,
 )
 from .metaheuristics import (
     GraspAlgorithm,
+    IterativeAlgorithm,
 )
 from .utils import (
     Crosser,

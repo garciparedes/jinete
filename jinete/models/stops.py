@@ -18,6 +18,7 @@ if TYPE_CHECKING:
         Optional,
         Iterable,
         Tuple,
+        List,
     )
     from .positions import (
         Position,
@@ -51,6 +52,8 @@ class Stop(Model):
     ]
     route: Route
     position: Position
+    previous: Optional[Stop]
+    following: Optional[Stop]
     pickups: Tuple[PlannedTrip, ...]
     deliveries: Tuple[PlannedTrip, ...]
 
@@ -60,13 +63,14 @@ class Stop(Model):
     _arrival_time: Optional[float]
     _previous_departure_time: Optional[float]
 
-    def __init__(self, route: Route, position: Position, previous: Optional[Stop], following: Optional[Stop] = None):
+    def __init__(self, route: Route, position: Position, previous: Optional[Stop], following: Optional[Stop] = None,
+                 pickups: Tuple[PlannedTrip, ...] = tuple(), deliveries: Tuple[PlannedTrip, ...] = tuple()):
 
         self.route = route
         self.position = position
 
-        self.pickups = tuple()
-        self.deliveries = tuple()
+        self.pickups = pickups
+        self.deliveries = deliveries
 
         self.previous = previous
         self.following = following
@@ -123,6 +127,14 @@ class Stop(Model):
     @property
     def vehicle_uuid(self) -> UUID:
         return self.vehicle.uuid
+
+    @property
+    def stops(self) -> List[Stop]:
+        return self.route.stops
+
+    @property
+    def index(self) -> int:
+        return self.stops.index(self)
 
     @property
     def previous_departure_time(self) -> float:
@@ -201,14 +213,26 @@ class Stop(Model):
         self.flush()
 
     def flip(self, other: Stop) -> None:
-        assert other.previous == self
+        # assert other.previous == self
+        assert self.route == other.route
+
+        self_index = self.index
+        other_index = other.index
+        self.stops[self_index], self.stops[other_index] = self.stops[other_index], self.stops[self_index]
 
         following = other.following
         other.following = self
+        if following is not None:
+            following.previous = self
         self.following = following
 
         previous = self.previous
         other.previous = previous
+        if previous is not None:
+            previous.following = other
         self.previous = other
 
         other.flush_all_following()
+
+    def flip_with_following(self):
+        self.flip(self.following)

@@ -70,7 +70,9 @@ from .algorithms import (
     Algorithm,
     NaiveAlgorithm,
     InsertionAlgorithm,
+    LocalSearchAlgorithm,
     GraspAlgorithm,
+    IterativeAlgorithm,
     Crosser,
     StatelessCrosser,
     BestStatelessCrosser,
@@ -80,6 +82,7 @@ from .algorithms import (
 
 from .exceptions import (
     JineteException,
-    NonFeasiblePlannedTripFoundException,
-    PlannedTripNotFeasibleException,
+    StopPlannedTripIterationException,
+    NonFeasiblePlannedTripException,
+    NonFeasibleRouteException,
 )

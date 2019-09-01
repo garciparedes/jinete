@@ -1,7 +1,16 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 from random import uniform, randint
-from typing import Set
 
 import jinete as jit
+
+if TYPE_CHECKING:
+    from typing import (
+        Set,
+        Type,
+        Optional,
+    )
 
 
 def generate_one_surface(*args, **kwargs) -> jit.Surface:
@@ -62,10 +71,36 @@ def generate_trips(n: int, *args, **kwargs) -> Set[jit.Trip]:
     }
 
 
+def generate_one_job(trips_count: int = None, trips_count_min: int = 1, trips_count_max: int = 100,
+                     objective_cls: Optional[Type[jit.Objective]] = None, *args, **kwargs) -> jit.Job:
+    if trips_count is None:
+        trips_count = randint(trips_count_min, trips_count_max)
+    if objective_cls is None:
+        objective_cls = jit.DialARideObjective
+
+    trips = generate_trips(trips_count, *args, **kwargs)
+    job = jit.Job(trips, objective_cls)
+    return job
+
+
+def generate_one_planning(routes_count: int = None, routes_count_min: int = 1, routes_count_max: int = 100,
+                          *args, **kwargs) -> jit.Planning:
+    if routes_count is None:
+        routes_count = randint(routes_count_min, routes_count_max)
+    trips = generate_routes(routes_count, *args, **kwargs)
+    planning = jit.Planning(trips)
+    return planning
+
+
+def generate_jobs(n: int, *args, **kwargs) -> Set[jit.Job]:
+    return {
+        generate_one_job(*args, **kwargs) for _ in range(n)
+    }
+
+
 def generate_one_planned_trip(feasible: bool, route: jit.Route = None, *args, **kwargs) -> jit.PlannedTrip:
     if route is None:
-        vehicle = generate_one_vehicle()
-        route = jit.Route(vehicle)
+        route = generate_one_route()
     if feasible:
         down_time = 0.0
         kwargs['earliest'] = 0.0
@@ -113,16 +148,18 @@ def generate_vehicles(n: int, *args, **kwargs) -> Set[jit.Vehicle]:
     return vehicles
 
 
-def generate_one_route(feasible: bool, planned_trips_min: int = 1, planned_trips_max: int = 20,
+def generate_one_route(feasible: bool = True,
+                       planned_trips_count: int = None, planned_trips_min: int = 1, planned_trips_max: int = 20,
                        surface: jit.Surface = None, *args, **kwargs) -> jit.Route:
     if surface is None:
         surface = generate_one_surface(*args, **kwargs)
     vehicle = generate_one_vehicle(surface=surface, *args, **kwargs)
     route = jit.Route(vehicle)
 
-    planned_trips_len = randint(planned_trips_min, planned_trips_max)
+    if planned_trips_count is None:
+        planned_trips_count = randint(planned_trips_min, planned_trips_max)
 
-    for i in range(planned_trips_len):
+    for i in range(planned_trips_count):
         planned_trip = generate_one_planned_trip(
             feasible=feasible,
             route=route,

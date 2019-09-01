@@ -8,7 +8,7 @@ from tests.utils import (
 )
 
 
-class TestGraspAlgorithm(unittest.TestCase):
+class TestIterativeAlgorithm(unittest.TestCase):
     job: jit.Job
     fleet: jit.Fleet
 
@@ -18,7 +18,7 @@ class TestGraspAlgorithm(unittest.TestCase):
         cls.fleet = jit.Fleet(generate_vehicles(10))
 
     def test_creation(self):
-        algorithm = jit.GraspAlgorithm(
+        algorithm = jit.IterativeAlgorithm(
             job=self.job,
             fleet=self.fleet,
         )
@@ -26,7 +26,7 @@ class TestGraspAlgorithm(unittest.TestCase):
         self.assertEqual(algorithm.fleet, self.fleet)
 
     def test_optimize(self):
-        algorithm = jit.GraspAlgorithm(
+        algorithm = jit.IterativeAlgorithm(
             job=self.job,
             fleet=self.fleet,
         )

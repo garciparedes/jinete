@@ -39,7 +39,7 @@ class Objective(ABC):
         self.name = name
         self.direction = direction
 
-    def best(self, *args: Optional[Optimizable]) -> Optional[Optimizable]:
+    def best(self, *args: Optional[Optimizable]) -> Optimizable:
         return self.direction(
             (arg for arg in args if arg is not None),
             key=self.optimization_function,

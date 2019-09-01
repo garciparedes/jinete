@@ -7,7 +7,7 @@ from ...models import (
     Planning,
 )
 from ...exceptions import (
-    NonFeasiblePlannedTripFoundException,
+    StopPlannedTripIterationException,
 )
 from ..abc import (
     Algorithm,
@@ -41,13 +41,12 @@ class InsertionAlgorithm(Algorithm):
         return self.crosser_cls(*self.args, **self.kwargs)
 
     def _optimize(self) -> Planning:
-        logger.info('Optimizing...')
         crosser = self.build_crosser()
 
         while not crosser.completed:
             try:
                 planned_trip = next(crosser)
-            except NonFeasiblePlannedTripFoundException:
+            except StopPlannedTripIterationException:
                 break
             route = planned_trip.route
             route.append_planned_trip(planned_trip)
@@ -56,5 +55,4 @@ class InsertionAlgorithm(Algorithm):
         for route in crosser.routes:
             route.finish()
         planning = Planning(crosser.routes)
-        logger.info('Optimized!')
         return planning
