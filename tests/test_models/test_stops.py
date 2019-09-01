@@ -1,5 +1,6 @@
 import unittest
 from copy import deepcopy
+from typing import TYPE_CHECKING
 
 import jinete as jit
 
@@ -9,8 +10,17 @@ from tests.utils import (
     generate_one_route,
 )
 
+if TYPE_CHECKING:
+    from typing import (
+        List,
+    )
+
 
 class TestStop(unittest.TestCase):
+    vehicle: jit.Vehicle
+    route: jit.Route
+    position: jit.Position
+    stops: List[jit.Stop]
 
     @classmethod
     def setUpClass(cls) -> None:
