@@ -5,6 +5,7 @@ from copy import deepcopy
 from typing import TYPE_CHECKING
 
 import itertools as it
+from uuid import UUID
 
 import jinete as jit
 
@@ -36,10 +37,32 @@ class TestPlanning(unittest.TestCase):
         planning = jit.Planning(self.routes)
 
         self.assertIsInstance(planning, jit.Planning)
+        self.assertIsNotNone(planning.uuid)
+        self.assertIsInstance(planning.uuid, UUID)
+        self.assertIsNotNone(planning.routes)
+        self.assertIsInstance(planning.routes, set)
+
+        self.assertTrue(all(isinstance(route, jit.Route) for route in planning.routes))
         self.assertEqual(planning.routes, self.routes)
+
+    def test_loaded_routes(self):
+        planning = jit.Planning(self.routes)
         self.assertEqual(planning.loaded_routes, self.loaded_routes)
+
+    def test_planned_trips(self):
+        planning = jit.Planning(self.routes)
         self.assertEqual(list(planning.planned_trips), self.planned_trips)
+
+    def test_trips(self):
+        planning = jit.Planning(self.routes)
         self.assertEqual(list(planning.trips), self.trips)
+
+    def test_as_dict(self):
+        planning = jit.Planning(self.routes)
+        expected = {
+            'uuid': planning.uuid,
+        }
+        self.assertEqual(expected, planning.as_dict())
 
     def test_deepcopy(self):
         planning = jit.Planning(self.routes)
