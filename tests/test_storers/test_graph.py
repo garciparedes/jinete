@@ -1,5 +1,6 @@
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import networkx as nx
 
@@ -25,7 +26,8 @@ class TestGraphPlotStorer(unittest.TestCase):
         )
         self.assertEqual(storer.result, self.result)
 
-    def test_store(self):
+    @patch("jinete.storers.plots.graph.plt.show")
+    def test_store(self, mocked_plt):
         storer = jit.GraphPlotStorer(
             result=self.result,
         )
