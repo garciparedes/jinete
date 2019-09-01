@@ -47,8 +47,8 @@ class GraspAlgorithm(Algorithm):
         args = (*self.args, *args)
         kwargs.update(self.kwargs)
 
-        kwargs['episodes'] = self.first_solution_episodes,
-        kwargs['seed'] = self.random.randint(0, MAX_INT),
+        kwargs['episodes'] = self.first_solution_episodes
+        kwargs['seed'] = self.random.randint(0, MAX_INT)
 
         return IterativeAlgorithm(*args, **kwargs)
 

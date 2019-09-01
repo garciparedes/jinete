@@ -11,6 +11,7 @@ from tests.utils import (
 class TestLocalSearchAlgorithm(unittest.TestCase):
     job: jit.Job
     fleet: jit.Fleet
+    initial: jit.Result
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -40,6 +41,7 @@ class TestLocalSearchAlgorithm(unittest.TestCase):
         )
         result = algorithm.optimize()
 
+        # TODO: Properly validate  behaviour of the provided "Result" object.
         self.assertIsNotNone(result)
         self.assertIsInstance(result, jit.Result)
 

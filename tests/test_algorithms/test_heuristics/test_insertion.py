@@ -34,6 +34,7 @@ class TestInsertionAlgorithm(unittest.TestCase):
         )
         result = algorithm.optimize()
 
+        # TODO: Properly validate  behaviour of the provided "Result" object.
         self.assertIsNotNone(result)
         self.assertIsInstance(result, jit.Result)
 
