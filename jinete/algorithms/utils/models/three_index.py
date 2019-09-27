@@ -1,11 +1,19 @@
 from __future__ import annotations
 
+import logging
+from itertools import product
 from typing import (
     TYPE_CHECKING,
 )
 
 import pulp as lp
 
+from ....models import (
+    MAX_INT,
+    Stop,
+    PlannedTrip,
+    Route,
+)
 from .abc import (
     Model,
 )
@@ -14,10 +22,14 @@ if TYPE_CHECKING:
     from typing import (
         List,
         Set,
+        Tuple,
     )
     from ....models import (
-        Route,
+        Trip,
+        Vehicle,
     )
+
+logger = logging.getLogger(__name__)
 
 
 class ThreeIndexModel(Model):
@@ -25,7 +37,10 @@ class ThreeIndexModel(Model):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self._model = None
+        self._trips = None
+        self._vehicles = None
+
+        self._problem = None
 
         self.x = None
         self.u = None
@@ -42,7 +57,7 @@ class ThreeIndexModel(Model):
 
     @property
     def problem(self) -> lp.LpProblem:
-        return self._model
+        return self._problem
 
     @property
     def objective(self) -> lp.LpConstraintVar:
@@ -56,20 +71,20 @@ class ThreeIndexModel(Model):
         # nodes = list()  # V_i | V_j
         # vehicles = list()  # K_k
 
-        pickups = list()  # P_i
-        deliveries = list()  # D_i
-
-        times = [[]]  # t_ij
-        durations = list()  # d_i
-        vehicle_capacities = list()  # Q_k
-        route_capacities = list()  # T_k
-        loads = list()  # q_i
-
-        time_windows = [[]]  # e_i, l_i
+        # pickups = list()  # P_i
+        # deliveries = list()  # D_i
+        #
+        # times = [[]]  # t_ij
+        # durations = list()  # d_i
+        # vehicle_capacities = list()  # Q_k
+        # route_capacities = list()  # T_k
+        # loads = list()  # q_i
+        #
+        # time_windows = [[]]  # e_i, l_i
 
         # costs = [[[]]]  # c_ijk
 
-        self._model = lp.LpProblem("3-idx_dial-a-ride", lp.LpMaximize)
+        self._problem = lp.LpProblem("3-idx_dial-a-ride", lp.LpMinimize)
 
         self.x = self._build_x_variables()
         self.u = self._build_u_variables()
@@ -79,12 +94,20 @@ class ThreeIndexModel(Model):
         self._objective = self._build_objective()
         self._constraints = self._build_constraints()
 
-        self._model.objective = self.objective
-        self._model.extend(self.constraints)
+        self._problem.objective = self.objective
+        self._problem.extend(self.constraints)
 
     @property
-    def vehicles(self):
-        return self.fleet.vehicles
+    def vehicles(self) -> Tuple[Vehicle]:
+        if self._vehicles is None:
+            self._vehicles = tuple(self.fleet.vehicles)
+        return self._vehicles
+
+    @property
+    def trips(self) -> Tuple[Trip]:
+        if self._trips is None:
+            self._trips = tuple(self.job.trips)
+        return self._trips
 
     @property
     def positions(self):
@@ -92,10 +115,18 @@ class ThreeIndexModel(Model):
             self._positions = self._build_positions()
         return self._positions
 
+    @staticmethod
+    def remove_duplicates(seq):
+        seen = set()
+        seen_add = seen.add
+        return tuple(x for x in seq if not (x in seen or seen_add(x)))
+
     def _build_positions(self):
-        origins = {trip.origin for trip in self.job.trips}
-        destinations = {trip.destination for trip in self.job.trips}
-        positions = tuple(origins.union(destinations))
+
+        origins = tuple(trip.origin for trip in self.trips)
+        destinations = tuple(trip.destination for trip in self.trips)
+        positions = (self.vehicles[0].initial,) + origins + destinations + (self.vehicles[0].final,)
+
         return positions
 
     @property
@@ -109,7 +140,10 @@ class ThreeIndexModel(Model):
         for origin in self.positions:
             origin_costs = list()
             for destination in self.positions:
-                cost = origin.distance_to(destination)
+                if origin == destination:
+                    cost = MAX_INT
+                else:
+                    cost = origin.distance_to(destination)
                 origin_costs.append(cost)
             costs.append(origin_costs)
         return costs
@@ -166,7 +200,90 @@ class ThreeIndexModel(Model):
         return obj
 
     def _build_constraints(self) -> List[lp.LpConstraint]:
-        raise NotImplementedError
+        return sum([
+            self._build_uniqueness_constraints(),
+            self._build_connectivity_constraints(),
+            self._build_time_constraints(),
+            self._build_feasibility_constraints(),
+        ], [])
+
+    def _build_uniqueness_constraints(self) -> List[lp.LpConstraint]:
+        constraints = list()
+
+        for i in range(1, len(self.trips) + 1):
+            lhs = sum(self.x[i][j][k] for j, k in product(range(len(self.positions)), range(len(self.vehicles))))
+            constraints.append(lhs == 1)
+
+        for i in range(1, len(self.trips) + 1):
+            for k in range(len(self.vehicles)):
+                lhs = (
+                        sum(self.x[i][j][k] for j in range(len(self.positions))) -
+                        sum(self.x[len(self.trips) + i][j][k] for j in range(len(self.positions)))
+                )
+                constraints.append(lhs == 0)
+
+        return constraints
+
+    def _build_connectivity_constraints(self) -> List[lp.LpConstraint]:
+        constraints = list()
+
+        for k in range(len(self.vehicles)):
+            lhs = sum(self.x[0][j][k] for j in range(len(self.positions)))
+            rhs = sum(self.x[i][-1][k] for i in range(len(self.positions)))
+            constraints.append(lhs == rhs)
+
+            constraints.append(lhs == 1)
+            constraints.append(rhs == 1)
+
+        for i in range(1, len(self.trips) * 2 + 1):
+            for k in range(len(self.vehicles)):
+                lhs = (
+                        sum(self.x[i][j][k] for j in range(len(self.positions))) -
+                        sum(self.x[j][i][k] for j in range(len(self.positions)))
+                )
+                constraints.append(lhs == 0)
+
+        return constraints
+
+    def _build_time_constraints(self) -> List[lp.LpConstraint]:
+        constraints = list()
+
+        return constraints
+
+    def _build_feasibility_constraints(self) -> List[lp.LpConstraint]:
+        constraints = list()
+
+        return constraints
 
     def solve(self) -> Set[Route]:
-        return set()
+        logger.info('Starting to solve...')
+        solver = lp.LpSolverDefault
+        self.problem.solve(solver)
+
+        routes = set()
+        for k in range(len(self.vehicles)):
+            route = Route(self.vehicles[k])
+
+            for i in range(1, len(self.positions)):
+                for j in range(1, len(self.positions)):
+                    if int(self.x[i][j][k].varValue) == 1:
+                        origin = self.positions[i]
+                        destination = self.positions[j]
+
+                        pickup = Stop(route, origin, route.last_stop)
+                        delivery = Stop(route, destination, pickup)
+                        trip = self.trips[(i % len(self.trips)) - 1]
+                        planned_trip = PlannedTrip(route=route, trip=trip, pickup=pickup, delivery=delivery)
+                        route.append_planned_trip(planned_trip)
+            routes.add(route)
+
+        for k in range(len(self.vehicles)):
+            print(f'Vehicle {k}-th.')
+            for i in range(len(self.positions)):
+                for j in range(len(self.positions)):
+                    print(f'{int(self.x[i][j][k].varValue)}', end=' ')
+                print()
+            print()
+
+        logger.info(f'Obtained "{lp.value(self.objective)}" reaching "{lp.LpStatus[self.problem.status]}".')
+        return routes
