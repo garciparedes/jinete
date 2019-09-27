@@ -104,5 +104,6 @@ class TestVehicles(unittest.TestCase):
 
         self.assertEqual(expected, vehicle.as_dict())
 
+
 if __name__ == '__main__':
     unittest.main()
