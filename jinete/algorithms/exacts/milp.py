@@ -39,10 +39,10 @@ class MilpAlgorithm(Algorithm):
         self.kwargs = kwargs
 
     def build_model(self) -> Model:
-        return self.model_cls(fleet=self.fleet, job=self.job, *self.args, **self.kwargs)
+        return self.model_cls(*self.args, **self.kwargs)
 
     def _optimize(self) -> Planning:
-        model = ThreeIndexModel(self.fleet, self.job)
+        model = self.build_model()
 
         routes = model.solve()
 

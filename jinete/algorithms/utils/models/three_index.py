@@ -35,6 +35,9 @@ class ThreeIndexModel(Model):
         self._objective = None
         self._constraints = None
 
+        self._positions = None
+        self._costs = None
+
         self.build()
 
     @property
@@ -50,8 +53,8 @@ class ThreeIndexModel(Model):
         return self._constraints
 
     def build(self):
-        nodes = list()  # V_i | V_j
-        vehicles = list()  # K_k
+        # nodes = list()  # V_i | V_j
+        # vehicles = list()  # K_k
 
         pickups = list()  # P_i
         deliveries = list()  # D_i
@@ -64,14 +67,14 @@ class ThreeIndexModel(Model):
 
         time_windows = [[]]  # e_i, l_i
 
-        costs = [[[]]]  # c_ijk
+        # costs = [[[]]]  # c_ijk
 
         self._model = lp.LpProblem("3-idx_dial-a-ride", lp.LpMaximize)
 
-        self.x = self._build_x_variables(nodes, vehicles)
-        self.u = self._build_u_variables(nodes, vehicles)
-        self.w = self._build_w_variables(nodes, vehicles)
-        self.r = self._build_r_variables(nodes, vehicles)
+        self.x = self._build_x_variables()
+        self.u = self._build_u_variables()
+        self.w = self._build_w_variables()
+        self.r = self._build_r_variables()
 
         self._objective = self._build_objective()
         self._constraints = self._build_constraints()
@@ -79,55 +82,88 @@ class ThreeIndexModel(Model):
         self._model.objective = self.objective
         self._model.extend(self.constraints)
 
-    @staticmethod
-    def _build_x_variables(nodes, vehicles) -> List[List[List[lp.LpVariable]]]:
+    @property
+    def vehicles(self):
+        return self.fleet.vehicles
+
+    @property
+    def positions(self):
+        if self._positions is None:
+            self._positions = self._build_positions()
+        return self._positions
+
+    def _build_positions(self):
+        origins = {trip.origin for trip in self.job.trips}
+        destinations = {trip.destination for trip in self.job.trips}
+        positions = tuple(origins.union(destinations))
+        return positions
+
+    @property
+    def costs(self):
+        if self._costs is None:
+            self._costs = self._build_costs()
+        return self._costs
+
+    def _build_costs(self):
+        costs = list()
+        for origin in self.positions:
+            origin_costs = list()
+            for destination in self.positions:
+                cost = origin.distance_to(destination)
+                origin_costs.append(cost)
+            costs.append(origin_costs)
+        return costs
+
+    def _build_x_variables(self) -> List[List[List[lp.LpVariable]]]:
         x = list()
-        for i in range(len(nodes)):
+        for i in range(len(self.positions)):
             x_i = list()
-            for j in range(len(nodes)):
+            for j in range(len(self.positions)):
                 x_ij = list()
-                for k in range(len(vehicles)):
-                    x_ijk = lp.LpVariable(f'x[{i}][{j}][{k}]', cat=lp.LpBinary)
+                for k in range(len(self.vehicles)):
+                    x_ijk = lp.LpVariable(f'x_{i}_{j}_{k}', cat=lp.LpBinary)
                     x_ij.append(x_ijk)
                 x_i.append(x_ij)
             x.append(x_i)
         return x
 
-    @staticmethod
-    def _build_u_variables(nodes, vehicles) -> List[List[lp.LpVariable]]:
+    def _build_u_variables(self) -> List[List[lp.LpVariable]]:
         u = list()
-        for i in range(len(nodes)):
+        for i in range(len(self.positions)):
             u_i = list()
-            for k in range(len(vehicles)):
-                u_ik = lp.LpVariable(f'u[{i}][{k}]')
+            for k in range(len(self.vehicles)):
+                u_ik = lp.LpVariable(f'u_{i}_{k}')
                 u_i.append(u_ik)
             u.append(u_i)
         return u
 
-    @staticmethod
-    def _build_w_variables(nodes, vehicles) -> List[List[lp.LpVariable]]:
+    def _build_w_variables(self) -> List[List[lp.LpVariable]]:
         w = list()
-        for i in range(len(nodes)):
+        for i in range(len(self.positions)):
             w_i = list()
-            for k in range(len(vehicles)):
-                w_ik = lp.LpVariable(f'w[{i}][{k}]')
+            for k in range(len(self.vehicles)):
+                w_ik = lp.LpVariable(f'w_{i}_{k}')
                 w_i.append(w_ik)
             w.append(w_i)
         return w
 
-    @staticmethod
-    def _build_r_variables(nodes, vehicles) -> List[List[lp.LpVariable]]:
+    def _build_r_variables(self) -> List[List[lp.LpVariable]]:
         r = list()
-        for i in range(len(nodes)):
+        for i in range(len(self.positions)):
             r_i = list()
-            for k in range(len(vehicles)):
-                r_ik = lp.LpVariable(f'r[{i}][{k}]')
+            for k in range(len(self.vehicles)):
+                r_ik = lp.LpVariable(f'r{i}_{k}')
                 r_i.append(r_ik)
             r.append(r_i)
         return r
 
     def _build_objective(self) -> lp.LpConstraintVar:
-        raise NotImplementedError
+        obj = None
+        for i in range(len(self.positions)):
+            for j in range(len(self.positions)):
+                for k in range(len(self.vehicles)):
+                    obj += self.x[i][j][k] * self.costs[i][j]
+        return obj
 
     def _build_constraints(self) -> List[lp.LpConstraint]:
         raise NotImplementedError
