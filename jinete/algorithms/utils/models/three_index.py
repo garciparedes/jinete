@@ -257,20 +257,20 @@ class ThreeIndexModel(Model):
                 constraints.append(constraint)
 
             for i, j in product(self.positions_indexer, self.positions_indexer):
-                if i not in (0, len(self.positions) - 1):
-                    load_time = self.trips[(i % self.n) - 1].load_time
-                else:
-                    load_time = 0
-                travel_time = self.positions[i].time_to(self.positions[j])
-
-                aux = lp.LpVariable(f'aux_{k}_{i}_{j}_1', lowBound=0.0)
-
-                constraints.extend([
-                    aux <= MAX_INT * self.x[k][i][j],
-                    aux <= self.u[k][i],
-                    aux >= self.u[k][i] - (1 - self.x[k][i][j]) * MAX_INT,
-                    self.u[k][j] >= aux + (load_time + travel_time) * self.x[k][i][j],
-                ])
+                # if i not in (0, len(self.positions) - 1):
+                #     load_time = self.trips[(i % self.n) - 1].load_time
+                # else:
+                #     load_time = 0
+                # travel_time = self.positions[i].time_to(self.positions[j])
+                #
+                # aux = lp.LpVariable(f'aux_{k}_{i}_{j}_1', lowBound=0.0)
+                #
+                # constraints.extend([
+                #     aux <= MAX_INT * self.x[k][i][j],
+                #     aux <= self.u[k][i],
+                #     aux >= self.u[k][i] - (1 - self.x[k][i][j]) * MAX_INT,
+                #     self.u[k][j] >= aux + (load_time + travel_time) * self.x[k][i][j],
+                # ])
 
                 if i not in (0, len(self.positions) - 1):
                     capacity = self.trips[(j % self.n) - 1].capacity
@@ -375,7 +375,7 @@ class ThreeIndexModel(Model):
             ordered_trip_indexes = [
                 idx
                 for idx, u_k in sorted(enumerate(u_k.varValue for u_k in self.u[k]), key=itemgetter(1))
-                if u_k != 0.0
+                # if u_k != 0.0
             ]
 
             for i in ordered_trip_indexes:
