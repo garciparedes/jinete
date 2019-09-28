@@ -236,8 +236,8 @@ class ThreeIndexModel(Model):
 
             for i in self.nodes_indexer:
                 lhs = (
-                        sum(self.x[k][i][j] for j in self.positions_indexer) -
-                        sum(self.x[k][j][i] for j in self.positions_indexer)
+                        sum(self.x[k][j][i] for j in self.positions_indexer) -
+                        sum(self.x[k][i][j] for j in self.positions_indexer)
                 )
                 constraints.append(lhs == 0)
 
@@ -265,13 +265,12 @@ class ThreeIndexModel(Model):
 
                 aux = lp.LpVariable(f'aux_{k}_{i}_{j}_1', lowBound=0.0)
 
-                aux_constraint_1 = aux <= MAX_INT * self.x[k][i][j]
-                aux_constraint_2 = aux <= self.u[k][i]
-                aux_constraint_3 = aux >= self.u[k][i] - (1 - self.x[k][i][j]) * MAX_INT
-
-                constraint = self.u[k][j] >= aux + (load_time + travel_time) * self.x[k][i][j]
-
-                constraints.extend([aux_constraint_1, aux_constraint_2, aux_constraint_3, constraint])
+                constraints.extend([
+                    aux <= MAX_INT * self.x[k][i][j],
+                    aux <= self.u[k][i],
+                    aux >= self.u[k][i] - (1 - self.x[k][i][j]) * MAX_INT,
+                    self.u[k][j] >= aux + (load_time + travel_time) * self.x[k][i][j],
+                ])
 
                 if i not in (0, len(self.positions) - 1):
                     capacity = self.trips[(j % self.n) - 1].capacity
@@ -282,13 +281,12 @@ class ThreeIndexModel(Model):
 
                 aux = lp.LpVariable(f'aux_{k}_{i}_{j}_2', lowBound=0.0)
 
-                aux_constraint_1 = aux <= MAX_INT * self.x[k][i][j]
-                aux_constraint_2 = aux <= self.w[k][i]
-                aux_constraint_3 = aux >= self.w[k][i] - (1 - self.x[k][i][j]) * MAX_INT
-
-                constraint = self.w[k][j] >= aux + capacity * self.x[k][i][j]
-
-                constraints.extend([aux_constraint_1, aux_constraint_2, aux_constraint_3, constraint])
+                constraints.extend([
+                    aux <= MAX_INT * self.x[k][i][j],
+                    aux <= self.w[k][i],
+                    aux >= self.w[k][i] - (1 - self.x[k][i][j]) * MAX_INT,
+                    self.w[k][j] >= aux + capacity * self.x[k][i][j],
+                ])
 
         return constraints
 
@@ -312,21 +310,27 @@ class ThreeIndexModel(Model):
                 else:
                     capacity = 0
 
-                constraint = max(0, capacity) <= self.w[k][i] <= self.vehicles[k].capacity + min(0, capacity)
-                constraints.append(constraint)
+                constraints.extend([
+                    max(0, capacity) <= self.w[k][i],
+                    self.w[k][i] <= self.vehicles[k].capacity + min(0, capacity),
+                ])
 
-                if i in (0, len(self.positions) - 1):
-                    continue
-
-                trip = self.trips[(i % self.n) - 1]
-                if not trip.inbound and self.positions[i] == trip.origin:
-                    constraint = trip.earliest <= self.u[k][i] <= trip.latest
-                    constraints.append(constraint)
-                elif trip.inbound and self.positions[i] == trip.destination:
-                    constraint = trip.earliest <= self.u[k][i] <= trip.latest
-                    constraints.append(constraint)
-                else:
-                    pass
+                # if i in (0, len(self.positions) - 1):
+                #     continue
+                #
+                # trip = self.trips[(i % self.n) - 1]
+                # if not trip.inbound and self.positions[i] == trip.origin:
+                #     constraints.extend([
+                #         trip.earliest <= self.u[k][i],
+                #         self.u[k][i] <= trip.latest,
+                #     ])
+                # elif trip.inbound and self.positions[i] == trip.destination:
+                #     constraints.extend([
+                #         trip.earliest <= self.u[k][i],
+                #         self.u[k][i] <= trip.latest,
+                #     ])
+                # else:
+                #     pass
         return constraints
 
     def _build_variable_constraints(self) -> List[lp.LpConstraint]:
@@ -339,7 +343,10 @@ class ThreeIndexModel(Model):
                 constraints.append(0 <= self.r[k][i])
 
                 for j in self.positions_indexer:
-                    constraints.append(0 <= self.x[k][i][j] <= 1)
+                    constraints.extend([
+                        0 <= self.x[k][i][j],
+                        self.x[k][i][j] <= 1,
+                    ])
 
         return constraints
 
