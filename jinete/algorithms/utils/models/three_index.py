@@ -12,7 +12,6 @@ import pulp as lp
 from ....models import (
     MAX_INT,
     Stop,
-    PlannedTrip,
     Route,
 )
 from .abc import (
@@ -206,6 +205,7 @@ class ThreeIndexModel(Model):
             self._build_connectivity_constraints(),
             self._build_time_constraints(),
             self._build_feasibility_constraints(),
+            self._build_variable_constraints(),
         ], [])
 
     def _build_uniqueness_constraints(self) -> List[lp.LpConstraint]:
@@ -264,15 +264,15 @@ class ThreeIndexModel(Model):
                     load_time = 0
                 travel_time = self.positions[i].time_to(self.positions[j])
 
-                aux_1 = lp.LpVariable(f'aux_{k}_{i}_{j}_1', lowBound=0.0)
+                aux = lp.LpVariable(f'aux_{k}_{i}_{j}_1', lowBound=0.0)
 
-                aux_constraint_1_1 = aux_1 <= MAX_INT * self.x[k][i][j]
-                aux_constraint_1_2 = aux_1 <= self.u[k][i]
-                aux_constraint_1_3 = aux_1 >= self.u[k][i] - (1 - self.x[k][i][j]) * MAX_INT
+                aux_constraint_1 = aux <= MAX_INT * self.x[k][i][j]
+                aux_constraint_2 = aux <= self.u[k][i]
+                aux_constraint_3 = aux >= self.u[k][i] - (1 - self.x[k][i][j]) * MAX_INT
 
-                constraint = self.u[k][j] - (load_time + travel_time) * self.x[k][i][j] >= aux_1
+                constraint = self.u[k][j] >= aux + (load_time + travel_time) * self.x[k][i][j]
 
-                constraints.extend([aux_constraint_1_1, aux_constraint_1_2, aux_constraint_1_3, constraint])
+                constraints.extend([aux_constraint_1, aux_constraint_2, aux_constraint_3, constraint])
 
                 if i not in (0, len(self.positions) - 1):
                     capacity = self.trips[(j % len(self.trips)) - 1].capacity
@@ -281,15 +281,15 @@ class ThreeIndexModel(Model):
                 else:
                     capacity = 0
 
-                aux_2 = lp.LpVariable(f'aux_{k}_{i}_{j}_2', lowBound=0.0)
+                aux = lp.LpVariable(f'aux_{k}_{i}_{j}_2', lowBound=0.0)
 
-                aux_constraint_2_1 = aux_1 <= MAX_INT * self.x[k][i][j]
-                aux_constraint_2_2 = aux_1 <= self.w[k][i]
-                aux_constraint_2_3 = aux_1 >= self.w[k][i] - (1 - self.x[k][i][j]) * MAX_INT
+                aux_constraint_1 = aux <= MAX_INT * self.x[k][i][j]
+                aux_constraint_2 = aux <= self.w[k][i]
+                aux_constraint_3 = aux >= self.w[k][i] - (1 - self.x[k][i][j]) * MAX_INT
 
-                constraint = self.w[k][j] - capacity * self.x[k][i][j] >= aux_2
+                constraint = self.w[k][j] >= aux + capacity * self.x[k][i][j]
 
-                constraints.extend([aux_constraint_2_1, aux_constraint_2_2, aux_constraint_2_3, constraint])
+                constraints.extend([aux_constraint_1, aux_constraint_2, aux_constraint_3, constraint])
 
         return constraints
 
@@ -330,6 +330,20 @@ class ThreeIndexModel(Model):
                     pass
         return constraints
 
+    def _build_variable_constraints(self) -> List[lp.LpConstraint]:
+        constraints = list()
+
+        for k in range(len(self.vehicles)):
+            for i in range(len(self.positions)):
+                constraints.append(0 <= self.u[k][i])
+                constraints.append(0 <= self.w[k][i])
+                constraints.append(0 <= self.r[k][i])
+
+                for j in range(len(self.positions)):
+                    constraints.append(0 <= self.x[k][i][j] <= 1)
+
+        return constraints
+
     def solve(self) -> Set[Route]:
         logger.info('Starting to solve...')
         solver = lp.LpSolverDefault
@@ -364,7 +378,7 @@ class ThreeIndexModel(Model):
                         continue
 
                     origin = self.positions[i]
-                    destination = self.positions[j]
+                    # destination = self.positions[j]
 
                     pickup = Stop(route, origin, route.last_stop)
                     # delivery = Stop(route, destination, pickup)

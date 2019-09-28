@@ -66,7 +66,7 @@ class Surface(Model, ABC):
         pass
 
     @abstractmethod
-    def time(self, position_a: Position, position_b: Position, now: float) -> float:
+    def time(self, position_a: Position, position_b: Position, **kwargs) -> float:
         pass
 
     def as_dict(self) -> Dict[str, Any]:
@@ -98,5 +98,5 @@ class GeometricSurface(Surface):
 
         return distance
 
-    def time(self, position_a: Position, position_b: Position, now: float) -> float:
+    def time(self, position_a: Position, position_b: Position, **kwargs) -> float:
         return self.distance(position_a, position_b)
