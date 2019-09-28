@@ -314,22 +314,11 @@ class ThreeIndexModel(Model):
                     self.w[k][i] <= self.vehicles[k].capacity + min(0, capacity),
                 ])
 
-                # if i in (0, len(self.positions) - 1):
-                #     continue
-                #
-                # trip = self.trips[(i % self.n) - 1]
-                # if not trip.inbound and self.positions[i] == trip.origin:
-                #     constraints.extend([
-                #         trip.earliest <= self.u[k][i],
-                #         self.u[k][i] <= trip.latest,
-                #     ])
-                # elif trip.inbound and self.positions[i] == trip.destination:
-                #     constraints.extend([
-                #         trip.earliest <= self.u[k][i],
-                #         self.u[k][i] <= trip.latest,
-                #     ])
-                # else:
-                #     pass
+                constraints.extend([
+                    0 <= self.u[k][i],
+                    self.u[k][i] <= 480,
+                ])
+
         return constraints
 
     def solve(self) -> Set[Route]:
