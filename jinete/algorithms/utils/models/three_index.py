@@ -23,6 +23,7 @@ if TYPE_CHECKING:
         List,
         Set,
         Tuple,
+        Iterable,
     )
     from ....models import (
         Trip,
@@ -36,6 +37,8 @@ class ThreeIndexModel(Model):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.args = args
+        self.kwargs = kwargs
 
         self._trips = None
         self._vehicles = None
@@ -68,22 +71,6 @@ class ThreeIndexModel(Model):
         return self._constraints
 
     def build(self):
-        # nodes = list()  # V_i | V_j
-        # vehicles = list()  # K_k
-
-        # pickups = list()  # P_i
-        # deliveries = list()  # D_i
-        #
-        # times = [[]]  # t_ij
-        # durations = list()  # d_i
-        # vehicle_capacities = list()  # Q_k
-        # route_capacities = list()  # T_k
-        # loads = list()  # q_i
-        #
-        # time_windows = [[]]  # e_i, l_i
-
-        # costs = [[[]]]  # c_ijk
-
         self._problem = lp.LpProblem("3-idx_dial-a-ride", lp.LpMinimize)
 
         self.x = self._build_x_variables()
@@ -115,12 +102,6 @@ class ThreeIndexModel(Model):
             self._positions = self._build_positions()
         return self._positions
 
-    @staticmethod
-    def remove_duplicates(seq):
-        seen = set()
-        seen_add = seen.add
-        return tuple(x for x in seq if not (x in seen or seen_add(x)))
-
     def _build_positions(self):
 
         origins = tuple(trip.origin for trip in self.trips)
@@ -150,11 +131,11 @@ class ThreeIndexModel(Model):
 
     def _build_x_variables(self) -> List[List[List[lp.LpVariable]]]:
         x = list()
-        for k in range(len(self.vehicles)):
+        for k in self.routes_indexer:
             x_k = list()
-            for i in range(len(self.positions)):
+            for i in self.positions_indexer:
                 x_ki = list()
-                for j in range(len(self.positions)):
+                for j in self.positions_indexer:
                     x_kij = lp.LpVariable(f'x_{k}_{i}_{j}', cat=lp.LpBinary)
                     x_ki.append(x_kij)
                 x_k.append(x_ki)
@@ -163,9 +144,9 @@ class ThreeIndexModel(Model):
 
     def _build_u_variables(self) -> List[List[lp.LpVariable]]:
         u = list()
-        for k in range(len(self.vehicles)):
+        for k in self.routes_indexer:
             u_k = list()
-            for i in range(len(self.positions)):
+            for i in self.positions_indexer:
                 u_ki = lp.LpVariable(f'u_{k}_{i}', lowBound=0.0)
                 u_k.append(u_ki)
             u.append(u_k)
@@ -173,9 +154,9 @@ class ThreeIndexModel(Model):
 
     def _build_w_variables(self) -> List[List[lp.LpVariable]]:
         w = list()
-        for k in range(len(self.vehicles)):
+        for k in self.routes_indexer:
             w_k = list()
-            for i in range(len(self.positions)):
+            for i in self.positions_indexer:
                 w_ki = lp.LpVariable(f'w_{k}_{i}', lowBound=0.0)
                 w_k.append(w_ki)
             w.append(w_k)
@@ -183,21 +164,19 @@ class ThreeIndexModel(Model):
 
     def _build_r_variables(self) -> List[List[lp.LpVariable]]:
         r = list()
-        for k in range(len(self.vehicles)):
+        for k in self.routes_indexer:
             r_k = list()
-            for i in range(len(self.positions)):
+            for i in self.positions_indexer:
                 r_ki = lp.LpVariable(f'r{k}_{i}', lowBound=0.0)
                 r_k.append(r_ki)
             r.append(r_k)
         return r
 
     def _build_objective(self) -> lp.LpConstraintVar:
-        obj = None
-        for i in range(len(self.positions)):
-            for j in range(len(self.positions)):
-                for k in range(len(self.vehicles)):
-                    obj += self.x[k][i][j] * self.costs[i][j]
-        return obj
+        return sum(
+            self.x[k][i][j] * self.costs[i][j]
+            for k, i, j in product(self.routes_indexer, self.positions_indexer, self.positions_indexer)
+        )
 
     def _build_constraints(self) -> List[lp.LpConstraint]:
         return sum([
@@ -208,17 +187,37 @@ class ThreeIndexModel(Model):
             self._build_variable_constraints(),
         ], [])
 
+    @property
+    def pickups_indexer(self) -> Iterable[int]:
+        return range(1, self.n + 1)
+
+    @property
+    def nodes_indexer(self) -> Iterable[int]:
+        return range(1, self.n * 2 + 1)
+
+    @property
+    def routes_indexer(self) -> Iterable[int]:
+        return range(len(self.vehicles))
+
+    @property
+    def positions_indexer(self) -> Iterable[int]:
+        return range(len(self.positions))
+
+    @property
+    def n(self) -> int:
+        return len(self.trips)
+
     def _build_uniqueness_constraints(self) -> List[lp.LpConstraint]:
         constraints = list()
 
-        for i in range(1, len(self.trips) + 1):
-            lhs = sum(self.x[k][i][j] for j, k in product(range(len(self.positions)), range(len(self.vehicles))))
+        for i in self.pickups_indexer:
+            lhs = sum(self.x[k][i][j] for j, k in product(self.positions_indexer, self.routes_indexer))
             constraints.append(lhs == 1)
 
-            for k in range(len(self.vehicles)):
+            for k in self.routes_indexer:
                 lhs = (
-                        sum(self.x[k][i][j] for j in range(len(self.positions))) -
-                        sum(self.x[k][len(self.trips) + i][j] for j in range(len(self.positions)))
+                        sum(self.x[k][i][j] for j in self.positions_indexer) -
+                        sum(self.x[k][self.n + i][j] for j in self.positions_indexer)
                 )
                 constraints.append(lhs == 0)
 
@@ -227,18 +226,18 @@ class ThreeIndexModel(Model):
     def _build_connectivity_constraints(self) -> List[lp.LpConstraint]:
         constraints = list()
 
-        for k in range(len(self.vehicles)):
-            lhs = sum(self.x[k][0][j] for j in range(len(self.positions)))
-            rhs = sum(self.x[k][i][-1] for i in range(len(self.positions)))
+        for k in self.routes_indexer:
+            lhs = sum(self.x[k][0][j] for j in self.positions_indexer)
+            rhs = sum(self.x[k][i][-1] for i in self.positions_indexer)
             constraints.append(lhs == rhs)
 
             constraints.append(lhs == 1)
             constraints.append(rhs == 1)
 
-            for i in range(1, len(self.trips) * 2 + 1):
+            for i in self.nodes_indexer:
                 lhs = (
-                        sum(self.x[k][i][j] for j in range(len(self.positions))) -
-                        sum(self.x[k][j][i] for j in range(len(self.positions)))
+                        sum(self.x[k][i][j] for j in self.positions_indexer) -
+                        sum(self.x[k][j][i] for j in self.positions_indexer)
                 )
                 constraints.append(lhs == 0)
 
@@ -247,19 +246,19 @@ class ThreeIndexModel(Model):
     def _build_time_constraints(self) -> List[lp.LpConstraint]:
         constraints = list()
 
-        for k in range(len(self.vehicles)):
-            for i in range(1, len(self.trips) + 1):
+        for k in self.routes_indexer:
+            for i in self.pickups_indexer:
                 if i not in (0, len(self.positions) - 1):
-                    load_time = self.trips[(i % len(self.trips)) - 1].load_time
+                    load_time = self.trips[(i % self.n) - 1].load_time
                 else:
                     load_time = 0
 
-                constraint = self.r[k][i] >= self.u[k][i + len(self.trips)] - (self.u[k][i] + load_time)
+                constraint = self.r[k][i] >= self.u[k][i + self.n] - (self.u[k][i] + load_time)
                 constraints.append(constraint)
 
-            for i, j in product(range(len(self.positions)), range(len(self.positions))):
+            for i, j in product(self.positions_indexer, self.positions_indexer):
                 if i not in (0, len(self.positions) - 1):
-                    load_time = self.trips[(i % len(self.trips)) - 1].load_time
+                    load_time = self.trips[(i % self.n) - 1].load_time
                 else:
                     load_time = 0
                 travel_time = self.positions[i].time_to(self.positions[j])
@@ -275,7 +274,7 @@ class ThreeIndexModel(Model):
                 constraints.extend([aux_constraint_1, aux_constraint_2, aux_constraint_3, constraint])
 
                 if i not in (0, len(self.positions) - 1):
-                    capacity = self.trips[(j % len(self.trips)) - 1].capacity
+                    capacity = self.trips[(j % self.n) - 1].capacity
                     if not j < len(self.positions) / 2:
                         capacity *= -1
                 else:
@@ -295,19 +294,19 @@ class ThreeIndexModel(Model):
 
     def _build_feasibility_constraints(self) -> List[lp.LpConstraint]:
         constraints = list()
-        for k in range(len(self.vehicles)):
+        for k in self.routes_indexer:
             constraint = self.u[k][-1] - self.u[k][0] <= self.vehicles[k].route_timeout
             constraints.append(constraint)
 
-            for i in range(1, len(self.trips) + 1):
-                travel_time = self.positions[i].time_to(self.positions[i + len(self.trips)])
+            for i in self.pickups_indexer:
+                travel_time = self.positions[i].time_to(self.positions[i + self.n])
                 constraint_1 = travel_time <= self.r[k][i]
                 constraint_2 = self.r[k][i] <= self.vehicles[k].trip_timeout
                 constraints.extend([constraint_1, constraint_2])
 
-            for i in range(len(self.positions)):
+            for i in self.positions_indexer:
                 if i not in (0, len(self.positions) - 1):
-                    capacity = self.trips[(i % len(self.trips)) - 1].capacity
+                    capacity = self.trips[(i % self.n) - 1].capacity
                     if not i < len(self.positions) / 2:
                         capacity *= -1
                 else:
@@ -319,11 +318,11 @@ class ThreeIndexModel(Model):
                 if i in (0, len(self.positions) - 1):
                     continue
 
-                trip = self.trips[(i % len(self.trips)) - 1]
-                if trip.inbound and self.positions[i] == trip.origin:
+                trip = self.trips[(i % self.n) - 1]
+                if not trip.inbound and self.positions[i] == trip.origin:
                     constraint = trip.earliest <= self.u[k][i] <= trip.latest
                     constraints.append(constraint)
-                elif not trip.inbound and self.positions[i] == trip.destination:
+                elif trip.inbound and self.positions[i] == trip.destination:
                     constraint = trip.earliest <= self.u[k][i] <= trip.latest
                     constraints.append(constraint)
                 else:
@@ -333,13 +332,13 @@ class ThreeIndexModel(Model):
     def _build_variable_constraints(self) -> List[lp.LpConstraint]:
         constraints = list()
 
-        for k in range(len(self.vehicles)):
-            for i in range(len(self.positions)):
+        for k in self.routes_indexer:
+            for i in self.positions_indexer:
                 constraints.append(0 <= self.u[k][i])
                 constraints.append(0 <= self.w[k][i])
                 constraints.append(0 <= self.r[k][i])
 
-                for j in range(len(self.positions)):
+                for j in self.positions_indexer:
                     constraints.append(0 <= self.x[k][i][j] <= 1)
 
         return constraints
@@ -349,10 +348,10 @@ class ThreeIndexModel(Model):
         solver = lp.LpSolverDefault
         self.problem.solve(solver)
 
-        for k in range(len(self.vehicles)):
+        for k in self.routes_indexer:
             print(f'Vehicle {k}-th.')
-            for i in range(len(self.positions)):
-                for j in range(len(self.positions)):
+            for i in self.positions_indexer:
+                for j in self.positions_indexer:
                     print(f'{int(self.x[k][i][j].varValue)}', end=' ')
                 print()
             print()
@@ -363,7 +362,7 @@ class ThreeIndexModel(Model):
     def _solution_to_routes(self):
         logger.info(f'Casting solution to a set of routes...')
         routes = set()
-        for k in range(len(self.vehicles)):
+        for k in self.routes_indexer:
             route = Route(self.vehicles[k])
 
             ordered_trip_indexes = [
@@ -374,6 +373,9 @@ class ThreeIndexModel(Model):
 
             for i in ordered_trip_indexes:
                 for j in range(1, len(self.positions)):
+                    if not min(abs(self.x[k][i][j].varValue), abs(self.x[k][i][j].varValue - 1)) <= 0.1:
+                        raise Exception
+
                     if not int(self.x[k][i][j].varValue) == 1:
                         continue
 
@@ -382,7 +384,7 @@ class ThreeIndexModel(Model):
 
                     pickup = Stop(route, origin, route.last_stop)
                     # delivery = Stop(route, destination, pickup)
-                    # trip = self.trips[(i % len(self.trips)) - 1]
+                    # trip = self.trips[(i % self.n) - 1]
                     # if trip.origin != origin or trip.destination != destination:
                     #     continue
                     # planned_trip = PlannedTrip(route=route, trip=trip, pickup=pickup, delivery=delivery)

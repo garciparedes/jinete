@@ -24,7 +24,7 @@ if TYPE_CHECKING:
 
 class Model(ABC):
 
-    def __init__(self, fleet: Fleet, job: Job):
+    def __init__(self, fleet: Fleet, job: Job, *args, **kwargs):
         self.fleet = fleet
         self.job = job
 
