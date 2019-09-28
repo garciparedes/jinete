@@ -91,7 +91,7 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
         else:
             raise LoaderFormatterException('It is not possible to distinguish between inbound and outbound task.')
 
-        identifier = str(idx)
+        identifier = f'{origin_row[0]:.0f}'
         timeout = latest - earliest
 
         trip = Trip(
