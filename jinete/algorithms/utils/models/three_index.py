@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 from itertools import product
+from operator import itemgetter
 from typing import (
     TYPE_CHECKING,
 )
@@ -150,45 +151,45 @@ class ThreeIndexModel(Model):
 
     def _build_x_variables(self) -> List[List[List[lp.LpVariable]]]:
         x = list()
-        for i in range(len(self.positions)):
-            x_i = list()
-            for j in range(len(self.positions)):
-                x_ij = list()
-                for k in range(len(self.vehicles)):
-                    x_ijk = lp.LpVariable(f'x_{i}_{j}_{k}', cat=lp.LpBinary)
-                    x_ij.append(x_ijk)
-                x_i.append(x_ij)
-            x.append(x_i)
+        for k in range(len(self.vehicles)):
+            x_k = list()
+            for i in range(len(self.positions)):
+                x_ki = list()
+                for j in range(len(self.positions)):
+                    x_kij = lp.LpVariable(f'x_{k}_{i}_{j}', cat=lp.LpBinary)
+                    x_ki.append(x_kij)
+                x_k.append(x_ki)
+            x.append(x_k)
         return x
 
     def _build_u_variables(self) -> List[List[lp.LpVariable]]:
         u = list()
-        for i in range(len(self.positions)):
-            u_i = list()
-            for k in range(len(self.vehicles)):
-                u_ik = lp.LpVariable(f'u_{i}_{k}')
-                u_i.append(u_ik)
-            u.append(u_i)
+        for k in range(len(self.vehicles)):
+            u_k = list()
+            for i in range(len(self.positions)):
+                u_ki = lp.LpVariable(f'u_{k}_{i}', lowBound=0.0)
+                u_k.append(u_ki)
+            u.append(u_k)
         return u
 
     def _build_w_variables(self) -> List[List[lp.LpVariable]]:
         w = list()
-        for i in range(len(self.positions)):
-            w_i = list()
-            for k in range(len(self.vehicles)):
-                w_ik = lp.LpVariable(f'w_{i}_{k}')
-                w_i.append(w_ik)
-            w.append(w_i)
+        for k in range(len(self.vehicles)):
+            w_k = list()
+            for i in range(len(self.positions)):
+                w_ki = lp.LpVariable(f'w_{k}_{i}', lowBound=0.0)
+                w_k.append(w_ki)
+            w.append(w_k)
         return w
 
     def _build_r_variables(self) -> List[List[lp.LpVariable]]:
         r = list()
-        for i in range(len(self.positions)):
-            r_i = list()
-            for k in range(len(self.vehicles)):
-                r_ik = lp.LpVariable(f'r{i}_{k}')
-                r_i.append(r_ik)
-            r.append(r_i)
+        for k in range(len(self.vehicles)):
+            r_k = list()
+            for i in range(len(self.positions)):
+                r_ki = lp.LpVariable(f'r{k}_{i}', lowBound=0.0)
+                r_k.append(r_ki)
+            r.append(r_k)
         return r
 
     def _build_objective(self) -> lp.LpConstraintVar:
@@ -196,7 +197,7 @@ class ThreeIndexModel(Model):
         for i in range(len(self.positions)):
             for j in range(len(self.positions)):
                 for k in range(len(self.vehicles)):
-                    obj += self.x[i][j][k] * self.costs[i][j]
+                    obj += self.x[k][i][j] * self.costs[i][j]
         return obj
 
     def _build_constraints(self) -> List[lp.LpConstraint]:
@@ -211,14 +212,13 @@ class ThreeIndexModel(Model):
         constraints = list()
 
         for i in range(1, len(self.trips) + 1):
-            lhs = sum(self.x[i][j][k] for j, k in product(range(len(self.positions)), range(len(self.vehicles))))
+            lhs = sum(self.x[k][i][j] for j, k in product(range(len(self.positions)), range(len(self.vehicles))))
             constraints.append(lhs == 1)
 
-        for i in range(1, len(self.trips) + 1):
             for k in range(len(self.vehicles)):
                 lhs = (
-                        sum(self.x[i][j][k] for j in range(len(self.positions))) -
-                        sum(self.x[len(self.trips) + i][j][k] for j in range(len(self.positions)))
+                        sum(self.x[k][i][j] for j in range(len(self.positions))) -
+                        sum(self.x[k][len(self.trips) + i][j] for j in range(len(self.positions)))
                 )
                 constraints.append(lhs == 0)
 
@@ -228,18 +228,17 @@ class ThreeIndexModel(Model):
         constraints = list()
 
         for k in range(len(self.vehicles)):
-            lhs = sum(self.x[0][j][k] for j in range(len(self.positions)))
-            rhs = sum(self.x[i][-1][k] for i in range(len(self.positions)))
+            lhs = sum(self.x[k][0][j] for j in range(len(self.positions)))
+            rhs = sum(self.x[k][i][-1] for i in range(len(self.positions)))
             constraints.append(lhs == rhs)
 
             constraints.append(lhs == 1)
             constraints.append(rhs == 1)
 
-        for i in range(1, len(self.trips) * 2 + 1):
-            for k in range(len(self.vehicles)):
+            for i in range(1, len(self.trips) * 2 + 1):
                 lhs = (
-                        sum(self.x[i][j][k] for j in range(len(self.positions))) -
-                        sum(self.x[j][i][k] for j in range(len(self.positions)))
+                        sum(self.x[k][i][j] for j in range(len(self.positions))) -
+                        sum(self.x[k][j][i] for j in range(len(self.positions)))
                 )
                 constraints.append(lhs == 0)
 
@@ -248,11 +247,87 @@ class ThreeIndexModel(Model):
     def _build_time_constraints(self) -> List[lp.LpConstraint]:
         constraints = list()
 
+        for k in range(len(self.vehicles)):
+            for i in range(1, len(self.trips) + 1):
+                if i not in (0, len(self.positions) - 1):
+                    load_time = self.trips[(i % len(self.trips)) - 1].load_time
+                else:
+                    load_time = 0
+
+                constraint = self.r[k][i] >= self.u[k][i + len(self.trips)] - (self.u[k][i] + load_time)
+                constraints.append(constraint)
+
+            for i, j in product(range(len(self.positions)), range(len(self.positions))):
+                if i not in (0, len(self.positions) - 1):
+                    load_time = self.trips[(i % len(self.trips)) - 1].load_time
+                else:
+                    load_time = 0
+                travel_time = self.positions[i].time_to(self.positions[j])
+
+                aux_1 = lp.LpVariable(f'aux_{k}_{i}_{j}_1', lowBound=0.0)
+
+                aux_constraint_1_1 = aux_1 <= MAX_INT * self.x[k][i][j]
+                aux_constraint_1_2 = aux_1 <= self.u[k][i]
+                aux_constraint_1_3 = aux_1 >= self.u[k][i] - (1 - self.x[k][i][j]) * MAX_INT
+
+                constraint = self.u[k][j] - (load_time + travel_time) * self.x[k][i][j] >= aux_1
+
+                constraints.extend([aux_constraint_1_1, aux_constraint_1_2, aux_constraint_1_3, constraint])
+
+                if i not in (0, len(self.positions) - 1):
+                    capacity = self.trips[(j % len(self.trips)) - 1].capacity
+                    if not j < len(self.positions) / 2:
+                        capacity *= -1
+                else:
+                    capacity = 0
+
+                aux_2 = lp.LpVariable(f'aux_{k}_{i}_{j}_2', lowBound=0.0)
+
+                aux_constraint_2_1 = aux_1 <= MAX_INT * self.x[k][i][j]
+                aux_constraint_2_2 = aux_1 <= self.w[k][i]
+                aux_constraint_2_3 = aux_1 >= self.w[k][i] - (1 - self.x[k][i][j]) * MAX_INT
+
+                constraint = self.w[k][j] - capacity * self.x[k][i][j] >= aux_2
+
+                constraints.extend([aux_constraint_2_1, aux_constraint_2_2, aux_constraint_2_3, constraint])
+
         return constraints
 
     def _build_feasibility_constraints(self) -> List[lp.LpConstraint]:
         constraints = list()
+        for k in range(len(self.vehicles)):
+            constraint = self.u[k][-1] - self.u[k][0] <= self.vehicles[k].route_timeout
+            constraints.append(constraint)
 
+            for i in range(1, len(self.trips) + 1):
+                travel_time = self.positions[i].time_to(self.positions[i + len(self.trips)])
+                constraint_1 = travel_time <= self.r[k][i]
+                constraint_2 = self.r[k][i] <= self.vehicles[k].trip_timeout
+                constraints.extend([constraint_1, constraint_2])
+
+            for i in range(len(self.positions)):
+                if i not in (0, len(self.positions) - 1):
+                    capacity = self.trips[(i % len(self.trips)) - 1].capacity
+                    if not i < len(self.positions) / 2:
+                        capacity *= -1
+                else:
+                    capacity = 0
+
+                constraint = max(0, capacity) <= self.w[k][i] <= self.vehicles[k].capacity + min(0, capacity)
+                constraints.append(constraint)
+
+                if i in (0, len(self.positions) - 1):
+                    continue
+
+                trip = self.trips[(i % len(self.trips)) - 1]
+                if trip.inbound and self.positions[i] == trip.origin:
+                    constraint = trip.earliest <= self.u[k][i] <= trip.latest
+                    constraints.append(constraint)
+                elif not trip.inbound and self.positions[i] == trip.destination:
+                    constraint = trip.earliest <= self.u[k][i] <= trip.latest
+                    constraints.append(constraint)
+                else:
+                    pass
         return constraints
 
     def solve(self) -> Set[Route]:
@@ -260,30 +335,47 @@ class ThreeIndexModel(Model):
         solver = lp.LpSolverDefault
         self.problem.solve(solver)
 
-        routes = set()
-        for k in range(len(self.vehicles)):
-            route = Route(self.vehicles[k])
-
-            for i in range(1, len(self.positions)):
-                for j in range(1, len(self.positions)):
-                    if int(self.x[i][j][k].varValue) == 1:
-                        origin = self.positions[i]
-                        destination = self.positions[j]
-
-                        pickup = Stop(route, origin, route.last_stop)
-                        delivery = Stop(route, destination, pickup)
-                        trip = self.trips[(i % len(self.trips)) - 1]
-                        planned_trip = PlannedTrip(route=route, trip=trip, pickup=pickup, delivery=delivery)
-                        route.append_planned_trip(planned_trip)
-            routes.add(route)
-
         for k in range(len(self.vehicles)):
             print(f'Vehicle {k}-th.')
             for i in range(len(self.positions)):
                 for j in range(len(self.positions)):
-                    print(f'{int(self.x[i][j][k].varValue)}', end=' ')
+                    print(f'{int(self.x[k][i][j].varValue)}', end=' ')
                 print()
             print()
 
         logger.info(f'Obtained "{lp.value(self.objective)}" reaching "{lp.LpStatus[self.problem.status]}".')
+        return self._solution_to_routes()
+
+    def _solution_to_routes(self):
+        logger.info(f'Casting solution to a set of routes...')
+        routes = set()
+        for k in range(len(self.vehicles)):
+            route = Route(self.vehicles[k])
+
+            ordered_trip_indexes = [
+                idx
+                for idx, u_k in sorted(enumerate(u_k.varValue for u_k in self.u[k]), key=itemgetter(1))
+                if u_k != 0.0
+            ]
+
+            for i in ordered_trip_indexes:
+                for j in range(1, len(self.positions)):
+                    if not int(self.x[k][i][j].varValue) == 1:
+                        continue
+
+                    origin = self.positions[i]
+                    destination = self.positions[j]
+
+                    pickup = Stop(route, origin, route.last_stop)
+                    # delivery = Stop(route, destination, pickup)
+                    # trip = self.trips[(i % len(self.trips)) - 1]
+                    # if trip.origin != origin or trip.destination != destination:
+                    #     continue
+                    # planned_trip = PlannedTrip(route=route, trip=trip, pickup=pickup, delivery=delivery)
+                    route.append_stop(pickup)
+                    # route.append_stop(delivery)
+                    # route.append_planned_trip(planned_trip)
+
+            route.finish()
+            routes.add(route)
         return routes

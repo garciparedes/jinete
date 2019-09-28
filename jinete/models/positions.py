@@ -32,7 +32,7 @@ class Position(ABC):
     def distance_to(self, other: Position) -> float:
         return self.surface.distance(self, other)
 
-    def time_to(self, other: Position, now: float) -> float:
+    def time_to(self, other: Position, now: float = None) -> float:
         return self.surface.time(self, other, now)
 
     def __deepcopy__(self, memo: Dict[int, Any]) -> Position:

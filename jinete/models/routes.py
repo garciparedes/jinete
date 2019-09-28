@@ -195,7 +195,8 @@ class Route(Model):
         return [self.conjecture_trip(trip) for trip in iterable]
 
     def finish(self):
-        if self.loaded and self.last_stop.position != self.vehicle.final:
+        # if self.loaded and self.last_stop.position != self.vehicle.final:
+        if self.last_stop.position != self.vehicle.final:
             finish_stop = Stop(self, self.vehicle.final, self.last_stop)
             if not self.last_stop.position == finish_stop.position:
                 self.append_stop(finish_stop)
