@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from itertools import product
-from operator import itemgetter
+from operator import itemgetter, attrgetter
 from typing import (
     TYPE_CHECKING,
 )
@@ -93,7 +93,7 @@ class ThreeIndexModel(Model):
     @property
     def trips(self) -> Tuple[Trip]:
         if self._trips is None:
-            self._trips = tuple(self.job.trips)
+            self._trips = tuple(sorted(self.job.trips, key=attrgetter('identifier')))
         return self._trips
 
     @property
@@ -166,7 +166,7 @@ class ThreeIndexModel(Model):
         r = list()
         for k in self.routes_indexer:
             r_k = list()
-            for i in self.positions_indexer:
+            for i in self.pickups_indexer:
                 r_ki = lp.LpVariable(f'r{k}_{i}', lowBound=0.0)
                 r_k.append(r_ki)
             r.append(r_k)
@@ -252,7 +252,7 @@ class ThreeIndexModel(Model):
                 else:
                     load_time = 0
 
-                constraint = self.r[k][i] >= self.u[k][i + self.n] - (self.u[k][i] + load_time)
+                constraint = self.r[k][i - 1] >= self.u[k][i + self.n] - (self.u[k][i] + load_time)
                 constraints.append(constraint)
 
             for i, j in product(self.positions_indexer, self.positions_indexer):
@@ -297,8 +297,8 @@ class ThreeIndexModel(Model):
 
             for i in self.pickups_indexer:
                 travel_time = self.positions[i].time_to(self.positions[i + self.n])
-                constraint_1 = travel_time <= self.r[k][i]
-                constraint_2 = self.r[k][i] <= self.vehicles[k].trip_timeout
+                constraint_1 = travel_time <= self.r[k][i - 1]
+                constraint_2 = self.r[k][i - 1] <= self.vehicles[k].trip_timeout
                 constraints.extend([constraint_1, constraint_2])
 
             for i in self.positions_indexer:
@@ -326,6 +326,8 @@ class ThreeIndexModel(Model):
         solver = lp.LpSolverDefault
         self.problem.solve(solver)
 
+        self.validate()
+
         for k in self.routes_indexer:
             print(f'Vehicle {k}-th.')
             for i in self.positions_indexer:
@@ -336,6 +338,18 @@ class ThreeIndexModel(Model):
 
         logger.info(f'Obtained "{lp.value(self.objective)}" reaching "{lp.LpStatus[self.problem.status]}".')
         return self._solution_to_routes()
+
+    def validate(self):
+        for k in self.routes_indexer:
+            for i in self.pickups_indexer:
+                assert self.r[k][i - 1].varValue >= 0.0
+
+            for i in self.positions_indexer:
+                assert self.u[k][i].varValue >= 0.0
+                assert self.w[k][i].varValue >= 0.0
+
+                for j in self.positions_indexer:
+                    assert min(abs(self.x[k][i][j].varValue), abs(self.x[k][i][j].varValue - 1)) <= 0.05
 
     def _solution_to_routes(self):
         logger.info(f'Casting solution to a set of routes...')
@@ -351,9 +365,6 @@ class ThreeIndexModel(Model):
 
             for i in ordered_trip_indexes:
                 for j in self.positions_indexer:
-                    if not min(abs(self.x[k][i][j].varValue), abs(self.x[k][i][j].varValue - 1)) <= 0.1:
-                        raise Exception
-
                     if not int(self.x[k][i][j].varValue) == 1:
                         continue
 
