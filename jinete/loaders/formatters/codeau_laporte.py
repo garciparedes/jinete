@@ -84,10 +84,10 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
 
         if e1 == 0 and l1 == 1440:
             earliest, latest = e2, l2
-            inbound = True
+            inbound = False
         elif e2 == 0 and l2 == 1440:
             earliest, latest = e1, l1
-            inbound = False
+            inbound = True
         else:
             raise LoaderFormatterException('It is not possible to distinguish between inbound and outbound task.')
 
