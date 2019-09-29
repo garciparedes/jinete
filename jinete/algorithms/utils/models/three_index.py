@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from itertools import product
-from operator import itemgetter, attrgetter
+from operator import itemgetter
 from typing import (
     TYPE_CHECKING,
 )
@@ -98,7 +98,7 @@ class ThreeIndexModel(Model):
     @property
     def trips(self) -> Tuple[Trip, ...]:
         if self._trips is None:
-            self._trips = tuple(sorted(self.job.trips, key=attrgetter('identifier')))
+            self._trips = tuple(sorted(self.job.trips, key=lambda x: int(x.identifier)))
         return self._trips
 
     @property
@@ -274,9 +274,6 @@ class ThreeIndexModel(Model):
             lhs = sum(self.x[k][0][j] for j in self.positions_indexer)
             constraints.append(lhs == 1)
 
-            lhs = sum(self.x[k][i][-1] for i in self.positions_indexer)
-            constraints.append(lhs == 1)
-
             for i in self.nodes_indexer:
                 lhs = (
                         sum(self.x[k][j][i] for j in self.positions_indexer) -
@@ -284,18 +281,15 @@ class ThreeIndexModel(Model):
                 )
                 constraints.append(lhs == 0)
 
+            lhs = sum(self.x[k][i][-1] for i in self.positions_indexer)
+            constraints.append(lhs == 1)
+
         return constraints
 
     def _build_time_constraints(self) -> List[lp.LpConstraint]:
         constraints = list()
 
         for k in self.routes_indexer:
-            for i in self.pickups_indexer:
-                load_time = self.load_time_by_position_idx(i)
-
-                constraint = self.r[k][i - 1] == self.u[k][i + self.n] - (self.u[k][i] + load_time)
-                constraints.append(constraint)
-
             for i, j in product(self.positions_indexer, self.positions_indexer):
                 load_time_i = self.load_time_by_position_idx(i)
                 travel_time = self.positions[i].time_to(self.positions[j])
@@ -318,6 +312,12 @@ class ThreeIndexModel(Model):
                     self.w[k][j] >= self.w[k][i] + capacity_j - cons * (1 - self.x[k][i][j]),
                 )
 
+            for i in self.pickups_indexer:
+                load_time = self.load_time_by_position_idx(i)
+
+                constraint = self.r[k][i - 1] == self.u[k][i + self.n] - (self.u[k][i] + load_time)
+                constraints.append(constraint)
+
         return constraints
 
     def _build_feasibility_constraints(self) -> List[lp.LpConstraint]:
@@ -325,6 +325,14 @@ class ThreeIndexModel(Model):
         for k in self.routes_indexer:
             constraint = self.u[k][-1] - self.u[k][0] <= self.vehicles[k].route_timeout
             constraints.append(constraint)
+
+            for i in self.positions_indexer:
+                earliest, latest = self.time_window_by_position_idx(i)
+
+                constraints.extend([
+                    earliest <= self.u[k][i],
+                    self.u[k][i] <= latest,
+                ])
 
             for i in self.pickups_indexer:
                 travel_time = self.positions[i].time_to(self.positions[i + self.n])
@@ -339,13 +347,6 @@ class ThreeIndexModel(Model):
                 constraints.extend([
                     max(0.0, capacity) <= self.w[k][i],
                     self.w[k][i] <= self.vehicles[k].capacity + min(0.0, capacity),
-                ])
-
-                earliest, latest = self.time_window_by_position_idx(i)
-
-                constraints.extend([
-                    earliest <= self.u[k][i],
-                    self.u[k][i] <= latest,
                 ])
 
         return constraints
