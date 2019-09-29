@@ -7,6 +7,6 @@ from .abc import (
 from .hashcode import (
     HashCodeLoaderFormatter,
 )
-from .codeau_laporte import (
+from .cordeau_laporte import (
     CordeauLaporteLoaderFormatter,
 )
