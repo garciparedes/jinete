@@ -10,7 +10,6 @@ from typing import (
 import pulp as lp
 
 from ....models import (
-    MAX_INT,
     Stop,
     Route,
 )
@@ -32,6 +31,8 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
+BIG = 10000
+
 
 class ThreeIndexModel(Model):
 
@@ -49,6 +50,7 @@ class ThreeIndexModel(Model):
         self.u = None
         self.w = None
         self.r = None
+        self.aux = None
 
         self._objective = None
         self._constraints = None
@@ -77,6 +79,7 @@ class ThreeIndexModel(Model):
         self.u = self._build_u_variables()
         self.w = self._build_w_variables()
         self.r = self._build_r_variables()
+        self.aux = list()
 
         self._objective = self._build_objective()
         self._constraints = self._build_constraints()
@@ -122,7 +125,7 @@ class ThreeIndexModel(Model):
             origin_costs = list()
             for destination in self.positions:
                 if origin == destination:
-                    cost = MAX_INT
+                    cost = BIG
                 else:
                     cost = origin.distance_to(destination)
                 origin_costs.append(cost)
@@ -179,12 +182,15 @@ class ThreeIndexModel(Model):
         )
 
     def _build_constraints(self) -> List[lp.LpConstraint]:
-        return sum([
+        constraints = sum([
             self._build_uniqueness_constraints(),
             self._build_connectivity_constraints(),
             self._build_time_constraints(),
             self._build_feasibility_constraints(),
         ], [])
+
+        logger.info(f'Built "{len(constraints)}" constraints.')
+        return constraints
 
     @property
     def pickups_indexer(self) -> Iterable[int]:
@@ -262,13 +268,13 @@ class ThreeIndexModel(Model):
                     load_time = 0
                 travel_time = self.positions[i].time_to(self.positions[j])
 
-                aux = lp.LpVariable(f'aux_{k}_{i}_{j}_1', lowBound=0.0)
+                self.aux.append(lp.LpVariable(f'aux_u_{k}_{i}_{j}', lowBound=0.0))
 
                 constraints.extend([
-                    aux <= MAX_INT * self.x[k][i][j],
-                    aux <= (load_time + travel_time + self.u[k][i]),
-                    aux >= (load_time + travel_time + self.u[k][i]) - (1 - self.x[k][i][j]) * MAX_INT,
-                    self.u[k][j] >= aux,
+                    self.aux[-1] <= BIG * self.x[k][i][j],
+                    self.aux[-1] <= (load_time + travel_time + self.u[k][i]),
+                    self.aux[-1] >= (load_time + travel_time + self.u[k][i]) - (1 - self.x[k][i][j]) * BIG,
+                    self.u[k][j] >= self.aux[-1],
                 ])
 
                 if j not in (0, len(self.positions) - 1):
@@ -278,13 +284,18 @@ class ThreeIndexModel(Model):
                 else:
                     capacity = 0
 
-                aux = lp.LpVariable(f'aux_{k}_{i}_{j}_2', lowBound=0.0)
+                self.aux.append(lp.LpVariable(f'aux_w_{k}_{i}_{j}', lowBound=min(-BIG, 0), upBound=BIG))
 
                 constraints.extend([
-                    aux <= MAX_INT * self.x[k][i][j],
-                    aux <= (capacity + self.w[k][i]),
-                    aux >= (capacity + self.w[k][i]) - (1 - self.x[k][i][j]) * MAX_INT,
-                    self.w[k][j] >= aux,
+                    - BIG * self.x[k][i][j] <= self.aux[-1],
+                    self.aux[-1] <= BIG * self.x[k][i][j],
+
+                    (capacity + self.w[k][i]) - (1 - self.x[k][i][j]) * BIG <= self.aux[-1],
+                    self.aux[-1] <= (capacity + self.w[k][i]) - (1 - self.x[k][i][j]) * - BIG,
+
+                    self.aux[-1] <= (capacity + self.w[k][i]) + (1 - self.x[k][i][j]) * BIG,
+
+                    self.w[k][j] >= self.aux[-1],
                 ])
 
         return constraints
@@ -297,12 +308,19 @@ class ThreeIndexModel(Model):
 
             for i in self.pickups_indexer:
                 travel_time = self.positions[i].time_to(self.positions[i + self.n])
-                constraint_1 = travel_time <= self.r[k][i - 1]
-                constraint_2 = self.r[k][i - 1] <= self.vehicles[k].trip_timeout
-                constraints.extend([constraint_1, constraint_2])
+                constraints.extend([
+                    travel_time <= self.r[k][i - 1],
+                    self.r[k][i - 1] <= self.vehicles[k].trip_timeout,
+                ])
 
             for i in self.positions_indexer:
+                position = self.positions[i]
                 if i not in (0, len(self.positions) - 1):
+                    trip = self.trips[(i % self.n) - 1]
+                else:
+                    trip = None
+
+                if trip is not None:
                     capacity = self.trips[(i % self.n) - 1].capacity
                     if not i < len(self.positions) / 2:
                         capacity *= -1
@@ -314,27 +332,59 @@ class ThreeIndexModel(Model):
                     self.w[k][i] <= self.vehicles[k].capacity + min(0, capacity),
                 ])
 
+                if (trip is not None) and ((trip.inbound and position == trip.origin) or (
+                        not trip.inbound and position == trip.destination)):
+                    earliest, latest = trip.earliest, trip.latest
+                else:
+                    earliest, latest = 0, 1440
+
                 constraints.extend([
-                    0 <= self.u[k][i],
-                    self.u[k][i] <= 480,
+                    earliest <= self.u[k][i],
+                    self.u[k][i] <= latest,
                 ])
 
         return constraints
 
     def solve(self) -> Set[Route]:
         logger.info('Starting to solve...')
-        solver = lp.LpSolverDefault
-        self.problem.solve(solver)
+        self.problem.solve(lp.PULP_CBC_CMD(msg=1, threads=4))
 
         self.validate()
 
+        print('X:')
+        for k in self.routes_indexer:
+            print(f'Vehicle {k}-th.')
+            print(f'   {"  ".join(map(str, self.positions_indexer))}')
+            for i in self.positions_indexer:
+                print(f'{i}', end='  ')
+                for j in self.positions_indexer:
+                    print(f'{int(self.x[k][i][j].varValue)}', end='  ')
+                print()
+            print()
+
+        print('U:')
         for k in self.routes_indexer:
             print(f'Vehicle {k}-th.')
             for i in self.positions_indexer:
-                for j in self.positions_indexer:
-                    print(f'{int(self.x[k][i][j].varValue)}', end=' ')
-                print()
+                print(f'{self.u[k][i].varValue:4.01f}', end=' ')
             print()
+
+        print('W:')
+        for k in self.routes_indexer:
+            print(f'Vehicle {k}-th.')
+            for i in self.positions_indexer:
+                print(f'{self.w[k][i].varValue:4.01f}', end=' ')
+            print()
+
+        print('R:')
+        for k in self.routes_indexer:
+            print(f'Vehicle {k}-th.')
+            for i in self.pickups_indexer:
+                print(f'{self.r[k][i - 1].varValue:4.01f}', end=' ')
+            print()
+
+        for i in range(len(self.aux)):
+            print(f'NAME="{self.aux[i].name}, VALUE="{self.aux[i].varValue}"')
 
         logger.info(f'Obtained "{lp.value(self.objective)}" reaching "{lp.LpStatus[self.problem.status]}".')
         return self._solution_to_routes()
@@ -342,13 +392,18 @@ class ThreeIndexModel(Model):
     def validate(self):
         for k in self.routes_indexer:
             for i in self.pickups_indexer:
+                logger.info(f'Obtained "r[{k}][{i - 1}={self.r[k][i - 1].varValue}".')
                 assert self.r[k][i - 1].varValue >= 0.0
 
             for i in self.positions_indexer:
+                logger.info(f'Obtained "u[{k}][{i}]={self.u[k][i].varValue}".')
                 assert self.u[k][i].varValue >= 0.0
+
+                logger.info(f'Obtained "w[{k}][{i}]={self.w[k][i].varValue}".')
                 assert self.w[k][i].varValue >= 0.0
 
                 for j in self.positions_indexer:
+                    logger.info(f'Obtained "x[{k}][{i}][{j}]={self.x[k][i][j].varValue}".')
                     assert min(abs(self.x[k][i][j].varValue), abs(self.x[k][i][j].varValue - 1)) <= 0.05
 
     def _solution_to_routes(self):
