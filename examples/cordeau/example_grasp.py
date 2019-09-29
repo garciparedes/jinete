@@ -18,7 +18,7 @@ DATASETS_PATH = BASE_PATH / 'res' / 'datasets'
 def main():
     logger.info('Starting...')
 
-    file_path = DATASETS_PATH / 'cordeau-laporte' / 'R1a.txt'
+    file_path = DATASETS_PATH / 'cordeau-laporte' / 'a2-16.txt'
 
     class MyLoader(jit.FileLoader):
         def __init__(self, *args, **kwargs):
@@ -28,10 +28,9 @@ def main():
                 *args, **kwargs,
             )
 
-    class MyAlgorithm(jit.InsertionAlgorithm):
+    class MyAlgorithm(jit.GraspAlgorithm):
         def __init__(self, *args, **kwargs):
             super().__init__(
-                neighborhood_max_size=500,
                 *args, **kwargs,
             )
 
