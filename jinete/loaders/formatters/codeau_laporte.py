@@ -78,6 +78,7 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
 
         origin = surface.get_or_create_position(origin_row[1:3])
         destination = surface.get_or_create_position(destination_row[1:3])
+        load_time = origin_row[4]
 
         e1, l1 = origin_row[5:7]
         e2, l2 = destination_row[5:7]
@@ -101,7 +102,7 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
             inbound=inbound,
             earliest=earliest,
             timeout=timeout,
-            load_time=10.0,
+            load_time=load_time,
         )
         return trip
 

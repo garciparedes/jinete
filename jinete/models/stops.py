@@ -81,6 +81,11 @@ class Stop(Model):
         self._earliest = None
         self._arrival_time = None
 
+    @property
+    def planned_trips(self) -> Iterable[PlannedTrip]:
+        yield from self.pickups
+        yield from self.deliveries
+
     def append_pickup(self, planned_trip: PlannedTrip) -> None:
         self.extend_pickups((planned_trip,))
 
@@ -117,7 +122,7 @@ class Stop(Model):
             if not any(self.pickups):
                 self._load_time = 0.0
             else:
-                self._load_time = max((pt.trip.load_time for pt in self.pickups))
+                self._load_time = max((pt.trip.load_time for pt in self.planned_trips))
         return self._load_time
 
     @property
