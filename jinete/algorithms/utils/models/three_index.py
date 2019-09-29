@@ -37,10 +37,9 @@ BIG = 10000
 
 class ThreeIndexModel(Model):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, solver: lp.LpSolver, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.args = args
-        self.kwargs = kwargs
+        self.solver = solver
 
         self._trips = None
         self._vehicles = None
@@ -353,7 +352,7 @@ class ThreeIndexModel(Model):
 
     def solve(self) -> Set[Route]:
         logger.info('Starting to solve...')
-        self.problem.solve(lp.PULP_CBC_CMD(msg=1, threads=4))
+        self.problem.solve(self.solver)
 
         self.validate()
 
