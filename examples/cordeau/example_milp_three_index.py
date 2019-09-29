@@ -13,7 +13,7 @@ coloredlogs.install(level=level)
 
 logger = logging.getLogger(__name__)
 
-BASE_PATH = Path(__file__).parents[1]
+BASE_PATH = Path(__file__).parents[2]
 DATASETS_PATH = BASE_PATH / 'res' / 'datasets'
 
 
@@ -33,7 +33,7 @@ def main():
     class MyAlgorithm(jit.MilpAlgorithm):
         def __init__(self, *args, **kwargs):
             super().__init__(
-                solver=lp.PULP_CBC_CMD(msg=1),
+                solver=lp.XPRESS(msg=1),
                 *args, **kwargs,
             )
 

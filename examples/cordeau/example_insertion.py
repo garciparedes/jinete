@@ -11,7 +11,7 @@ coloredlogs.install(level=level)
 
 logger = logging.getLogger(__name__)
 
-BASE_PATH = Path(__file__).parents[1]
+BASE_PATH = Path(__file__).parents[2]
 DATASETS_PATH = BASE_PATH / 'res' / 'datasets'
 
 
