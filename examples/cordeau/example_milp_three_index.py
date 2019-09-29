@@ -33,7 +33,7 @@ def main():
     class MyAlgorithm(jit.MilpAlgorithm):
         def __init__(self, *args, **kwargs):
             super().__init__(
-                solver=lp.XPRESS(msg=1),
+                solver=lp.PULP_CBC_CMD(msg=1),
                 *args, **kwargs,
             )
 
