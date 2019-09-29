@@ -23,6 +23,7 @@ if TYPE_CHECKING:
         Set,
         Tuple,
         Iterable,
+        Optional,
     )
     from ....models import (
         Trip,
@@ -86,6 +87,7 @@ class ThreeIndexModel(Model):
 
         self._problem.objective = self.objective
         self._problem.extend(self.constraints)
+        pass
 
     @property
     def vehicles(self) -> Tuple[Vehicle]:
@@ -94,7 +96,7 @@ class ThreeIndexModel(Model):
         return self._vehicles
 
     @property
-    def trips(self) -> Tuple[Trip]:
+    def trips(self) -> Tuple[Trip, ...]:
         if self._trips is None:
             self._trips = tuple(sorted(self.job.trips, key=attrgetter('identifier')))
         return self._trips
@@ -212,11 +214,48 @@ class ThreeIndexModel(Model):
     def n(self) -> int:
         return len(self.trips)
 
+    def trip_by_position_idx(self, idx: int) -> Optional[Trip]:
+        if idx in (0, len(self.positions) - 1):
+            return None
+        return self.trips[(idx % self.n) - 1]
+
+    def time_window_by_position_idx(self, idx: int) -> Tuple[float, float]:
+        position = self.positions[idx]
+        trip = self.trip_by_position_idx(idx)
+
+        if (trip is not None) and ((trip.inbound and position == trip.origin) or (
+                not trip.inbound and position == trip.destination)):
+            earliest, latest = trip.earliest, trip.latest
+        else:
+            earliest, latest = 0, 1440
+
+        return earliest, latest
+
+    def capacity_by_position_idx(self, idx: int) -> float:
+        trip = self.trip_by_position_idx(idx)
+        if trip is None:
+            return 0
+
+        capacity = trip.capacity
+        if not idx < len(self.positions) / 2:
+            capacity *= -1
+
+        return capacity
+
+    def load_time_by_position_idx(self, idx: int) -> float:
+        trip = self.trip_by_position_idx(idx)
+        if trip is None:
+            return 0
+        return trip.load_time
+
     def _build_uniqueness_constraints(self) -> List[lp.LpConstraint]:
         constraints = list()
 
         for i in self.pickups_indexer:
-            lhs = sum(self.x[k][i][j] for j, k in product(self.positions_indexer, self.routes_indexer))
+            lhs = sum(
+                self.x[k][i][j]
+                for j, k in product(self.positions_indexer, self.routes_indexer)
+            )
             constraints.append(lhs == 1)
 
             for k in self.routes_indexer:
@@ -233,11 +272,10 @@ class ThreeIndexModel(Model):
 
         for k in self.routes_indexer:
             lhs = sum(self.x[k][0][j] for j in self.positions_indexer)
-            rhs = sum(self.x[k][i][-1] for i in self.positions_indexer)
-            constraints.append(lhs == rhs)
-
             constraints.append(lhs == 1)
-            constraints.append(rhs == 1)
+
+            lhs = sum(self.x[k][i][-1] for i in self.positions_indexer)
+            constraints.append(lhs == 1)
 
             for i in self.nodes_indexer:
                 lhs = (
@@ -253,50 +291,32 @@ class ThreeIndexModel(Model):
 
         for k in self.routes_indexer:
             for i in self.pickups_indexer:
-                if i not in (0, len(self.positions) - 1):
-                    load_time = self.trips[(i % self.n) - 1].load_time
-                else:
-                    load_time = 0
+                load_time = self.load_time_by_position_idx(i)
 
-                constraint = self.r[k][i - 1] >= self.u[k][i + self.n] - (self.u[k][i] + load_time)
+                constraint = self.r[k][i - 1] == self.u[k][i + self.n] - (self.u[k][i] + load_time)
                 constraints.append(constraint)
 
             for i, j in product(self.positions_indexer, self.positions_indexer):
-                if i not in (0, len(self.positions) - 1):
-                    load_time = self.trips[(i % self.n) - 1].load_time
-                else:
-                    load_time = 0
+                load_time_i = self.load_time_by_position_idx(i)
                 travel_time = self.positions[i].time_to(self.positions[j])
 
-                self.aux.append(lp.LpVariable(f'aux_u_{k}_{i}_{j}', lowBound=0.0))
+                earliest_i, latest_i = self.time_window_by_position_idx(i)
+                earliest_j, latest_j = self.time_window_by_position_idx(j)
 
-                constraints.extend([
-                    self.aux[-1] <= BIG * self.x[k][i][j],
-                    self.aux[-1] <= (load_time + travel_time + self.u[k][i]),
-                    self.aux[-1] >= (load_time + travel_time + self.u[k][i]) - (1 - self.x[k][i][j]) * BIG,
-                    self.u[k][j] >= self.aux[-1],
-                ])
+                cons = max(0, latest_i + load_time_i + travel_time - earliest_j)
 
-                if j not in (0, len(self.positions) - 1):
-                    capacity = self.trips[(j % self.n) - 1].capacity
-                    if not j < len(self.positions) / 2:
-                        capacity *= -1
-                else:
-                    capacity = 0
+                constraints.append(
+                    self.u[k][j] >= self.u[k][i] + load_time_i + travel_time - cons * (1 - self.x[k][i][j]),
+                )
 
-                self.aux.append(lp.LpVariable(f'aux_w_{k}_{i}_{j}', lowBound=min(-BIG, 0), upBound=BIG))
+                capacity_i = self.capacity_by_position_idx(i)
+                capacity_j = self.capacity_by_position_idx(j)
 
-                constraints.extend([
-                    - BIG * self.x[k][i][j] <= self.aux[-1],
-                    self.aux[-1] <= BIG * self.x[k][i][j],
+                cons = self.vehicles[k].capacity + min(0.0, capacity_i)
 
-                    (capacity + self.w[k][i]) - (1 - self.x[k][i][j]) * BIG <= self.aux[-1],
-                    self.aux[-1] <= (capacity + self.w[k][i]) - (1 - self.x[k][i][j]) * - BIG,
-
-                    self.aux[-1] <= (capacity + self.w[k][i]) + (1 - self.x[k][i][j]) * BIG,
-
-                    self.w[k][j] >= self.aux[-1],
-                ])
+                constraints.append(
+                    self.w[k][j] >= self.w[k][i] + capacity_j - cons * (1 - self.x[k][i][j]),
+                )
 
         return constraints
 
@@ -314,29 +334,14 @@ class ThreeIndexModel(Model):
                 ])
 
             for i in self.positions_indexer:
-                position = self.positions[i]
-                if i not in (0, len(self.positions) - 1):
-                    trip = self.trips[(i % self.n) - 1]
-                else:
-                    trip = None
-
-                if trip is not None:
-                    capacity = self.trips[(i % self.n) - 1].capacity
-                    if not i < len(self.positions) / 2:
-                        capacity *= -1
-                else:
-                    capacity = 0
+                capacity = self.capacity_by_position_idx(i)
 
                 constraints.extend([
-                    max(0, capacity) <= self.w[k][i],
-                    self.w[k][i] <= self.vehicles[k].capacity + min(0, capacity),
+                    max(0.0, capacity) <= self.w[k][i],
+                    self.w[k][i] <= self.vehicles[k].capacity + min(0.0, capacity),
                 ])
 
-                if (trip is not None) and ((trip.inbound and position == trip.origin) or (
-                        not trip.inbound and position == trip.destination)):
-                    earliest, latest = trip.earliest, trip.latest
-                else:
-                    earliest, latest = 0, 1440
+                earliest, latest = self.time_window_by_position_idx(i)
 
                 constraints.extend([
                     earliest <= self.u[k][i],
@@ -354,11 +359,11 @@ class ThreeIndexModel(Model):
         print('X:')
         for k in self.routes_indexer:
             print(f'Vehicle {k}-th.')
-            print(f'   {"  ".join(map(str, self.positions_indexer))}')
+            print(f'   {" ".join(map(lambda num: f"{num:02d}", self.positions_indexer))}')
             for i in self.positions_indexer:
-                print(f'{i}', end='  ')
+                print(f'{i:02d}', end=' ')
                 for j in self.positions_indexer:
-                    print(f'{int(self.x[k][i][j].varValue)}', end='  ')
+                    print(f'{int(self.x[k][i][j].varValue):2d}', end=' ')
                 print()
             print()
 
