@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from collections import defaultdict
 from itertools import product
 from operator import itemgetter
 from typing import (
@@ -12,6 +13,7 @@ import pulp as lp
 from ....models import (
     Stop,
     Route,
+    PlannedTrip,
 )
 from .abc import (
     Model,
@@ -24,10 +26,12 @@ if TYPE_CHECKING:
         Tuple,
         Iterable,
         Optional,
+        Dict,
     )
     from ....models import (
         Trip,
         Vehicle,
+        Position,
     )
 
 logger = logging.getLogger(__name__)
@@ -177,7 +181,7 @@ class ThreeIndexModel(Model):
         return r
 
     def _build_objective(self) -> lp.LpConstraintVar:
-        return sum(
+        return lp.lpSum(
             self.x[k][i][j] * self.costs[i][j]
             for k, i, j in product(self.routes_indexer, self.positions_indexer, self.positions_indexer)
         )
@@ -251,7 +255,7 @@ class ThreeIndexModel(Model):
         constraints = list()
 
         for i in self.pickups_indexer:
-            lhs = sum(
+            lhs = lp.lpSum(
                 self.x[k][i][j]
                 for j, k in product(self.positions_indexer, self.routes_indexer)
             )
@@ -259,8 +263,8 @@ class ThreeIndexModel(Model):
 
             for k in self.routes_indexer:
                 lhs = (
-                        sum(self.x[k][i][j] for j in self.positions_indexer) -
-                        sum(self.x[k][self.n + i][j] for j in self.positions_indexer)
+                        lp.lpSum(self.x[k][i][j] for j in self.positions_indexer) -
+                        lp.lpSum(self.x[k][self.n + i][j] for j in self.positions_indexer)
                 )
                 constraints.append(lhs == 0)
 
@@ -270,17 +274,17 @@ class ThreeIndexModel(Model):
         constraints = list()
 
         for k in self.routes_indexer:
-            lhs = sum(self.x[k][0][j] for j in self.positions_indexer)
+            lhs = lp.lpSum(self.x[k][0][j] for j in self.positions_indexer)
             constraints.append(lhs == 1)
 
             for i in self.nodes_indexer:
                 lhs = (
-                        sum(self.x[k][j][i] for j in self.positions_indexer) -
-                        sum(self.x[k][i][j] for j in self.positions_indexer)
+                        lp.lpSum(self.x[k][j][i] for j in self.positions_indexer) -
+                        lp.lpSum(self.x[k][i][j] for j in self.positions_indexer)
                 )
                 constraints.append(lhs == 0)
 
-            lhs = sum(self.x[k][i][-1] for i in self.positions_indexer)
+            lhs = lp.lpSum(self.x[k][i][-1] for i in self.positions_indexer)
             constraints.append(lhs == 1)
 
         return constraints
@@ -420,27 +424,61 @@ class ThreeIndexModel(Model):
             ordered_trip_indexes = [
                 idx
                 for idx, u_k in sorted(enumerate(u_k.varValue for u_k in self.u[k]), key=itemgetter(1))
-                # if u_k != 0.0
             ]
 
-            for i in ordered_trip_indexes:
-                for j in self.positions_indexer:
-                    if not int(self.x[k][i][j].varValue) == 1:
-                        continue
+            positions = self._solution_to_positions(k, ordered_trip_indexes)
+            stops = self._positions_to_stops(route, positions)
+            trips = self._positions_to_trips(positions)
+            self._build_planned_trips(route, trips, stops)
 
-                    origin = self.positions[i]
-                    # destination = self.positions[j]
-
-                    pickup = Stop(route, origin, route.last_stop)
-                    # delivery = Stop(route, destination, pickup)
-                    # trip = self.trips[(i % self.n) - 1]
-                    # if trip.origin != origin or trip.destination != destination:
-                    #     continue
-                    # planned_trip = PlannedTrip(route=route, trip=trip, pickup=pickup, delivery=delivery)
-                    route.append_stop(pickup)
-                    # route.append_stop(delivery)
-                    # route.append_planned_trip(planned_trip)
+            for stop in stops:
+                route.append_stop(stop)
 
             route.finish()
             routes.add(route)
         return routes
+
+    def _positions_to_trips(self, positions) -> List[Trip]:
+        trips = list()
+        for position in positions:
+            trip = next((trip for trip in self.trips if trip.origin == position), None)
+            if trip is None:
+                continue
+            if trip in trips:
+                continue
+            trips.append(trip)
+        return trips
+
+    def _build_planned_trips(self, route: Route, trips: List[Trip], stops: List[Stop]) -> List[PlannedTrip]:
+        stop_mapper = self._stop_to_stop_mapper(stops)
+
+        planned_trips = list()
+        for trip in trips:
+            pickup = stop_mapper[trip.origin].pop(0)
+            delivery = stop_mapper[trip.destination].pop(0)
+
+            planned_trip = PlannedTrip(route, trip, pickup, delivery)
+            planned_trips.append(planned_trip)
+        return planned_trips
+
+    def _solution_to_positions(self, k, ordered_trip_indexes) -> List[Position]:
+        positions = list()
+        for i, j in product(ordered_trip_indexes, self.positions_indexer):
+            if not int(self.x[k][i][j].varValue) == 1:
+                continue
+            positions.append(self.positions[i])
+        return positions
+
+    def _positions_to_stops(self, route, positions) -> List[Stop]:
+        stops = [route.first_stop]
+        for position in positions:
+            pickup = Stop(route, position, stops[-1])
+            stops.append(pickup)
+        stops.pop(0)
+        return stops
+
+    def _stop_to_stop_mapper(self, stops: List[Stop]) -> Dict[Position, List[Stop]]:
+        mapper = defaultdict(list)
+        for stop in stops:
+            mapper[stop.position].append(stop)
+        return mapper

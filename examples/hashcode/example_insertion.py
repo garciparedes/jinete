@@ -57,7 +57,7 @@ def main():
         MyStorer,
     )
 
-    result = dispatcher.run()
+    result = dispatcher.run()  # noqa
 
     logger.info('Finished...')
 

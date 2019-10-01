@@ -33,7 +33,11 @@ def main():
     class MyAlgorithm(jit.MilpAlgorithm):
         def __init__(self, *args, **kwargs):
             super().__init__(
-                solver=lp.PULP_CBC_CMD(msg=1),
+                # solver=lp.XPRESS(msg=1, path=str(BASE_PATH / 'tmp' / 'xpressmp' / 'bin' / 'optimizer')),
+                # solver=lp.GUROBI_CMD(msg=1),
+                # solver=lp.CPLEX_CMD(msg=1, path=str(BASE_PATH / 'tmp' / 'cplex' / 'bin' / 'x86-64_osx' / 'cplex')),
+                solver=lp.SCIP(msg=1),
+                # solver=lp.PULP_CBC_CMD(msg=1, threads=4),
                 *args, **kwargs,
             )
 
@@ -49,7 +53,7 @@ def main():
             super().__init__(
                 storer_cls_set={
                     MyStorer,
-                    jit.GraphPlotStorer,
+                    # jit.GraphPlotStorer,
                 },
                 *args, **kwargs,
             )
@@ -60,7 +64,7 @@ def main():
         MyStorerSet,
     )
 
-    result = dispatcher.run()
+    result = dispatcher.run()  # noqa
 
     logger.info('Finished...')
 
