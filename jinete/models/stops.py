@@ -87,9 +87,11 @@ class Stop(Model):
         yield from self.deliveries
 
     def append_pickup(self, planned_trip: PlannedTrip) -> None:
+        assert planned_trip.origin == self.position
         self.extend_pickups((planned_trip,))
 
     def append_delivery(self, planned_trip: PlannedTrip) -> None:
+        assert planned_trip.destination == self.position
         self.extend_deliveries((planned_trip,))
 
     def extend_pickups(self, iterable: Iterable[PlannedTrip]) -> None:
