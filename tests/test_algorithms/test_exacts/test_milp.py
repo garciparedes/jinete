@@ -5,20 +5,17 @@ import jinete as jit
 
 
 class TestMilpAlgorithm(unittest.TestCase):
-    job: jit.Job
-    fleet: jit.Fleet
-    initial: jit.Result
+    loader: jit.Loader
 
     @classmethod
     def setUpClass(cls) -> None:
         file_path = Path(__file__).parents[2] / 'res' / 'problem-4.txt'
 
         class MyLoader(jit.FileLoader):
-            def __init__(self, *args, **kwargs):
+            def __init__(self):
                 super().__init__(
                     file_path=file_path,
                     formatter_cls=jit.CordeauLaporteLoaderFormatter,
-                    *args, **kwargs,
                 )
 
         cls.loader = MyLoader()
