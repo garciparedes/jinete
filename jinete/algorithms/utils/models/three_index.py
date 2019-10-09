@@ -49,7 +49,7 @@ class ThreeIndexModel(Model):
     _trips: Optional[Tuple[Trip, ...]]
     _vehicles: Optional[Tuple[Vehicle, ...]]
 
-    def __init__(self, solver: lp.LpSolver, *args, **kwargs):
+    def __init__(self, solver: lp.LpSolver = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.solver = solver
 
