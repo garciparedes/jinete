@@ -40,6 +40,14 @@ BIG = 10000
 
 
 class ThreeIndexModel(Model):
+    _x: Optional[List[List[List[lp.LpVariable]]]]
+    _r: Optional[List[List[lp.LpVariable]]]
+    _u: Optional[List[List[lp.LpVariable]]]
+    _w: Optional[List[List[lp.LpVariable]]]
+    _objective: Optional[lp.LpConstraintVar]
+    _constraints: Optional[List[lp.LpConstraint]]
+    _trips: Optional[Tuple[Trip, ...]]
+    _vehicles: Optional[Tuple[Vehicle, ...]]
 
     def __init__(self, solver: lp.LpSolver, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -50,11 +58,10 @@ class ThreeIndexModel(Model):
 
         self._problem = None
 
-        self.x = None
-        self.u = None
-        self.w = None
-        self.r = None
-        self.aux = None
+        self._x = None
+        self._u = None
+        self._w = None
+        self._r = None
 
         self._objective = None
         self._constraints = None
@@ -62,38 +69,50 @@ class ThreeIndexModel(Model):
         self._positions = None
         self._costs = None
 
-        self.build()
-
     @property
     def problem(self) -> lp.LpProblem:
+        if self._problem is None:
+            self._problem = self._build_problem()
         return self._problem
 
     @property
-    def objective(self) -> lp.LpConstraintVar:
+    def objective(self) -> Optional[lp.LpConstraintVar]:
+        if self._objective is None:
+            self._objective = self._build_objective()
         return self._objective
 
     @property
     def constraints(self) -> List[lp.LpConstraint]:
+        if self._constraints is None:
+            self._constraints = self._build_constraints()
         return self._constraints
 
-    def build(self):
-        self._problem = lp.LpProblem("3-idx_dial-a-ride", lp.LpMinimize)
-
-        self.x = self._build_x_variables()
-        self.u = self._build_u_variables()
-        self.w = self._build_w_variables()
-        self.r = self._build_r_variables()
-        self.aux = list()
-
-        self._objective = self._build_objective()
-        self._constraints = self._build_constraints()
-
-        self._problem.objective = self.objective
-        self._problem.extend(self.constraints)
-        pass
+    @property
+    def x(self) -> List[List[List[lp.LpVariable]]]:
+        if self._x is None:
+            self._x = self._build_x_variables()
+        return self._x
 
     @property
-    def vehicles(self) -> Tuple[Vehicle]:
+    def r(self) -> List[List[lp.LpVariable]]:
+        if self._r is None:
+            self._r = self._build_r_variables()
+        return self._r
+
+    @property
+    def u(self) -> List[List[lp.LpVariable]]:
+        if self._u is None:
+            self._u = self._build_u_variables()
+        return self._u
+
+    @property
+    def w(self) -> List[List[lp.LpVariable]]:
+        if self._w is None:
+            self._w = self._build_w_variables()
+        return self._w
+
+    @property
+    def vehicles(self) -> Tuple[Vehicle, ...]:
         if self._vehicles is None:
             self._vehicles = tuple(self.fleet.vehicles)
         return self._vehicles
@@ -101,7 +120,7 @@ class ThreeIndexModel(Model):
     @property
     def trips(self) -> Tuple[Trip, ...]:
         if self._trips is None:
-            self._trips = tuple(sorted(self.job.trips, key=lambda x: int(x.identifier)))
+            self._trips = tuple(self.job.trips)
         return self._trips
 
     @property
@@ -187,7 +206,7 @@ class ThreeIndexModel(Model):
         )
 
     def _build_constraints(self) -> List[lp.LpConstraint]:
-        constraints = sum([
+        constraints: List[lp.LpConstraint] = sum([
             self._build_uniqueness_constraints(),
             self._build_connectivity_constraints(),
             self._build_time_constraints(),
@@ -196,6 +215,12 @@ class ThreeIndexModel(Model):
 
         logger.info(f'Built "{len(constraints)}" constraints.')
         return constraints
+
+    def _build_problem(self) -> lp.LpProblem:
+        problem = lp.LpProblem("3-idx_dial-a-ride", lp.LpMinimize)
+        problem.objective = self.objective
+        problem.extend(self.constraints)
+        return problem
 
     @property
     def pickups_indexer(self) -> Iterable[int]:
@@ -359,7 +384,10 @@ class ThreeIndexModel(Model):
         self.problem.solve(self.solver)
 
         self.validate()
+        logger.info(f'Obtained "{lp.value(self.objective)}" reaching "{lp.LpStatus[self.problem.status]}".')
+        return self._solution_to_routes()
 
+    def print_solution(self):
         print('X:')
         for k in self.routes_indexer:
             print(f'Vehicle {k}-th.')
@@ -391,12 +419,6 @@ class ThreeIndexModel(Model):
             for i in self.pickups_indexer:
                 print(f'{self.r[k][i - 1].varValue:4.01f}', end=' ')
             print()
-
-        for i in range(len(self.aux)):
-            print(f'NAME="{self.aux[i].name}, VALUE="{self.aux[i].varValue}"')
-
-        logger.info(f'Obtained "{lp.value(self.objective)}" reaching "{lp.LpStatus[self.problem.status]}".')
-        return self._solution_to_routes()
 
     def validate(self):
         for k in self.routes_indexer:
@@ -439,7 +461,7 @@ class ThreeIndexModel(Model):
         return routes
 
     def _positions_to_trips(self, positions) -> List[Trip]:
-        trips = list()
+        trips: List[Trip] = list()
         for position in positions:
             trip = next((trip for trip in self.trips if trip.origin == position), None)
             if trip is None:
@@ -478,7 +500,7 @@ class ThreeIndexModel(Model):
         return stops
 
     def _stop_to_stop_mapper(self, stops: List[Stop]) -> Dict[Position, List[Stop]]:
-        mapper = defaultdict(list)
+        mapper: Dict[Position, List[Stop]] = defaultdict(list)
         for stop in stops:
             mapper[stop.position].append(stop)
         return mapper

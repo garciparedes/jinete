@@ -44,9 +44,5 @@ class Model(ABC):
         pass
 
     @abstractmethod
-    def build(self) -> None:
-        pass
-
-    @abstractmethod
     def solve(self) -> Set[Route]:
         pass
