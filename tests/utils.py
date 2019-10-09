@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import Path
 from typing import TYPE_CHECKING
 from random import uniform, randint
 
@@ -176,6 +177,19 @@ def generate_routes(n: int, *args, **kwargs) -> Set[jit.Route]:
     return {
         generate_one_route(*args, **kwargs) for _ in range(n)
     }
+
+
+def generate_one_loader() -> Type[jit.Loader]:
+    file_path = Path(__file__).parent / 'res' / 'problem-4.txt'
+
+    class MyLoader(jit.FileLoader):
+        def __init__(self):
+            super().__init__(
+                file_path=file_path,
+                formatter_cls=jit.CordeauLaporteLoaderFormatter,
+            )
+
+    return MyLoader
 
 
 def generate_one_result():

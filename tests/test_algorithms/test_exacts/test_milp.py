@@ -1,7 +1,10 @@
 import unittest
-from pathlib import Path
 
 import jinete as jit
+
+from tests.utils import (
+    generate_one_loader,
+)
 
 
 class TestMilpAlgorithm(unittest.TestCase):
@@ -9,16 +12,8 @@ class TestMilpAlgorithm(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        file_path = Path(__file__).parents[2] / 'res' / 'problem-4.txt'
-
-        class MyLoader(jit.FileLoader):
-            def __init__(self):
-                super().__init__(
-                    file_path=file_path,
-                    formatter_cls=jit.CordeauLaporteLoaderFormatter,
-                )
-
-        cls.loader = MyLoader()
+        loader_cls = generate_one_loader()
+        cls.loader = loader_cls()
 
     @property
     def job(self) -> jit.Job:
