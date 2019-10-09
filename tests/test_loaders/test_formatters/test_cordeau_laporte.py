@@ -70,12 +70,12 @@ class TestCordeauLaporteLoaderFormatter(unittest.TestCase):
 
             if origin_row[-2] == 0.0 and origin_row[-1] == 1440.0:
                 earliest, latest = destination_row[-2:]
-                inbound = True
+                inbound = False
             else:
                 earliest, latest = origin_row[-2:]
-                inbound = False
+                inbound = True
 
-            self.assertEqual(str(idx), trip.identifier)
+            self.assertEqual(str(idx + 1), trip.identifier)
             self.assertIsInstance(trip, jit.Trip)
             self.assertEqual(1.0, trip.capacity)
             self.assertEqual(0.0, trip.on_time_bonus)
