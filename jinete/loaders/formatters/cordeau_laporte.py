@@ -78,20 +78,22 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
 
         origin = surface.get_or_create_position(origin_row[1:3])
         destination = surface.get_or_create_position(destination_row[1:3])
+        load_time = origin_row[3]
+        capacity = origin_row[4]
 
         e1, l1 = origin_row[5:7]
         e2, l2 = destination_row[5:7]
 
         if e1 == 0 and l1 == 1440:
             earliest, latest = e2, l2
-            inbound = True
+            inbound = False
         elif e2 == 0 and l2 == 1440:
             earliest, latest = e1, l1
-            inbound = False
+            inbound = True
         else:
             raise LoaderFormatterException('It is not possible to distinguish between inbound and outbound task.')
 
-        identifier = str(idx)
+        identifier = f'{origin_row[0]:.0f}'
         timeout = latest - earliest
 
         trip = Trip(
@@ -101,7 +103,8 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
             inbound=inbound,
             earliest=earliest,
             timeout=timeout,
-            load_time=10.0,
+            load_time=load_time,
+            capacity=capacity,
         )
         return trip
 

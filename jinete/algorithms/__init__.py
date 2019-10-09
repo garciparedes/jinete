@@ -12,6 +12,9 @@ from .metaheuristics import (
     GraspAlgorithm,
     IterativeAlgorithm,
 )
+from .exacts import (
+    MilpAlgorithm,
+)
 from .utils import (
     Crosser,
     StatelessCrosser,

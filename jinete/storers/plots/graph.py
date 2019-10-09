@@ -26,13 +26,21 @@ class GraphPlotStorer(Storer):
     def _generate_nodes(self, edges: Dict[Tuple[Position, Position], Dict[str, Any]]) -> Dict[Position, Dict[str, Any]]:
         nodes: Dict[Position, Dict[str, Any]] = dict()
         for trip in self.trips:
-            nodes[trip.origin] = dict()
-            nodes[trip.destination] = dict()
+            nodes[trip.origin] = {
+                'label': f'+{trip.identifier}',
+            }
+            nodes[trip.destination] = {
+                'label': f'-{trip.identifier}',
+            }
         for position_pair in edges.keys():
             if position_pair[0] not in nodes:
-                nodes[position_pair[0]] = dict()
+                nodes[position_pair[0]] = {
+                    'label': '',
+                }
             if position_pair[1] not in nodes:
-                nodes[position_pair[1]] = dict()
+                nodes[position_pair[1]] = {
+                    'label': '',
+                }
         return nodes
 
     def _generate_edges(self) -> Dict[Tuple[Position, Position], Dict[str, Any]]:
@@ -41,6 +49,7 @@ class GraphPlotStorer(Storer):
             for first, second in zip(route.stops[:-1], route.stops[1:]):
                 edges[(first.position, second.position)] = {
                     'color': color,
+                    'label': '',
                 }
         return edges
 
@@ -61,9 +70,20 @@ class GraphPlotStorer(Storer):
 
     @staticmethod
     def _show_graph(graph: nx.Graph) -> None:
+        import matplotlib as mpl
+        mpl.rcParams['figure.dpi'] = 300
+
         pos = {node: node.coordinates for node in graph.nodes.keys()}
+
+        node_labels = {node: metadata['label'] for node, metadata in graph.nodes.items()}
+
         edge_color = [metadata['color'] for metadata in graph.edges.values()]
-        nx.draw(graph, pos=pos, edge_color=edge_color, node_size=25)
+        edge_labels = {edge: metadata['label'] for edge, metadata in graph.edges.items()}
+
+        nx.draw(graph, pos=pos, edge_color=edge_color, node_size=100)
+        nx.draw_networkx_labels(graph, pos, labels=node_labels, font_size=5, font_color='white')
+        nx.draw_networkx_edge_labels(graph, pos, edge_labels=edge_labels)
+
         plt.show()
 
     def store(self) -> None:
