@@ -44,8 +44,7 @@ class HashCodeLoaderFormatter(LoaderFormatter):
                     earliest: float, latest: float) -> Trip:
         origin = surface.get_or_create_position([x1, y1])
         destination = surface.get_or_create_position([x2, y2])
-        timeout = latest - earliest
-        trip = Trip(identifier, origin, destination, earliest, timeout, bonus)
+        trip = Trip(identifier, origin, destination, earliest, latest, bonus)
         logger.debug(f'Created trip!')
         return trip
 

@@ -27,7 +27,7 @@ class Trip(object):
         'origin',
         'destination',
         'earliest',
-        'timeout',
+        'latest',
         'on_time_bonus',
         'load_capacity',
         'load_time',
@@ -44,23 +44,18 @@ class Trip(object):
     capacity: float
 
     def __init__(self, identifier: str, origin: Position, destination: Position, earliest: float = 0.0,
-                 timeout: Optional[float] = None, on_time_bonus: float = 0.0, load_time: float = 0.0,
+                 latest: float = MAX_FLOAT, on_time_bonus: float = 0.0, load_time: float = 0.0,
                  inbound: bool = True, capacity: float = 1):
         self.identifier = identifier
         self.origin = origin
         self.destination = destination
         self.earliest = earliest
-        self.timeout = timeout
+        self.latest = latest
+
         self.on_time_bonus = on_time_bonus
         self.load_time = load_time
         self.inbound = inbound
         self.capacity = capacity
-
-    @property
-    def latest(self) -> float:
-        if self.timeout is None:
-            return MAX_FLOAT
-        return self.earliest + self.timeout
 
     @property
     def empty(self) -> bool:

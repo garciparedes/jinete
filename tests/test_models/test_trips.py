@@ -22,7 +22,6 @@ class TestTrips(unittest.TestCase):
         self.assertEqual(origin, trip.origin)
         self.assertEqual(destination, trip.destination)
         self.assertEqual(earliest, trip.earliest)
-        self.assertIsNone(trip.timeout)
         self.assertEqual(trip.latest, jit.MAX_FLOAT)
         self.assertEqual(0, trip.load_time)
         self.assertEqual(1, trip.capacity)
@@ -44,7 +43,6 @@ class TestTrips(unittest.TestCase):
         self.assertEqual(origin, trip.origin)
         self.assertEqual(destination, trip.destination)
         self.assertEqual(earliest, trip.earliest)
-        self.assertIsNone(trip.timeout)
         self.assertEqual(trip.latest, jit.MAX_FLOAT)
         self.assertEqual(0, trip.load_time)
         self.assertEqual(capacity, trip.capacity)
@@ -61,12 +59,11 @@ class TestTrips(unittest.TestCase):
         duration = origin.time_to(destination, earliest)
 
         trip = jit.Trip(identifier=identifier, origin=origin, destination=destination, earliest=earliest,
-                        timeout=timeout)
+                        latest=earliest + timeout)
 
         self.assertEqual(origin, trip.origin)
         self.assertEqual(destination, trip.destination)
         self.assertEqual(earliest, trip.earliest)
-        self.assertEqual(timeout, trip.timeout)
         self.assertEqual(earliest + timeout, trip.latest)
         self.assertEqual(0, trip.load_time)
         self.assertEqual(1, trip.capacity)
@@ -87,7 +84,6 @@ class TestTrips(unittest.TestCase):
 
         self.assertEqual(origin, trip.origin)
         self.assertEqual(destination, trip.destination)
-        self.assertIsNone(trip.timeout)
         self.assertEqual(trip.latest, jit.MAX_FLOAT)
         self.assertEqual(load_time, trip.load_time)
         self.assertEqual(1, trip.capacity)
