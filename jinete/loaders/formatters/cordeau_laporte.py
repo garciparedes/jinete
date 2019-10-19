@@ -79,7 +79,7 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
         destination_earliest, destination_latest = destination_row[5:7]
         destination_duration = destination_row[3]
 
-        identifier = f'{origin_row[0]:.0f}'
+        identifier = f'{idx + 1:.0f}'
 
         assert origin_row[4] == -destination_row[4]
         capacity = origin_row[4]

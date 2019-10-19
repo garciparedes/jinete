@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import unittest
+from operator import attrgetter
 from typing import TYPE_CHECKING
 import jinete as jit
 
@@ -64,7 +65,7 @@ class TestCordeauLaporteLoaderFormatter(unittest.TestCase):
         self.assertIsInstance(job, jit.Job)
         self.assertEqual(n, len(job.trips))
 
-        for idx, trip in enumerate(job.trips):
+        for idx, trip in enumerate(sorted(job.trips, key=attrgetter('identifier'))):
             origin_row = self.data[2 + idx]
             destination_row = self.data[2 + idx + n]
 

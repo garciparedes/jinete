@@ -8,6 +8,9 @@ from typing import (
 from .constants import (
     MAX_FLOAT,
 )
+from .services import (
+    Service,
+)
 
 if TYPE_CHECKING:
     from typing import (
@@ -24,14 +27,8 @@ logger = logging.getLogger(__name__)
 class Trip(object):
     __slots__ = (
         'identifier',
-        'origin_position',
-        'origin_earliest',
-        'origin_latest',
-        'origin_duration',
-        'destination_position',
-        'destination_earliest',
-        'destination_latest',
-        'destination_duration',
+        'origin',
+        'destination',
         'on_time_bonus',
         'capacity',
     )
@@ -49,18 +46,52 @@ class Trip(object):
                  origin_duration: float = 0.0, capacity: float = 1, destination_earliest: float = 0.0,
                  destination_latest: float = MAX_FLOAT, destination_duration: float = 0.0):
         self.identifier = identifier
-        self.origin_position = origin_position
-        self.origin_earliest = origin_earliest
-        self.origin_latest = origin_latest
-        self.origin_duration = origin_duration
-
-        self.destination_position = destination_position
-        self.destination_earliest = destination_earliest
-        self.destination_latest = destination_latest
-        self.destination_duration = destination_duration
-
+        self.origin = Service(
+            position=origin_position,
+            earliest=origin_earliest,
+            latest=origin_latest,
+            duration=origin_duration,
+        )
+        self.destination = Service(
+            position=destination_position,
+            earliest=destination_earliest,
+            latest=destination_latest,
+            duration=destination_duration,
+        )
         self.on_time_bonus = on_time_bonus
         self.capacity = capacity
+
+    @property
+    def origin_position(self) -> Position:
+        return self.origin.position
+
+    @property
+    def origin_earliest(self) -> float:
+        return self.origin.earliest
+
+    @property
+    def origin_latest(self) -> float:
+        return self.origin.latest
+
+    @property
+    def origin_duration(self) -> float:
+        return self.origin.duration
+
+    @property
+    def destination_position(self) -> Position:
+        return self.destination.position
+
+    @property
+    def destination_earliest(self) -> float:
+        return self.destination.earliest
+
+    @property
+    def destination_latest(self) -> float:
+        return self.destination.latest
+
+    @property
+    def destination_duration(self) -> float:
+        return self.destination.duration
 
     @property
     def empty(self) -> bool:
