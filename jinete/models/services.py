@@ -7,6 +7,9 @@ from typing import (
 from .constants import (
     MAX_FLOAT,
 )
+from .abc import (
+    Model,
+)
 
 if TYPE_CHECKING:
     from typing import (
@@ -20,7 +23,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class Service(object):
+class Service(Model):
     __slots__ = (
         'position',
         'earliest',
@@ -40,3 +43,11 @@ class Service(object):
 
     def __deepcopy__(self, memo: Dict[int, Any]) -> Service:
         return self
+
+    def as_dict(self) -> Dict[str, Any]:
+        return {
+            'position': self.position,
+            'earliest': self.earliest,
+            'latest': self.latest,
+            'duration': self.duration,
+        }
