@@ -275,7 +275,7 @@ class ThreeIndexModel(Model):
         trip = self.trip_by_position_idx(idx)
         if trip is None:
             return 0
-        return trip.load_time
+        return trip.origin_duration
 
     def _build_uniqueness_constraints(self) -> List[lp.LpConstraint]:
         constraints = list()

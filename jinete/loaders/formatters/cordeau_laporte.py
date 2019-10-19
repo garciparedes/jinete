@@ -68,30 +68,32 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
 
     def build_trip(self, surface: Surface, idx: int, n: int) -> Trip:
         origin_idx = idx + 2
-        destination_idx = origin_idx + n
-
         origin_row = self.data[origin_idx]
-        destination_row = self.data[destination_idx]
-
         origin = surface.get_or_create_position(origin_row[1:3])
-        destination = surface.get_or_create_position(destination_row[1:3])
-        load_time = origin_row[3]
-        capacity = origin_row[4]
-
         origin_earliest, origin_latest = origin_row[5:7]
+        origin_duration = origin_row[3]
+
+        destination_idx = origin_idx + n
+        destination_row = self.data[destination_idx]
+        destination = surface.get_or_create_position(destination_row[1:3])
         destination_earliest, destination_latest = destination_row[5:7]
+        destination_duration = destination_row[3]
 
         identifier = f'{origin_row[0]:.0f}'
+
+        assert origin_row[4] == -destination_row[4]
+        capacity = origin_row[4]
 
         trip = Trip(
             identifier=identifier,
             origin=origin,
-            destination=destination,
             origin_earliest=origin_earliest,
             origin_latest=origin_latest,
+            origin_duration=origin_duration,
+            destination=destination,
             destination_earliest=destination_earliest,
             destination_latest=destination_latest,
-            load_time=load_time,
+            destination_duration=destination_duration,
             capacity=capacity,
         )
         return trip

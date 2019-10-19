@@ -16,7 +16,7 @@ class TestCordeauLaporteLoaderFormatter(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.data = (
-            (1.0, 2.0, 480, 6.0, 90.0),
+            (1.0, 4.0, 480, 6.0, 90.0),
             (0.0, -1.044, 2.000, 0.0, 0.0, 0.0, 1440.0),
             (1.0, -2.973, 6.414, 10.0, 1.0, 0.0, 1440.0),
             (2.0, -7.667, 9.934, 10.0, 1.0, 325.0, 358.0),

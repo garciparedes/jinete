@@ -34,7 +34,7 @@ class ColumnarStorerFormatter(StorerFormatter):
                 f'TW: {planned_trip.trip.origin_earliest:6.01f} to {planned_trip.trip.origin_latest:6.01f}',
                 f'WT: {planned_trip.pickup.waiting_time:5.01f}',
                 f'NT: {planned_trip.pickup.navigation_time:5.01f}',
-                f'LT: {planned_trip.trip.load_time:4.01f}',
+                f'LT: {planned_trip.trip.origin_duration:4.01f}',
                 f'TT: {planned_trip.duration:6.01f}',
                 f'T: {planned_trip.pickup_time:6.01f} to {planned_trip.delivery_time:6.01f}',
                 f'L: {planned_trip.capacity}',
