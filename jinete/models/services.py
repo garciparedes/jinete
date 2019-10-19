@@ -27,7 +27,6 @@ class Service(object):
         'latest',
         'duration',
     )
-    identifier: str
     position: Position
     earliest: float
     latest: float
