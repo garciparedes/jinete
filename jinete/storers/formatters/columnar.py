@@ -31,7 +31,7 @@ class ColumnarStorerFormatter(StorerFormatter):
             self.tab_character.join((
                 f'ID: {planned_trip.trip.identifier:5}',
                 f'P: {planned_trip.origin} to {planned_trip.destination}',
-                f'TW: {planned_trip.trip.earliest:6.01f} to {planned_trip.trip.latest:6.01f}',
+                f'TW: {planned_trip.trip.origin_earliest:6.01f} to {planned_trip.trip.origin_latest:6.01f}',
                 f'WT: {planned_trip.pickup.waiting_time:5.01f}',
                 f'NT: {planned_trip.pickup.navigation_time:5.01f}',
                 f'LT: {planned_trip.trip.load_time:4.01f}',

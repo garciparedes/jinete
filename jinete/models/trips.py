@@ -26,35 +26,38 @@ class Trip(object):
         'identifier',
         'origin',
         'destination',
-        'earliest',
-        'latest',
+        'origin_earliest',
+        'origin_latest',
+        'destination_earliest',
+        'destination_latest',
         'on_time_bonus',
         'load_capacity',
         'load_time',
-        'inbound',
         'capacity',
     )
     identifier: str
     origin: Position
     destination: Position
-    earliest: float
+    origin_earliest: float
     timeout: Optional[float]
     on_time_bonus: float
     load_time: float
     capacity: float
 
-    def __init__(self, identifier: str, origin: Position, destination: Position, earliest: float = 0.0,
-                 latest: float = MAX_FLOAT, on_time_bonus: float = 0.0, load_time: float = 0.0,
-                 inbound: bool = True, capacity: float = 1):
+    def __init__(self, identifier: str, origin: Position, destination: Position, origin_earliest: float = 0.0,
+                 origin_latest: float = MAX_FLOAT, on_time_bonus: float = 0.0, load_time: float = 0.0,
+                 capacity: float = 1, destination_earliest: float = 0.0, destination_latest: float = MAX_FLOAT):
         self.identifier = identifier
         self.origin = origin
+        self.origin_earliest = origin_earliest
+        self.origin_latest = origin_latest
+
         self.destination = destination
-        self.earliest = earliest
-        self.latest = latest
+        self.destination_earliest = destination_earliest
+        self.destination_latest = destination_latest
 
         self.on_time_bonus = on_time_bonus
         self.load_time = load_time
-        self.inbound = inbound
         self.capacity = capacity
 
     @property

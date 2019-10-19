@@ -108,7 +108,7 @@ class HashCodePlannedTripCriterion(PlannedTripCriterion):
             return MIN_FLOAT
 
         scoring = planned_trip.distance
-        if planned_trip.pickup_time == planned_trip.trip.earliest:
+        if planned_trip.pickup_time == planned_trip.trip.origin_earliest:
             scoring += planned_trip.trip.on_time_bonus
 
         # TODO: Optimize this call

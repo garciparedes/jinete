@@ -250,13 +250,14 @@ class ThreeIndexModel(Model):
     def time_window_by_position_idx(self, idx: int) -> Tuple[float, float]:
         position = self.positions[idx]
         trip = self.trip_by_position_idx(idx)
-
-        if (trip is not None) and ((trip.inbound and position == trip.origin) or (
-                not trip.inbound and position == trip.destination)):
-            earliest, latest = trip.earliest, trip.latest
-        else:
+        if trip is None:
             earliest, latest = 0, 1440
-
+        elif position == trip.origin:
+            earliest, latest = trip.origin_earliest, trip.origin_latest
+        elif position == trip.destination:
+            earliest, latest = trip.destination_earliest, trip.destination_latest
+        else:
+            raise Exception(f'There was a problem related with earliest, latest indices.')
         return earliest, latest
 
     def capacity_by_position_idx(self, idx: int) -> float:

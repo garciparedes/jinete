@@ -12,9 +12,6 @@ from ...models import (
     Trip,
     DialARideObjective,
 )
-from .exceptions import (
-    LoaderFormatterException,
-)
 from .abc import (
     LoaderFormatter,
 )
@@ -81,17 +78,8 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
         load_time = origin_row[3]
         capacity = origin_row[4]
 
-        e1, l1 = origin_row[5:7]
-        e2, l2 = destination_row[5:7]
-
-        if e1 == 0 and l1 == 1440:
-            earliest, latest = e2, l2
-            inbound = False
-        elif e2 == 0 and l2 == 1440:
-            earliest, latest = e1, l1
-            inbound = True
-        else:
-            raise LoaderFormatterException('It is not possible to distinguish between inbound and outbound task.')
+        origin_earliest, origin_latest = origin_row[5:7]
+        destination_earliest, destination_latest = destination_row[5:7]
 
         identifier = f'{origin_row[0]:.0f}'
 
@@ -99,9 +87,10 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
             identifier=identifier,
             origin=origin,
             destination=destination,
-            inbound=inbound,
-            earliest=earliest,
-            latest=latest,
+            origin_earliest=origin_earliest,
+            origin_latest=origin_latest,
+            destination_earliest=destination_earliest,
+            destination_latest=destination_latest,
             load_time=load_time,
             capacity=capacity,
         )

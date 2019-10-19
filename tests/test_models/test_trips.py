@@ -17,16 +17,16 @@ class TestTrips(unittest.TestCase):
         distance = origin.distance_to(destination)
         duration = origin.time_to(destination, earliest)
 
-        trip = jit.Trip(identifier=identifier, origin=origin, destination=destination, earliest=earliest)
+        trip = jit.Trip(identifier=identifier, origin=origin, destination=destination, origin_earliest=earliest)
 
         self.assertEqual(origin, trip.origin)
         self.assertEqual(destination, trip.destination)
-        self.assertEqual(earliest, trip.earliest)
-        self.assertEqual(trip.latest, jit.MAX_FLOAT)
+        self.assertEqual(earliest, trip.origin_earliest)
+        self.assertEqual(trip.origin_latest, jit.MAX_FLOAT)
         self.assertEqual(0, trip.load_time)
         self.assertEqual(1, trip.capacity)
         self.assertEqual(distance, trip.distance)
-        self.assertEqual(duration, trip.duration(trip.earliest))
+        self.assertEqual(duration, trip.duration(trip.origin_earliest))
 
     def test_trip_with_capacity(self):
         identifier = str()
@@ -37,17 +37,17 @@ class TestTrips(unittest.TestCase):
         distance = origin.distance_to(destination)
         duration = origin.time_to(destination, earliest)
 
-        trip = jit.Trip(identifier=identifier, origin=origin, destination=destination, earliest=earliest,
+        trip = jit.Trip(identifier=identifier, origin=origin, destination=destination, origin_earliest=earliest,
                         capacity=capacity)
 
         self.assertEqual(origin, trip.origin)
         self.assertEqual(destination, trip.destination)
-        self.assertEqual(earliest, trip.earliest)
-        self.assertEqual(trip.latest, jit.MAX_FLOAT)
+        self.assertEqual(earliest, trip.origin_earliest)
+        self.assertEqual(trip.origin_latest, jit.MAX_FLOAT)
         self.assertEqual(0, trip.load_time)
         self.assertEqual(capacity, trip.capacity)
         self.assertEqual(distance, trip.distance)
-        self.assertEqual(duration, trip.duration(trip.earliest))
+        self.assertEqual(duration, trip.duration(trip.origin_earliest))
 
     def test_trip_with_timeout(self):
         identifier = str()
@@ -58,17 +58,17 @@ class TestTrips(unittest.TestCase):
         distance = origin.distance_to(destination)
         duration = origin.time_to(destination, earliest)
 
-        trip = jit.Trip(identifier=identifier, origin=origin, destination=destination, earliest=earliest,
-                        latest=earliest + timeout)
+        trip = jit.Trip(identifier=identifier, origin=origin, destination=destination, origin_earliest=earliest,
+                        origin_latest=earliest + timeout)
 
         self.assertEqual(origin, trip.origin)
         self.assertEqual(destination, trip.destination)
-        self.assertEqual(earliest, trip.earliest)
-        self.assertEqual(earliest + timeout, trip.latest)
+        self.assertEqual(earliest, trip.origin_earliest)
+        self.assertEqual(earliest + timeout, trip.origin_latest)
         self.assertEqual(0, trip.load_time)
         self.assertEqual(1, trip.capacity)
         self.assertEqual(distance, trip.distance)
-        self.assertEqual(duration, trip.duration(trip.earliest))
+        self.assertEqual(duration, trip.duration(trip.origin_earliest))
 
     def test_trip_with_load_time(self):
         identifier = str()
@@ -79,17 +79,17 @@ class TestTrips(unittest.TestCase):
         distance = origin.distance_to(destination)
         duration = origin.time_to(destination, earliest)
 
-        trip = jit.Trip(identifier=identifier, origin=origin, destination=destination, earliest=earliest,
+        trip = jit.Trip(identifier=identifier, origin=origin, destination=destination, origin_earliest=earliest,
                         load_time=load_time)
 
         self.assertEqual(origin, trip.origin)
         self.assertEqual(destination, trip.destination)
-        self.assertEqual(trip.latest, jit.MAX_FLOAT)
+        self.assertEqual(trip.origin_latest, jit.MAX_FLOAT)
         self.assertEqual(load_time, trip.load_time)
         self.assertEqual(1, trip.capacity)
-        self.assertEqual(earliest, trip.earliest)
+        self.assertEqual(earliest, trip.origin_earliest)
         self.assertEqual(distance, trip.distance)
-        self.assertEqual(duration, trip.duration(trip.earliest))
+        self.assertEqual(duration, trip.duration(trip.origin_earliest))
 
 
 if __name__ == '__main__':
