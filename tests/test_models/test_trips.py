@@ -17,10 +17,10 @@ class TestTrips(unittest.TestCase):
         distance = origin.distance_to(destination)
         duration = origin.time_to(destination, earliest)
 
-        trip = jit.Trip(identifier=identifier, origin=origin, destination=destination, origin_earliest=earliest)
+        trip = jit.Trip(identifier=identifier, origin_position=origin, destination_position=destination, origin_earliest=earliest)
 
-        self.assertEqual(origin, trip.origin)
-        self.assertEqual(destination, trip.destination)
+        self.assertEqual(origin, trip.origin_position)
+        self.assertEqual(destination, trip.destination_position)
         self.assertEqual(earliest, trip.origin_earliest)
         self.assertEqual(trip.origin_latest, jit.MAX_FLOAT)
         self.assertEqual(0, trip.origin_duration)
@@ -37,11 +37,11 @@ class TestTrips(unittest.TestCase):
         distance = origin.distance_to(destination)
         duration = origin.time_to(destination, earliest)
 
-        trip = jit.Trip(identifier=identifier, origin=origin, destination=destination, origin_earliest=earliest,
+        trip = jit.Trip(identifier=identifier, origin_position=origin, destination_position=destination, origin_earliest=earliest,
                         capacity=capacity)
 
-        self.assertEqual(origin, trip.origin)
-        self.assertEqual(destination, trip.destination)
+        self.assertEqual(origin, trip.origin_position)
+        self.assertEqual(destination, trip.destination_position)
         self.assertEqual(earliest, trip.origin_earliest)
         self.assertEqual(trip.origin_latest, jit.MAX_FLOAT)
         self.assertEqual(0, trip.origin_duration)
@@ -58,11 +58,11 @@ class TestTrips(unittest.TestCase):
         distance = origin.distance_to(destination)
         duration = origin.time_to(destination, earliest)
 
-        trip = jit.Trip(identifier=identifier, origin=origin, destination=destination, origin_earliest=earliest,
+        trip = jit.Trip(identifier=identifier, origin_position=origin, destination_position=destination, origin_earliest=earliest,
                         origin_latest=earliest + timeout)
 
-        self.assertEqual(origin, trip.origin)
-        self.assertEqual(destination, trip.destination)
+        self.assertEqual(origin, trip.origin_position)
+        self.assertEqual(destination, trip.destination_position)
         self.assertEqual(earliest, trip.origin_earliest)
         self.assertEqual(earliest + timeout, trip.origin_latest)
         self.assertEqual(0, trip.origin_duration)
@@ -79,11 +79,11 @@ class TestTrips(unittest.TestCase):
         distance = origin.distance_to(destination)
         duration = origin.time_to(destination, earliest)
 
-        trip = jit.Trip(identifier=identifier, origin=origin, destination=destination, origin_earliest=earliest,
+        trip = jit.Trip(identifier=identifier, origin_position=origin, destination_position=destination, origin_earliest=earliest,
                         origin_duration=load_time)
 
-        self.assertEqual(origin, trip.origin)
-        self.assertEqual(destination, trip.destination)
+        self.assertEqual(origin, trip.origin_position)
+        self.assertEqual(destination, trip.destination_position)
         self.assertEqual(trip.origin_latest, jit.MAX_FLOAT)
         self.assertEqual(load_time, trip.origin_duration)
         self.assertEqual(1, trip.capacity)

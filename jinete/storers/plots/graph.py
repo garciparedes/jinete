@@ -26,10 +26,10 @@ class GraphPlotStorer(Storer):
     def _generate_nodes(self, edges: Dict[Tuple[Position, Position], Dict[str, Any]]) -> Dict[Position, Dict[str, Any]]:
         nodes: Dict[Position, Dict[str, Any]] = dict()
         for trip in self.trips:
-            nodes[trip.origin] = {
+            nodes[trip.origin_position] = {
                 'label': f'+{trip.identifier}',
             }
-            nodes[trip.destination] = {
+            nodes[trip.destination_position] = {
                 'label': f'-{trip.identifier}',
             }
         for position_pair in edges.keys():

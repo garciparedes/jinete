@@ -86,11 +86,11 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
 
         trip = Trip(
             identifier=identifier,
-            origin=origin,
+            origin_position=origin,
             origin_earliest=origin_earliest,
             origin_latest=origin_latest,
             origin_duration=origin_duration,
-            destination=destination,
+            destination_position=destination,
             destination_earliest=destination_earliest,
             destination_latest=destination_latest,
             destination_duration=destination_duration,

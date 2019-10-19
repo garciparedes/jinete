@@ -24,11 +24,11 @@ logger = logging.getLogger(__name__)
 class Trip(object):
     __slots__ = (
         'identifier',
-        'origin',
+        'origin_position',
         'origin_earliest',
         'origin_latest',
         'origin_duration',
-        'destination',
+        'destination_position',
         'destination_earliest',
         'destination_latest',
         'destination_duration',
@@ -36,25 +36,25 @@ class Trip(object):
         'capacity',
     )
     identifier: str
-    origin: Position
-    destination: Position
+    origin_position: Position
+    destination_position: Position
     origin_earliest: float
     timeout: Optional[float]
     on_time_bonus: float
     origin_duration: float
     capacity: float
 
-    def __init__(self, identifier: str, origin: Position, destination: Position, origin_earliest: float = 0.0,
-                 origin_latest: float = MAX_FLOAT, on_time_bonus: float = 0.0, origin_duration: float = 0.0,
-                 capacity: float = 1, destination_earliest: float = 0.0, destination_latest: float = MAX_FLOAT,
-                 destination_duration: float = 0.0):
+    def __init__(self, identifier: str, origin_position: Position, destination_position: Position,
+                 origin_earliest: float = 0.0, origin_latest: float = MAX_FLOAT, on_time_bonus: float = 0.0,
+                 origin_duration: float = 0.0, capacity: float = 1, destination_earliest: float = 0.0,
+                 destination_latest: float = MAX_FLOAT, destination_duration: float = 0.0):
         self.identifier = identifier
-        self.origin = origin
+        self.origin_position = origin_position
         self.origin_earliest = origin_earliest
         self.origin_latest = origin_latest
         self.origin_duration = origin_duration
 
-        self.destination = destination
+        self.destination_position = destination_position
         self.destination_earliest = destination_earliest
         self.destination_latest = destination_latest
         self.destination_duration = destination_duration
@@ -68,10 +68,10 @@ class Trip(object):
 
     @property
     def distance(self) -> float:
-        return self.origin.distance_to(self.destination)
+        return self.origin_position.distance_to(self.destination_position)
 
     def duration(self, now: float):
-        return self.origin.time_to(self.destination, now)
+        return self.origin_position.time_to(self.destination_position, now)
 
     def __deepcopy__(self, memo: Dict[int, Any]) -> Trip:
         return self

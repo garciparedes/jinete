@@ -85,11 +85,11 @@ class PlannedTrip(Model):
 
     @property
     def origin(self) -> Position:
-        return self.trip.origin
+        return self.trip.origin_position
 
     @property
     def destination(self) -> Position:
-        return self.trip.destination
+        return self.trip.destination_position
 
     @property
     def distance(self) -> float:
@@ -132,7 +132,7 @@ class PlannedTrip(Model):
         if not self.trip.destination_earliest <= self.delivery_time <= self.trip.destination_latest:
             return False
 
-        time_to_return = self.trip.destination.time_to(self.vehicle.final, self.delivery_time)
+        time_to_return = self.trip.destination_position.time_to(self.vehicle.final, self.delivery_time)
         vehicle_finish_time = self.delivery_time + time_to_return
         if not vehicle_finish_time <= self.vehicle.latest:
             return False

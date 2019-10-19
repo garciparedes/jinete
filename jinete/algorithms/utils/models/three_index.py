@@ -131,8 +131,8 @@ class ThreeIndexModel(Model):
 
     def _build_positions(self):
 
-        origins = tuple(trip.origin for trip in self.trips)
-        destinations = tuple(trip.destination for trip in self.trips)
+        origins = tuple(trip.origin_position for trip in self.trips)
+        destinations = tuple(trip.destination_position for trip in self.trips)
         positions = (self.vehicles[0].initial,) + origins + destinations + (self.vehicles[0].final,)
 
         return positions
@@ -252,9 +252,9 @@ class ThreeIndexModel(Model):
         trip = self.trip_by_position_idx(idx)
         if trip is None:
             earliest, latest = 0, 1440
-        elif position == trip.origin:
+        elif position == trip.origin_position:
             earliest, latest = trip.origin_earliest, trip.origin_latest
-        elif position == trip.destination:
+        elif position == trip.destination_position:
             earliest, latest = trip.destination_earliest, trip.destination_latest
         else:
             raise Exception(f'There was a problem related with earliest, latest indices.')
@@ -464,7 +464,7 @@ class ThreeIndexModel(Model):
     def _positions_to_trips(self, positions) -> List[Trip]:
         trips: List[Trip] = list()
         for position in positions:
-            trip = next((trip for trip in self.trips if trip.origin == position), None)
+            trip = next((trip for trip in self.trips if trip.origin_position == position), None)
             if trip is None:
                 continue
             if trip in trips:
@@ -477,8 +477,8 @@ class ThreeIndexModel(Model):
 
         planned_trips = list()
         for trip in trips:
-            pickup = stop_mapper[trip.origin].pop(0)
-            delivery = stop_mapper[trip.destination].pop(0)
+            pickup = stop_mapper[trip.origin_position].pop(0)
+            delivery = stop_mapper[trip.destination_position].pop(0)
 
             planned_trip = PlannedTrip(route, trip, pickup, delivery)
             planned_trips.append(planned_trip)

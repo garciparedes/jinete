@@ -82,10 +82,10 @@ class TestCordeauLaporteLoaderFormatter(unittest.TestCase):
             self.assertEqual(destination_earliest, trip.destination_earliest)
             self.assertEqual(destination_latest, trip.destination_latest)
 
-            self.assertIsInstance(trip.origin, jit.GeometricPosition)
-            self.assertEqual(origin_row[1:3], trip.origin.coordinates)
-            self.assertIsInstance(trip.destination, jit.GeometricPosition)
-            self.assertEqual(destination_row[1:3], trip.destination.coordinates)
+            self.assertIsInstance(trip.origin_position, jit.GeometricPosition)
+            self.assertEqual(origin_row[1:3], trip.origin_position.coordinates)
+            self.assertIsInstance(trip.destination_position, jit.GeometricPosition)
+            self.assertEqual(destination_row[1:3], trip.destination_position.coordinates)
 
 
 if __name__ == '__main__':

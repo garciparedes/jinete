@@ -32,8 +32,8 @@ class TestLongestTimePlannedTripCriterion(unittest.TestCase):
                 route=route,
                 trip=jit.Trip(
                     identifier='TEST_1',
-                    origin=surface.get_or_create_position([0, 0]),
-                    destination=surface.get_or_create_position([1, 1]),
+                    origin_position=surface.get_or_create_position([0, 0]),
+                    destination_position=surface.get_or_create_position([1, 1]),
                     origin_earliest=0.0,
                     origin_latest=10.0,
                 ),
@@ -44,8 +44,8 @@ class TestLongestTimePlannedTripCriterion(unittest.TestCase):
                 route=route,
                 trip=jit.Trip(
                     identifier='TEST_1',
-                    origin=surface.get_or_create_position([0, 0]),
-                    destination=surface.get_or_create_position([10, 10]),
+                    origin_position=surface.get_or_create_position([0, 0]),
+                    destination_position=surface.get_or_create_position([10, 10]),
                     origin_earliest=0.0,
                     origin_latest=20.0,
                 ),

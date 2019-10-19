@@ -91,7 +91,7 @@ class LongestUtilTimePlannedTripCriterion(PlannedTripCriterion):
         if not planned_trip.feasible:
             return MIN_FLOAT
 
-        return planned_trip.duration - planned_trip.trip.origin.distance_to(planned_trip.route.last_position)
+        return planned_trip.duration - planned_trip.trip.origin_position.distance_to(planned_trip.route.last_position)
 
 
 class HashCodePlannedTripCriterion(PlannedTripCriterion):
