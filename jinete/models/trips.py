@@ -33,7 +33,6 @@ class Trip(object):
         'destination_latest',
         'destination_duration',
         'on_time_bonus',
-        'load_capacity',
         'capacity',
     )
     identifier: str
