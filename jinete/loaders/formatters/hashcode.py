@@ -9,6 +9,7 @@ from ...models import (
     Vehicle,
     Trip,
     HashCodeObjective,
+    Service,
 )
 from .abc import (
     LoaderFormatter,
@@ -42,9 +43,15 @@ class HashCodeLoaderFormatter(LoaderFormatter):
 
     def _build_trip(self, surface: Surface, identifier: str, bonus: float, x1: float, y1: float, x2: float, y2: float,
                     earliest: float, latest: float) -> Trip:
-        origin = surface.get_or_create_position([x1, y1])
-        destination = surface.get_or_create_position([x2, y2])
-        trip = Trip(identifier, origin, destination, earliest, latest, bonus)
+        origin = Service(
+            position=surface.get_or_create_position([x1, y1]),
+            earliest=earliest,
+            latest=latest,
+        )
+        destination = Service(
+            position=surface.get_or_create_position([x2, y2]),
+        )
+        trip = Trip(identifier, on_time_bonus=bonus, origin=origin, destination=destination)
         logger.debug(f'Created trip!')
         return trip
 

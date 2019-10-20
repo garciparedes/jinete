@@ -5,9 +5,7 @@ from typing import (
     TYPE_CHECKING,
     Optional,
 )
-from .constants import (
-    MAX_FLOAT,
-)
+
 from .services import (
     Service,
 )
@@ -41,23 +39,11 @@ class Trip(object):
     origin_duration: float
     capacity: float
 
-    def __init__(self, identifier: str, origin_position: Position, destination_position: Position,
-                 origin_earliest: float = 0.0, origin_latest: float = MAX_FLOAT, on_time_bonus: float = 0.0,
-                 origin_duration: float = 0.0, capacity: float = 1, destination_earliest: float = 0.0,
-                 destination_latest: float = MAX_FLOAT, destination_duration: float = 0.0):
+    def __init__(self, identifier: str, origin: Service, destination: Service, capacity: float = 1,
+                 on_time_bonus: float = 0.0):
         self.identifier = identifier
-        self.origin = Service(
-            position=origin_position,
-            earliest=origin_earliest,
-            latest=origin_latest,
-            duration=origin_duration,
-        )
-        self.destination = Service(
-            position=destination_position,
-            earliest=destination_earliest,
-            latest=destination_latest,
-            duration=destination_duration,
-        )
+        self.origin = origin
+        self.destination = destination
         self.on_time_bonus = on_time_bonus
         self.capacity = capacity
 

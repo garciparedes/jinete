@@ -11,6 +11,7 @@ from ...models import (
     Job,
     Trip,
     DialARideObjective,
+    Service,
 )
 from .abc import (
     LoaderFormatter,
@@ -69,15 +70,20 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
     def build_trip(self, surface: Surface, idx: int, n: int) -> Trip:
         origin_idx = idx + 2
         origin_row = self.data[origin_idx]
-        origin = surface.get_or_create_position(origin_row[1:3])
-        origin_earliest, origin_latest = origin_row[5:7]
-        origin_duration = origin_row[3]
+        origin = Service(
+            position=surface.get_or_create_position(origin_row[1:3]),
+            earliest=origin_row[5],
+            latest=origin_row[6],
+            duration=origin_row[3],
+        )
 
-        destination_idx = origin_idx + n
-        destination_row = self.data[destination_idx]
-        destination = surface.get_or_create_position(destination_row[1:3])
-        destination_earliest, destination_latest = destination_row[5:7]
-        destination_duration = destination_row[3]
+        destination_row = self.data[origin_idx + n]
+        destination = Service(
+            position=surface.get_or_create_position(destination_row[1:3]),
+            earliest=destination_row[5],
+            latest=destination_row[6],
+            duration=destination_row[3],
+        )
 
         identifier = f'{idx + 1:.0f}'
 
@@ -86,14 +92,8 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
 
         trip = Trip(
             identifier=identifier,
-            origin_position=origin,
-            origin_earliest=origin_earliest,
-            origin_latest=origin_latest,
-            origin_duration=origin_duration,
-            destination_position=destination,
-            destination_earliest=destination_earliest,
-            destination_latest=destination_latest,
-            destination_duration=destination_duration,
+            origin=origin,
+            destination=destination,
             capacity=capacity,
         )
         return trip

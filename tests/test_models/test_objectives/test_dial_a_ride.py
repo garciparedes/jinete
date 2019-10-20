@@ -23,16 +23,25 @@ class TestDialARideObjective(unittest.TestCase):
         trips = [
             jit.Trip(
                 identifier='TEST_1',
-                origin_position=surface.get_or_create_position([0, 0]),
-                destination_position=surface.get_or_create_position([1, 1]),
-                origin_earliest=0.0,
-                origin_latest=10.0,
-            ), jit.Trip(
+                origin=jit.Service(
+                    position=surface.get_or_create_position([0, 0]),
+                    earliest=0.0,
+                    latest=10.0,
+                ),
+                destination=jit.Service(
+                    position=surface.get_or_create_position([1, 1]),
+                ),
+            ),
+            jit.Trip(
                 identifier='TEST_1',
-                origin_position=surface.get_or_create_position([1, 1]),
-                destination_position=surface.get_or_create_position([10, 10]),
-                origin_earliest=0.0,
-                origin_latest=20.0,
+                origin=jit.Service(
+                    position=surface.get_or_create_position([1, 1]),
+                    earliest=0.0,
+                    latest=20.0,
+                ),
+                destination=jit.Service(
+                    position=surface.get_or_create_position([10, 10]),
+                ),
             ),
         ]
         job = jit.Job(set(trips), jit.DialARideObjective)

@@ -51,3 +51,9 @@ class Service(Model):
             'latest': self.latest,
             'duration': self.duration,
         }
+
+    def distance_to(self, other: Service) -> float:
+        return self.position.distance_to(other.position)
+
+    def time_to(self, other: Service, *args, **kwargs) -> float:
+        return self.position.time_to(other.position, *args, **kwargs)
