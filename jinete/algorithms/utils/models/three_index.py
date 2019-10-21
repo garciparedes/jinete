@@ -127,8 +127,8 @@ class ThreeIndexModel(Model):
     @property
     @lru_cache()
     def positions(self) -> Tuple[Position, ...]:
-        origins = tuple(trip.origin for trip in self.trips)
-        destinations = tuple(trip.destination for trip in self.trips)
+        origins = tuple(trip.origin_position for trip in self.trips)
+        destinations = tuple(trip.destination_position for trip in self.trips)
         positions = (self.vehicles[0].initial,) + origins + destinations + (self.vehicles[0].final,)
 
         return positions
