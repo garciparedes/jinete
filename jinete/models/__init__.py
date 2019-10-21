@@ -18,6 +18,9 @@ from .planned_trips import (
 from .stops import (
     Stop,
 )
+from .services import (
+    Service,
+)
 from .criterions import (
     PlannedTripCriterion,
     ShortestTimePlannedTripCriterion,

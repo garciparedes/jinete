@@ -11,9 +11,7 @@ from ...models import (
     Job,
     Trip,
     DialARideObjective,
-)
-from .exceptions import (
-    LoaderFormatterException,
+    Service,
 )
 from .abc import (
     LoaderFormatter,
@@ -71,39 +69,31 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
 
     def build_trip(self, surface: Surface, idx: int, n: int) -> Trip:
         origin_idx = idx + 2
-        destination_idx = origin_idx + n
-
         origin_row = self.data[origin_idx]
-        destination_row = self.data[destination_idx]
+        origin = Service(
+            position=surface.get_or_create_position(origin_row[1:3]),
+            earliest=origin_row[5],
+            latest=origin_row[6],
+            duration=origin_row[3],
+        )
 
-        origin = surface.get_or_create_position(origin_row[1:3])
-        destination = surface.get_or_create_position(destination_row[1:3])
-        load_time = origin_row[3]
+        destination_row = self.data[origin_idx + n]
+        destination = Service(
+            position=surface.get_or_create_position(destination_row[1:3]),
+            earliest=destination_row[5],
+            latest=destination_row[6],
+            duration=destination_row[3],
+        )
+
+        identifier = f'{idx + 1:.0f}'
+
+        assert origin_row[4] == -destination_row[4]
         capacity = origin_row[4]
-
-        e1, l1 = origin_row[5:7]
-        e2, l2 = destination_row[5:7]
-
-        if e1 == 0 and l1 == 1440:
-            earliest, latest = e2, l2
-            inbound = False
-        elif e2 == 0 and l2 == 1440:
-            earliest, latest = e1, l1
-            inbound = True
-        else:
-            raise LoaderFormatterException('It is not possible to distinguish between inbound and outbound task.')
-
-        identifier = f'{origin_row[0]:.0f}'
-        timeout = latest - earliest
 
         trip = Trip(
             identifier=identifier,
             origin=origin,
             destination=destination,
-            inbound=inbound,
-            earliest=earliest,
-            timeout=timeout,
-            load_time=load_time,
             capacity=capacity,
         )
         return trip

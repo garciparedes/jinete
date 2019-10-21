@@ -9,6 +9,7 @@ from .models import (
     Surface,
     GeometricSurface,
     DistanceMetric,
+    Service,
     Trip,
     Job,
     Vehicle,

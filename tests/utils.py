@@ -63,7 +63,20 @@ def generate_one_trip(identifier: str = None,
         capacity = randint(capacity_min, capacity_max)
     if load_time is None:
         load_time = uniform(load_time_min, load_time_max)
-    return jit.Trip(identifier, origin, destination, earliest, timeout, load_time, capacity)
+
+    return jit.Trip(
+        identifier,
+        origin=jit.Service(
+            position=origin,
+            earliest=earliest,
+            latest=earliest + timeout,
+            duration=load_time,
+        ),
+        destination=jit.Service(
+            position=destination,
+        ),
+        capacity=capacity,
+    )
 
 
 def generate_trips(n: int, *args, **kwargs) -> Set[jit.Trip]:
@@ -111,8 +124,8 @@ def generate_one_planned_trip(feasible: bool, route: jit.Route = None, *args, **
 
     trip = generate_one_trip(*args, **kwargs)
 
-    pickup_stop = jit.Stop(route, trip.origin, route.last_stop)
-    delivery_stop = jit.Stop(route, trip.destination, pickup_stop)
+    pickup_stop = jit.Stop(route, trip.origin_position, route.last_stop)
+    delivery_stop = jit.Stop(route, trip.destination_position, pickup_stop)
 
     return jit.PlannedTrip(
         route=route,

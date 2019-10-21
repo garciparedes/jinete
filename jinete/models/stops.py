@@ -115,7 +115,7 @@ class Stop(Model):
             if not any(self.pickups):
                 self._earliest = 0.0
             else:
-                self._earliest = max((pt.trip.earliest for pt in self.pickups))
+                self._earliest = max((pt.trip.origin_earliest for pt in self.pickups))
         return self._earliest
 
     @property
@@ -124,7 +124,7 @@ class Stop(Model):
             if not any(self.pickups):
                 self._load_time = 0.0
             else:
-                self._load_time = max((pt.trip.load_time for pt in self.planned_trips))
+                self._load_time = max((pt.trip.origin_duration for pt in self.planned_trips))
         return self._load_time
 
     @property

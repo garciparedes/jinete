@@ -34,10 +34,14 @@ class TestShortestTimePlannedTripCriterion(unittest.TestCase):
                 route=route,
                 trip=jit.Trip(
                     identifier='TEST_1',
-                    origin=surface.get_or_create_position([0, 0]),
-                    destination=surface.get_or_create_position([1, 1]),
-                    earliest=0.0,
-                    timeout=10.0,
+                    origin=jit.Service(
+                        position=surface.get_or_create_position([0, 0]),
+                        earliest=0.0,
+                        latest=10.0,
+                    ),
+                    destination=jit.Service(
+                        position=surface.get_or_create_position([1, 1]),
+                    ),
                 ),
                 pickup=pickup_stop_1,
                 delivery=delivery_stop_1,
@@ -46,10 +50,14 @@ class TestShortestTimePlannedTripCriterion(unittest.TestCase):
                 route=route,
                 trip=jit.Trip(
                     identifier='TEST_1',
-                    origin=surface.get_or_create_position([0, 0]),
-                    destination=surface.get_or_create_position([10, 10]),
-                    earliest=0.0,
-                    timeout=20.0,
+                    origin=jit.Service(
+                        position=surface.get_or_create_position([0, 0]),
+                        earliest=0.0,
+                        latest=20.0,
+                    ),
+                    destination=jit.Service(
+                        position=surface.get_or_create_position([10, 10]),
+                    ),
                 ),
                 pickup=pickup_stop_2,
                 delivery=delivery_stop_2,

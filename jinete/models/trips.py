@@ -5,8 +5,9 @@ from typing import (
     TYPE_CHECKING,
     Optional,
 )
-from .constants import (
-    MAX_FLOAT,
+
+from .services import (
+    Service,
 )
 
 if TYPE_CHECKING:
@@ -26,41 +27,57 @@ class Trip(object):
         'identifier',
         'origin',
         'destination',
-        'earliest',
-        'timeout',
         'on_time_bonus',
-        'load_capacity',
-        'load_time',
-        'inbound',
         'capacity',
     )
     identifier: str
-    origin: Position
-    destination: Position
-    earliest: float
+    origin_position: Position
+    destination_position: Position
+    origin_earliest: float
     timeout: Optional[float]
     on_time_bonus: float
-    load_time: float
+    origin_duration: float
     capacity: float
 
-    def __init__(self, identifier: str, origin: Position, destination: Position, earliest: float = 0.0,
-                 timeout: Optional[float] = None, on_time_bonus: float = 0.0, load_time: float = 0.0,
-                 inbound: bool = True, capacity: float = 1):
+    def __init__(self, identifier: str, origin: Service, destination: Service, capacity: float = 1,
+                 on_time_bonus: float = 0.0):
         self.identifier = identifier
         self.origin = origin
         self.destination = destination
-        self.earliest = earliest
-        self.timeout = timeout
         self.on_time_bonus = on_time_bonus
-        self.load_time = load_time
-        self.inbound = inbound
         self.capacity = capacity
 
     @property
-    def latest(self) -> float:
-        if self.timeout is None:
-            return MAX_FLOAT
-        return self.earliest + self.timeout
+    def origin_position(self) -> Position:
+        return self.origin.position
+
+    @property
+    def origin_earliest(self) -> float:
+        return self.origin.earliest
+
+    @property
+    def origin_latest(self) -> float:
+        return self.origin.latest
+
+    @property
+    def origin_duration(self) -> float:
+        return self.origin.duration
+
+    @property
+    def destination_position(self) -> Position:
+        return self.destination.position
+
+    @property
+    def destination_earliest(self) -> float:
+        return self.destination.earliest
+
+    @property
+    def destination_latest(self) -> float:
+        return self.destination.latest
+
+    @property
+    def destination_duration(self) -> float:
+        return self.destination.duration
 
     @property
     def empty(self) -> bool:
@@ -68,10 +85,10 @@ class Trip(object):
 
     @property
     def distance(self) -> float:
-        return self.origin.distance_to(self.destination)
+        return self.origin_position.distance_to(self.destination_position)
 
     def duration(self, now: float):
-        return self.origin.time_to(self.destination, now)
+        return self.origin_position.time_to(self.destination_position, now)
 
     def __deepcopy__(self, memo: Dict[int, Any]) -> Trip:
         return self

@@ -186,8 +186,8 @@ class Route(Model):
         }
 
     def conjecture_trip(self, trip: Trip) -> PlannedTrip:
-        pickup = Stop(self, trip.origin, self.last_stop)
-        delivery = Stop(self, trip.destination, pickup)
+        pickup = Stop(self, trip.origin_position, self.last_stop)
+        delivery = Stop(self, trip.destination_position, pickup)
         planned_trip = PlannedTrip(route=self, trip=trip, pickup=pickup, delivery=delivery)
         return planned_trip
 
