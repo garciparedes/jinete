@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 from collections import defaultdict
+from functools import lru_cache
 from itertools import product
 from operator import itemgetter
 from typing import (
@@ -40,123 +41,43 @@ BIG = 10000
 
 
 class ThreeIndexModel(Model):
-    _x: Optional[List[List[List[lp.LpVariable]]]]
-    _r: Optional[List[List[lp.LpVariable]]]
-    _u: Optional[List[List[lp.LpVariable]]]
-    _w: Optional[List[List[lp.LpVariable]]]
-    _objective: Optional[lp.LpConstraintVar]
-    _constraints: Optional[List[lp.LpConstraint]]
-    _trips: Optional[Tuple[Trip, ...]]
-    _vehicles: Optional[Tuple[Vehicle, ...]]
 
     def __init__(self, solver: lp.LpSolver = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.solver = solver
 
-        self._trips = None
-        self._vehicles = None
-
-        self._problem = None
-
-        self._x = None
-        self._u = None
-        self._w = None
-        self._r = None
-
-        self._objective = None
-        self._constraints = None
-
-        self._positions = None
-        self._costs = None
-
     @property
+    @lru_cache()
     def problem(self) -> lp.LpProblem:
-        if self._problem is None:
-            self._problem = self._build_problem()
-        return self._problem
+        problem = lp.LpProblem("3-idx_dial-a-ride", lp.LpMinimize)
+        problem.objective = self.objective
+        problem.extend(self.constraints)
+        return problem
 
     @property
+    @lru_cache()
     def objective(self) -> Optional[lp.LpConstraintVar]:
-        if self._objective is None:
-            self._objective = self._build_objective()
-        return self._objective
+        return lp.lpSum(
+            self.x[k][i][j] * self.costs[i][j]
+            for k, i, j in product(self.routes_indexer, self.positions_indexer, self.positions_indexer)
+        )
 
     @property
+    @lru_cache()
     def constraints(self) -> List[lp.LpConstraint]:
-        if self._constraints is None:
-            self._constraints = self._build_constraints()
-        return self._constraints
+        constraints: List[lp.LpConstraint] = sum([
+            self.uniqueness_constraints,
+            self.connectivity_constraints,
+            self.time_constraints,
+            self.feasibility_constraints,
+        ], [])
+
+        logger.info(f'Built "{len(constraints)}" constraints.')
+        return constraints
 
     @property
+    @lru_cache()
     def x(self) -> List[List[List[lp.LpVariable]]]:
-        if self._x is None:
-            self._x = self._build_x_variables()
-        return self._x
-
-    @property
-    def r(self) -> List[List[lp.LpVariable]]:
-        if self._r is None:
-            self._r = self._build_r_variables()
-        return self._r
-
-    @property
-    def u(self) -> List[List[lp.LpVariable]]:
-        if self._u is None:
-            self._u = self._build_u_variables()
-        return self._u
-
-    @property
-    def w(self) -> List[List[lp.LpVariable]]:
-        if self._w is None:
-            self._w = self._build_w_variables()
-        return self._w
-
-    @property
-    def vehicles(self) -> Tuple[Vehicle, ...]:
-        if self._vehicles is None:
-            self._vehicles = tuple(self.fleet.vehicles)
-        return self._vehicles
-
-    @property
-    def trips(self) -> Tuple[Trip, ...]:
-        if self._trips is None:
-            self._trips = tuple(self.job.trips)
-        return self._trips
-
-    @property
-    def positions(self):
-        if self._positions is None:
-            self._positions = self._build_positions()
-        return self._positions
-
-    def _build_positions(self):
-
-        origins = tuple(trip.origin_position for trip in self.trips)
-        destinations = tuple(trip.destination_position for trip in self.trips)
-        positions = (self.vehicles[0].initial,) + origins + destinations + (self.vehicles[0].final,)
-
-        return positions
-
-    @property
-    def costs(self):
-        if self._costs is None:
-            self._costs = self._build_costs()
-        return self._costs
-
-    def _build_costs(self):
-        costs = list()
-        for origin in self.positions:
-            origin_costs = list()
-            for destination in self.positions:
-                if origin == destination:
-                    cost = BIG
-                else:
-                    cost = origin.distance_to(destination)
-                origin_costs.append(cost)
-            costs.append(origin_costs)
-        return costs
-
-    def _build_x_variables(self) -> List[List[List[lp.LpVariable]]]:
         x = list()
         for k in self.routes_indexer:
             x_k = list()
@@ -169,7 +90,9 @@ class ThreeIndexModel(Model):
             x.append(x_k)
         return x
 
-    def _build_u_variables(self) -> List[List[lp.LpVariable]]:
+    @property
+    @lru_cache()
+    def u(self) -> List[List[lp.LpVariable]]:
         u = list()
         for k in self.routes_indexer:
             u_k = list()
@@ -179,7 +102,9 @@ class ThreeIndexModel(Model):
             u.append(u_k)
         return u
 
-    def _build_w_variables(self) -> List[List[lp.LpVariable]]:
+    @property
+    @lru_cache()
+    def w(self) -> List[List[lp.LpVariable]]:
         w = list()
         for k in self.routes_indexer:
             w_k = list()
@@ -189,38 +114,39 @@ class ThreeIndexModel(Model):
             w.append(w_k)
         return w
 
-    def _build_r_variables(self) -> List[List[lp.LpVariable]]:
-        r = list()
-        for k in self.routes_indexer:
-            r_k = list()
-            for i in self.pickups_indexer:
-                r_ki = lp.LpVariable(f'r{k}_{i}', lowBound=0.0)
-                r_k.append(r_ki)
-            r.append(r_k)
-        return r
+    @property
+    @lru_cache()
+    def vehicles(self) -> Tuple[Vehicle, ...]:
+        return tuple(self.fleet.vehicles)
 
-    def _build_objective(self) -> lp.LpConstraintVar:
-        return lp.lpSum(
-            self.x[k][i][j] * self.costs[i][j]
-            for k, i, j in product(self.routes_indexer, self.positions_indexer, self.positions_indexer)
-        )
+    @property
+    @lru_cache()
+    def trips(self) -> Tuple[Trip, ...]:
+        return tuple(self.job.trips)
 
-    def _build_constraints(self) -> List[lp.LpConstraint]:
-        constraints: List[lp.LpConstraint] = sum([
-            self._build_uniqueness_constraints(),
-            self._build_connectivity_constraints(),
-            self._build_time_constraints(),
-            self._build_feasibility_constraints(),
-        ], [])
+    @property
+    @lru_cache()
+    def positions(self) -> Tuple[Position, ...]:
+        origins = tuple(trip.origin for trip in self.trips)
+        destinations = tuple(trip.destination for trip in self.trips)
+        positions = (self.vehicles[0].initial,) + origins + destinations + (self.vehicles[0].final,)
 
-        logger.info(f'Built "{len(constraints)}" constraints.')
-        return constraints
+        return positions
 
-    def _build_problem(self) -> lp.LpProblem:
-        problem = lp.LpProblem("3-idx_dial-a-ride", lp.LpMinimize)
-        problem.objective = self.objective
-        problem.extend(self.constraints)
-        return problem
+    @property
+    @lru_cache()
+    def costs(self):
+        costs = list()
+        for origin in self.positions:
+            origin_costs = list()
+            for destination in self.positions:
+                if origin == destination:
+                    cost = BIG
+                else:
+                    cost = origin.distance_to(destination)
+                origin_costs.append(cost)
+            costs.append(origin_costs)
+        return costs
 
     @property
     def pickups_indexer(self) -> Iterable[int]:
@@ -277,7 +203,9 @@ class ThreeIndexModel(Model):
             return 0
         return trip.origin_duration
 
-    def _build_uniqueness_constraints(self) -> List[lp.LpConstraint]:
+    @property
+    @lru_cache()
+    def uniqueness_constraints(self) -> List[lp.LpConstraint]:
         constraints = list()
 
         for i in self.pickups_indexer:
@@ -296,7 +224,9 @@ class ThreeIndexModel(Model):
 
         return constraints
 
-    def _build_connectivity_constraints(self) -> List[lp.LpConstraint]:
+    @property
+    @lru_cache()
+    def connectivity_constraints(self) -> List[lp.LpConstraint]:
         constraints = list()
 
         for k in self.routes_indexer:
@@ -315,7 +245,9 @@ class ThreeIndexModel(Model):
 
         return constraints
 
-    def _build_time_constraints(self) -> List[lp.LpConstraint]:
+    @property
+    @lru_cache()
+    def time_constraints(self) -> List[lp.LpConstraint]:
         constraints = list()
 
         for k in self.routes_indexer:
@@ -341,15 +273,11 @@ class ThreeIndexModel(Model):
                     self.w[k][j] >= self.w[k][i] + capacity_j - cons * (1 - self.x[k][i][j]),
                 )
 
-            for i in self.pickups_indexer:
-                load_time = self.load_time_by_position_idx(i)
-
-                constraint = self.r[k][i - 1] == self.u[k][i + self.n] - (self.u[k][i] + load_time)
-                constraints.append(constraint)
-
         return constraints
 
-    def _build_feasibility_constraints(self) -> List[lp.LpConstraint]:
+    @property
+    @lru_cache()
+    def feasibility_constraints(self) -> List[lp.LpConstraint]:
         constraints = list()
         for k in self.routes_indexer:
             constraint = self.u[k][-1] - self.u[k][0] <= self.vehicles[k].route_timeout
@@ -364,10 +292,12 @@ class ThreeIndexModel(Model):
                 ])
 
             for i in self.pickups_indexer:
+                load_time = self.load_time_by_position_idx(i)
                 travel_time = self.positions[i].time_to(self.positions[i + self.n])
+
                 constraints.extend([
-                    travel_time <= self.r[k][i - 1],
-                    self.r[k][i - 1] <= self.vehicles[k].trip_timeout,
+                    travel_time <= self.u[k][i + self.n] - (self.u[k][i] + load_time),
+                    self.u[k][i + self.n] - (self.u[k][i] + load_time) <= self.vehicles[k].trip_timeout,
                 ])
 
             for i in self.positions_indexer:
@@ -414,19 +344,8 @@ class ThreeIndexModel(Model):
                 print(f'{self.w[k][i].varValue:4.01f}', end=' ')
             print()
 
-        print('R:')
-        for k in self.routes_indexer:
-            print(f'Vehicle {k}-th.')
-            for i in self.pickups_indexer:
-                print(f'{self.r[k][i - 1].varValue:4.01f}', end=' ')
-            print()
-
     def validate(self):
         for k in self.routes_indexer:
-            for i in self.pickups_indexer:
-                logger.info(f'Obtained "r[{k}][{i - 1}={self.r[k][i - 1].varValue}".')
-                assert self.r[k][i - 1].varValue >= 0.0
-
             for i in self.positions_indexer:
                 logger.info(f'Obtained "u[{k}][{i}]={self.u[k][i].varValue}".')
                 assert self.u[k][i].varValue >= 0.0
