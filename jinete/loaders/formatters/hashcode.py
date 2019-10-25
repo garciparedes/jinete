@@ -22,10 +22,10 @@ class HashCodeLoaderFormatter(LoaderFormatter):
 
     def fleet(self, surface: Surface, *args, **kwargs) -> Fleet:
         row = self.data[0]
-        n, timeout, capacity = int(row[2]), row[5], 1.0
+        n, latest, capacity = int(row[2]), row[5], 1.0
 
-        initial = surface.get_or_create_position([0, 0])
-        vehicles = set(Vehicle(str(idx), initial, capacity=capacity, timeout=timeout) for idx in range(n))
+        origin = Service(surface.get_or_create_position([0, 0]), latest=latest)
+        vehicles = set(Vehicle(str(idx), origin, capacity=capacity) for idx in range(n))
         fleet = Fleet(vehicles)
         logger.info(f'Created fleet!')
         return fleet

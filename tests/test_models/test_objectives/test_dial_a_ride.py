@@ -13,9 +13,10 @@ class TestDialARideObjective(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         surface = jit.GeometricSurface(jit.DistanceMetric.MANHATTAN)
+        origin = jit.Service(surface.get_or_create_position([0, 0]))
         vehicle = jit.Vehicle(
             identifier='TEST',
-            initial=surface.get_or_create_position([0, 0]),
+            origin=origin,
         )
         fleet = jit.Fleet({vehicle})
         route = jit.Route(vehicle)

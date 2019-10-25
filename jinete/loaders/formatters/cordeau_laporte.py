@@ -32,8 +32,9 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
         m = int(row[0])
 
         depot_row = self.data[1]
-        initial = surface.get_or_create_position(depot_row[1:3])
-        final = None
+        depot_position = surface.get_or_create_position(depot_row[1:3])
+
+        origin = Service(depot_position)
 
         capacity = row[3]
         route_timeout = row[2]
@@ -43,8 +44,7 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
         for idx in range(m):
             vehicle = Vehicle(
                 str(idx),
-                initial,
-                final,
+                origin,
                 capacity=capacity,
                 route_timeout=route_timeout,
                 trip_timeout=trip_timeout,

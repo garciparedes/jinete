@@ -147,10 +147,12 @@ def generate_one_vehicle(capacity_min: int = 1, capacity_max: int = 3, earliest_
                          idx: int = 0, *args, **kwargs) -> jit.Vehicle:
     # TODO: Increase parameter options.
     capacity = randint(capacity_min, capacity_max)
-    initial = generate_one_position(*args, **kwargs)
+    position = generate_one_position(*args, **kwargs)
     earliest = uniform(earliest_min, earliest_max)
-    timeout = uniform(timeout_min, timeout_max)
-    return jit.Vehicle(str(idx), initial, capacity=capacity, earliest=earliest, timeout=timeout)
+    latest = earliest + uniform(timeout_min, timeout_max)
+
+    origin = jit.Service(position=position, earliest=earliest, latest=latest)
+    return jit.Vehicle(str(idx), origin, capacity=capacity)
 
 
 def generate_vehicles(n: int, *args, **kwargs) -> Set[jit.Vehicle]:

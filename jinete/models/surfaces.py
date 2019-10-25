@@ -28,6 +28,8 @@ if TYPE_CHECKING:
         Set,
         Any,
         Dict,
+        Generator,
+        Tuple,
     )
     from uuid import (
         UUID,
@@ -69,12 +71,10 @@ class Surface(Model, ABC):
     def time(self, position_a: Position, position_b: Position, **kwargs) -> float:
         pass
 
-    def as_dict(self) -> Dict[str, Any]:
-        positions_str = ', '.join(str(position) for position in self.positions)
-        dict_values = {
-            'positions': f'{{{positions_str}}}'
-        }
-        return dict_values
+    def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
+        yield from (
+            ('position_coordinates', tuple(position.coordinates for position in self.positions)),
+        )
 
 
 class GeometricSurface(Surface):
@@ -93,7 +93,7 @@ class GeometricSurface(Surface):
         try:
             distance = self.cached_distance[position_a][position_b]
         except KeyError:
-            distance = self.metric(position_a, position_b)
+            distance = self.metric(position_a.coordinates, position_b.coordinates)
             self.cached_distance[position_a][position_b] = distance
 
         return distance

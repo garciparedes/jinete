@@ -51,8 +51,8 @@ class TestCordeauLaporteLoaderFormatter(unittest.TestCase):
             self.assertEqual(self.data[0][3], vehicle.capacity)
             self.assertEqual(self.data[0][4], vehicle.trip_timeout)
 
-            position = vehicle.initial
-            self.assertEqual(vehicle.initial, vehicle.final)
+            position = vehicle.origin_position
+            self.assertEqual(vehicle.origin_position, vehicle.destination_position)
             self.assertIsInstance(position, jit.GeometricPosition)
             self.assertEqual(self.data[1][1:3], position.coordinates)
 

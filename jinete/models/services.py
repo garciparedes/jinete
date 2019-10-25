@@ -15,6 +15,8 @@ if TYPE_CHECKING:
     from typing import (
         Dict,
         Any,
+        Generator,
+        Tuple,
     )
     from .positions import (
         Position,
@@ -44,13 +46,19 @@ class Service(Model):
     def __deepcopy__(self, memo: Dict[int, Any]) -> Service:
         return self
 
-    def as_dict(self) -> Dict[str, Any]:
-        return {
-            'position': self.position,
-            'earliest': self.earliest,
-            'latest': self.latest,
-            'duration': self.duration,
-        }
+    def __eq__(self, other: Service) -> bool:
+        return hash(self) == hash(other)
+
+    def __hash__(self):
+        return hash(tuple(self))
+
+    def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
+        yield from (
+            ('position', self.position),
+            ('earliest', self.earliest),
+            ('latest', self.latest),
+            ('duration', self.duration),
+        )
 
     def distance_to(self, other: Service) -> float:
         return self.position.distance_to(other.position)

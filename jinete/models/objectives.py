@@ -65,7 +65,7 @@ class Objective(ABC):
 
     def _planning_optimization_function(self, planning: Planning) -> float:
         scoring = 0.0
-        for route in planning:
+        for route in planning.routes:
             scoring += self._route_optimization_function(route)
         return scoring
 
