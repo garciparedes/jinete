@@ -1,5 +1,4 @@
 import unittest
-from uuid import UUID
 
 import jinete as jit
 
@@ -22,7 +21,6 @@ class TestVehicles(unittest.TestCase):
 
         self.assertEqual(identifier, vehicle.identifier)
         self.assertEqual(1, vehicle.capacity)
-        self.assertIsInstance(vehicle.uuid, UUID)
 
         self.assertEqual(service, vehicle.origin)
         self.assertEqual(service.position, vehicle.origin_position)
@@ -49,7 +47,6 @@ class TestVehicles(unittest.TestCase):
 
         self.assertEqual(identifier, vehicle.identifier)
         self.assertEqual(capacity, vehicle.capacity)
-        self.assertIsInstance(vehicle.uuid, UUID)
 
         self.assertEqual(service, vehicle.origin)
         self.assertEqual(service.position, vehicle.origin_position)
@@ -81,7 +78,6 @@ class TestVehicles(unittest.TestCase):
 
         self.assertEqual(identifier, vehicle.identifier)
         self.assertEqual(1, vehicle.capacity)
-        self.assertIsInstance(vehicle.uuid, UUID)
 
         self.assertEqual(origin, vehicle.origin)
         self.assertEqual(origin.position, vehicle.origin_position)
@@ -95,7 +91,7 @@ class TestVehicles(unittest.TestCase):
         self.assertEqual(destination.latest, vehicle.destination_latest)
         self.assertEqual(destination.duration, vehicle.destination_duration)
 
-    def test_as_dict(self):
+    def test_as_tuple(self):
         identifier = str(0)
         origin = jit.Service(
             position=generate_one_position(),
@@ -112,21 +108,15 @@ class TestVehicles(unittest.TestCase):
         capacity = 44
         vehicle = jit.Vehicle(identifier, origin, destination, capacity)
 
-        expected = {
-            'uuid': vehicle.uuid,
-            'origin_position': origin.position,
-            'origin_earliest': origin.earliest,
-            'origin_latest': origin.latest,
-            'destination_position': destination.position,
-            'destination_earliest': destination.earliest,
-            'destination_latest': destination.latest,
-            'capacity': capacity,
-            'route_timeout': vehicle.route_timeout,
-            'trip_timeout': vehicle.trip_timeout,
+        expected = (
+            ('origin', tuple(origin)),
+            ('destination', tuple(destination)),
+            ('capacity', capacity),
+            ('route_timeout', vehicle.route_timeout),
+            ('trip_timeout', vehicle.trip_timeout),
+        )
 
-        }
-
-        self.assertEqual(expected, dict(vehicle))
+        self.assertEqual(expected, tuple(vehicle))
 
 
 if __name__ == '__main__':

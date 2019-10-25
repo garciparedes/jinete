@@ -56,21 +56,21 @@ class TestServices(unittest.TestCase):
 
         one = jit.Service(position, earliest, latest, duration)
         two = jit.Service(position, earliest, latest, duration)
-        self.assertEqual(one, two)
+        self.assertEquals(one, two)
 
     def test_distance_to(self):
         one_position = generate_one_position()
         two_position = generate_one_position()
         one = jit.Service(one_position)
         two = jit.Service(two_position)
-        self.assertEqual(one_position.distance_to(two_position), one.distance_to(two))
+        self.assertEquals(one_position.distance_to(two_position), one.distance_to(two))
 
     def test_time_to(self):
         one_position = generate_one_position()
         two_position = generate_one_position()
         one = jit.Service(one_position)
         two = jit.Service(two_position)
-        self.assertEqual(one_position.time_to(two_position), one.time_to(two))
+        self.assertEquals(one_position.time_to(two_position), one.time_to(two))
 
     def test_tuple(self):
         position = generate_one_position()
@@ -86,7 +86,7 @@ class TestServices(unittest.TestCase):
             ('latest', latest),
             ('duration', duration),
         )
-        self.assertEqual(raw, tuple(service))
+        self.assertEquals(raw, tuple(service))
 
     def test_dict(self):
         position = generate_one_position()
@@ -102,7 +102,7 @@ class TestServices(unittest.TestCase):
             'latest': latest,
             'duration': duration,
         }
-        self.assertEqual(raw, dict(service))
+        self.assertEquals(raw, dict(service))
 
     def test_deepcopy(self):
         position = generate_one_position()

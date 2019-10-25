@@ -57,12 +57,13 @@ class TestPlanning(unittest.TestCase):
         planning = jit.Planning(self.routes)
         self.assertEqual(list(planning.trips), self.trips)
 
-    def test_as_dict(self):
+    def test_as_tuple(self):
         planning = jit.Planning(self.routes)
-        expected = {
-            'uuid': planning.uuid,
-        }
-        self.assertEqual(expected, planning.as_dict())
+        expected = (
+            ('uuid', planning.uuid),
+            ('route_uuids', tuple(route.uuid for route in self.routes)),
+        )
+        self.assertEqual(expected, tuple(planning))
 
     def test_deepcopy(self):
         planning = jit.Planning(self.routes)
@@ -74,7 +75,7 @@ class TestPlanning(unittest.TestCase):
         self.assertEqual(len(planning.routes), len(copied_planning.routes))
         self.assertTrue(planning.routes.isdisjoint(copied_planning.routes))
         for route in planning.routes:
-            assert any(set(route.trips).isdisjoint(copied_route.trips) for copied_route in copied_planning)
+            assert any(set(route.trips).isdisjoint(copied_route.trips) for copied_route in copied_planning.routes)
 
 
 if __name__ == '__main__':

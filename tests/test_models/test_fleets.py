@@ -16,15 +16,14 @@ class TestFleet(unittest.TestCase):
         self.assertIsInstance(fleet, jit.Fleet)
         self.assertEqual(fleet.vehicles, vehicles)
 
-    def test_as_dict(self):
+    def test_as_tuple(self):
         vehicles = generate_vehicles(3)
         fleet = jit.Fleet(vehicles)
 
-        vehicles_str = ', '.join(str(vehicle) for vehicle in vehicles)
-        expected = {
-            'vehicles': f'{{{vehicles_str}}}'
-        }
-        self.assertEqual(expected, fleet.as_dict())
+        expected = (
+            ('vehicle_identifiers', tuple(vehicle.identifier for vehicle in vehicles)),
+        )
+        self.assertEqual(expected, tuple(fleet))
 
 
 if __name__ == '__main__':
