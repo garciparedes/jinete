@@ -14,7 +14,8 @@ if TYPE_CHECKING:
     from typing import (
         Set,
         Any,
-        Dict,
+        Generator,
+        Tuple,
         Type,
         Optional,
     )
@@ -45,16 +46,11 @@ class Job(Model):
             self._objective = self.objective_cls(*self.args, **self.kwargs)
         return self._objective
 
-    def __iter__(self):
-        yield from self.trips
-
     def __deepcopy__(self, memo) -> Job:
         return self
 
-    def as_dict(self) -> Dict[str, Any]:
-        trips_str = ', '.join(str(trip) for trip in self.trips)
-        dict_values = {
-            'trips': f'{{{trips_str}}}',
-            'objective': self.objective,
-        }
-        return dict_values
+    def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
+        yield from (
+            ('trip_identifiers', tuple(trip.identifier for trip in self.trips)),
+            ('objective', self.objective),
+        )

@@ -9,15 +9,12 @@ from .abc import (
 )
 
 if TYPE_CHECKING:
-    from uuid import (
-        UUID,
-    )
     from typing import (
-        Dict,
+        Generator,
+        Tuple,
         Any,
         Optional,
         Iterable,
-        Tuple,
         List,
     )
     from .positions import (
@@ -132,10 +129,6 @@ class Stop(Model):
         return self.route.vehicle
 
     @property
-    def vehicle_uuid(self) -> UUID:
-        return self.vehicle.uuid
-
-    @property
     def stops(self) -> List[Stop]:
         return self.route.stops
 
@@ -180,11 +173,11 @@ class Stop(Model):
     def departure_time(self) -> float:
         return self.arrival_time + self.load_time
 
-    def as_dict(self) -> Dict[str, Any]:
-        return {
-            'vehicle_uuid': self.vehicle_uuid,
-            'position': self.position,
-        }
+    def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
+        yield from (
+            ('route_uuid', self.route.uuid),
+            ('position', self.position),
+        )
 
     def flush(self) -> None:
         self._down_time = None

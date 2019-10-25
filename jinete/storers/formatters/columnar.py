@@ -18,7 +18,7 @@ class ColumnarStorerFormatter(StorerFormatter):
 
     def vehicle_to_str(self, vehicle: Vehicle) -> List[str]:
         return [
-            f'ID: "{vehicle.uuid}"',
+            f'ID: "{vehicle.identifier}"',
             f'Initial:  {vehicle.origin_position}',
             f'Final:    {vehicle.destination_position}',
             f'Earliest: {vehicle.origin_earliest:7.2f}',

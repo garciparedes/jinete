@@ -27,6 +27,8 @@ if TYPE_CHECKING:
         Dict,
         Optional,
         Iterable,
+        Generator,
+        Tuple,
     )
     from uuid import (
         UUID,
@@ -63,9 +65,6 @@ class Route(Model):
             ]
         else:
             self.stops = list(stops)
-
-    def __iter__(self):
-        yield from self.planned_trips
 
     def __deepcopy__(self, memo: Dict[int, Any]) -> Route:
         vehicle = deepcopy(self.vehicle, memo)
@@ -174,16 +173,17 @@ class Route(Model):
         return stop
 
     @property
-    def vehicle_uuid(self) -> Optional[UUID]:
+    def vehicle_identifier(self) -> Optional[str]:
         if self.vehicle is None:
             return None
-        return self.vehicle.uuid
+        return self.vehicle.identifier
 
-    def as_dict(self) -> Dict[str, Any]:
-        return {
-            'uuid': self.uuid,
-            'vehicle_uuid': self.vehicle_uuid,
-        }
+    def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
+        yield from (
+            ('uuid', self.uuid),
+            ('vehicle_identifier', self.vehicle_identifier),
+            ('trip_identifiers', tuple(trip.identifier for trip in self.trips))
+        )
 
     def conjecture_trip(self, trip: Trip) -> PlannedTrip:
         pickup = Stop(self, trip.origin_position, self.last_stop)

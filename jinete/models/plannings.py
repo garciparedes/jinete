@@ -16,6 +16,8 @@ if TYPE_CHECKING:
         Dict,
         Any,
         Iterator,
+        Generator,
+        Tuple,
     )
     from .routes import (
         Route,
@@ -46,9 +48,6 @@ class Planning(Model):
         self.routes = routes
         self.uuid = uuid
 
-    def __iter__(self):
-        yield from self.routes
-
     @property
     def loaded_routes(self):
         return set(route for route in self.routes if route.loaded)
@@ -62,10 +61,11 @@ class Planning(Model):
     def trips(self) -> Iterator[Trip]:
         yield from (planned_trip.trip for planned_trip in self.planned_trips)
 
-    def as_dict(self) -> Dict[str, Any]:
-        return {
-            'uuid': self.uuid,
-        }
+    def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
+        yield from (
+            ('uuid', self.uuid),
+            ('route_uuids', tuple(route.uuid for route in self.routes))
+        )
 
     def __deepcopy__(self, memo: Dict[int, Any]) -> Planning:
         planning = Planning()

@@ -3,9 +3,10 @@ from __future__ import annotations
 import logging
 from typing import (
     TYPE_CHECKING,
-    Optional,
 )
-
+from .abc import (
+    Model,
+)
 from .services import (
     Service,
 )
@@ -14,6 +15,9 @@ if TYPE_CHECKING:
     from typing import (
         Dict,
         Any,
+        Generator,
+        Tuple,
+        Optional,
     )
     from .positions import (
         Position,
@@ -22,7 +26,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class Trip(object):
+class Trip(Model):
     __slots__ = (
         'identifier',
         'origin',
@@ -92,3 +96,12 @@ class Trip(object):
 
     def __deepcopy__(self, memo: Dict[int, Any]) -> Trip:
         return self
+
+    def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
+        yield from (
+            ('identifier', self.identifier),
+            ('origin', tuple(self.origin)),
+            ('destination', tuple(self.destination)),
+            ('on_time_bonus', self.on_time_bonus),
+            ('capacity', self.capacity),
+        )

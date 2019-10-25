@@ -14,9 +14,10 @@ from .stops import (
 
 if TYPE_CHECKING:
     from typing import (
-        Dict,
         Any,
         Optional,
+        Generator,
+        Tuple,
     )
     from uuid import (
         UUID,
@@ -113,15 +114,15 @@ class PlannedTrip(Model):
     def empty(self) -> bool:
         return self.trip.empty
 
-    def as_dict(self) -> Dict[str, Any]:
-        return {
-            'route_uuid': self.route_uuid,
-            'trip_identifier': self.trip_identifier,
-            'pickup': self.pickup,
-            'delivery': self.delivery,
-            'down_time': self.down_time,
-            'feasible': self.feasible,
-        }
+    def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
+        yield from (
+            ('route_uuid', self.route_uuid),
+            ('trip_identifier', self.trip_identifier),
+            ('pickup', self.pickup),
+            ('delivery', self.delivery),
+            ('down_time', self.down_time),
+            ('feasible', self.feasible),
+        )
 
     def flush(self) -> None:
         self._feasible = None

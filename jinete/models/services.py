@@ -15,6 +15,8 @@ if TYPE_CHECKING:
     from typing import (
         Dict,
         Any,
+        Generator,
+        Tuple,
     )
     from .positions import (
         Position,
@@ -50,16 +52,13 @@ class Service(Model):
     def __hash__(self):
         return hash(tuple(self))
 
-    def __iter__(self):
+    def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
         yield from (
             ('position', self.position),
             ('earliest', self.earliest),
             ('latest', self.latest),
             ('duration', self.duration),
         )
-
-    def as_dict(self) -> Dict[str, Any]:
-        return dict(self)
 
     def distance_to(self, other: Service) -> float:
         return self.position.distance_to(other.position)
