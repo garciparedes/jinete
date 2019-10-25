@@ -61,11 +61,11 @@ class TestStop(unittest.TestCase):
         self.assertEqual(stop.route, self.route)
         self.assertEqual(stop.position, self.position)
         self.assertEqual(stop.previous, None)
-        self.assertEqual(stop.previous_position, self.vehicle.initial)
-        self.assertEqual(stop.previous_departure_time, self.vehicle.earliest)
+        self.assertEqual(stop.previous_position, self.vehicle.origin_position)
+        self.assertEqual(stop.previous_departure_time, self.vehicle.origin_earliest)
         self.assertEqual(
             stop.navigation_time,
-            stop.position.time_to(self.vehicle.initial, stop.previous_departure_time),
+            stop.position.time_to(self.vehicle.origin_position, stop.previous_departure_time),
         )
         self.assertEqual(stop.waiting_time, 0.0)
         self.assertEqual(stop.down_time, 0.0)

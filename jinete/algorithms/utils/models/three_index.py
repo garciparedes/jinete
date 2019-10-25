@@ -129,7 +129,12 @@ class ThreeIndexModel(Model):
     def positions(self) -> Tuple[Position, ...]:
         origins = tuple(trip.origin_position for trip in self.trips)
         destinations = tuple(trip.destination_position for trip in self.trips)
-        positions = (self.vehicles[0].initial,) + origins + destinations + (self.vehicles[0].final,)
+        positions = (
+                (self.vehicles[0].origin_position,) +
+                origins +
+                destinations +
+                (self.vehicles[0].destination_position,)
+        )
 
         return positions
 

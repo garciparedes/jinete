@@ -146,7 +146,7 @@ class Stop(Model):
     @property
     def previous_departure_time(self) -> float:
         if self.previous is None:
-            return self.vehicle.earliest
+            return self.vehicle.origin_earliest
         if self._previous_departure_time is None:
             self._previous_departure_time = self.previous.departure_time
         return self._previous_departure_time
@@ -154,7 +154,7 @@ class Stop(Model):
     @property
     def previous_position(self) -> Position:
         if self.previous is None:
-            return self.vehicle.initial
+            return self.vehicle.origin_position
         return self.previous.position
 
     @property

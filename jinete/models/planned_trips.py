@@ -132,9 +132,9 @@ class PlannedTrip(Model):
         if not self.trip.destination_earliest <= self.delivery_time <= self.trip.destination_latest:
             return False
 
-        time_to_return = self.trip.destination_position.time_to(self.vehicle.final, self.delivery_time)
+        time_to_return = self.trip.destination_position.time_to(self.vehicle.destination_position, self.delivery_time)
         vehicle_finish_time = self.delivery_time + time_to_return
-        if not vehicle_finish_time <= self.vehicle.latest:
+        if not vehicle_finish_time <= self.vehicle.origin_latest:
             return False
 
         if self.vehicle.route_timeout is not None:

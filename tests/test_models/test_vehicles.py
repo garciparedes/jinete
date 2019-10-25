@@ -10,99 +10,123 @@ from tests.utils import (
 
 class TestVehicles(unittest.TestCase):
 
-    def test_vehicle(self):
-        initial = generate_one_position()
+    def test_construction(self):
         identifier = str(0)
-        vehicle = jit.Vehicle(identifier, initial)
+        service = jit.Service(
+            position=generate_one_position(),
+            earliest=1800,
+            latest=3600,
+            duration=60,
+        )
+        vehicle = jit.Vehicle(identifier, service)
 
         self.assertEqual(identifier, vehicle.identifier)
         self.assertEqual(1, vehicle.capacity)
-        self.assertEqual(vehicle.initial, initial)
-        self.assertEqual(vehicle.final, vehicle.initial)
-        self.assertEqual(vehicle.earliest, 0)
-        self.assertEqual(vehicle.latest, jit.MAX_FLOAT)
-        self.assertEqual(vehicle.timeout, jit.MAX_FLOAT)
         self.assertIsInstance(vehicle.uuid, UUID)
 
-    def test_vehicle_with_capacity(self):
+        self.assertEqual(service, vehicle.origin)
+        self.assertEqual(service.position, vehicle.origin_position)
+        self.assertEqual(service.earliest, vehicle.origin_earliest)
+        self.assertEqual(service.latest, vehicle.origin_latest)
+        self.assertEqual(service.duration, vehicle.origin_duration)
+
+        self.assertEqual(service, vehicle.destination)
+        self.assertEqual(service.position, vehicle.destination_position)
+        self.assertEqual(service.earliest, vehicle.destination_earliest)
+        self.assertEqual(service.latest, vehicle.destination_latest)
+        self.assertEqual(service.duration, vehicle.destination_duration)
+
+    def test_construction_with_capacity(self):
         capacity = 3
-        initial = generate_one_position()
+        service = jit.Service(
+            position=generate_one_position(),
+            earliest=1800,
+            latest=3600,
+            duration=60,
+        )
         identifier = str(0)
-        vehicle = jit.Vehicle(identifier, initial, capacity=capacity)
+        vehicle = jit.Vehicle(identifier, service, capacity=capacity)
 
-        self.assertEqual(vehicle.capacity, capacity)
-        self.assertEqual(vehicle.initial, initial)
-        self.assertEqual(vehicle.final, vehicle.initial)
-        self.assertEqual(vehicle.earliest, 0)
-        self.assertEqual(vehicle.latest, jit.MAX_FLOAT)
-        self.assertEqual(vehicle.timeout, jit.MAX_FLOAT)
+        self.assertEqual(identifier, vehicle.identifier)
+        self.assertEqual(capacity, vehicle.capacity)
         self.assertIsInstance(vehicle.uuid, UUID)
+
+        self.assertEqual(service, vehicle.origin)
+        self.assertEqual(service.position, vehicle.origin_position)
+        self.assertEqual(service.earliest, vehicle.origin_earliest)
+        self.assertEqual(service.latest, vehicle.origin_latest)
+        self.assertEqual(service.duration, vehicle.origin_duration)
+
+        self.assertEqual(service, vehicle.destination)
+        self.assertEqual(service.position, vehicle.destination_position)
+        self.assertEqual(service.earliest, vehicle.destination_earliest)
+        self.assertEqual(service.latest, vehicle.destination_latest)
+        self.assertEqual(service.duration, vehicle.destination_duration)
 
     def test_vehicle_with_final(self):
-        capacity = 3
-        initial = generate_one_position()
-        final = generate_one_position()
         identifier = str(0)
-        vehicle = jit.Vehicle(identifier, initial, capacity=capacity, final=final)
+        origin = jit.Service(
+            position=generate_one_position(),
+            earliest=100,
+            latest=200,
+            duration=2,
+        )
+        destination = jit.Service(
+            position=generate_one_position(),
+            earliest=1000,
+            latest=2000,
+            duration=20,
+        )
+        vehicle = jit.Vehicle(identifier, origin, destination)
 
         self.assertEqual(identifier, vehicle.identifier)
-        self.assertEqual(vehicle.capacity, capacity)
-        self.assertEqual(vehicle.initial, initial)
-        self.assertEqual(vehicle.final, final)
-        self.assertEqual(vehicle.earliest, 0)
-        self.assertEqual(vehicle.latest, jit.MAX_FLOAT)
-        self.assertEqual(vehicle.timeout, jit.MAX_FLOAT)
+        self.assertEqual(1, vehicle.capacity)
         self.assertIsInstance(vehicle.uuid, UUID)
 
-    def test_vehicle_with_earliest(self):
-        initial = generate_one_position()
-        earliest = 3600
-        identifier = str(0)
-        vehicle = jit.Vehicle(identifier, initial, earliest=earliest)
+        self.assertEqual(origin, vehicle.origin)
+        self.assertEqual(origin.position, vehicle.origin_position)
+        self.assertEqual(origin.earliest, vehicle.origin_earliest)
+        self.assertEqual(origin.latest, vehicle.origin_latest)
+        self.assertEqual(origin.duration, vehicle.origin_duration)
 
-        self.assertEqual(identifier, vehicle.identifier)
-        self.assertEqual(vehicle.capacity, 1, )
-        self.assertEqual(vehicle.initial, initial)
-        self.assertEqual(vehicle.final, vehicle.initial)
-        self.assertEqual(vehicle.earliest, earliest)
-        self.assertEqual(vehicle.latest, jit.MAX_FLOAT)
-        self.assertEqual(vehicle.timeout, jit.MAX_FLOAT)
-        self.assertIsInstance(vehicle.uuid, UUID)
-
-    def test_vehicle_with_timeout(self):
-        initial = generate_one_position()
-        earliest = 1800
-        timeout = 3600
-        identifier = str(0)
-        vehicle = jit.Vehicle(identifier, initial, earliest=earliest, timeout=timeout)
-
-        self.assertEqual(identifier, vehicle.identifier)
-        self.assertEqual(vehicle.capacity, 1)
-        self.assertEqual(vehicle.initial, initial)
-        self.assertEqual(vehicle.final, vehicle.initial)
-        self.assertEqual(vehicle.earliest, earliest)
-        self.assertEqual(vehicle.latest, earliest + timeout)
-        self.assertEqual(vehicle.timeout, timeout)
-        self.assertIsInstance(vehicle.uuid, UUID)
+        self.assertEqual(destination, vehicle.destination)
+        self.assertEqual(destination.position, vehicle.destination_position)
+        self.assertEqual(destination.earliest, vehicle.destination_earliest)
+        self.assertEqual(destination.latest, vehicle.destination_latest)
+        self.assertEqual(destination.duration, vehicle.destination_duration)
 
     def test_as_dict(self):
-        initial = generate_one_position()
         identifier = str(0)
-        vehicle = jit.Vehicle(identifier, initial)
+        origin = jit.Service(
+            position=generate_one_position(),
+            earliest=100,
+            latest=200,
+            duration=2,
+        )
+        destination = jit.Service(
+            position=generate_one_position(),
+            earliest=1000,
+            latest=2000,
+            duration=20,
+        )
+        capacity = 44
+        vehicle = jit.Vehicle(identifier, origin, destination, capacity)
 
         expected = {
-            'initial': vehicle.initial,
-            'final': vehicle.final,
-            'capacity': vehicle.capacity,
-            'earliest': vehicle.earliest,
-            'timeout': vehicle.timeout,
+            'uuid': vehicle.uuid,
+            'origin_position': origin.position,
+            'origin_earliest': origin.earliest,
+            'origin_latest': origin.latest,
+            'destination_position': destination.position,
+            'destination_earliest': destination.earliest,
+            'destination_latest': destination.latest,
+            'capacity': capacity,
             'route_timeout': vehicle.route_timeout,
             'trip_timeout': vehicle.trip_timeout,
-            'latest': vehicle.latest,
-            'uuid': vehicle.uuid,
+
         }
 
-        self.assertEqual(expected, vehicle.as_dict())
+        self.assertEqual(expected, dict(vehicle))
 
 
 if __name__ == '__main__':

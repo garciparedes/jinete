@@ -59,7 +59,7 @@ class Route(Model):
 
         if stops is None:
             self.stops = [
-                Stop(self, self.vehicle.initial, None),
+                Stop(self, self.vehicle.origin_position, None),
             ]
         else:
             self.stops = list(stops)
@@ -94,13 +94,13 @@ class Route(Model):
     @property
     def feasible(self) -> bool:
         if any(self.planned_trips):
-            if not self.first_stop.position == self.vehicle.initial:
+            if not self.first_stop.position == self.vehicle.origin_position:
                 return False
-            if not self.vehicle.earliest <= self.first_stop.arrival_time:
+            if not self.vehicle.origin_earliest <= self.first_stop.arrival_time:
                 return False
-            if not self.last_position == self.vehicle.final:
+            if not self.last_position == self.vehicle.destination_position:
                 return False
-            if not self.last_departure_time <= self.vehicle.latest:
+            if not self.last_departure_time <= self.vehicle.origin_latest:
                 return False
 
         if __debug__:
@@ -196,8 +196,8 @@ class Route(Model):
 
     def finish(self):
         # if self.loaded and self.last_stop.position != self.vehicle.final:
-        if self.last_stop.position != self.vehicle.final:
-            finish_stop = Stop(self, self.vehicle.final, self.last_stop)
+        if self.last_stop.position != self.vehicle.destination_position:
+            finish_stop = Stop(self, self.vehicle.destination_position, self.last_stop)
             if not self.last_stop.position == finish_stop.position:
                 self.append_stop(finish_stop)
 
