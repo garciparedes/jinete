@@ -6,14 +6,10 @@ labels: ''
 assignees: ''
 
 ---
-**Reference related Issues**
-Include a list of related issues.
+# Version Release Details
 
-**Set a release date**
-A date and time specifying the release of the new version.
+## Related Issues
+<!-- Include a list of related issues. --> 
 
-**Describe the change respect to the past version**
-A clear and concise description of what the new version will contain.
-
-**Additional context**
-Add any other context about the new version here here.
+## Release date
+<!-- A date and time specifying the release of the new version.-->
