@@ -49,7 +49,6 @@ class TestCordeauLaporteLoaderFormatter(unittest.TestCase):
             self.assertIsInstance(vehicle, jit.Vehicle)
             self.assertEqual(self.data[0][2], vehicle.timeout)
             self.assertEqual(self.data[0][3], vehicle.capacity)
-            self.assertEqual(self.data[0][4], vehicle.trip_timeout)
 
             position = vehicle.origin_position
             self.assertEqual(vehicle.origin_position, vehicle.destination_position)
@@ -73,6 +72,7 @@ class TestCordeauLaporteLoaderFormatter(unittest.TestCase):
             destination_earliest, destination_latest = destination_row[-2:]
 
             self.assertEqual(str(idx + 1), trip.identifier)
+            self.assertEqual(self.data[0][4], trip.timeout)
             self.assertIsInstance(trip, jit.Trip)
             self.assertEqual(1.0, trip.capacity)
             self.assertEqual(0.0, trip.on_time_bonus)

@@ -35,7 +35,7 @@ class Vehicle(Model):
     capacity: float
 
     def __init__(self, identifier: str, origin: Service, destination: Service = None, capacity: float = 1.0,
-                 timeout: float = MAX_FLOAT, trip_timeout: float = MAX_FLOAT):
+                 timeout: float = MAX_FLOAT):
         self.identifier = identifier
 
         self.origin = origin
@@ -45,7 +45,6 @@ class Vehicle(Model):
         self.capacity = capacity
 
         self.timeout = timeout
-        self.trip_timeout = trip_timeout
 
     @property
     def origin_position(self) -> Position:
@@ -87,11 +86,11 @@ class Vehicle(Model):
 
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
         yield from (
+            ('identifier', self.identifier),
             ('origin', tuple(self.origin)),
             ('destination', tuple(self.destination)),
             ('capacity', self.capacity),
             ('timeout', self.timeout),
-            ('trip_timeout', self.trip_timeout),
         )
 
     def __deepcopy__(self, memo: Dict[int, Any]) -> Vehicle:

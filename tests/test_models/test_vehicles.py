@@ -109,11 +109,11 @@ class TestVehicles(unittest.TestCase):
         vehicle = jit.Vehicle(identifier, origin, destination, capacity)
 
         expected = (
+            ('identifier', identifier),
             ('origin', tuple(origin)),
             ('destination', tuple(destination)),
             ('capacity', capacity),
             ('timeout', vehicle.timeout),
-            ('trip_timeout', vehicle.trip_timeout),
         )
 
         self.assertEqual(expected, tuple(vehicle))

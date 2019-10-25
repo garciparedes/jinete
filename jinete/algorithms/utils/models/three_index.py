@@ -208,6 +208,12 @@ class ThreeIndexModel(Model):
             return 0
         return trip.origin_duration
 
+    def timeout_by_position_idx(self, idx: int) -> float:
+        trip = self.trip_by_position_idx(idx)
+        if trip is None:
+            return 0
+        return trip.timeout
+
     @property
     @lru_cache()
     def uniqueness_constraints(self) -> List[lp.LpConstraint]:
@@ -298,11 +304,12 @@ class ThreeIndexModel(Model):
 
             for i in self.pickups_indexer:
                 load_time = self.load_time_by_position_idx(i)
+                timeout = self.timeout_by_position_idx(i)
                 travel_time = self.positions[i].time_to(self.positions[i + self.n])
 
                 constraints.extend([
                     travel_time <= self.u[k][i + self.n] - (self.u[k][i] + load_time),
-                    self.u[k][i + self.n] - (self.u[k][i] + load_time) <= self.vehicles[k].trip_timeout,
+                    self.u[k][i + self.n] - (self.u[k][i] + load_time) <= timeout,
                 ])
 
             for i in self.positions_indexer:

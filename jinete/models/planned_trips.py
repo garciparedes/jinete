@@ -141,7 +141,7 @@ class PlannedTrip(Model):
         if not self.duration <= self.vehicle.timeout:
             return False
 
-        if not self.duration <= self.vehicle.trip_timeout:
+        if not self.duration <= self.trip.timeout:
             return False
 
         return True

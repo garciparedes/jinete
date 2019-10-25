@@ -106,6 +106,43 @@ class TestTrips(unittest.TestCase):
         self.assertEqual(distance, trip.distance)
         self.assertEqual(duration, trip.duration(trip.origin_earliest))
 
+    def test_as_tuple(self):
+        identifier = str(0)
+        origin = jit.Service(
+            position=generate_one_position(),
+            earliest=100,
+            latest=200,
+            duration=2,
+        )
+        destination = jit.Service(
+            position=generate_one_position(),
+            earliest=1000,
+            latest=2000,
+            duration=20,
+        )
+        capacity = 44
+        on_time_bonus = 3
+        timeout = 100
+        trip = jit.Trip(
+            identifier=identifier,
+            origin=origin,
+            destination=destination,
+            capacity=capacity,
+            on_time_bonus=on_time_bonus,
+            timeout=timeout,
+        )
+
+        expected = (
+            ('identifier', identifier),
+            ('origin', tuple(origin)),
+            ('destination', tuple(destination)),
+            ('on_time_bonus', on_time_bonus),
+            ('capacity', capacity),
+            ('timeout', trip.timeout),
+        )
+
+        self.assertEqual(expected, tuple(trip))
+
 
 if __name__ == '__main__':
     unittest.main()

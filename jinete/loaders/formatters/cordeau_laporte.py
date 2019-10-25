@@ -38,7 +38,6 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
 
         capacity = row[3]
         timeout = row[2]
-        trip_timeout = row[4]
 
         vehicles = set()
         for idx in range(m):
@@ -47,7 +46,6 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
                 origin,
                 capacity=capacity,
                 timeout=timeout,
-                trip_timeout=trip_timeout,
             )
 
             vehicles.add(vehicle)
@@ -90,11 +88,14 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
         assert origin_row[4] == -destination_row[4]
         capacity = origin_row[4]
 
+        timeout = self.data[0][4]
+
         trip = Trip(
             identifier=identifier,
             origin=origin,
             destination=destination,
             capacity=capacity,
+            timeout=timeout,
         )
         return trip
 

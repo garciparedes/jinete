@@ -10,6 +10,9 @@ from .abc import (
 from .services import (
     Service,
 )
+from .constants import (
+    MAX_FLOAT,
+)
 
 if TYPE_CHECKING:
     from typing import (
@@ -17,7 +20,6 @@ if TYPE_CHECKING:
         Any,
         Generator,
         Tuple,
-        Optional,
     )
     from .positions import (
         Position,
@@ -33,23 +35,25 @@ class Trip(Model):
         'destination',
         'on_time_bonus',
         'capacity',
+        'timeout',
     )
     identifier: str
     origin_position: Position
     destination_position: Position
     origin_earliest: float
-    timeout: Optional[float]
+    timeout: float
     on_time_bonus: float
     origin_duration: float
     capacity: float
 
     def __init__(self, identifier: str, origin: Service, destination: Service, capacity: float = 1,
-                 on_time_bonus: float = 0.0):
+                 on_time_bonus: float = 0.0, timeout: float = MAX_FLOAT):
         self.identifier = identifier
         self.origin = origin
         self.destination = destination
         self.on_time_bonus = on_time_bonus
         self.capacity = capacity
+        self.timeout = timeout
 
     @property
     def origin_position(self) -> Position:
@@ -104,4 +108,5 @@ class Trip(Model):
             ('destination', tuple(self.destination)),
             ('on_time_bonus', self.on_time_bonus),
             ('capacity', self.capacity),
+            ('timeout', self.timeout),
         )
