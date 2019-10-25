@@ -47,7 +47,7 @@ class TestCordeauLaporteLoaderFormatter(unittest.TestCase):
         for idx, vehicle in enumerate(fleet.vehicles):
             self.assertEqual(str(idx), vehicle.identifier)
             self.assertIsInstance(vehicle, jit.Vehicle)
-            self.assertEqual(self.data[0][2], vehicle.route_timeout)
+            self.assertEqual(self.data[0][2], vehicle.timeout)
             self.assertEqual(self.data[0][3], vehicle.capacity)
             self.assertEqual(self.data[0][4], vehicle.trip_timeout)
 

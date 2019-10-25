@@ -37,7 +37,7 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
         origin = Service(depot_position)
 
         capacity = row[3]
-        route_timeout = row[2]
+        timeout = row[2]
         trip_timeout = row[4]
 
         vehicles = set()
@@ -46,7 +46,7 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
                 str(idx),
                 origin,
                 capacity=capacity,
-                route_timeout=route_timeout,
+                timeout=timeout,
                 trip_timeout=trip_timeout,
             )
 

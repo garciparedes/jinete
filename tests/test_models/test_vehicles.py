@@ -112,7 +112,7 @@ class TestVehicles(unittest.TestCase):
             ('origin', tuple(origin)),
             ('destination', tuple(destination)),
             ('capacity', capacity),
-            ('route_timeout', vehicle.route_timeout),
+            ('timeout', vehicle.timeout),
             ('trip_timeout', vehicle.trip_timeout),
         )
 

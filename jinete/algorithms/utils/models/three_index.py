@@ -285,7 +285,7 @@ class ThreeIndexModel(Model):
     def feasibility_constraints(self) -> List[lp.LpConstraint]:
         constraints = list()
         for k in self.routes_indexer:
-            constraint = self.u[k][-1] - self.u[k][0] <= self.vehicles[k].route_timeout
+            constraint = self.u[k][-1] - self.u[k][0] <= self.vehicles[k].timeout
             constraints.append(constraint)
 
             for i in self.positions_indexer:

@@ -3,6 +3,9 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
+from .constants import (
+    MAX_FLOAT,
+)
 from .abc import (
     Model,
 )
@@ -32,7 +35,7 @@ class Vehicle(Model):
     capacity: float
 
     def __init__(self, identifier: str, origin: Service, destination: Service = None, capacity: float = 1.0,
-                 route_timeout: float = None, trip_timeout: float = None):
+                 timeout: float = MAX_FLOAT, trip_timeout: float = MAX_FLOAT):
         self.identifier = identifier
 
         self.origin = origin
@@ -41,7 +44,7 @@ class Vehicle(Model):
 
         self.capacity = capacity
 
-        self.route_timeout = route_timeout
+        self.timeout = timeout
         self.trip_timeout = trip_timeout
 
     @property
@@ -87,7 +90,7 @@ class Vehicle(Model):
             ('origin', tuple(self.origin)),
             ('destination', tuple(self.destination)),
             ('capacity', self.capacity),
-            ('route_timeout', self.route_timeout),
+            ('timeout', self.timeout),
             ('trip_timeout', self.trip_timeout),
         )
 
