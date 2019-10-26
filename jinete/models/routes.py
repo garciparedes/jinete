@@ -195,11 +195,22 @@ class Route(Model):
         return [self.conjecture_trip(trip) for trip in iterable]
 
     def finish(self):
-        # if self.loaded and self.last_stop.position != self.vehicle.final:
         if self.last_stop.position != self.vehicle.destination_position:
             finish_stop = Stop(self, self.vehicle.destination_position, self.last_stop)
             if not self.last_stop.position == finish_stop.position:
                 self.append_stop(finish_stop)
+
+    def un_finish(self):
+        if not len(self.stops) > 1:
+            return
+        if not self.last_stop.position == self.vehicle.destination_position:
+            return
+
+        if any(self.last_stop.planned_trips):
+            return
+
+        self.stops.pop()
+        self.stops[-1].following = None
 
     def append_stop(self, stop: Stop) -> None:
         assert stop.previous == self.last_stop

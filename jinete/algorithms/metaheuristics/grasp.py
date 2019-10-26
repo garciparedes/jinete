@@ -63,7 +63,11 @@ class GraspAlgorithm(Algorithm):
 
         i = 0
         while self.again(i):
-            current = self.build_local_search_algorithm(initial=best).optimize()
-            best = self.objective.best(best, current)
             i += 1
+            current = self.build_local_search_algorithm(initial=best).optimize()
+            current = self.build_first_solution_algorithm(routes=current.routes).optimize()
+            if len(best.trips) < len(current.trips):
+                best = current
+                continue
+            best = self.objective.best(best, current)
         return best.planning

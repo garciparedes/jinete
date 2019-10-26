@@ -4,13 +4,21 @@ from abc import (
     ABC,
     abstractmethod,
 )
+from typing import (
+    TYPE_CHECKING,
+)
 from copy import deepcopy
 
-from ....models import (
-    Planning,
-    Result,
-    Objective,
-)
+if TYPE_CHECKING:
+    from typing import (
+        Set,
+    )
+    from ....models import (
+        Planning,
+        Result,
+        Objective,
+        Route
+    )
 
 
 class Breeder(ABC):
@@ -28,6 +36,10 @@ class Breeder(ABC):
     @property
     def planning(self) -> Planning:
         return self.result.planning
+
+    @property
+    def routes(self) -> Set[Route]:
+        return self.planning.routes
 
     @abstractmethod
     def improve(self) -> Result:
