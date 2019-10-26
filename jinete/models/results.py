@@ -98,5 +98,5 @@ class Result(Model):
             ('fleet_uuid', tuple(self.fleet)),
             ('job', tuple(self.job)),
             ('algorithm_name', self.algorithm_cls.__name__),
-            ('planning', self.planning_uuid)
+            ('planning_uuid', self.planning_uuid)
         )
