@@ -17,8 +17,9 @@ class TestStatelessCrosser(unittest.TestCase):
             job=job,
             fleet=fleet,
         )
-        self.assertEqual(dispatcher.job, job)
-        self.assertEqual(dispatcher.fleet, fleet)
+        self.assertEqual(job, dispatcher.job)
+        self.assertEqual(fleet, dispatcher.fleet)
+        self.assertEqual(len(job.trips), len(list(dispatcher.iterator)))
 
 
 if __name__ == '__main__':
