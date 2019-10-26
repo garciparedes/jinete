@@ -3,6 +3,11 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 import itertools as it
+
+from cached_property import (
+    cached_property,
+)
+
 from .abc import (
     Crosser,
 )
@@ -24,20 +29,12 @@ logger = logging.getLogger(__name__)
 
 class StatelessCrosser(Crosser):
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._iterator = None
-
     def flush(self):
-        self._iterator = None
+        for key in ('iterator',):
+            self.__dict__.pop(key, None)
 
-    @property
-    def iterator(self):
-        if self._iterator is None:
-            self._iterator = self._calculate_iterator()
-        return self._iterator
-
-    def _calculate_iterator(self) -> Iterator[PlannedTrip]:
+    @cached_property
+    def iterator(self) -> Iterator[PlannedTrip]:
         for route, trip in it.product(self.attractive_routes, self.pending_trips):
             logger.debug(f'Yielding ({route}, {trip})...')
             planned_trip = route.conjecture_trip(trip)

@@ -51,7 +51,7 @@ class TestLongestTimePlannedTripCriterion(unittest.TestCase):
                     identifier='TEST_1',
                     origin=jit.Service(
                         position=surface.get_or_create_position([0, 0]),
-                        earliest=0.0,
+                        earliest=1.0,
                         latest=20.0,
                     ),
                     destination=jit.Service(
@@ -80,12 +80,12 @@ class TestLongestTimePlannedTripCriterion(unittest.TestCase):
         criterion = jit.LongestTimePlannedTripCriterion()
 
         self.assertEqual(
-            2.0,
+            0.0,
             criterion.scoring(self.planned_trips[0]),
         )
 
         self.assertEqual(
-            20.0,
+            1.0,
             criterion.scoring(self.planned_trips[1]),
         )
 
