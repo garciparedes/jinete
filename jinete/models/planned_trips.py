@@ -45,14 +45,11 @@ class PlannedTrip(Model):
         'down_time',
         'pickup',
         'delivery',
-        '_feasible',
     ]
 
     route: Route
     trip: Trip
     down_time: float
-
-    _feasible: Optional[bool]
 
     def __init__(self, route: Route, trip: Trip, pickup: Stop, delivery: Stop, down_time: float = 0.0):
         self.route = route
@@ -64,8 +61,6 @@ class PlannedTrip(Model):
 
         self.delivery = delivery
         delivery.append_delivery(self)
-
-        self._feasible = None
 
     @property
     def pickup_time(self) -> float:
@@ -147,4 +142,5 @@ class PlannedTrip(Model):
         )
 
     def flush(self) -> None:
-        self._feasible = None
+        for key in ('feasible',):
+            self.__dict__.pop(key, None)
