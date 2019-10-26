@@ -18,11 +18,11 @@ class ColumnarStorerFormatter(StorerFormatter):
 
     def vehicle_to_str(self, vehicle: Vehicle) -> List[str]:
         return [
-            f'ID: "{vehicle.uuid}"',
-            f'Initial:  {vehicle.initial}',
-            f'Final:    {vehicle.final}',
-            f'Earliest: {vehicle.earliest:7.2f}',
-            f'Latest:   {vehicle.latest:7.2f}',
+            f'ID: "{vehicle.identifier}"',
+            f'Initial:  {vehicle.origin_position}',
+            f'Final:    {vehicle.destination_position}',
+            f'Earliest: {vehicle.origin_earliest:7.2f}',
+            f'Latest:   {vehicle.origin_latest:7.2f}',
             f'Capacity: {vehicle.capacity:7.2f}',
         ]
 
@@ -31,10 +31,10 @@ class ColumnarStorerFormatter(StorerFormatter):
             self.tab_character.join((
                 f'ID: {planned_trip.trip.identifier:5}',
                 f'P: {planned_trip.origin} to {planned_trip.destination}',
-                f'TW: {planned_trip.trip.earliest:6.01f} to {planned_trip.trip.latest:6.01f}',
+                f'TW: {planned_trip.trip.origin_earliest:6.01f} to {planned_trip.trip.origin_latest:6.01f}',
                 f'WT: {planned_trip.pickup.waiting_time:5.01f}',
                 f'NT: {planned_trip.pickup.navigation_time:5.01f}',
-                f'LT: {planned_trip.trip.load_time:4.01f}',
+                f'LT: {planned_trip.trip.origin_duration:4.01f}',
                 f'TT: {planned_trip.duration:6.01f}',
                 f'T: {planned_trip.pickup_time:6.01f} to {planned_trip.delivery_time:6.01f}',
                 f'L: {planned_trip.capacity}',

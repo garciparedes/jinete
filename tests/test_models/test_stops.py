@@ -53,19 +53,17 @@ class TestStop(unittest.TestCase):
     def test_creation(self):
         stop = jit.Stop(self.route, self.position, None)
 
-        self.assertIsNone(stop._down_time)
-        self.assertIsNone(stop._load_time)
-        self.assertIsNone(stop._earliest)
-        self.assertIsNone(stop._arrival_time)
+        self.assertNotIn('arrival_time', stop.__dict__)
+        self.assertNotIn('departure_time', stop.__dict__)
 
         self.assertEqual(stop.route, self.route)
         self.assertEqual(stop.position, self.position)
         self.assertEqual(stop.previous, None)
-        self.assertEqual(stop.previous_position, self.vehicle.initial)
-        self.assertEqual(stop.previous_departure_time, self.vehicle.earliest)
+        self.assertEqual(stop.previous_position, self.vehicle.origin_position)
+        self.assertEqual(stop.previous_departure_time, self.vehicle.origin_earliest)
         self.assertEqual(
             stop.navigation_time,
-            stop.position.time_to(self.vehicle.initial, stop.previous_departure_time),
+            stop.position.time_to(self.vehicle.origin_position, stop.previous_departure_time),
         )
         self.assertEqual(stop.waiting_time, 0.0)
         self.assertEqual(stop.down_time, 0.0)
@@ -99,47 +97,35 @@ class TestStop(unittest.TestCase):
     def test_flush(self):
         stop = jit.Stop(self.route, self.position, None)
 
-        self.assertIsNone(stop._down_time)
-        self.assertIsNone(stop._load_time)
-        self.assertIsNone(stop._earliest)
-        self.assertIsNone(stop._arrival_time)
+        self.assertNotIn('arrival_time', stop.__dict__)
+        self.assertNotIn('departure_time', stop.__dict__)
 
         self.assertIsInstance(stop.departure_time, float)
 
-        self.assertIsNotNone(stop._down_time)
-        self.assertIsNotNone(stop._load_time)
-        self.assertIsNotNone(stop._earliest)
-        self.assertIsNotNone(stop._arrival_time)
+        self.assertIn('arrival_time', stop.__dict__)
+        self.assertIn('departure_time', stop.__dict__)
 
         stop.flush()
 
-        self.assertIsNone(stop._down_time)
-        self.assertIsNone(stop._load_time)
-        self.assertIsNone(stop._earliest)
-        self.assertIsNone(stop._arrival_time)
+        self.assertNotIn('arrival_time', stop.__dict__)
+        self.assertNotIn('departure_time', stop.__dict__)
 
     def test_cache(self):
         self.assertIsInstance(self.stops[-1].departure_time, float)
         for stop in self.stops:
-            self.assertIsNotNone(stop._down_time)
-            self.assertIsNotNone(stop._load_time)
-            self.assertIsNotNone(stop._earliest)
-            self.assertIsNotNone(stop._arrival_time)
+            self.assertIn('arrival_time', stop.__dict__)
+            self.assertIn('departure_time', stop.__dict__)
 
     def test_all_following(self):
         self.assertIsInstance(self.stops[-1].departure_time, float)
         self.stops[2].flush_all_following()
 
         for stop in self.stops[:2]:
-            self.assertIsNotNone(stop._down_time)
-            self.assertIsNotNone(stop._load_time)
-            self.assertIsNotNone(stop._earliest)
-            self.assertIsNotNone(stop._arrival_time)
+            self.assertIn('arrival_time', stop.__dict__)
+            self.assertIn('departure_time', stop.__dict__)
         for stop in self.stops[2:]:
-            self.assertIsNone(stop._down_time)
-            self.assertIsNone(stop._load_time)
-            self.assertIsNone(stop._earliest)
-            self.assertIsNone(stop._arrival_time)
+            self.assertNotIn('arrival_time', stop.__dict__)
+            self.assertNotIn('departure_time', stop.__dict__)
 
     def test_all_previous(self):
         self.assertIsInstance(self.stops[-1].departure_time, float)
@@ -147,16 +133,12 @@ class TestStop(unittest.TestCase):
         self.stops[2].flush_all_previous()
 
         for stop in self.stops[:3]:
-            self.assertIsNone(stop._down_time)
-            self.assertIsNone(stop._load_time)
-            self.assertIsNone(stop._earliest)
-            self.assertIsNone(stop._arrival_time)
+            self.assertNotIn('arrival_time', stop.__dict__)
+            self.assertNotIn('departure_time', stop.__dict__)
 
         for stop in self.stops[3:]:
-            self.assertIsNotNone(stop._down_time)
-            self.assertIsNotNone(stop._load_time)
-            self.assertIsNotNone(stop._earliest)
-            self.assertIsNotNone(stop._arrival_time)
+            self.assertIn('arrival_time', stop.__dict__)
+            self.assertIn('departure_time', stop.__dict__)
 
     def test_flip(self):
         route = deepcopy(self.route)

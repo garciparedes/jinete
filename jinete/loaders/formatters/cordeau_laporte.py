@@ -11,9 +11,7 @@ from ...models import (
     Job,
     Trip,
     DialARideObjective,
-)
-from .exceptions import (
-    LoaderFormatterException,
+    Service,
 )
 from .abc import (
     LoaderFormatter,
@@ -34,22 +32,20 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
         m = int(row[0])
 
         depot_row = self.data[1]
-        initial = surface.get_or_create_position(depot_row[1:3])
-        final = None
+        depot_position = surface.get_or_create_position(depot_row[1:3])
+
+        origin = Service(depot_position)
 
         capacity = row[3]
-        route_timeout = row[2]
-        trip_timeout = row[4]
+        timeout = row[2]
 
         vehicles = set()
         for idx in range(m):
             vehicle = Vehicle(
                 str(idx),
-                initial,
-                final,
+                origin,
                 capacity=capacity,
-                route_timeout=route_timeout,
-                trip_timeout=trip_timeout,
+                timeout=timeout,
             )
 
             vehicles.add(vehicle)
@@ -71,37 +67,35 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
 
     def build_trip(self, surface: Surface, idx: int, n: int) -> Trip:
         origin_idx = idx + 2
-        destination_idx = origin_idx + n
-
         origin_row = self.data[origin_idx]
-        destination_row = self.data[destination_idx]
+        origin = Service(
+            position=surface.get_or_create_position(origin_row[1:3]),
+            earliest=origin_row[5],
+            latest=origin_row[6],
+            duration=origin_row[3],
+        )
 
-        origin = surface.get_or_create_position(origin_row[1:3])
-        destination = surface.get_or_create_position(destination_row[1:3])
+        destination_row = self.data[origin_idx + n]
+        destination = Service(
+            position=surface.get_or_create_position(destination_row[1:3]),
+            earliest=destination_row[5],
+            latest=destination_row[6],
+            duration=destination_row[3],
+        )
 
-        e1, l1 = origin_row[5:7]
-        e2, l2 = destination_row[5:7]
+        identifier = f'{idx + 1:.0f}'
 
-        if e1 == 0 and l1 == 1440:
-            earliest, latest = e2, l2
-            inbound = True
-        elif e2 == 0 and l2 == 1440:
-            earliest, latest = e1, l1
-            inbound = False
-        else:
-            raise LoaderFormatterException('It is not possible to distinguish between inbound and outbound task.')
+        assert origin_row[4] == -destination_row[4]
+        capacity = origin_row[4]
 
-        identifier = str(idx)
-        timeout = latest - earliest
+        timeout = self.data[0][4]
 
         trip = Trip(
             identifier=identifier,
             origin=origin,
             destination=destination,
-            inbound=inbound,
-            earliest=earliest,
+            capacity=capacity,
             timeout=timeout,
-            load_time=10.0,
         )
         return trip
 

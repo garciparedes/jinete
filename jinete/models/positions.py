@@ -3,15 +3,21 @@ from __future__ import annotations
 import logging
 from abc import (
     ABC,
+    abstractmethod,
 )
 from typing import (
     TYPE_CHECKING,
+)
+
+from .abc import (
+    Model,
 )
 
 if TYPE_CHECKING:
     from typing import (
         Tuple,
         Sequence,
+        Generator,
         Dict,
         Any,
     )
@@ -22,18 +28,20 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class Position(ABC):
+class Position(Model, ABC):
     def __init__(self, surface: Surface):
         self.surface = surface
-
-    def __eq__(self, other):
-        return hash(self) == hash(other)
 
     def distance_to(self, other: Position) -> float:
         return self.surface.distance(self, other)
 
-    def time_to(self, other: Position, now: float) -> float:
-        return self.surface.time(self, other, now)
+    @property
+    @abstractmethod
+    def coordinates(self) -> Tuple[Any]:
+        pass
+
+    def time_to(self, other: Position, now: float = None) -> float:
+        return self.surface.time(self, other, now=now)
 
     def __deepcopy__(self, memo: Dict[int, Any]) -> Position:
         return self
@@ -59,8 +67,13 @@ class GeometricPosition(Position):
     def __ne__(self, other) -> bool:
         return self.coordinates != other.coordinates
 
+    def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
+        yield from (
+            ('coordinates', self.coordinates),
+        )
+
     def __str__(self):
-        c = ",".join(f"{x:07.3f}" for x in self)
+        c = ",".join(f"{x:07.3f}" for x in self.coordinates)
         return f'({c})'
 
     def __getitem__(self, item):

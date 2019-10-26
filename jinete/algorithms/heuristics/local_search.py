@@ -1,19 +1,15 @@
 from __future__ import annotations
 
 import logging
-from copy import deepcopy
 from typing import TYPE_CHECKING
 
-from ...exceptions import (
-    NonFeasiblePlannedTripException,
-)
 from ...models import (
     Planning,
 )
 from ..abc import (
     Algorithm,
 )
-from ..utils.breeders import (
+from ..utils import (
     FlipBreeder
 )
 

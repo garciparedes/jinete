@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import logging
 from typing import TYPE_CHECKING
+
+from cached_property import cached_property
+
 from .abc import (
     Model,
 )
@@ -14,9 +17,10 @@ from .stops import (
 
 if TYPE_CHECKING:
     from typing import (
-        Dict,
         Any,
         Optional,
+        Generator,
+        Tuple,
     )
     from uuid import (
         UUID,
@@ -84,12 +88,16 @@ class PlannedTrip(Model):
         return self.route.uuid
 
     @property
+    def route_duration(self) -> float:
+        return self.delivery_time - self.route.first_stop.arrival_time
+
+    @property
     def origin(self) -> Position:
-        return self.trip.origin
+        return self.trip.origin_position
 
     @property
     def destination(self) -> Position:
-        return self.trip.destination
+        return self.trip.destination_position
 
     @property
     def distance(self) -> float:
@@ -103,48 +111,40 @@ class PlannedTrip(Model):
     def capacity(self):
         return self.trip.capacity
 
-    @property
+    @cached_property
     def feasible(self) -> bool:
-        if self._feasible is None:
-            self._feasible = self._calculate_feasible()
-        return self._feasible
+        if not self.trip.origin_earliest <= self.pickup_time <= self.trip.origin_latest:
+            return False
+        if not self.trip.destination_earliest <= self.delivery_time <= self.trip.destination_latest:
+            return False
+
+        time_to_return = self.trip.destination_position.time_to(self.vehicle.destination_position, self.delivery_time)
+        vehicle_finish_time = self.delivery_time + time_to_return
+
+        if not vehicle_finish_time <= self.vehicle.origin_latest:
+            return False
+
+        if not self.route_duration <= self.vehicle.timeout:
+            return False
+
+        if not self.duration <= self.trip.timeout:
+            return False
+
+        return True
 
     @property
     def empty(self) -> bool:
         return self.trip.empty
 
-    def as_dict(self) -> Dict[str, Any]:
-        return {
-            'route_uuid': self.route_uuid,
-            'trip_identifier': self.trip_identifier,
-            'pickup': self.pickup,
-            'delivery': self.delivery,
-            'down_time': self.down_time,
-            'feasible': self.feasible,
-        }
+    def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
+        yield from (
+            ('route_uuid', self.route_uuid),
+            ('trip_identifier', self.trip_identifier),
+            ('pickup', self.pickup),
+            ('delivery', self.delivery),
+            ('down_time', self.down_time),
+            ('feasible', self.feasible),
+        )
 
     def flush(self) -> None:
         self._feasible = None
-
-    def _calculate_feasible(self) -> bool:
-        if self.trip.inbound:
-            if not self.trip.earliest <= self.delivery_time <= self.trip.latest:
-                return False
-        else:
-            if not self.trip.earliest <= self.pickup_time <= self.trip.latest:
-                return False
-
-        time_to_return = self.trip.destination.time_to(self.vehicle.final, self.delivery_time)
-        vehicle_finish_time = self.delivery_time + time_to_return
-        if not vehicle_finish_time <= self.vehicle.latest:
-            return False
-
-        if self.vehicle.route_timeout is not None:
-            if not self.duration <= self.vehicle.route_timeout:
-                return False
-
-        if self.vehicle.trip_timeout is not None:
-            if not self.duration <= self.vehicle.trip_timeout:
-                return False
-
-        return True

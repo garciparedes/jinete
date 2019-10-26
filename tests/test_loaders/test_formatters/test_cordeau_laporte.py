@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import unittest
+from operator import attrgetter
 from typing import TYPE_CHECKING
 import jinete as jit
 
@@ -16,7 +17,7 @@ class TestCordeauLaporteLoaderFormatter(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.data = (
-            (1.0, 2.0, 480, 6.0, 90.0),
+            (1.0, 4.0, 480, 6.0, 90.0),
             (0.0, -1.044, 2.000, 0.0, 0.0, 0.0, 1440.0),
             (1.0, -2.973, 6.414, 10.0, 1.0, 0.0, 1440.0),
             (2.0, -7.667, 9.934, 10.0, 1.0, 325.0, 358.0),
@@ -46,12 +47,11 @@ class TestCordeauLaporteLoaderFormatter(unittest.TestCase):
         for idx, vehicle in enumerate(fleet.vehicles):
             self.assertEqual(str(idx), vehicle.identifier)
             self.assertIsInstance(vehicle, jit.Vehicle)
-            self.assertEqual(self.data[0][2], vehicle.route_timeout)
+            self.assertEqual(self.data[0][2], vehicle.timeout)
             self.assertEqual(self.data[0][3], vehicle.capacity)
-            self.assertEqual(self.data[0][4], vehicle.trip_timeout)
 
-            position = vehicle.initial
-            self.assertEqual(vehicle.initial, vehicle.final)
+            position = vehicle.origin_position
+            self.assertEqual(vehicle.origin_position, vehicle.destination_position)
             self.assertIsInstance(position, jit.GeometricPosition)
             self.assertEqual(self.data[1][1:3], position.coordinates)
 
@@ -64,30 +64,29 @@ class TestCordeauLaporteLoaderFormatter(unittest.TestCase):
         self.assertIsInstance(job, jit.Job)
         self.assertEqual(n, len(job.trips))
 
-        for idx, trip in enumerate(job.trips):
+        for idx, trip in enumerate(sorted(job.trips, key=attrgetter('identifier'))):
             origin_row = self.data[2 + idx]
             destination_row = self.data[2 + idx + n]
 
-            if origin_row[-2] == 0.0 and origin_row[-1] == 1440.0:
-                earliest, latest = destination_row[-2:]
-                inbound = True
-            else:
-                earliest, latest = origin_row[-2:]
-                inbound = False
+            origin_earliest, origin_latest = origin_row[-2:]
+            destination_earliest, destination_latest = destination_row[-2:]
 
-            self.assertEqual(str(idx), trip.identifier)
+            self.assertEqual(str(idx + 1), trip.identifier)
+            self.assertEqual(self.data[0][4], trip.timeout)
             self.assertIsInstance(trip, jit.Trip)
             self.assertEqual(1.0, trip.capacity)
             self.assertEqual(0.0, trip.on_time_bonus)
 
-            self.assertEqual(inbound, trip.inbound)
-            self.assertEqual(earliest, trip.earliest)
-            self.assertEqual(latest, trip.latest)
+            self.assertEqual(origin_earliest, trip.origin_earliest)
+            self.assertEqual(origin_latest, trip.origin_latest)
 
-            self.assertIsInstance(trip.origin, jit.GeometricPosition)
-            self.assertEqual(origin_row[1:3], trip.origin.coordinates)
-            self.assertIsInstance(trip.destination, jit.GeometricPosition)
-            self.assertEqual(destination_row[1:3], trip.destination.coordinates)
+            self.assertEqual(destination_earliest, trip.destination_earliest)
+            self.assertEqual(destination_latest, trip.destination_latest)
+
+            self.assertIsInstance(trip.origin_position, jit.GeometricPosition)
+            self.assertEqual(origin_row[1:3], trip.origin_position.coordinates)
+            self.assertIsInstance(trip.destination_position, jit.GeometricPosition)
+            self.assertEqual(destination_row[1:3], trip.destination_position.coordinates)
 
 
 if __name__ == '__main__':

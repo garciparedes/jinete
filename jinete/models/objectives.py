@@ -65,7 +65,7 @@ class Objective(ABC):
 
     def _planning_optimization_function(self, planning: Planning) -> float:
         scoring = 0.0
-        for route in planning:
+        for route in planning.routes:
             scoring += self._route_optimization_function(route)
         return scoring
 
@@ -134,6 +134,6 @@ class HashCodeObjective(Objective):
             return 0.0
         trip = planned_trip.trip
         scoring = trip.distance
-        if trip.earliest == planned_trip.pickup_time:
+        if trip.origin_earliest == planned_trip.pickup_time:
             scoring += trip.on_time_bonus
         return scoring

@@ -19,13 +19,7 @@ from .iterative import (
 )
 
 if TYPE_CHECKING:
-    from typing import (
-        Type,
-        Optional,
-    )
-    from ...models import (
-        Result,
-    )
+    pass
 
 logger = logging.getLogger(__name__)
 

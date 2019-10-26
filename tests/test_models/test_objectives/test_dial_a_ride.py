@@ -13,9 +13,10 @@ class TestDialARideObjective(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         surface = jit.GeometricSurface(jit.DistanceMetric.MANHATTAN)
+        origin = jit.Service(surface.get_or_create_position([0, 0]))
         vehicle = jit.Vehicle(
             identifier='TEST',
-            initial=surface.get_or_create_position([0, 0]),
+            origin=origin,
         )
         fleet = jit.Fleet({vehicle})
         route = jit.Route(vehicle)
@@ -23,16 +24,25 @@ class TestDialARideObjective(unittest.TestCase):
         trips = [
             jit.Trip(
                 identifier='TEST_1',
-                origin=surface.get_or_create_position([0, 0]),
-                destination=surface.get_or_create_position([1, 1]),
-                earliest=0.0,
-                timeout=10.0,
-            ), jit.Trip(
+                origin=jit.Service(
+                    position=surface.get_or_create_position([0, 0]),
+                    earliest=0.0,
+                    latest=10.0,
+                ),
+                destination=jit.Service(
+                    position=surface.get_or_create_position([1, 1]),
+                ),
+            ),
+            jit.Trip(
                 identifier='TEST_1',
-                origin=surface.get_or_create_position([1, 1]),
-                destination=surface.get_or_create_position([10, 10]),
-                earliest=0.0,
-                timeout=20.0,
+                origin=jit.Service(
+                    position=surface.get_or_create_position([1, 1]),
+                    earliest=0.0,
+                    latest=20.0,
+                ),
+                destination=jit.Service(
+                    position=surface.get_or_create_position([10, 10]),
+                ),
             ),
         ]
         job = jit.Job(set(trips), jit.DialARideObjective)

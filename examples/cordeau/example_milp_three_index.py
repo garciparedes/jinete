@@ -3,6 +3,8 @@ from pathlib import Path
 
 import coloredlogs
 
+import pulp as lp
+
 import jinete as jit
 
 level = logging.INFO
@@ -11,14 +13,14 @@ coloredlogs.install(level=level)
 
 logger = logging.getLogger(__name__)
 
-BASE_PATH = Path(__file__).parents[1]
+BASE_PATH = Path(__file__).parents[2]
 DATASETS_PATH = BASE_PATH / 'res' / 'datasets'
 
 
 def main():
     logger.info('Starting...')
 
-    file_path = DATASETS_PATH / 'cordeau-laporte' / 'R1a.txt'
+    file_path = DATASETS_PATH / 'cordeau-laporte' / 'a2-16.txt'
 
     class MyLoader(jit.FileLoader):
         def __init__(self, *args, **kwargs):
@@ -28,10 +30,14 @@ def main():
                 *args, **kwargs,
             )
 
-    class MyAlgorithm(jit.InsertionAlgorithm):
+    class MyAlgorithm(jit.MilpAlgorithm):
         def __init__(self, *args, **kwargs):
             super().__init__(
-                neighborhood_max_size=500,
+                # solver=lp.XPRESS(msg=1, path=str(BASE_PATH / 'tmp' / 'xpressmp' / 'bin' / 'optimizer')),
+                # solver=lp.GUROBI_CMD(msg=1),
+                # solver=lp.CPLEX_CMD(msg=1, path=str(BASE_PATH / 'tmp' / 'cplex' / 'bin' / 'x86-64_osx' / 'cplex')),
+                solver=lp.SCIP(msg=1),
+                # solver=lp.PULP_CBC_CMD(msg=1, threads=4),
                 *args, **kwargs,
             )
 
@@ -47,7 +53,7 @@ def main():
             super().__init__(
                 storer_cls_set={
                     MyStorer,
-                    jit.GraphPlotStorer,
+                    # jit.GraphPlotStorer,
                 },
                 *args, **kwargs,
             )
@@ -58,7 +64,7 @@ def main():
         MyStorerSet,
     )
 
-    result = dispatcher.run()
+    result = dispatcher.run()  # noqa
 
     logger.info('Finished...')
 

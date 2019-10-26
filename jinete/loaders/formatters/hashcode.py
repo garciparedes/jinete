@@ -9,6 +9,7 @@ from ...models import (
     Vehicle,
     Trip,
     HashCodeObjective,
+    Service,
 )
 from .abc import (
     LoaderFormatter,
@@ -21,10 +22,10 @@ class HashCodeLoaderFormatter(LoaderFormatter):
 
     def fleet(self, surface: Surface, *args, **kwargs) -> Fleet:
         row = self.data[0]
-        n, timeout, capacity = int(row[2]), row[5], 1.0
+        n, latest, capacity = int(row[2]), row[5], 1.0
 
-        initial = surface.get_or_create_position([0, 0])
-        vehicles = set(Vehicle(str(idx), initial, capacity=capacity, timeout=timeout) for idx in range(n))
+        origin = Service(surface.get_or_create_position([0, 0]), latest=latest)
+        vehicles = set(Vehicle(str(idx), origin, capacity=capacity) for idx in range(n))
         fleet = Fleet(vehicles)
         logger.info(f'Created fleet!')
         return fleet
@@ -42,10 +43,15 @@ class HashCodeLoaderFormatter(LoaderFormatter):
 
     def _build_trip(self, surface: Surface, identifier: str, bonus: float, x1: float, y1: float, x2: float, y2: float,
                     earliest: float, latest: float) -> Trip:
-        origin = surface.get_or_create_position([x1, y1])
-        destination = surface.get_or_create_position([x2, y2])
-        timeout = latest - earliest
-        trip = Trip(identifier, origin, destination, earliest, timeout, bonus)
+        origin = Service(
+            position=surface.get_or_create_position([x1, y1]),
+            earliest=earliest,
+            latest=latest,
+        )
+        destination = Service(
+            position=surface.get_or_create_position([x2, y2]),
+        )
+        trip = Trip(identifier, on_time_bonus=bonus, origin=origin, destination=destination)
         logger.debug(f'Created trip!')
         return trip
 

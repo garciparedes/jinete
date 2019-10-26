@@ -11,36 +11,26 @@ coloredlogs.install(level=level)
 
 logger = logging.getLogger(__name__)
 
-BASE_PATH = Path(__file__).parents[1]
+BASE_PATH = Path(__file__).parents[2]
 DATASETS_PATH = BASE_PATH / 'res' / 'datasets'
 
 
 def main():
     logger.info('Starting...')
 
-    FILES = {
-        'a': 'a_example.in',
-        'b': 'b_should_be_easy.in',
-        'c': 'c_no_hurry.in',
-        'd': 'd_metropolis.in',
-        'e': 'e_high_bonus.in',
-    }
-
-    file_path = DATASETS_PATH / 'hashcode' / FILES['b']
+    file_path = DATASETS_PATH / 'cordeau-laporte' / 'a2-16.txt'
 
     class MyLoader(jit.FileLoader):
         def __init__(self, *args, **kwargs):
             super().__init__(
                 file_path=file_path,
-                formatter_cls=jit.HashCodeLoaderFormatter,
+                formatter_cls=jit.CordeauLaporteLoaderFormatter,
                 *args, **kwargs,
             )
 
     class MyAlgorithm(jit.InsertionAlgorithm):
         def __init__(self, *args, **kwargs):
             super().__init__(
-                neighborhood_max_size=None,
-                criterion_cls=jit.HashCodePlannedTripCriterion,
                 *args, **kwargs,
             )
 
@@ -51,13 +41,23 @@ def main():
                 *args, **kwargs,
             )
 
+    class MyStorerSet(jit.StorerSet):
+        def __init__(self, *args, **kwargs):
+            super().__init__(
+                storer_cls_set={
+                    MyStorer,
+                    jit.GraphPlotStorer,
+                },
+                *args, **kwargs,
+            )
+
     dispatcher = jit.StaticDispatcher(
         MyLoader,
         MyAlgorithm,
-        MyStorer,
+        MyStorerSet,
     )
 
-    result = dispatcher.run()
+    result = dispatcher.run()  # noqa
 
     logger.info('Finished...')
 

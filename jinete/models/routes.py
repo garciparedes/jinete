@@ -27,6 +27,8 @@ if TYPE_CHECKING:
         Dict,
         Optional,
         Iterable,
+        Generator,
+        Tuple,
     )
     from uuid import (
         UUID,
@@ -59,13 +61,10 @@ class Route(Model):
 
         if stops is None:
             self.stops = [
-                Stop(self, self.vehicle.initial, None),
+                Stop(self, self.vehicle.origin_position, None),
             ]
         else:
             self.stops = list(stops)
-
-    def __iter__(self):
-        yield from self.planned_trips
 
     def __deepcopy__(self, memo: Dict[int, Any]) -> Route:
         vehicle = deepcopy(self.vehicle, memo)
@@ -94,13 +93,13 @@ class Route(Model):
     @property
     def feasible(self) -> bool:
         if any(self.planned_trips):
-            if not self.first_stop.position == self.vehicle.initial:
+            if not self.first_stop.position == self.vehicle.origin_position:
                 return False
-            if not self.vehicle.earliest <= self.first_stop.arrival_time:
+            if not self.vehicle.origin_earliest <= self.first_stop.arrival_time:
                 return False
-            if not self.last_position == self.vehicle.final:
+            if not self.last_position == self.vehicle.destination_position:
                 return False
-            if not self.last_departure_time <= self.vehicle.latest:
+            if not self.last_departure_time <= self.vehicle.origin_latest:
                 return False
 
         if __debug__:
@@ -174,20 +173,21 @@ class Route(Model):
         return stop
 
     @property
-    def vehicle_uuid(self) -> Optional[UUID]:
+    def vehicle_identifier(self) -> Optional[str]:
         if self.vehicle is None:
             return None
-        return self.vehicle.uuid
+        return self.vehicle.identifier
 
-    def as_dict(self) -> Dict[str, Any]:
-        return {
-            'uuid': self.uuid,
-            'vehicle_uuid': self.vehicle_uuid,
-        }
+    def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
+        yield from (
+            ('uuid', self.uuid),
+            ('vehicle_identifier', self.vehicle_identifier),
+            ('trip_identifiers', tuple(trip.identifier for trip in self.trips))
+        )
 
     def conjecture_trip(self, trip: Trip) -> PlannedTrip:
-        pickup = Stop(self, trip.origin, self.last_stop)
-        delivery = Stop(self, trip.destination, pickup)
+        pickup = Stop(self, trip.origin_position, self.last_stop)
+        delivery = Stop(self, trip.destination_position, pickup)
         planned_trip = PlannedTrip(route=self, trip=trip, pickup=pickup, delivery=delivery)
         return planned_trip
 
@@ -195,8 +195,9 @@ class Route(Model):
         return [self.conjecture_trip(trip) for trip in iterable]
 
     def finish(self):
-        if self.loaded and self.last_stop.position != self.vehicle.final:
-            finish_stop = Stop(self, self.vehicle.final, self.last_stop)
+        # if self.loaded and self.last_stop.position != self.vehicle.final:
+        if self.last_stop.position != self.vehicle.destination_position:
+            finish_stop = Stop(self, self.vehicle.destination_position, self.last_stop)
             if not self.last_stop.position == finish_stop.position:
                 self.append_stop(finish_stop)
 
