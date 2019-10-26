@@ -59,7 +59,7 @@ class ShortestTimePlannedTripCriterion(PlannedTripCriterion):
         if not planned_trip.feasible:
             return MAX_FLOAT
 
-        return planned_trip.delivery_time - planned_trip.route.last_departure_time
+        return planned_trip.pickup_time - planned_trip.route.last_departure_time
 
 
 class LongestTimePlannedTripCriterion(PlannedTripCriterion):
@@ -75,7 +75,7 @@ class LongestTimePlannedTripCriterion(PlannedTripCriterion):
         if not planned_trip.feasible:
             return MIN_FLOAT
 
-        return planned_trip.delivery_time - planned_trip.route.last_departure_time
+        return planned_trip.pickup_time - planned_trip.route.last_departure_time
 
 
 class LongestUtilTimePlannedTripCriterion(PlannedTripCriterion):
