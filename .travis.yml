@@ -4,13 +4,12 @@ python:
   - "3.7"
 cache: pip
 install:
-  - 'pip install pipenv'
-  - 'pipenv sync'
+  - 'pip install -e .[all]'
 script:
-  - 'pipenv run flake8'
-  - 'pipenv run coverage run -m unittest discover tests'
+  - 'flake8'
+  - 'coverage run -m unittest discover tests'
 after_success:
-  - 'pipenv run codecov'
+  - 'codecov'
 
 branches:
   only:

@@ -4,6 +4,9 @@ import logging
 from typing import (
     TYPE_CHECKING,
 )
+
+from cached_property import cached_property
+
 from .abc import (
     Model,
 )
@@ -41,11 +44,6 @@ class Stop(Model):
         'deliveries',
         'previous',
         'following',
-        '_previous_departure_time',
-        '_down_time',
-        '_load_time',
-        '_earliest',
-        '_arrival_time',
     ]
     route: Route
     position: Position
@@ -53,12 +51,6 @@ class Stop(Model):
     following: Optional[Stop]
     pickups: Tuple[PlannedTrip, ...]
     deliveries: Tuple[PlannedTrip, ...]
-
-    _down_time: Optional[float]
-    _load_time: Optional[float]
-    _earliest: Optional[float]
-    _arrival_time: Optional[float]
-    _previous_departure_time: Optional[float]
 
     def __init__(self, route: Route, position: Position, previous: Optional[Stop], following: Optional[Stop] = None,
                  pickups: Tuple[PlannedTrip, ...] = tuple(), deliveries: Tuple[PlannedTrip, ...] = tuple()):
@@ -71,12 +63,6 @@ class Stop(Model):
 
         self.previous = previous
         self.following = following
-
-        self._previous_departure_time = None
-        self._down_time = None
-        self._load_time = None
-        self._earliest = None
-        self._arrival_time = None
 
     @property
     def planned_trips(self) -> Iterable[PlannedTrip]:
@@ -99,30 +85,15 @@ class Stop(Model):
 
     @property
     def down_time(self) -> float:
-        if self._down_time is None:
-            if not any(self.pickups):
-                self._down_time = 0.0
-            else:
-                self._down_time = max((pt.down_time for pt in self.pickups))
-        return self._down_time
+        return max((pt.down_time for pt in self.pickups), default=0.0)
 
     @property
     def earliest(self):
-        if self._earliest is None:
-            if not any(self.pickups):
-                self._earliest = 0.0
-            else:
-                self._earliest = max((pt.trip.origin_earliest for pt in self.pickups))
-        return self._earliest
+        return max((pt.trip.origin_earliest for pt in self.pickups), default=0.0)
 
     @property
     def load_time(self) -> float:
-        if self._load_time is None:
-            if not any(self.pickups):
-                self._load_time = 0.0
-            else:
-                self._load_time = max((pt.trip.origin_duration for pt in self.planned_trips))
-        return self._load_time
+        return max((pt.trip.origin_duration for pt in self.planned_trips), default=0.0)
 
     @property
     def vehicle(self) -> Vehicle:
@@ -140,9 +111,7 @@ class Stop(Model):
     def previous_departure_time(self) -> float:
         if self.previous is None:
             return self.vehicle.origin_earliest
-        if self._previous_departure_time is None:
-            self._previous_departure_time = self.previous.departure_time
-        return self._previous_departure_time
+        return self.previous.departure_time
 
     @property
     def previous_position(self) -> Position:
@@ -162,14 +131,11 @@ class Stop(Model):
     def waiting_time(self):
         return max(self.earliest - self.arrival_time, 0.0)
 
-    @property
+    @cached_property
     def arrival_time(self):
-        if self._arrival_time is None:
-            arrival_time = self.previous_departure_time + self.down_time + self.navigation_time
-            self._arrival_time = max(arrival_time, self.earliest)
-        return self._arrival_time
+        return max(self.previous_departure_time + self.down_time + self.navigation_time, self.earliest)
 
-    @property
+    @cached_property
     def departure_time(self) -> float:
         return self.arrival_time + self.load_time
 
@@ -180,10 +146,8 @@ class Stop(Model):
         )
 
     def flush(self) -> None:
-        self._down_time = None
-        self._load_time = None
-        self._earliest = None
-        self._arrival_time = None
+        for key in ('arrival_time', 'departure_time',):
+            self.__dict__.pop(key, None)
 
     def flush_all_previous(self):
         self.flush()

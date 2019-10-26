@@ -16,13 +16,13 @@ with open(convert_path('{}/_version.py'.format(module_name))) as file:
     module_version = main_ns['__version__']
 
 description = (
-    "High Performance solving suite for the Pickup and Delivery "
-    "Problem and its related extensions."
+    'High Performance solving suite for the Pickup and Delivery Problem and its related extensions.'
 )
 
 dependencies = [
-    "networkx>=2.3",
-    "matplotlib>=3.1.1",
+    'cached-property>=1.5.1',
+    'networkx>=2.3',
+    'matplotlib>=3.1.1',
     'seaborn>=0.9.0',
     'PuLP>=1.6.10',
 ]

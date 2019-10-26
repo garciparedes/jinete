@@ -39,11 +39,8 @@ class Vehicle(Model):
         self.identifier = identifier
 
         self.origin = origin
-
         self._destination = destination
-
         self.capacity = capacity
-
         self.timeout = timeout
 
     @property

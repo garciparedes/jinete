@@ -28,6 +28,9 @@ if TYPE_CHECKING:
     from .planned_trips import (
         PlannedTrip,
     )
+    from .vehicles import (
+        Vehicle,
+    )
     from uuid import (
         UUID,
     )
@@ -51,6 +54,11 @@ class Planning(Model):
     @property
     def loaded_routes(self):
         return set(route for route in self.routes if route.loaded)
+
+    @property
+    def vehicles(self) -> Iterator[Vehicle]:
+        for route in self.routes:
+            yield route.vehicle
 
     @property
     def planned_trips(self) -> Iterator[PlannedTrip]:
