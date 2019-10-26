@@ -85,15 +85,21 @@ class Stop(Model):
 
     @property
     def down_time(self) -> float:
-        return max((pt.down_time for pt in self.pickups), default=0.0)
+        if not any(self.pickups):
+            return 0.0
+        return max(pt.down_time for pt in self.pickups)
 
     @property
     def earliest(self):
-        return max((pt.trip.origin_earliest for pt in self.pickups), default=0.0)
+        if not any(self.pickups):
+            return 0.0
+        return max(pt.trip.origin_earliest for pt in self.pickups)
 
     @property
     def load_time(self) -> float:
-        return max((pt.trip.origin_duration for pt in self.planned_trips), default=0.0)
+        if not any(self.planned_trips):
+            return 0.0
+        return max(pt.trip.origin_duration for pt in self.planned_trips)
 
     @property
     def vehicle(self) -> Vehicle:
