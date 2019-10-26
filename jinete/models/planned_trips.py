@@ -1,9 +1,13 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING
+from typing import (
+    TYPE_CHECKING,
+)
 
-from cached_property import cached_property
+from cached_property import (
+    cached_property,
+)
 
 from .abc import (
     Model,
@@ -18,7 +22,6 @@ from .stops import (
 if TYPE_CHECKING:
     from typing import (
         Any,
-        Optional,
         Generator,
         Tuple,
     )
@@ -50,6 +53,8 @@ class PlannedTrip(Model):
     route: Route
     trip: Trip
     down_time: float
+    pickup: Stop
+    delivery: Stop
 
     def __init__(self, route: Route, trip: Trip, pickup: Stop, delivery: Stop, down_time: float = 0.0):
         self.route = route
