@@ -1,14 +1,22 @@
 from __future__ import annotations
 
 import logging
-from collections import defaultdict
-from functools import lru_cache
-from itertools import product
-from operator import itemgetter
+from collections import (
+    defaultdict,
+)
+from itertools import (
+    product,
+)
+from operator import (
+    itemgetter,
+)
 from typing import (
     TYPE_CHECKING,
 )
 
+from cached_property import (
+    cached_property,
+)
 import pulp as lp
 
 from ....models import (
@@ -46,24 +54,21 @@ class ThreeIndexModel(Model):
         super().__init__(*args, **kwargs)
         self.solver = solver
 
-    @property
-    @lru_cache()
+    @cached_property
     def problem(self) -> lp.LpProblem:
         problem = lp.LpProblem("3-idx_dial-a-ride", lp.LpMinimize)
         problem.objective = self.objective
         problem.extend(self.constraints)
         return problem
 
-    @property
-    @lru_cache()
+    @cached_property
     def objective(self) -> Optional[lp.LpConstraintVar]:
         return lp.lpSum(
             self.x[k][i][j] * self.costs[i][j]
             for k, i, j in product(self.routes_indexer, self.positions_indexer, self.positions_indexer)
         )
 
-    @property
-    @lru_cache()
+    @cached_property
     def constraints(self) -> List[lp.LpConstraint]:
         constraints: List[lp.LpConstraint] = sum([
             self.uniqueness_constraints,
@@ -75,8 +80,7 @@ class ThreeIndexModel(Model):
         logger.info(f'Built "{len(constraints)}" constraints.')
         return constraints
 
-    @property
-    @lru_cache()
+    @cached_property
     def x(self) -> List[List[List[lp.LpVariable]]]:
         x = list()
         for k in self.routes_indexer:
@@ -90,8 +94,7 @@ class ThreeIndexModel(Model):
             x.append(x_k)
         return x
 
-    @property
-    @lru_cache()
+    @cached_property
     def u(self) -> List[List[lp.LpVariable]]:
         u = list()
         for k in self.routes_indexer:
@@ -102,8 +105,7 @@ class ThreeIndexModel(Model):
             u.append(u_k)
         return u
 
-    @property
-    @lru_cache()
+    @cached_property
     def w(self) -> List[List[lp.LpVariable]]:
         w = list()
         for k in self.routes_indexer:
@@ -114,18 +116,15 @@ class ThreeIndexModel(Model):
             w.append(w_k)
         return w
 
-    @property
-    @lru_cache()
+    @cached_property
     def vehicles(self) -> Tuple[Vehicle, ...]:
         return tuple(self.fleet.vehicles)
 
-    @property
-    @lru_cache()
+    @cached_property
     def trips(self) -> Tuple[Trip, ...]:
         return tuple(self.job.trips)
 
-    @property
-    @lru_cache()
+    @cached_property
     def positions(self) -> Tuple[Position, ...]:
         origins = tuple(trip.origin_position for trip in self.trips)
         destinations = tuple(trip.destination_position for trip in self.trips)
@@ -138,8 +137,7 @@ class ThreeIndexModel(Model):
 
         return positions
 
-    @property
-    @lru_cache()
+    @cached_property
     def costs(self):
         costs = list()
         for origin in self.positions:
@@ -214,8 +212,7 @@ class ThreeIndexModel(Model):
             return 0
         return trip.timeout
 
-    @property
-    @lru_cache()
+    @cached_property
     def uniqueness_constraints(self) -> List[lp.LpConstraint]:
         constraints = list()
 
@@ -235,8 +232,7 @@ class ThreeIndexModel(Model):
 
         return constraints
 
-    @property
-    @lru_cache()
+    @cached_property
     def connectivity_constraints(self) -> List[lp.LpConstraint]:
         constraints = list()
 
@@ -256,8 +252,7 @@ class ThreeIndexModel(Model):
 
         return constraints
 
-    @property
-    @lru_cache()
+    @cached_property
     def time_constraints(self) -> List[lp.LpConstraint]:
         constraints = list()
 
@@ -286,8 +281,7 @@ class ThreeIndexModel(Model):
 
         return constraints
 
-    @property
-    @lru_cache()
+    @cached_property
     def feasibility_constraints(self) -> List[lp.LpConstraint]:
         constraints = list()
         for k in self.routes_indexer:

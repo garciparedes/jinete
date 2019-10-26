@@ -1,22 +1,53 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import (
+    TYPE_CHECKING,
+)
+
+from .abc import (
+    Model,
+)
 
 if TYPE_CHECKING:
     from typing import (
         Set,
+        Generator,
+        Tuple,
+        Any,
+        Type,
     )
-    from ..models import (
+    from uuid import (
+        UUID,
+    )
+    from .trips import (
         Trip,
+    )
+    from .routes import (
         Route,
+    )
+    from .jobs import (
+        Job,
+    )
+    from .vehicles import (
+        Fleet,
+        Vehicle,
+    )
+    from .plannings import (
+        Planning,
+    )
+    from .objectives import (
         Objective,
         OptimizationDirection,
     )
+    from ..algorithms import (
+        Algorithm,
+    )
 
 
-class Result(object):
+class Result(Model):
 
-    def __init__(self, fleet, job, algorithm_cls, planning, computation_time):
+    def __init__(self, fleet: Fleet, job: Job, algorithm_cls: Type[Algorithm], planning: Planning,
+                 computation_time: float):
         self.fleet = fleet
         self.job = job
         self.algorithm_cls = algorithm_cls
@@ -28,8 +59,16 @@ class Result(object):
         return self.job.trips
 
     @property
+    def vehicles(self) -> Set[Vehicle]:
+        return self.fleet.vehicles
+
+    @property
     def routes(self) -> Set[Route]:
         return self.planning.routes
+
+    @property
+    def planning_uuid(self) -> UUID:
+        return self.planning.uuid
 
     @property
     def completed_trips(self) -> Set[Trip]:
@@ -53,3 +92,11 @@ class Result(object):
     @property
     def direction(self) -> OptimizationDirection:
         return self.objective.direction
+
+    def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
+        yield from (
+            ('fleet_uuid', tuple(self.fleet)),
+            ('job', tuple(self.job)),
+            ('algorithm_name', self.algorithm_cls.__name__),
+            ('planning', self.planning_uuid)
+        )
