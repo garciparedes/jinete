@@ -13,12 +13,16 @@ from tests.utils import (
 
 if TYPE_CHECKING:
     from typing import (
-        Set,
-        List
+        Type,
     )
 
 
 class TestResult(unittest.TestCase):
+    planning: jit.Planning
+    fleet: jit.Fleet
+    job: jit.Job
+    algorithm_cls: Type[jit.Algorithm]
+    computation_time: float
 
     @classmethod
     def setUpClass(cls) -> None:
