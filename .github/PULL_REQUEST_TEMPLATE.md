@@ -1,6 +1,6 @@
 # PR Details
 
-## Related Issue
+## Related Issues
 
 <!--- This project only accepts pull requests related to open issues -->
 <!--- If suggesting a new feature or change, please discuss it in an issue first -->
