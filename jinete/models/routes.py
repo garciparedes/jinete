@@ -92,6 +92,9 @@ class Route(Model):
 
     @property
     def feasible(self) -> bool:
+        for stop in self.stops:
+            stop.flush()
+
         if any(self.planned_trips):
             if not self.first_stop.position == self.vehicle.origin_position:
                 return False
@@ -209,10 +212,37 @@ class Route(Model):
     #         for previous_delivery in self.stops[i + 1:]:
     #             planned_trip = self.conjecture_trip(trip, previous_pickup, previous_delivery)
     #             planned_trips.append(planned_trip)
+    #
+    #         planned_trip = self.conjecture_trip(trip, previous_pickup)
     #         planned_trips.append(planned_trip)
+    #     return planned_trips
+    #
+    # def sampling_conjecture_trip(self, trip: Trip, count: int) -> List[PlannedTrip]:
+    #     from random import randint
+    #
+    #     indices = set()
+    #     for _ in range(count):
+    #         sampled_i = randint(0, len(self.stops) - 1)
+    #         if sampled_i == len(self.stops) - 1:
+    #             sampled_j = None
+    #         else:
+    #             sampled_j = randint(sampled_i + 1, len(self.stops) - 1)
+    #         pair = (sampled_i, sampled_j)
+    #         indices.add(pair)
+    #
+    #     planned_trips = list()
+    #     for i, j in indices:
+    #         if j is None:
+    #             planned_trip = self.conjecture_trip(trip, self.stops[i])
+    #         else:
+    #             planned_trip = self.conjecture_trip(trip, self.stops[i], self.stops[j])
+    #         planned_trips.append(planned_trip)
+    #
     #     return planned_trips
 
     def conjecture_trip_in_batch(self, iterable: Iterable[Trip]) -> List[PlannedTrip]:
+        # return sum((self.sampling_conjecture_trip(trip, 30) for trip in iterable), [])
+        # return sum((self.intensive_conjecture_trip(trip) for trip in iterable), [])
         return [self.conjecture_trip(trip) for trip in iterable]
 
     def finish(self):
