@@ -166,6 +166,8 @@ class Stop(Model):
     def flush(self) -> None:
         for key in ('arrival_time', 'departure_time',):
             self.__dict__.pop(key, None)
+        for planned_trip in self.planned_trips:
+            planned_trip.flush()
 
     def flush_all_previous(self):
         self.flush()
