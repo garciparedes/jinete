@@ -185,11 +185,32 @@ class Route(Model):
             ('trip_identifiers', tuple(trip.identifier for trip in self.trips))
         )
 
-    def conjecture_trip(self, trip: Trip) -> PlannedTrip:
-        pickup = Stop(self, trip.origin_position, self.last_stop)
-        delivery = Stop(self, trip.destination_position, pickup)
+    def conjecture_trip(self, trip: Trip, previous_pickup: Stop = None, previous_delivery: Stop = None) -> PlannedTrip:
+        assert previous_delivery is None or (previous_pickup is not None and previous_delivery is not None)
+
+        if previous_pickup is None:
+            previous_pickup = self.last_stop
+        assert previous_pickup != previous_delivery
+
+        pickup = Stop(self, trip.origin_position, previous_pickup)
+
+        if previous_delivery is None:
+            previous_delivery = pickup
+        assert previous_pickup.departure_time <= previous_delivery.arrival_time
+
+        delivery = Stop(self, trip.destination_position, previous_delivery)
         planned_trip = PlannedTrip(route=self, trip=trip, pickup=pickup, delivery=delivery)
         return planned_trip
+
+    # def intensive_conjecture_trip(self, trip: Trip) -> List[PlannedTrip]:
+    #     planned_trips = list()
+    #     for i, previous_pickup in enumerate(self.stops):
+    #         planned_trip = self.conjecture_trip(trip, previous_pickup)
+    #         for previous_delivery in self.stops[i + 1:]:
+    #             planned_trip = self.conjecture_trip(trip, previous_pickup, previous_delivery)
+    #             planned_trips.append(planned_trip)
+    #         planned_trips.append(planned_trip)
+    #     return planned_trips
 
     def conjecture_trip_in_batch(self, iterable: Iterable[Trip]) -> List[PlannedTrip]:
         return [self.conjecture_trip(trip) for trip in iterable]
