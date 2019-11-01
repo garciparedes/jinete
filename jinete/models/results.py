@@ -71,6 +71,10 @@ class Result(Model):
         return self.planning.uuid
 
     @property
+    def feasible(self) -> bool:
+        return self.planning.feasible
+
+    @property
     def completed_trips(self) -> Set[Trip]:
         trips: Set[Trip] = set()
         for route in self.routes:
