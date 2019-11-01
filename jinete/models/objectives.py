@@ -1,4 +1,6 @@
 from __future__ import annotations
+
+import logging
 from abc import ABC
 from functools import reduce
 from operator import add
@@ -33,7 +35,9 @@ if TYPE_CHECKING:
         Tuple,
     )
 
-    Optimizable = TypeVar('Optimizable', Result, Planning, Route, Stop, PlannedTrip)
+    Optimizable = TypeVar('Optimizable', Result, Planning, Route, Stop, PlannedTrip, Tuple[float, ...])
+
+logger = logging.getLogger(__name__)
 
 
 class Objective(ABC):
@@ -53,17 +57,19 @@ class Objective(ABC):
 
     def optimization_function(self, value: Optimizable) -> Tuple[float, ...]:
         if isinstance(value, Result):
-            return self._result_optimization_function(value)
+            result = self._result_optimization_function(value)
         elif isinstance(value, Planning):
-            return self._planning_optimization_function(value)
+            result = self._planning_optimization_function(value)
         elif isinstance(value, Route):
-            return self._route_optimization_function(value)
+            result = self._route_optimization_function(value)
         elif isinstance(value, Stop):
-            return self._stop_optimization_function(value)
+            result = self._stop_optimization_function(value)
         elif isinstance(value, PlannedTrip):
-            return self._planned_trip_optimization_function(value)
+            result = self._planned_trip_optimization_function(value)
         else:
-            raise ValueError
+            result = value
+        logger.debug(f'Computed optimization function value and obtained "{result}" from "{value}".')
+        return result
 
     def _result_optimization_function(self, result: Result) -> Tuple[float, ...]:
         return self._planning_optimization_function(result.planning)
