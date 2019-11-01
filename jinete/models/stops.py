@@ -69,6 +69,18 @@ class Stop(Model):
         yield from self.pickups
         yield from self.deliveries
 
+    @property
+    def all_previous(self) -> List[Stop]:
+        if self.previous is None:
+            return []
+        return [self.previous] + self.previous.all_previous
+
+    @property
+    def all_following(self) -> List[Stop]:
+        if self.following is None:
+            return []
+        return [self.following] + self.following.all_previous
+
     def append_pickup(self, planned_trip: PlannedTrip) -> None:
         assert planned_trip.origin == self.position
         self.extend_pickups((planned_trip,))
