@@ -27,12 +27,13 @@ logger = logging.getLogger(__name__)
 
 class LocalSearchAlgorithm(Algorithm):
 
-    def __init__(self, initial: Result, *args, **kwargs):
+    def __init__(self, initial: Result, no_improvement_threshold: int = 10, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial = initial
         self.args = args
         self.kwargs = kwargs
         self.breeder_cls = FlipBreeder
+        self.no_improvement_threshold = no_improvement_threshold
 
     @property
     def initial_planning(self) -> Planning:
@@ -45,11 +46,15 @@ class LocalSearchAlgorithm(Algorithm):
     def _optimize(self) -> Planning:
         best = self.initial
 
-        again = True
-        while again:
+        no_improvement_count = 0
+        while no_improvement_count < self.no_improvement_threshold:
+            no_improvement_count += 1
+
             current = self.breeder_cls(best).improve()
             best = self.objective.best(best, current)
-            again = best == current
+
+            if best == current:
+                no_improvement_count = 0
 
         assert best is not None
 
