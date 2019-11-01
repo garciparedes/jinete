@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 if TYPE_CHECKING:
     from .models import (
         Route,
-        Trip,
+        Stop,
         PlannedTrip,
     )
 
@@ -24,6 +24,14 @@ class StopPlannedTripIterationException(JineteException):
 
     def __init__(self):
         message = f'There are no more Planned Trips to iterate over them.'
+        super().__init__(message=message)
+
+
+class PreviousStopNotInRouteException(JineteException):
+
+    def __init__(self, stop: Stop):
+        self.stop = stop
+        message = f'Stop "{stop}" has no previous "{stop.previous}" on the belonging route "{stop.route}".'
         super().__init__(message=message)
 
 

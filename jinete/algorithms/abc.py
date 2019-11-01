@@ -44,7 +44,7 @@ class Algorithm(ABC):
             planning=planning,
             computation_time=computation_time,
         )
-        logger.info(f'Optimized with {self.__class__.__name__} obtaining {"" if result.feasible else "non"} '
+        logger.info(f'Optimized with {self.__class__.__name__} obtaining {"" if result.feasible else "non "}'
                     f'feasible results!')
         return result
 

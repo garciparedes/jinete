@@ -87,4 +87,5 @@ from .exceptions import (
     StopPlannedTripIterationException,
     NonFeasiblePlannedTripException,
     NonFeasibleRouteException,
+    PreviousStopNotInRouteException,
 )

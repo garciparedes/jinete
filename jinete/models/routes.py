@@ -9,6 +9,10 @@ from typing import (
 from uuid import (
     uuid4,
 )
+
+from ..exceptions import (
+    PreviousStopNotInRouteException,
+)
 from .abc import (
     Model,
 )
@@ -208,7 +212,6 @@ class Route(Model):
     # def intensive_conjecture_trip(self, trip: Trip) -> List[PlannedTrip]:
     #     planned_trips = list()
     #     for i, previous_pickup in enumerate(self.stops):
-    #         planned_trip = self.conjecture_trip(trip, previous_pickup)
     #         for previous_delivery in self.stops[i + 1:]:
     #             planned_trip = self.conjecture_trip(trip, previous_pickup, previous_delivery)
     #             planned_trips.append(planned_trip)
@@ -249,7 +252,7 @@ class Route(Model):
         if self.last_stop.position != self.vehicle.destination_position:
             finish_stop = Stop(self, self.vehicle.destination_position, self.last_stop)
             if not self.last_stop.position == finish_stop.position:
-                self.append_stop(finish_stop)
+                self.insert_stop(finish_stop)
 
     def un_finish(self):
         if not len(self.stops) > 1:
@@ -263,16 +266,40 @@ class Route(Model):
         self.stops.pop()
         self.stops[-1].following = None
 
-    def append_stop(self, stop: Stop) -> None:
-        assert stop.previous == self.last_stop
+    def insert_stop(self, stop: Stop) -> Stop:
+        for idx in range(len(self.stops)):
+            if self.stops[idx] != stop.previous:
+                continue
+            return self.insert_stop_at(idx + 1, stop)
+        raise PreviousStopNotInRouteException(stop)
+
+    def insert_stop_at(self, idx: int, stop: Stop) -> Stop:
+        previous_stop = self.stops[idx - 1]
+
+        if previous_stop == stop:
+            return stop
+
         assert set(stop.pickups).isdisjoint(stop.deliveries)
-        if __debug__:
-            for planned_trip in stop.pickups:
-                assert planned_trip.pickup == stop
-            for planned_trip in stop.deliveries:
-                assert planned_trip.delivery == stop
-        self.last_stop.following = stop
-        self.stops.append(stop)
+        # if __debug__:
+        #     for planned_trip in stop.pickups:
+        #         assert planned_trip.pickup == stop
+        #     for planned_trip in stop.deliveries:
+        #         assert planned_trip.delivery == stop
+
+        if previous_stop.position == stop.position:
+            previous_stop.merge(stop)
+            return previous_stop
+
+        following_stop = previous_stop.following
+        if following_stop is not None:
+            following_stop.previous = stop
+            stop.following = following_stop
+        previous_stop.following = stop
+
+        self.stops.insert(idx, stop)
+        previous_stop.flush_all_following()
+
+        return stop
 
     def append_planned_trip(self, planned_trip: PlannedTrip):
         assert planned_trip.delivery is not None
@@ -281,13 +308,7 @@ class Route(Model):
         assert planned_trip.pickup_time <= planned_trip.delivery_time
         assert isnan(planned_trip.duration) or planned_trip.duration > 0
 
-        if not planned_trip.pickup == self.last_stop:
-            if self.last_stop.position == planned_trip.pickup.position:
-                self.last_stop.merge(planned_trip.pickup)
-                planned_trip.delivery.previous = self.last_stop  # FIXME: should be inside merge?
-            else:
-                self.append_stop(planned_trip.pickup)
-
-        self.append_stop(planned_trip.delivery)
+        self.insert_stop(planned_trip.pickup)
+        self.insert_stop(planned_trip.delivery)
 
         logger.info(f'Append trip "{planned_trip.trip_identifier}" identifier to route "{self.uuid}".')

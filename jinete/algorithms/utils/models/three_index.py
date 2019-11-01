@@ -380,7 +380,7 @@ class ThreeIndexModel(Model):
             self._build_planned_trips(route, trips, stops)
 
             for stop in stops:
-                route.append_stop(stop)
+                route.insert_stop(stop)
 
             route.finish()
             routes.add(route)
