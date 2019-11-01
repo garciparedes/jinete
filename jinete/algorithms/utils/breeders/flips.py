@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 class FlipBreeder(Breeder):
 
     def improve(self) -> Result:
-        for route in self.planning.routes:
+        for route in self.routes:
             cost = self.objective.optimization_function(route)
 
             for i in range(1, len(route.stops) - 1):

@@ -86,7 +86,7 @@ class Result(Model):
         return self.job.objective
 
     @property
-    def optimization_function(self) -> float:
+    def optimization_function(self) -> Tuple[float, ...]:
         return self.objective.optimization_function(self)
 
     @property

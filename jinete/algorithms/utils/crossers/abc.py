@@ -5,6 +5,7 @@ from abc import (
     ABC,
     abstractmethod,
 )
+from copy import deepcopy
 from typing import (
     TYPE_CHECKING,
 )
@@ -41,14 +42,24 @@ class Crosser(ABC):
     criterion_cls: Type[PlannedTripCriterion]
     _criterion: Optional[PlannedTripCriterion]
 
-    def __init__(self, fleet: Fleet, job: Job, criterion_cls: Type[PlannedTripCriterion] = None, *args, **kwargs):
+    def __init__(self, fleet: Fleet, job: Job, criterion_cls: Type[PlannedTripCriterion] = None,
+                 routes: Set[Route] = None, *args, **kwargs):
         if criterion_cls is None:
             criterion_cls = ShortestTimePlannedTripCriterion
 
+        pending_trips = set(job.trips)
+        if routes is None:
+            routes = set(Route(vehicle) for vehicle in fleet.vehicles)
+        else:
+            routes = deepcopy(routes)
+            for route in routes:
+                route.un_finish()
+                pending_trips -= set(route.trips)
+
         self.fleet = fleet
         self.job = job
-        self.routes = set(Route(vehicle) for vehicle in self.vehicles)
-        self._pending_trips = set(self.trips)
+        self.routes = routes
+        self._pending_trips = pending_trips
 
         self.criterion_cls = criterion_cls
         self._criterion = None

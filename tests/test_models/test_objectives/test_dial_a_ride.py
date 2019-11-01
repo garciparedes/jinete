@@ -58,14 +58,13 @@ class TestDialARideObjective(unittest.TestCase):
 
     def test_creation(self):
         objective = jit.DialARideObjective()
-        self.assertEqual(jit.OptimizationDirection.MINIMIZATION, objective.direction)
         self.assertEqual('Dial-a-Ride', objective.name)
 
     def test_result(self):
         objective = jit.DialARideObjective()
 
         self.assertEqual(
-            20.0,
+            (2, -20.0),
             objective.optimization_function(self.result),
         )
 
@@ -73,7 +72,7 @@ class TestDialARideObjective(unittest.TestCase):
         objective = jit.DialARideObjective()
 
         self.assertEqual(
-            20.0,
+            (2, -20.0),
             objective.optimization_function(self.planning),
         )
 
@@ -81,7 +80,7 @@ class TestDialARideObjective(unittest.TestCase):
         objective = jit.DialARideObjective()
 
         self.assertEqual(
-            20.0,
+            (2, -20.0),
             objective.optimization_function(self.route),
         )
 
@@ -89,7 +88,7 @@ class TestDialARideObjective(unittest.TestCase):
         objective = jit.DialARideObjective()
 
         self.assertEqual(
-            2.0,
+            (1, -2.0),
             objective.optimization_function(self.stop),
         )
 
@@ -97,7 +96,7 @@ class TestDialARideObjective(unittest.TestCase):
         objective = jit.DialARideObjective()
 
         self.assertEqual(
-            2.0,
+            (1, -2.0),
             objective.optimization_function(self.planned_trip),
         )
 
