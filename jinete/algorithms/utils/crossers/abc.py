@@ -15,7 +15,7 @@ from ....exceptions import (
 )
 from ....models import (
     Route,
-    ShortestTimePlannedTripCriterion,
+    ShortestTimeRouteCriterion,
 )
 
 if TYPE_CHECKING:
@@ -30,7 +30,7 @@ if TYPE_CHECKING:
         Fleet,
         Trip,
         Job,
-        PlannedTripCriterion,
+        RouteCriterion,
     )
 
 logger = logging.getLogger(__name__)
@@ -39,13 +39,13 @@ logger = logging.getLogger(__name__)
 class Crosser(ABC):
     fleet: Fleet
     job: Job
-    criterion_cls: Type[PlannedTripCriterion]
-    _criterion: Optional[PlannedTripCriterion]
+    criterion_cls: Type[RouteCriterion]
+    _criterion: Optional[RouteCriterion]
 
-    def __init__(self, fleet: Fleet, job: Job, criterion_cls: Type[PlannedTripCriterion] = None,
+    def __init__(self, fleet: Fleet, job: Job, criterion_cls: Type[RouteCriterion] = None,
                  routes: Set[Route] = None, *args, **kwargs):
         if criterion_cls is None:
-            criterion_cls = ShortestTimePlannedTripCriterion
+            criterion_cls = ShortestTimeRouteCriterion
 
         pending_trips = set(job.trips)
         if routes is None:
@@ -53,12 +53,14 @@ class Crosser(ABC):
         else:
             routes = deepcopy(routes)
             for route in routes:
-                route.un_finish()
                 pending_trips -= set(route.trips)
 
         self.fleet = fleet
         self.job = job
-        self.routes = routes
+        self.routes_container = {
+            route.vehicle: route
+            for route in routes
+        }
         self._pending_trips = pending_trips
 
         self.criterion_cls = criterion_cls
@@ -68,7 +70,19 @@ class Crosser(ABC):
         self.kwargs = kwargs
 
     @property
-    def criterion(self) -> PlannedTripCriterion:
+    def routes(self) -> Set[Route]:
+        return set(self.routes_container.values())
+
+    def set_route(self, route: Route):
+        old = self.routes_container[route.vehicle]
+        self.routes_container[route.vehicle] = route
+        for trip in set(route.trips) - set(old.trips):
+            self.mark_trip_as_done(trip)
+        for trip in set(old.trips) - set(route.trips):
+            self.mark_trip_as_undone(trip)
+
+    @property
+    def criterion(self) -> RouteCriterion:
         if self._criterion is None:
             self._criterion = self.criterion_cls(*self.args, **self.kwargs)
         return self._criterion

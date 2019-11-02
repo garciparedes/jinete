@@ -45,14 +45,10 @@ class InsertionAlgorithm(Algorithm):
 
         while not crosser.completed:
             try:
-                planned_trip = next(crosser)
+                route = next(crosser)
             except StopPlannedTripIterationException:
                 break
-            route = planned_trip.route
-            route.append_planned_trip(planned_trip)
-            crosser.mark_planned_trip_as_done(planned_trip)
+            crosser.set_route(route)
 
-        for route in crosser.routes:
-            route.finish()
         planning = Planning(crosser.routes)
         return planning

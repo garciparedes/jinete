@@ -53,7 +53,7 @@ def main():
             super().__init__(
                 storer_cls_set={
                     MyStorer,
-                    # jit.GraphPlotStorer,
+                    jit.GraphPlotStorer,
                 },
                 *args, **kwargs,
             )

@@ -89,7 +89,7 @@ class PlannedTrip(Model):
 
     @property
     def route_duration(self) -> float:
-        return self.delivery_time - self.route.first_stop.arrival_time
+        return self.route.last_stop.departure_time - self.route.first_stop.arrival_time
 
     @property
     def origin(self) -> Position:

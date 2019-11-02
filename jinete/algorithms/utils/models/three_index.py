@@ -381,8 +381,6 @@ class ThreeIndexModel(Model):
 
             for stop in stops:
                 route.insert_stop(stop)
-
-            route.finish()
             routes.add(route)
         return routes
 

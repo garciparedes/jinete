@@ -184,7 +184,6 @@ def generate_one_route(feasible: bool = True,
         )
 
         route.append_planned_trip(planned_trip)
-    route.finish()
     return route
 
 
@@ -223,7 +222,7 @@ def generate_one_result():
         def __init__(self, *args, **kwargs):
             super().__init__(
                 neighborhood_max_size=None,
-                criterion_cls=jit.HashCodePlannedTripCriterion,
+                criterion_cls=jit.HashCodeRouteCriterion,
                 *args, **kwargs,
             )
 

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import logging
 from copy import deepcopy
-from math import isnan
 from typing import (
     TYPE_CHECKING,
 )
@@ -64,8 +63,11 @@ class Route(Model):
         self.vehicle = vehicle
 
         if stops is None:
+            first = Stop(self, self.vehicle.origin_position, None)
+            last = Stop(self, self.vehicle.destination_position, first)
+            first.following = last
             self.stops = [
-                Stop(self, self.vehicle.origin_position, None),
+                first, last,
             ]
         else:
             self.stops = list(stops)
@@ -109,14 +111,14 @@ class Route(Model):
             if not self.last_departure_time <= self.vehicle.origin_latest:
                 return False
 
-        if __debug__:
-            for stop in self.stops:
-                assert stop.route == self
-
-            for one, two in zip(self.stops[:-1], self.stops[1:]):
-                assert one.following == two
-                assert two.previous == one
-                assert one.position != two.position
+        # if __debug__:
+        #     for stop in self.stops:
+        #         assert stop.route == self
+        #
+        #     for one, two in zip(self.stops[:-2], self.stops[1:-1]):
+        #         assert one.following == two
+        #         assert two.previous == one
+        #         assert one.position != two.position
 
         for planned_trip in self.planned_trips:
             if not planned_trip.feasible:
@@ -144,12 +146,23 @@ class Route(Model):
         return sum(1 for _ in self.loaded_trips)
 
     @property
+    def first_stop(self) -> Stop:
+        stop = self.stops[0]
+        assert stop.previous is None
+        return stop
+
+    @property
     def first_arrival_time(self) -> float:
         return self.first_stop.arrival_time
 
     @property
     def first_departure_time(self) -> float:
         return self.first_stop.departure_time
+
+    @property
+    def last_stop(self) -> Stop:
+        stop = self.stops[-1]
+        return stop
 
     @property
     def last_arrival_time(self) -> float:
@@ -160,24 +173,29 @@ class Route(Model):
         return self.last_stop.departure_time
 
     @property
-    def duration(self) -> float:
-        return self.last_departure_time - self.first_arrival_time
-
-    @property
     def last_position(self) -> Position:
         return self.last_stop.position
 
     @property
-    def first_stop(self) -> Stop:
-        stop = self.stops[0]
-        assert stop.previous is None
+    def current_stop(self) -> Stop:
+        stop = self.stops[-2]
         return stop
 
     @property
-    def last_stop(self) -> Stop:
-        stop = self.stops[-1]
-        assert stop.following is None
-        return stop
+    def current_arrival_time(self) -> float:
+        return self.current_stop.arrival_time
+
+    @property
+    def current_departure_time(self) -> float:
+        return self.current_stop.departure_time
+
+    @property
+    def current_position(self) -> Position:
+        return self.current_stop.position
+
+    @property
+    def duration(self) -> float:
+        return self.last_departure_time - self.first_arrival_time
 
     @property
     def vehicle_identifier(self) -> Optional[str]:
@@ -192,79 +210,66 @@ class Route(Model):
             ('trip_identifiers', tuple(trip.identifier for trip in self.trips))
         )
 
-    def conjecture_trip(self, trip: Trip, previous_pickup: Stop = None, previous_delivery: Stop = None) -> PlannedTrip:
-        assert previous_delivery is None or (previous_pickup is not None and previous_delivery is not None)
+    def conjecture_trip(self, trip: Trip, previous: Stop = None, following: Stop = None) -> Route:
+        assert following is None or (previous is not None and following is not None)
 
-        if previous_pickup is None:
-            previous_pickup = self.last_stop
-        assert previous_pickup != previous_delivery
+        if previous is None:
+            previous = self.current_stop
+        if following is None:
+            following = self.last_stop
+        assert previous != following
+        assert previous in following.all_previous
+        assert following in previous.all_following
+        assert previous.departure_time <= following.arrival_time
 
-        pickup = Stop(self, trip.origin_position, previous_pickup)
+        previous_idx = self.stops.index(previous)
+        following_idx = self.stops.index(following)
 
-        if previous_delivery is None:
+        route = deepcopy(self)
+
+        previous_pickup = route.stops[previous_idx]
+        pickup = Stop(route, trip.origin_position, previous_pickup)
+        if previous_idx + 1 == following_idx:
             previous_delivery = pickup
-        assert previous_pickup.departure_time <= previous_delivery.arrival_time
+        else:
+            previous_delivery = route.stops[following_idx - 1]
+        delivery = Stop(route, trip.destination_position, previous_delivery)
+        planned_trip = PlannedTrip(route=route, trip=trip, pickup=pickup, delivery=delivery)
+        route.append_planned_trip(planned_trip)
+        return route
 
-        delivery = Stop(self, trip.destination_position, previous_delivery)
-        planned_trip = PlannedTrip(route=self, trip=trip, pickup=pickup, delivery=delivery)
-        return planned_trip
+    def intensive_conjecture_trip(self, trip: Trip) -> List[Route]:
+        routes = list()
+        for i, previous in enumerate(self.stops[:-1]):
+            for following in self.stops[i + 1:]:
+                route = self.conjecture_trip(trip, previous, following)
+                routes.append(route)
+        return routes
 
-    # def intensive_conjecture_trip(self, trip: Trip) -> List[PlannedTrip]:
-    #     planned_trips = list()
-    #     for i, previous_pickup in enumerate(self.stops):
-    #         for previous_delivery in self.stops[i + 1:]:
-    #             planned_trip = self.conjecture_trip(trip, previous_pickup, previous_delivery)
-    #             planned_trips.append(planned_trip)
-    #
-    #         planned_trip = self.conjecture_trip(trip, previous_pickup)
-    #         planned_trips.append(planned_trip)
-    #     return planned_trips
-    #
-    # def sampling_conjecture_trip(self, trip: Trip, count: int) -> List[PlannedTrip]:
-    #     from random import randint
-    #
-    #     indices = set()
-    #     for _ in range(count):
-    #         sampled_i = randint(0, len(self.stops) - 1)
-    #         if sampled_i == len(self.stops) - 1:
-    #             sampled_j = None
-    #         else:
-    #             sampled_j = randint(sampled_i + 1, len(self.stops) - 1)
-    #         pair = (sampled_i, sampled_j)
-    #         indices.add(pair)
-    #
-    #     planned_trips = list()
-    #     for i, j in indices:
-    #         if j is None:
-    #             planned_trip = self.conjecture_trip(trip, self.stops[i])
-    #         else:
-    #             planned_trip = self.conjecture_trip(trip, self.stops[i], self.stops[j])
-    #         planned_trips.append(planned_trip)
-    #
-    #     return planned_trips
+    def sampling_conjecture_trip(self, trip: Trip, count: int) -> List[Route]:
+        from random import randint
 
-    def conjecture_trip_in_batch(self, iterable: Iterable[Trip]) -> List[PlannedTrip]:
-        # return sum((self.sampling_conjecture_trip(trip, 30) for trip in iterable), [])
-        # return sum((self.intensive_conjecture_trip(trip) for trip in iterable), [])
-        return [self.conjecture_trip(trip) for trip in iterable]
+        indices = set()
+        for _ in range(count):
+            sampled_i = randint(0, len(self.stops) - 2)
+            sampled_j = randint(sampled_i + 1, len(self.stops) - 1)
+            pair = (sampled_i, sampled_j)
+            indices.add(pair)
 
-    def finish(self):
-        if self.last_stop.position != self.vehicle.destination_position:
-            finish_stop = Stop(self, self.vehicle.destination_position, self.last_stop)
-            if not self.last_stop.position == finish_stop.position:
-                self.insert_stop(finish_stop)
+        planned_trips = list()
+        for i, j in indices:
+            if j is None:
+                planned_trip = self.conjecture_trip(trip, self.stops[i])
+            else:
+                planned_trip = self.conjecture_trip(trip, self.stops[i], self.stops[j])
+            planned_trips.append(planned_trip)
 
-    def un_finish(self):
-        if not len(self.stops) > 1:
-            return
-        if not self.last_stop.position == self.vehicle.destination_position:
-            return
+        return planned_trips
 
-        if any(self.last_stop.planned_trips):
-            return
-
-        self.stops.pop()
-        self.stops[-1].following = None
+    def conjecture_trip_in_batch(self, iterable: Iterable[Trip]) -> List[Route]:
+        # return sum((self.sampling_conjecture_trip(trip, 100) for trip in iterable), [])
+        return sum((self.intensive_conjecture_trip(trip) for trip in iterable), [])
+        # return [self.conjecture_trip(trip) for trip in iterable]
 
     def insert_stop(self, stop: Stop) -> Stop:
         for idx in range(len(self.stops)):
@@ -280,13 +285,9 @@ class Route(Model):
             return stop
 
         assert set(stop.pickups).isdisjoint(stop.deliveries)
-        # if __debug__:
-        #     for planned_trip in stop.pickups:
-        #         assert planned_trip.pickup == stop
-        #     for planned_trip in stop.deliveries:
-        #         assert planned_trip.delivery == stop
 
-        if previous_stop.position == stop.position:
+        stop.previous = previous_stop
+        if previous_stop == stop:
             previous_stop.merge(stop)
             return previous_stop
 
@@ -297,18 +298,17 @@ class Route(Model):
         previous_stop.following = stop
 
         self.stops.insert(idx, stop)
-        previous_stop.flush_all_following()
 
+        self.first_stop.flush_all_following()
         return stop
 
     def append_planned_trip(self, planned_trip: PlannedTrip):
         assert planned_trip.delivery is not None
         assert planned_trip.pickup is not None
-        assert planned_trip.delivery.previous is not None
-        assert planned_trip.pickup_time <= planned_trip.delivery_time
-        assert isnan(planned_trip.duration) or planned_trip.duration > 0
 
         self.insert_stop(planned_trip.pickup)
         self.insert_stop(planned_trip.delivery)
 
+        assert all(self.stops[i] == self.stops[i + 1].previous for i in range(len(self.stops) - 1))
+        assert all(self.stops[i].following == self.stops[i + 1] for i in range(len(self.stops) - 1))
         logger.info(f'Append trip "{planned_trip.trip_identifier}" identifier to route "{self.uuid}".')

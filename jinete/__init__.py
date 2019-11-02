@@ -29,11 +29,11 @@ from .models import (
     TaxiSharingObjective,
     HashCodeObjective,
 
-    PlannedTripCriterion,
-    ShortestTimePlannedTripCriterion,
-    LongestTimePlannedTripCriterion,
-    LongestUtilTimePlannedTripCriterion,
-    HashCodePlannedTripCriterion,
+    RouteCriterion,
+    ShortestTimeRouteCriterion,
+    LongestTimeRouteCriterion,
+    LongestUtilTimeRouteCriterion,
+    HashCodeRouteCriterion,
 
     MAX_INT,
     MIN_INT,

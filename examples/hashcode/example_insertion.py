@@ -40,7 +40,7 @@ def main():
         def __init__(self, *args, **kwargs):
             super().__init__(
                 neighborhood_max_size=None,
-                criterion_cls=jit.HashCodePlannedTripCriterion,
+                criterion_cls=jit.HashCodeRouteCriterion,
                 *args, **kwargs,
             )
 

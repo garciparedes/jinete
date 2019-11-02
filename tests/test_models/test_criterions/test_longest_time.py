@@ -64,12 +64,12 @@ class TestLongestTimePlannedTripCriterion(unittest.TestCase):
         ]
 
     def test_creation(self):
-        criterion = jit.LongestTimePlannedTripCriterion()
+        criterion = jit.LongestTimeRouteCriterion()
         self.assertEqual(jit.OptimizationDirection.MAXIMIZATION, criterion.direction)
         self.assertEqual('Longest-Time', criterion.name)
 
     def test_sorting(self):
-        criterion = jit.LongestTimePlannedTripCriterion()
+        criterion = jit.LongestTimeRouteCriterion()
 
         self.assertEqual(
             self.planned_trips[::-1],
@@ -77,7 +77,7 @@ class TestLongestTimePlannedTripCriterion(unittest.TestCase):
         )
 
     def test_scoring(self):
-        criterion = jit.LongestTimePlannedTripCriterion()
+        criterion = jit.LongestTimeRouteCriterion()
 
         self.assertEqual(
             0.0,
@@ -90,7 +90,7 @@ class TestLongestTimePlannedTripCriterion(unittest.TestCase):
         )
 
     def test_best(self):
-        criterion = jit.LongestTimePlannedTripCriterion()
+        criterion = jit.LongestTimeRouteCriterion()
 
         self.assertEqual(
             self.planned_trips[1],

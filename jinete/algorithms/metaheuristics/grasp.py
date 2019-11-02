@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 class GraspAlgorithm(Algorithm):
 
-    def __init__(self, first_solution_episodes: int = 3, no_improvement_threshold: int = 10,
+    def __init__(self, first_solution_episodes: int = 1, no_improvement_threshold: int = 10,
                  seed: int = 56, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

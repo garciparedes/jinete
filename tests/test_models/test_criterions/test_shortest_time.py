@@ -66,12 +66,12 @@ class TestShortestTimePlannedTripCriterion(unittest.TestCase):
         ]
 
     def test_creation(self):
-        criterion = jit.ShortestTimePlannedTripCriterion()
+        criterion = jit.ShortestTimeRouteCriterion()
         self.assertEqual(jit.OptimizationDirection.MINIMIZATION, criterion.direction)
         self.assertEqual('Shortest-Time', criterion.name)
 
     def test_sorting(self):
-        criterion = jit.ShortestTimePlannedTripCriterion()
+        criterion = jit.ShortestTimeRouteCriterion()
 
         self.assertEqual(
             self.planned_trips,
@@ -79,7 +79,7 @@ class TestShortestTimePlannedTripCriterion(unittest.TestCase):
         )
 
     def test_scoring(self):
-        criterion = jit.ShortestTimePlannedTripCriterion()
+        criterion = jit.ShortestTimeRouteCriterion()
 
         self.assertEqual(
             0.0,
@@ -92,7 +92,7 @@ class TestShortestTimePlannedTripCriterion(unittest.TestCase):
         )
 
     def test_best(self):
-        criterion = jit.ShortestTimePlannedTripCriterion()
+        criterion = jit.ShortestTimeRouteCriterion()
 
         self.assertEqual(
             self.planned_trips[0],
