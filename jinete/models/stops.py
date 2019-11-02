@@ -79,7 +79,7 @@ class Stop(Model):
     def all_following(self) -> List[Stop]:
         if self.following is None:
             return []
-        return [self.following] + self.following.all_previous
+        return [self.following] + self.following.all_following
 
     def append_pickup(self, planned_trip: PlannedTrip) -> None:
         assert planned_trip.origin == self.position
