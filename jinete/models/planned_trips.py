@@ -25,12 +25,6 @@ if TYPE_CHECKING:
         Generator,
         Tuple,
     )
-    from uuid import (
-        UUID,
-    )
-    from .routes import (
-        Route,
-    )
     from .positions import (
         Position,
     )
@@ -43,21 +37,21 @@ logger = logging.getLogger(__name__)
 
 class PlannedTrip(Model):
     __slots__ = [
-        'route',
+        'vehicle',
         'trip',
         'down_time',
         'pickup',
         'delivery',
     ]
 
-    route: Route
+    vehicle: Vehicle
     trip: Trip
     down_time: float
     pickup: Stop
     delivery: Stop
 
-    def __init__(self, route: Route, trip: Trip, pickup: Stop, delivery: Stop, down_time: float = 0.0):
-        self.route = route
+    def __init__(self, vehicle: Vehicle, trip: Trip, pickup: Stop, delivery: Stop, down_time: float = 0.0):
+        self.vehicle = vehicle
         self.trip = trip
         self.down_time = down_time
 
@@ -76,20 +70,8 @@ class PlannedTrip(Model):
         return self.delivery.arrival_time
 
     @property
-    def vehicle(self) -> Vehicle:
-        return self.route.vehicle
-
-    @property
     def trip_identifier(self) -> str:
         return self.trip.identifier
-
-    @property
-    def route_uuid(self) -> UUID:
-        return self.route.uuid
-
-    @property
-    def route_duration(self) -> float:
-        return self.route.last_stop.departure_time - self.route.first_stop.arrival_time
 
     @property
     def origin(self) -> Position:
@@ -121,13 +103,7 @@ class PlannedTrip(Model):
         if not self.delivery_time <= self.trip.destination_latest:
             return False
 
-        time_to_return = self.trip.destination_position.time_to(self.vehicle.destination_position, self.delivery_time)
-        vehicle_finish_time = self.delivery_time + time_to_return
-
-        if not vehicle_finish_time <= self.vehicle.origin_latest:
-            return False
-
-        if not self.route_duration <= self.vehicle.timeout:
+        if not self.pickup.capacity <= self.vehicle.capacity:
             return False
 
         if not self.duration <= self.trip.timeout:
@@ -141,7 +117,6 @@ class PlannedTrip(Model):
 
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
         yield from (
-            ('route_uuid', self.route_uuid),
             ('trip_identifier', self.trip_identifier),
             ('pickup', self.pickup),
             ('delivery', self.delivery),

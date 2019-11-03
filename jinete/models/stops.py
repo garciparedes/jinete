@@ -70,6 +70,16 @@ class Stop(Model):
         yield from self.deliveries
 
     @property
+    def trips(self):
+        yield from (planned_trip.trip for planned_trip in self.planned_trips)
+
+    @property
+    def capacity(self) -> float:
+        result = sum(trip.capacity for trip in self.planned_trips)
+        assert 0 <= result
+        return result
+
+    @property
     def all_previous(self) -> List[Stop]:
         if self.previous is None:
             return []
@@ -159,7 +169,6 @@ class Stop(Model):
 
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
         yield from (
-            ('route_uuid', self.route.uuid),
             ('position', self.position),
         )
 

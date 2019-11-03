@@ -5,9 +5,7 @@ from copy import deepcopy
 from typing import (
     TYPE_CHECKING,
 )
-from uuid import (
-    uuid4,
-)
+from cached_property import cached_property
 
 from ..exceptions import (
     PreviousStopNotInRouteException,
@@ -33,9 +31,6 @@ if TYPE_CHECKING:
         Generator,
         Tuple,
     )
-    from uuid import (
-        UUID,
-    )
     from .vehicles import (
         Vehicle,
     )
@@ -51,14 +46,9 @@ logger = logging.getLogger(__name__)
 
 class Route(Model):
     vehicle: Vehicle
-    uuid: UUID
     stops: List[Stop]
 
-    def __init__(self, vehicle: Vehicle, stops: List[Stop] = None, uuid: UUID = None):
-
-        if uuid is None:
-            uuid = uuid4()
-        self.uuid = uuid
+    def __init__(self, vehicle: Vehicle, stops: List[Stop] = None):
 
         self.vehicle = vehicle
 
@@ -83,6 +73,10 @@ class Route(Model):
         return route
 
     @property
+    def identifier(self):
+        return '|'.join(trip.identifier for trip in self.trips)
+
+    @property
     def planned_trips(self) -> Iterator[PlannedTrip]:
         yield from self.deliveries
 
@@ -97,29 +91,21 @@ class Route(Model):
             yield from stop.deliveries
 
     @property
+    def positions(self) -> Iterator[Position]:
+        yield from (stop.position for stop in self.stops)
+
+    @cached_property
     def feasible(self) -> bool:
-        for stop in self.stops:
-            stop.flush()
-
-        if any(self.planned_trips):
-            if not self.first_stop.position == self.vehicle.origin_position:
-                return False
-            if not self.vehicle.origin_earliest <= self.first_stop.arrival_time:
-                return False
-            if not self.last_position == self.vehicle.destination_position:
-                return False
-            if not self.last_departure_time <= self.vehicle.origin_latest:
-                return False
-
-        # if __debug__:
-        #     for stop in self.stops:
-        #         assert stop.route == self
-        #
-        #     for one, two in zip(self.stops[:-2], self.stops[1:-1]):
-        #         assert one.following == two
-        #         assert two.previous == one
-        #         assert one.position != two.position
-
+        if not self.first_stop.position == self.vehicle.origin_position:
+            return False
+        if not self.vehicle.origin_earliest <= self.first_stop.arrival_time:
+            return False
+        if not self.last_position == self.vehicle.destination_position:
+            return False
+        if not self.last_departure_time <= self.vehicle.origin_latest:
+            return False
+        if not self.duration <= self.vehicle.timeout:
+            return False
         for planned_trip in self.planned_trips:
             if not planned_trip.feasible:
                 return False
@@ -205,25 +191,17 @@ class Route(Model):
 
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
         yield from (
-            ('uuid', self.uuid),
             ('vehicle_identifier', self.vehicle_identifier),
             ('trip_identifiers', tuple(trip.identifier for trip in self.trips))
         )
 
-    def conjecture_trip(self, trip: Trip, previous: Stop = None, following: Stop = None) -> Route:
-        assert following is None or (previous is not None and following is not None)
+    def conjecture_trip(self, trip: Trip, previous_idx: int = None, following_idx: int = None) -> Route:
+        assert following_idx is None or (previous_idx is not None and following_idx is not None)
 
-        if previous is None:
-            previous = self.current_stop
-        if following is None:
-            following = self.last_stop
-        assert previous != following
-        assert previous in following.all_previous
-        assert following in previous.all_following
-        assert previous.departure_time <= following.arrival_time
-
-        previous_idx = self.stops.index(previous)
-        following_idx = self.stops.index(following)
+        if previous_idx is None:
+            previous_idx = - 2
+        if following_idx is None:
+            following_idx = - 1
 
         route = deepcopy(self)
 
@@ -233,16 +211,21 @@ class Route(Model):
             previous_delivery = pickup
         else:
             previous_delivery = route.stops[following_idx - 1]
+
+        # assert previous_pickup in previous_delivery.all_previous
+        # assert previous_delivery in previous_pickup.all_following
+        # assert previous_pickup.departure_time <= previous_delivery.arrival_time
+
         delivery = Stop(route, trip.destination_position, previous_delivery)
-        planned_trip = PlannedTrip(route=route, trip=trip, pickup=pickup, delivery=delivery)
+        planned_trip = PlannedTrip(vehicle=route.vehicle, trip=trip, pickup=pickup, delivery=delivery)
         route.append_planned_trip(planned_trip)
         return route
 
     def intensive_conjecture_trip(self, trip: Trip) -> List[Route]:
         routes = list()
-        for i, previous in enumerate(self.stops[:-1]):
-            for following in self.stops[i + 1:]:
-                route = self.conjecture_trip(trip, previous, following)
+        for i in range(len(self.stops) - 1):
+            for j in range(i + 1, len(self.stops)):
+                route = self.conjecture_trip(trip, i, j)
                 routes.append(route)
         return routes
 
@@ -258,16 +241,12 @@ class Route(Model):
 
         planned_trips = list()
         for i, j in indices:
-            if j is None:
-                planned_trip = self.conjecture_trip(trip, self.stops[i])
-            else:
-                planned_trip = self.conjecture_trip(trip, self.stops[i], self.stops[j])
+            planned_trip = self.conjecture_trip(trip, i, j)
             planned_trips.append(planned_trip)
-
         return planned_trips
 
     def conjecture_trip_in_batch(self, iterable: Iterable[Trip]) -> List[Route]:
-        # return sum((self.sampling_conjecture_trip(trip, 100) for trip in iterable), [])
+        # return sum((self.sampling_conjecture_trip(trip, 10) for trip in iterable), [])
         return sum((self.intensive_conjecture_trip(trip) for trip in iterable), [])
         # return [self.conjecture_trip(trip) for trip in iterable]
 
@@ -298,8 +277,7 @@ class Route(Model):
         previous_stop.following = stop
 
         self.stops.insert(idx, stop)
-
-        self.first_stop.flush_all_following()
+        stop.flush_all_following()
         return stop
 
     def append_planned_trip(self, planned_trip: PlannedTrip):
@@ -311,4 +289,4 @@ class Route(Model):
 
         assert all(self.stops[i] == self.stops[i + 1].previous for i in range(len(self.stops) - 1))
         assert all(self.stops[i].following == self.stops[i + 1] for i in range(len(self.stops) - 1))
-        logger.info(f'Append trip "{planned_trip.trip_identifier}" identifier to route "{self.uuid}".')
+        logger.debug(f'Append trip "{planned_trip.trip_identifier}" identifier to route.')
