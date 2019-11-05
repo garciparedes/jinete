@@ -45,6 +45,12 @@ logger = logging.getLogger(__name__)
 
 
 class Route(Model):
+
+    __slots__ = (
+        'vehicle',
+        'stops',
+    )
+
     vehicle: Vehicle
     stops: List[Stop]
 
