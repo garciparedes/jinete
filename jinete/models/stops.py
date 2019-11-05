@@ -43,16 +43,14 @@ class Stop(Model):
         'pickups',
         'deliveries',
         'previous',
-        'following',
     ]
     route: Route
     position: Position
     previous: Optional[Stop]
-    following: Optional[Stop]
     pickups: Tuple[PlannedTrip, ...]
     deliveries: Tuple[PlannedTrip, ...]
 
-    def __init__(self, route: Route, position: Position, previous: Optional[Stop], following: Optional[Stop] = None,
+    def __init__(self, route: Route, position: Position, previous: Optional[Stop],
                  pickups: Tuple[PlannedTrip, ...] = tuple(), deliveries: Tuple[PlannedTrip, ...] = tuple()):
 
         self.route = route
@@ -62,7 +60,6 @@ class Stop(Model):
         self.deliveries = deliveries
 
         self.previous = previous
-        self.following = following
 
     @property
     def planned_trips(self) -> Iterable[PlannedTrip]:
@@ -84,12 +81,6 @@ class Stop(Model):
         if self.previous is None:
             return []
         return [self.previous] + self.previous.all_previous
-
-    @property
-    def all_following(self) -> List[Stop]:
-        if self.following is None:
-            return []
-        return [self.following] + self.following.all_following
 
     def append_pickup(self, planned_trip: PlannedTrip) -> None:
         assert planned_trip.origin == self.position
@@ -183,17 +174,11 @@ class Stop(Model):
         if self.previous is not None:
             self.previous.flush_all_previous()
 
-    def flush_all_following(self):
-        self.flush()
-        if self.following is not None:
-            self.following.flush_all_following()
-
     def merge(self, other: Stop) -> None:
         if self == other:
             return
         assert self.route == other.route
         assert self.position == other.position
-        assert self.following == other.following
 
         self.extend_pickups(other.pickups)
         for planned_trip in other.pickups:
@@ -203,29 +188,18 @@ class Stop(Model):
         for planned_trip in other.deliveries:
             planned_trip.delivery = self
 
-        self.flush()
-
-    def flip(self, other: Stop) -> None:
-        # assert other.previous == self
+    def flip(self, other: Stop, following: Stop = None) -> None:
+        assert following is None or following.previous == self
+        assert self.previous == other
         assert self.route == other.route
 
         self_index = self.index
         other_index = other.index
         self.stops[self_index], self.stops[other_index] = self.stops[other_index], self.stops[self_index]
 
-        following = other.following
-        other.following = self
         if following is not None:
             following.previous = self
-        self.following = following
 
         previous = self.previous
         other.previous = previous
-        if previous is not None:
-            previous.following = other
         self.previous = other
-
-        other.flush_all_following()
-
-    def flip_with_following(self):
-        self.flip(self.following)

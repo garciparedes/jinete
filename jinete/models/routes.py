@@ -45,7 +45,6 @@ logger = logging.getLogger(__name__)
 
 
 class Route(Model):
-
     __slots__ = (
         'vehicle',
         'stops',
@@ -61,7 +60,6 @@ class Route(Model):
         if stops is None:
             first = Stop(self, self.vehicle.origin_position, None)
             last = Stop(self, self.vehicle.destination_position, first)
-            first.following = last
             self.stops = [
                 first, last,
             ]
@@ -265,25 +263,22 @@ class Route(Model):
 
     def insert_stop_at(self, idx: int, stop: Stop) -> Stop:
         previous_stop = self.stops[idx - 1]
+        following_stop = self.stops[idx] if idx < len(self.stops) else None
 
-        if previous_stop == stop:
-            return stop
-
-        assert set(stop.pickups).isdisjoint(stop.deliveries)
-
-        stop.previous = previous_stop
         if previous_stop == stop:
             previous_stop.merge(stop)
             return previous_stop
 
-        following_stop = previous_stop.following
+        assert set(stop.pickups).isdisjoint(stop.deliveries)
+
         if following_stop is not None:
             following_stop.previous = stop
-            stop.following = following_stop
-        previous_stop.following = stop
 
         self.stops.insert(idx, stop)
-        stop.flush_all_following()
+
+        for stop in self.stops[idx + 1:]:
+            stop.flush()
+
         return stop
 
     def append_planned_trip(self, planned_trip: PlannedTrip):
@@ -294,5 +289,4 @@ class Route(Model):
         self.insert_stop(planned_trip.delivery)
 
         assert all(self.stops[i] == self.stops[i + 1].previous for i in range(len(self.stops) - 1))
-        assert all(self.stops[i].following == self.stops[i + 1] for i in range(len(self.stops) - 1))
         logger.debug(f'Append trip "{planned_trip.trip_identifier}" identifier to route.')

@@ -143,7 +143,7 @@ class TestStop(unittest.TestCase):
     def test_flip(self):
         route = deepcopy(self.route)
         stops = route.stops
-        stops[1].flip(stops[2])
+        stops[1].flip(stops[2], stops[3])
 
         self.assertEqual(stops[0].position, self.route.stops[0].position)
         self.assertEqual(stops[1].position, self.route.stops[2].position)
@@ -151,7 +151,6 @@ class TestStop(unittest.TestCase):
         self.assertEqual(stops[3].position, self.route.stops[3].position)
 
         for first, second in zip(stops[:-1], stops[1:]):
-            self.assertEqual(first.following, second)
             self.assertEqual(second.previous, first)
 
 

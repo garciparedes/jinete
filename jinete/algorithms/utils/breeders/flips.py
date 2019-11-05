@@ -19,15 +19,17 @@ class FlipBreeder(Breeder):
 
             for i in range(1, len(route.stops) - 1):
                 j = i + 1
+                k = i + 2
                 first = route.stops[i]
                 second = route.stops[j]
+                third = route.stops[k] if k < len(route.stops) else None
 
                 if not set(first.pickups).isdisjoint(second.deliveries):
                     continue
-                first.flip(second)
+                first.flip(second, third)
 
                 if not route.feasible or cost == self.objective.best(cost, route):
-                    second.flip(first)
+                    second.flip(first, third)
                     continue
 
                 cost = self.objective.optimization_function(route)
