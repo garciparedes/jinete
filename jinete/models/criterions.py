@@ -55,11 +55,6 @@ class ShortestTimeRouteCriterion(RouteCriterion):
             *args, **kwargs,
         )
 
-    # def scoring(self, planned_trip: PlannedTrip) -> float:
-    #     if not planned_trip.feasible:
-    #         return MAX_FLOAT
-    #
-    #     return planned_trip.pickup_time - planned_trip.route.current_departure_time
     def scoring(self, route: Route) -> float:
         if not route.feasible:
             return MAX_FLOAT
