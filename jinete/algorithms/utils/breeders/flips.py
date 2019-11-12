@@ -4,7 +4,9 @@ from .abc import (
     Breeder,
 )
 from ....models import (
-    Result
+    Result,
+    Stop,
+    Route,
 )
 
 logger = logging.getLogger(__name__)
@@ -26,12 +28,25 @@ class FlipBreeder(Breeder):
 
                 if not set(first.pickups).isdisjoint(second.deliveries):
                     continue
-                first.flip(second, third)
+                self.flip(route, first, second, third)
 
                 if not route.feasible or cost == self.objective.best(cost, route):
-                    second.flip(first, third)
+                    self.flip(route, second, first, third)
                     continue
 
                 cost = self.objective.optimization_function(route)
                 logger.info(f'Flipped "{i}"-th and "{j}"-th stops from "{route}".')
         return self.result
+
+    def flip(self, route: Route, previous: Stop, other: Stop, following: Stop = None) -> None:
+        assert following is None or following.previous == other
+        assert other.previous == previous
+
+        self_index = route.stops.index(other)
+        other_index = route.stops.index(previous)
+        route.stops[self_index], route.stops[other_index] = route.stops[other_index], route.stops[self_index]
+
+        if following is not None:
+            following.previous = previous
+        other.previous = previous.previous
+        previous.previous = other

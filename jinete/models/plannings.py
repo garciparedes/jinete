@@ -78,7 +78,7 @@ class Planning(Model):
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
         yield from (
             ('uuid', self.uuid),
-            ('route_uuids', tuple(route.uuid for route in self.routes))
+            ('route_identifiers', tuple(route.identifier for route in self.routes))
         )
 
     def __deepcopy__(self, memo: Dict[int, Any]) -> Planning:

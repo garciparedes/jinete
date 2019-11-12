@@ -26,9 +26,6 @@ if TYPE_CHECKING:
     from .planned_trips import (
         PlannedTrip
     )
-    from .routes import (
-        Route,
-    )
     from .vehicles import (
         Vehicle,
     )
@@ -38,22 +35,22 @@ logger = logging.getLogger(__name__)
 
 class Stop(Model):
     __slots__ = [
-        'route',
+        'vehicle',
         'position',
         'pickups',
         'deliveries',
         'previous',
     ]
-    route: Route
+    position: Vehicle
     position: Position
     previous: Optional[Stop]
     pickups: Tuple[PlannedTrip, ...]
     deliveries: Tuple[PlannedTrip, ...]
 
-    def __init__(self, route: Route, position: Position, previous: Optional[Stop],
+    def __init__(self, vehicle: Vehicle, position: Position, previous: Optional[Stop],
                  pickups: Tuple[PlannedTrip, ...] = tuple(), deliveries: Tuple[PlannedTrip, ...] = tuple()):
 
-        self.route = route
+        self.vehicle = vehicle
         self.position = position
 
         self.pickups = pickups
@@ -115,18 +112,6 @@ class Stop(Model):
         return max(pt.trip.origin_duration for pt in self.planned_trips)
 
     @property
-    def vehicle(self) -> Vehicle:
-        return self.route.vehicle
-
-    @property
-    def stops(self) -> List[Stop]:
-        return self.route.stops
-
-    @property
-    def index(self) -> int:
-        return self.stops.index(self)
-
-    @property
     def previous_departure_time(self) -> float:
         if self.previous is None:
             return self.vehicle.origin_earliest
@@ -177,7 +162,6 @@ class Stop(Model):
     def merge(self, other: Stop) -> None:
         if self == other:
             return
-        assert self.route == other.route
         assert self.position == other.position
 
         self.extend_pickups(other.pickups)
@@ -187,19 +171,3 @@ class Stop(Model):
         self.extend_deliveries(other.deliveries)
         for planned_trip in other.deliveries:
             planned_trip.delivery = self
-
-    def flip(self, other: Stop, following: Stop = None) -> None:
-        assert following is None or following.previous == self
-        assert self.previous == other
-        assert self.route == other.route
-
-        self_index = self.index
-        other_index = other.index
-        self.stops[self_index], self.stops[other_index] = self.stops[other_index], self.stops[self_index]
-
-        if following is not None:
-            following.previous = self
-
-        previous = self.previous
-        other.previous = previous
-        self.previous = other

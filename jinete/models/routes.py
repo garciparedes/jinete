@@ -58,8 +58,8 @@ class Route(Model):
         self.vehicle = vehicle
 
         if stops is None:
-            first = Stop(self, self.vehicle.origin_position, None)
-            last = Stop(self, self.vehicle.destination_position, first)
+            first = Stop(self.vehicle, self.vehicle.origin_position, None)
+            last = Stop(self.vehicle, self.vehicle.destination_position, first)
             self.stops = [
                 first, last,
             ]
@@ -106,7 +106,7 @@ class Route(Model):
             return False
         if not self.last_position == self.vehicle.destination_position:
             return False
-        if not self.last_departure_time <= self.vehicle.origin_latest:
+        if not self.last_departure_time <= self.vehicle.destination_latest:
             return False
         if not self.duration <= self.vehicle.timeout:
             return False
@@ -208,9 +208,15 @@ class Route(Model):
             following_idx = - 1
 
         route = deepcopy(self)
+        vehicle = self.vehicle
+        # route = Route(vehicle, self.stops[:previous_idx + 1])
+        # for one in self.stops[previous_idx + 1:]:
+        #     stop = Stop(vehicle, position=one.position, previous=route.stops[-1],
+        #                 pickups=one.pickups, deliveries=one.deliveries)
+        #     route.stops.append(stop)
 
         previous_pickup = route.stops[previous_idx]
-        pickup = Stop(route, trip.origin_position, previous_pickup)
+        pickup = Stop(vehicle, trip.origin_position, previous_pickup)
         if previous_idx + 1 == following_idx:
             previous_delivery = pickup
         else:
@@ -220,8 +226,8 @@ class Route(Model):
         # assert previous_delivery in previous_pickup.all_following
         # assert previous_pickup.departure_time <= previous_delivery.arrival_time
 
-        delivery = Stop(route, trip.destination_position, previous_delivery)
-        planned_trip = PlannedTrip(vehicle=route.vehicle, trip=trip, pickup=pickup, delivery=delivery)
+        delivery = Stop(vehicle, trip.destination_position, previous_delivery)
+        planned_trip = PlannedTrip(vehicle=vehicle, trip=trip, pickup=pickup, delivery=delivery)
         route.append_planned_trip(planned_trip)
         return route
 
@@ -265,9 +271,9 @@ class Route(Model):
         previous_stop = self.stops[idx - 1]
         following_stop = self.stops[idx] if idx < len(self.stops) else None
 
-        if previous_stop == stop:
-            previous_stop.merge(stop)
-            return previous_stop
+        if stop == previous_stop:
+            # previous_stop.merge(stop)
+            return stop
 
         assert set(stop.pickups).isdisjoint(stop.deliveries)
 

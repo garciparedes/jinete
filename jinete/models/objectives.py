@@ -117,8 +117,8 @@ class DialARideObjective(Objective):
         scoring = 0.0
         current = planned_trip.delivery
         while current != planned_trip.pickup and current.previous is not None:
-            current = current.previous
             scoring -= current.distance
+            current = current.previous
         return 1, scoring
 
 

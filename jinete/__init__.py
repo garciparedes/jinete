@@ -80,6 +80,8 @@ from .algorithms import (
     BestStatelessCrosser,
     OrderedCrosser,
     RandomizedCrosser,
+    Breeder,
+    FlipBreeder,
 )
 
 from .exceptions import (

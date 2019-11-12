@@ -367,7 +367,8 @@ class ThreeIndexModel(Model):
         logger.info(f'Casting solution to a set of routes...')
         routes = set()
         for k in self.routes_indexer:
-            route = Route(self.vehicles[k])
+            vehicle = self.vehicles[k]
+            route = Route(vehicle)
 
             ordered_trip_indexes = [
                 idx
@@ -377,7 +378,7 @@ class ThreeIndexModel(Model):
             positions = self._solution_to_positions(k, ordered_trip_indexes)
             stops = self._positions_to_stops(route, positions)
             trips = self._positions_to_trips(positions)
-            self._build_planned_trips(route, trips, stops)
+            self._build_planned_trips(vehicle, trips, stops)
 
             for stop in stops:
                 route.insert_stop(stop)
@@ -395,7 +396,7 @@ class ThreeIndexModel(Model):
             trips.append(trip)
         return trips
 
-    def _build_planned_trips(self, route: Route, trips: List[Trip], stops: List[Stop]) -> List[PlannedTrip]:
+    def _build_planned_trips(self, vehicle: Vehicle, trips: List[Trip], stops: List[Stop]) -> List[PlannedTrip]:
         stop_mapper = self._stop_to_stop_mapper(stops)
 
         planned_trips = list()
@@ -403,7 +404,7 @@ class ThreeIndexModel(Model):
             pickup = stop_mapper[trip.origin_position].pop(0)
             delivery = stop_mapper[trip.destination_position].pop(0)
 
-            planned_trip = PlannedTrip(route, trip, pickup, delivery)
+            planned_trip = PlannedTrip(vehicle, trip, pickup, delivery)
             planned_trips.append(planned_trip)
         return planned_trips
 
