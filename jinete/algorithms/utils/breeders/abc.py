@@ -41,6 +41,23 @@ class Breeder(ABC):
     def routes(self) -> Set[Route]:
         return self.planning.routes
 
-    @abstractmethod
     def improve(self) -> Result:
+
+        if __debug__:
+            for route in self.routes:
+                assert all(s1 == s2.previous for s1, s2 in zip(route.stops[:-1], route.stops[1:]))
+                assert all(s1.departure_time <= s2.arrival_time for s1, s2 in zip(route.stops[:-1], route.stops[1:]))
+
+        result = self._improve()
+
+        if __debug__:
+            for route in result.routes:
+                assert all(s1 == s2.previous for s1, s2 in zip(route.stops[:-1], route.stops[1:]))
+                if not all(s1.departure_time <= s2.arrival_time for s1, s2 in zip(route.stops[:-1], route.stops[1:])):
+                    assert False
+
+        return result
+
+    @abstractmethod
+    def _improve(self) -> Result:
         pass

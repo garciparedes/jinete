@@ -207,13 +207,8 @@ class Route(Model):
         if following_idx is None:
             following_idx = - 1
 
-        route = deepcopy(self)
         vehicle = self.vehicle
-        # route = Route(vehicle, self.stops[:previous_idx + 1])
-        # for one in self.stops[previous_idx + 1:]:
-        #     stop = Stop(vehicle, position=one.position, previous=route.stops[-1],
-        #                 pickups=one.pickups, deliveries=one.deliveries)
-        #     route.stops.append(stop)
+        route = deepcopy(self)
 
         previous_pickup = route.stops[previous_idx]
         pickup = Stop(vehicle, trip.origin_position, previous_pickup)
@@ -221,10 +216,6 @@ class Route(Model):
             previous_delivery = pickup
         else:
             previous_delivery = route.stops[following_idx - 1]
-
-        # assert previous_pickup in previous_delivery.all_previous
-        # assert previous_delivery in previous_pickup.all_following
-        # assert previous_pickup.departure_time <= previous_delivery.arrival_time
 
         delivery = Stop(vehicle, trip.destination_position, previous_delivery)
         planned_trip = PlannedTrip(vehicle=vehicle, trip=trip, pickup=pickup, delivery=delivery)
@@ -269,7 +260,7 @@ class Route(Model):
 
     def insert_stop_at(self, idx: int, stop: Stop) -> Stop:
         previous_stop = self.stops[idx - 1]
-        following_stop = self.stops[idx] if idx < len(self.stops) else None
+        following_stop = self.stops[idx] or None
 
         if stop == previous_stop:
             # previous_stop.merge(stop)
@@ -290,9 +281,12 @@ class Route(Model):
     def append_planned_trip(self, planned_trip: PlannedTrip):
         assert planned_trip.delivery is not None
         assert planned_trip.pickup is not None
+        assert all(s1 == s2.previous for s1, s2 in zip(self.stops[:-1], self.stops[1:]))
+        assert all(s1.departure_time <= s2.arrival_time for s1, s2 in zip(self.stops[:-1], self.stops[1:]))
 
         self.insert_stop(planned_trip.pickup)
         self.insert_stop(planned_trip.delivery)
 
-        assert all(self.stops[i] == self.stops[i + 1].previous for i in range(len(self.stops) - 1))
+        assert all(s1 == s2.previous for s1, s2 in zip(self.stops[:-1], self.stops[1:]))
+        assert all(s1.departure_time <= s2.arrival_time for s1, s2 in zip(self.stops[:-1], self.stops[1:]))
         logger.debug(f'Append trip "{planned_trip.trip_identifier}" identifier to route.')

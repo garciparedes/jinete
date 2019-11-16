@@ -42,7 +42,7 @@ class Stop(Model):
         'deliveries',
         'previous',
     ]
-    position: Vehicle
+    vehicle: Vehicle
     position: Position
     previous: Optional[Stop]
     pickups: Tuple[PlannedTrip, ...]
@@ -58,6 +58,25 @@ class Stop(Model):
         self.deliveries = deliveries
 
         self.previous = previous
+
+    # def __deepcopy__(self, memo: Dict[int, Any]) -> Stop:
+    #     vehicle = deepcopy(self.vehicle, memo)
+    #     position = deepcopy(self.position, memo)
+    #     pickups = deepcopy(self.pickups, memo)
+    #     deliveries = deepcopy(self.deliveries, memo)
+    #
+    #     stop = Stop(
+    #         vehicle=vehicle,
+    #         position=position,
+    #         previous=None,
+    #         pickups=pickups,
+    #         deliveries=deliveries,
+    #     )
+    #     memo[id(self)] = stop
+    #     stop.previous = deepcopy(self.previous, memo)
+    #
+    #
+    #     return stop
 
     @property
     def identifier(self) -> str:
@@ -161,6 +180,7 @@ class Stop(Model):
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
         yield from (
             ('position', self.position),
+            ('identifier', self.identifier),
         )
 
     def flush(self) -> None:
