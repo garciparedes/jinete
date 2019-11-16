@@ -1,10 +1,7 @@
 import unittest
 
-import jinete as jit
-
 from tests.utils import (
     generate_one_planned_trip,
-    generate_one_vehicle,
 )
 
 
