@@ -2,13 +2,14 @@ from __future__ import annotations
 
 import unittest
 from typing import TYPE_CHECKING
+import itertools as it
 
 import jinete as jit
 
 from tests.utils import (
     generate_one_vehicle,
     generate_one_position,
-)
+    generate_one_planned_trip)
 
 if TYPE_CHECKING:
     from typing import (
@@ -117,6 +118,37 @@ class TestStop(unittest.TestCase):
         for stop in self.stops[3:]:
             self.assertIn('arrival_time', stop.__dict__)
             self.assertIn('departure_time', stop.__dict__)
+
+    def test_with_planned_trip(self):
+        stop = jit.Stop(self.vehicle, self.position, self.stops[0])
+
+        delivery_planned_trip = generate_one_planned_trip(
+            feasible=True,
+            vehicle=self.vehicle,
+            pickup_stop=self.stops[0],
+            delivery_stop=stop,
+        )
+
+        pickup_planned_trip = generate_one_planned_trip(
+            feasible=True,
+            vehicle=self.vehicle,
+            pickup_stop=stop,
+        )
+        self.assertIn(delivery_planned_trip, stop.deliveries)
+        self.assertNotIn(delivery_planned_trip, stop.pickups)
+
+        self.assertNotIn(pickup_planned_trip, stop.deliveries)
+        self.assertIn(pickup_planned_trip, stop.pickups)
+        self.assertIsInstance(stop.identifier, str)
+
+        trips_seq = ''.join(
+            it.chain(
+                (f'P{planned_trip.trip_identifier}' for planned_trip in stop.pickups),
+                (f'D{planned_trip.trip_identifier}' for planned_trip in stop.deliveries),
+            )
+        )
+        identifier = f'{stop.position},{stop.arrival_time:.2f}:{stop.departure_time:.2f},({trips_seq})'
+        self.assertEqual(identifier, stop.identifier)
 
 
 if __name__ == '__main__':

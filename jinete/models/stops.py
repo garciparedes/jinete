@@ -4,6 +4,7 @@ import logging
 from typing import (
     TYPE_CHECKING,
 )
+import itertools as it
 
 from cached_property import cached_property
 
@@ -57,6 +58,20 @@ class Stop(Model):
         self.deliveries = deliveries
 
         self.previous = previous
+
+    @property
+    def identifier(self) -> str:
+        trips_sequence = ''.join(
+            it.chain(
+                (f'P{planned_trip.trip_identifier}' for planned_trip in self.pickups),
+                (f'D{planned_trip.trip_identifier}' for planned_trip in self.deliveries),
+            )
+        )
+        return ','.join((
+            f'{self.position}',
+            f'{self.arrival_time:.2f}:{self.departure_time:.2f}',
+            f'({trips_sequence})',
+        ))
 
     @property
     def planned_trips(self) -> Iterable[PlannedTrip]:

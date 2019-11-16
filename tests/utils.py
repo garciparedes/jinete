@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import TYPE_CHECKING
 from random import uniform, randint
+from uuid import uuid4
 
 import jinete as jit
 
@@ -43,18 +44,18 @@ def generate_positions(n: int, surface: jit.Surface = None, *args, **kwargs) -> 
 
 
 def generate_one_trip(identifier: str = None,
-                      origin: jit.Position = None, destination: jit.Position = None,
+                      origin_position: jit.Position = None, destination_position: jit.Position = None,
                       earliest: float = None, earliest_min: float = 0, earliest_max: float = 86400,
                       timeout: float = None, timeout_min: float = 1800, timeout_max: float = 7200,
                       load_time: float = None, load_time_min: float = 300, load_time_max: float = 900,
                       capacity: float = None, capacity_min: int = 1, capacity_max: int = 3,
                       *args, **kwargs) -> jit.Trip:
     if identifier is None:
-        identifier = str()
-    if origin is None:
-        origin = generate_one_position(*args, **kwargs)
-    if destination is None:
-        destination = generate_one_position(*args, **kwargs)
+        identifier = f'{randint(1, 999):0d}'
+    if origin_position is None:
+        origin_position = generate_one_position(*args, **kwargs)
+    if destination_position is None:
+        destination_position = generate_one_position(*args, **kwargs)
     if earliest is None:
         earliest = uniform(earliest_min, earliest_max)
     if timeout is None:
@@ -67,13 +68,13 @@ def generate_one_trip(identifier: str = None,
     return jit.Trip(
         identifier,
         origin=jit.Service(
-            position=origin,
+            position=origin_position,
             earliest=earliest,
             latest=earliest + timeout,
             duration=load_time,
         ),
         destination=jit.Service(
-            position=destination,
+            position=destination_position,
         ),
         capacity=capacity,
     )
@@ -112,22 +113,44 @@ def generate_jobs(n: int, *args, **kwargs) -> Set[jit.Job]:
     }
 
 
-def generate_one_planned_trip(feasible: bool, route: jit.Route = None, *args, **kwargs) -> jit.PlannedTrip:
-    if route is None:
-        route = generate_one_route()
+def generate_one_planned_trip(feasible: bool, vehicle: jit.Vehicle = None, previous_stop: jit.Stop = None,
+                              pickup_stop: jit.Stop = None, delivery_stop: jit.Stop = None,
+                              origin_position: jit.Position = None, destination_position: jit.Position = None,
+                              *args, **kwargs) -> jit.PlannedTrip:
+    if vehicle is None:
+        vehicle = generate_one_vehicle()
+    if previous_stop is None:
+        previous_stop = jit.Stop(vehicle, vehicle.origin_position, previous_stop)
+
     if feasible:
         down_time = 0.0
         kwargs['earliest'] = 0.0
         kwargs['timeout'] = float('inf')
-        kwargs['capacity'] = route.vehicle.capacity
+        kwargs['capacity'] = vehicle.capacity
     else:
         down_time = jit.MAX_FLOAT
 
-    vehicle = route.vehicle
-    trip = generate_one_trip(*args, **kwargs)
+    if origin_position is None:
+        origin_position = generate_one_position()
 
-    pickup_stop = jit.Stop(vehicle, trip.origin_position, route.current_stop)
-    delivery_stop = jit.Stop(vehicle, trip.destination_position, pickup_stop)
+    if destination_position is None:
+        destination_position = generate_one_position()
+
+    if pickup_stop is None:
+        pickup_stop = jit.Stop(vehicle, origin_position, previous_stop)
+    else:
+        origin_position = pickup_stop.position
+
+    if delivery_stop is None:
+        delivery_stop = jit.Stop(vehicle, destination_position, pickup_stop)
+    else:
+        destination_position = delivery_stop.position
+
+    trip = generate_one_trip(
+        origin_position=origin_position,
+        destination_position=destination_position,
+        *args, **kwargs,
+    )
 
     return jit.PlannedTrip(
         vehicle=vehicle,
@@ -136,12 +159,6 @@ def generate_one_planned_trip(feasible: bool, route: jit.Route = None, *args, **
         delivery=delivery_stop,
         down_time=down_time,
     )
-
-
-def generate_planned_trips(n: int, *args, **kwargs) -> Set[jit.PlannedTrip]:
-    return {
-        generate_one_planned_trip(*args, **kwargs) for _ in range(n)
-    }
 
 
 def generate_one_vehicle(capacity_min: int = 1, capacity_max: int = 3, earliest_min: float = 0,
@@ -186,7 +203,8 @@ def generate_one_route(feasible: bool = True,
     for i in range(planned_trips_count):
         planned_trip = generate_one_planned_trip(
             feasible=feasible,
-            route=route,
+            vehicle=vehicle,
+            previous_stop=route.current_stop,
             surface=surface,
         )
 

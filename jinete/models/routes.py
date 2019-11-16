@@ -78,7 +78,7 @@ class Route(Model):
 
     @property
     def identifier(self):
-        return '|'.join(trip.identifier for trip in self.trips)
+        return '|'.join(stop.identifier for stop in self.stops)
 
     @property
     def planned_trips(self) -> Iterator[PlannedTrip]:
