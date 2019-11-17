@@ -67,6 +67,6 @@ class TestObjective(unittest.TestCase, ABC):
 
         cls.stop = route.stops[1]
         conjecture = jit.Conjecturer()
-        cls.route = conjecture.conjecture_trip(route, trips[1])
+        cls.route = conjecture.compute_one(route, trips[1])
         cls.planning = jit.Planning({cls.route})
         cls.result = jit.Result(fleet, job, jit.NaiveAlgorithm, cls.planning, 0.0)
