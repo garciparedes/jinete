@@ -83,7 +83,7 @@ class LongestUtilTimeRouteCriterion(RouteCriterion):
     def __init__(self, *args, **kwargs):
         super().__init__(
             direction=OptimizationDirection.MAXIMIZATION,
-            name='Longest-Time',
+            name='Longest-Util-Time',
             *args, **kwargs,
         )
 
