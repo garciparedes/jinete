@@ -15,4 +15,6 @@ from .breeders import (
 )
 from .conjecturer import (
     Conjecturer,
+    SamplingConjecturer,
+    IntensiveConjecturer,
 )

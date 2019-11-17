@@ -9,6 +9,9 @@ from copy import deepcopy
 from typing import (
     TYPE_CHECKING,
 )
+from cached_property import (
+    cached_property,
+)
 
 from ....exceptions import (
     StopPlannedTripIterationException,
@@ -16,6 +19,9 @@ from ....exceptions import (
 from ....models import (
     Route,
     ShortestTimeRouteCriterion,
+)
+from ..conjecturer import (
+    Conjecturer,
 )
 
 if TYPE_CHECKING:
@@ -40,10 +46,11 @@ class Crosser(ABC):
     fleet: Fleet
     job: Job
     criterion_cls: Type[RouteCriterion]
-    _criterion: Optional[RouteCriterion]
 
-    def __init__(self, fleet: Fleet, job: Job, criterion_cls: Type[RouteCriterion] = None,
-                 routes: Set[Route] = None, *args, **kwargs):
+    def __init__(self, fleet: Fleet, job: Job, conjecturer_cls: Type[Conjecturer] = None,
+                 criterion_cls: Type[RouteCriterion] = None, routes: Set[Route] = None, *args, **kwargs):
+        if conjecturer_cls is None:
+            conjecturer_cls = Conjecturer
         if criterion_cls is None:
             criterion_cls = ShortestTimeRouteCriterion
 
@@ -63,8 +70,8 @@ class Crosser(ABC):
         }
         self._pending_trips = pending_trips
 
+        self.conjecturer_cls = conjecturer_cls
         self.criterion_cls = criterion_cls
-        self._criterion = None
 
         self.args = args
         self.kwargs = kwargs
@@ -90,11 +97,13 @@ class Crosser(ABC):
                 continue
             self.mark_planned_trip_as_done(planned_trip)
 
-    @property
+    @cached_property
+    def conjecturer(self) -> Conjecturer:
+        return self.conjecturer_cls(*self.args, **self.kwargs)
+
+    @cached_property
     def criterion(self) -> RouteCriterion:
-        if self._criterion is None:
-            self._criterion = self.criterion_cls(*self.args, **self.kwargs)
-        return self._criterion
+        return self.criterion_cls(*self.args, **self.kwargs)
 
     @property
     def vehicles(self) -> Set[Vehicle]:

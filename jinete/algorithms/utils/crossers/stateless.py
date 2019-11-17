@@ -8,9 +8,6 @@ from cached_property import (
     cached_property,
 )
 
-from ..conjecturer import (
-    Conjecturer,
-)
 from .abc import (
     Crosser,
 )
@@ -38,10 +35,9 @@ class StatelessCrosser(Crosser):
 
     @cached_property
     def iterator(self) -> Iterator[PlannedTrip]:
-        conjecturer = Conjecturer()
         for route, trip in it.product(self.attractive_routes, self.pending_trips):
             logger.debug(f'Yielding ({route}, {trip})...')
-            planned_trip = conjecturer.conjecture_trip(route, trip)
+            planned_trip = self.conjecturer.compute_one(route, trip)
             yield planned_trip
 
     def get_planned_trip(self) -> Optional[PlannedTrip]:

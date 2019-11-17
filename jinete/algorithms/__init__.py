@@ -24,4 +24,6 @@ from .utils import (
     Breeder,
     FlipBreeder,
     Conjecturer,
+    SamplingConjecturer,
+    IntensiveConjecturer,
 )

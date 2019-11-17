@@ -83,6 +83,8 @@ from .algorithms import (
     Breeder,
     FlipBreeder,
     Conjecturer,
+    SamplingConjecturer,
+    IntensiveConjecturer,
 )
 
 from .exceptions import (
