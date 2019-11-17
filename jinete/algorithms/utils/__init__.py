@@ -13,3 +13,6 @@ from .breeders import (
     Breeder,
     FlipBreeder,
 )
+from .conjecturer import (
+    Conjecturer,
+)

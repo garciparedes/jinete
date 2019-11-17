@@ -27,7 +27,6 @@ if TYPE_CHECKING:
         Any,
         Dict,
         Optional,
-        Iterable,
         Generator,
         Tuple,
     )
@@ -198,58 +197,6 @@ class Route(Model):
             ('vehicle_identifier', self.vehicle_identifier),
             ('trip_identifiers', tuple(trip.identifier for trip in self.trips))
         )
-
-    def conjecture_trip(self, trip: Trip, previous_idx: int = None, following_idx: int = None) -> Route:
-        assert following_idx is None or (previous_idx is not None and following_idx is not None)
-
-        if previous_idx is None:
-            previous_idx = - 2
-        if following_idx is None:
-            following_idx = - 1
-
-        vehicle = self.vehicle
-        route = deepcopy(self)
-
-        previous_pickup = route.stops[previous_idx]
-        pickup = Stop(vehicle, trip.origin_position, previous_pickup)
-        if previous_idx + 1 == following_idx:
-            previous_delivery = pickup
-        else:
-            previous_delivery = route.stops[following_idx - 1]
-
-        delivery = Stop(vehicle, trip.destination_position, previous_delivery)
-        planned_trip = PlannedTrip(vehicle=vehicle, trip=trip, pickup=pickup, delivery=delivery)
-        route.append_planned_trip(planned_trip)
-        return route
-
-    def intensive_conjecture_trip(self, trip: Trip) -> List[Route]:
-        routes = list()
-        for i in range(len(self.stops) - 1):
-            for j in range(i + 1, len(self.stops)):
-                route = self.conjecture_trip(trip, i, j)
-                routes.append(route)
-        return routes
-
-    def sampling_conjecture_trip(self, trip: Trip, count: int) -> List[Route]:
-        from random import randint
-
-        indices = set()
-        for _ in range(count):
-            sampled_i = randint(0, len(self.stops) - 2)
-            sampled_j = randint(sampled_i + 1, len(self.stops) - 1)
-            pair = (sampled_i, sampled_j)
-            indices.add(pair)
-
-        planned_trips = list()
-        for i, j in indices:
-            planned_trip = self.conjecture_trip(trip, i, j)
-            planned_trips.append(planned_trip)
-        return planned_trips
-
-    def conjecture_trip_in_batch(self, iterable: Iterable[Trip]) -> List[Route]:
-        # return sum((self.sampling_conjecture_trip(trip, 10) for trip in iterable), [])
-        return sum((self.intensive_conjecture_trip(trip) for trip in iterable), [])
-        # return [self.conjecture_trip(trip) for trip in iterable]
 
     def insert_stop(self, stop: Stop) -> Stop:
         for idx in range(len(self.stops)):

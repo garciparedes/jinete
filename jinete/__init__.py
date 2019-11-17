@@ -82,6 +82,7 @@ from .algorithms import (
     RandomizedCrosser,
     Breeder,
     FlipBreeder,
+    Conjecturer,
 )
 
 from .exceptions import (

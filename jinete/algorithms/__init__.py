@@ -23,4 +23,5 @@ from .utils import (
     RandomizedCrosser,
     Breeder,
     FlipBreeder,
+    Conjecturer,
 )

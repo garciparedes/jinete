@@ -4,6 +4,9 @@ import logging
 import itertools as it
 from typing import TYPE_CHECKING
 
+from ..conjecturer import (
+    Conjecturer,
+)
 from .abc import (
     Crosser,
 )
@@ -47,7 +50,9 @@ class OrderedCrosser(Crosser):
     def create_sub_ranking(self, route: Route) -> List[Route]:
         logger.debug("Creating sub_ranking...")
         pending_trips = it.islice(self.pending_trips, self.neighborhood_max_size)
-        raw_sub_ranking = route.conjecture_trip_in_batch(pending_trips)
+
+        conjecturer = Conjecturer()
+        raw_sub_ranking = conjecturer.conjecture_trip_in_batch(route, pending_trips)
 
         self.criterion.sorted(raw_sub_ranking, inplace=True)
         return raw_sub_ranking
