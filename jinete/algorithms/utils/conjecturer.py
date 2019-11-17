@@ -62,7 +62,7 @@ class Conjecturer(object):
 
 class IntensiveConjecturer(Conjecturer):
 
-    def compute(self, route: Route, trips: Trip, *args, **kwargs) -> List[Route]:
+    def compute(self, route: Route, trips: Union[Trip, Iterable[Trip]], *args, **kwargs) -> List[Route]:
         if not isinstance(trips, Trip):
             return super().compute(route, trips, *args, **kwargs)
         trip = trips
@@ -80,7 +80,8 @@ class SamplingConjecturer(Conjecturer):
         super().__init__(*args, **kwargs)
         self.random = Random(seed)
 
-    def compute(self, route: Route, trips: Trip, count: int = 25, *args, **kwargs) -> List[Route]:
+    def compute(self, route: Route, trips: Union[Trip, Iterable[Trip]], count: int = 25,
+                *args, **kwargs) -> List[Route]:
         if not isinstance(trips, Trip):
             return super().compute(route, trips, *args, **kwargs)
         trip = trips
