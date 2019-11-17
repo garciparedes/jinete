@@ -59,25 +59,6 @@ class Stop(Model):
 
         self.previous = previous
 
-    # def __deepcopy__(self, memo: Dict[int, Any]) -> Stop:
-    #     vehicle = deepcopy(self.vehicle, memo)
-    #     position = deepcopy(self.position, memo)
-    #     pickups = deepcopy(self.pickups, memo)
-    #     deliveries = deepcopy(self.deliveries, memo)
-    #
-    #     stop = Stop(
-    #         vehicle=vehicle,
-    #         position=position,
-    #         previous=None,
-    #         pickups=pickups,
-    #         deliveries=deliveries,
-    #     )
-    #     memo[id(self)] = stop
-    #     stop.previous = deepcopy(self.previous, memo)
-    #
-    #
-    #     return stop
-
     @property
     def identifier(self) -> str:
         trips_sequence = ''.join(
