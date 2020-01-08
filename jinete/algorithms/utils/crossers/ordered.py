@@ -49,7 +49,7 @@ class OrderedCrosser(Crosser):
         self.update_ranking(planned_trip)
 
     def update_ranking(self, planned_trip: PlannedTrip) -> None:
-        logger.info(f'Updating all rankings due to planned trip with "{planned_trip.trip_identifier}" trip...')
+        logger.debug(f'Updating all rankings due to planned trip with "{planned_trip.trip_identifier}" trip...')
         for route in self.attractive_routes:
             self._update_vehicle_ranking(planned_trip, route.vehicle)
 

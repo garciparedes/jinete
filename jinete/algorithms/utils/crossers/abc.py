@@ -68,6 +68,7 @@ class Crosser(ABC):
             route.vehicle: route
             for route in routes
         }
+        self._attractive_routes = None
         self.pending_trips = pending_trips
 
         self.conjecturer_cls = conjecturer_cls
@@ -82,15 +83,18 @@ class Crosser(ABC):
 
     @property
     def attractive_routes(self) -> Set[Route]:
-        routes = set(route for route in self.routes if any(route.planned_trips))
-        empty_route = next((route for route in self.routes if not any(route.planned_trips)), None)
-        if empty_route is not None:
-            routes.add(empty_route)
-        return routes
+        if self._attractive_routes is None:
+            self._attractive_routes = set(route for route in self.routes if any(route.planned_trips))
+
+        if not any(any(route.planned_trips) for route in self._attractive_routes):
+            empty_route = next((route for route in self.routes if not any(route.planned_trips)), None)
+            if empty_route is not None:
+                self._attractive_routes.add(empty_route)
+        return self._attractive_routes
 
     def set_route(self, route: Route):
         vehicle = route.vehicle
-        logger.info(f'Updating route for vehicle with "{vehicle.identifier}" identifier...')
+        logger.debug(f'Updating route for vehicle with "{vehicle.identifier}" identifier...')
         old_trips = set(self.routes_container[vehicle].trips)
         self.routes_container[vehicle] = route
         for planned_trip in route.planned_trips:
