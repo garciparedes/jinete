@@ -35,8 +35,7 @@ class Conjecturer(object):
 
         return [self.compute_one(route, trip, *args, **kwargs)]
 
-    @staticmethod
-    def compute_one(route: Route, trip: Trip, previous_idx: int = None, following_idx: int = None) -> Route:
+    def compute_one(self, route: Route, trip: Trip, previous_idx: int = None, following_idx: int = None) -> Route:
         assert following_idx is None or (previous_idx is not None and following_idx is not None)
 
         if previous_idx is None:
@@ -47,17 +46,25 @@ class Conjecturer(object):
         vehicle = route.vehicle
         route = deepcopy(route)
 
-        previous_pickup = route.stops[previous_idx]
-        pickup = Stop(vehicle, trip.origin_position, previous_pickup)
-        if previous_idx + 1 == following_idx:
-            previous_delivery = pickup
-        else:
-            previous_delivery = route.stops[following_idx - 1]
+        pickup = self._build_pickup(route, trip, previous_idx)
+        delivery = self._build_delivery(route, trip, previous_idx, following_idx, pickup)
 
-        delivery = Stop(vehicle, trip.destination_position, previous_delivery)
-        planned_trip = PlannedTrip(vehicle=vehicle, trip=trip, pickup=pickup, delivery=delivery)
+        planned_trip = PlannedTrip(vehicle, trip, pickup, delivery)
+
         route.append_planned_trip(planned_trip)
         return route
+
+    @staticmethod
+    def _build_pickup(route: Route, trip: Trip, previous_idx: int) -> Stop:
+        previous_pickup = route.stops[previous_idx]
+        pickup = Stop(route.vehicle, trip.origin_position, previous_pickup)
+        return pickup
+
+    @staticmethod
+    def _build_delivery(route: Route, trip: Trip, previous_idx: int, following_idx: int, pickup: Stop) -> Stop:
+        previous_delivery = pickup if previous_idx + 1 == following_idx else route.stops[following_idx - 1]
+        delivery = Stop(route.vehicle, trip.destination_position, previous_delivery)
+        return delivery
 
 
 class IntensiveConjecturer(Conjecturer):
