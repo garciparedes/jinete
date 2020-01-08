@@ -74,6 +74,10 @@ class PlannedTrip(Model):
         return self.trip.identifier
 
     @property
+    def vehicle_identifier(self) -> str:
+        return self.vehicle.identifier
+
+    @property
     def origin(self) -> Position:
         return self.trip.origin_position
 

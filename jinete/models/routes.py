@@ -236,4 +236,4 @@ class Route(Model):
 
         assert all(s1 == s2.previous for s1, s2 in zip(self.stops[:-1], self.stops[1:]))
         assert all(s1.departure_time <= s2.arrival_time for s1, s2 in zip(self.stops[:-1], self.stops[1:]))
-        logger.debug(f'Append trip "{planned_trip.trip_identifier}" identifier to route.')
+        logger.debug(f'Append trip with "{planned_trip.trip_identifier}" identifier to route.')

@@ -68,7 +68,7 @@ class Crosser(ABC):
             route.vehicle: route
             for route in routes
         }
-        self._pending_trips = pending_trips
+        self.pending_trips = pending_trips
 
         self.conjecturer_cls = conjecturer_cls
         self.criterion_cls = criterion_cls
@@ -89,9 +89,10 @@ class Crosser(ABC):
         return routes
 
     def set_route(self, route: Route):
-        old = self.routes_container[route.vehicle]
-        old_trips = set(old.trips)
-        self.routes_container[route.vehicle] = route
+        vehicle = route.vehicle
+        logger.info(f'Updating route for vehicle with "{vehicle.identifier}" identifier...')
+        old_trips = set(self.routes_container[vehicle].trips)
+        self.routes_container[vehicle] = route
         for planned_trip in route.planned_trips:
             if planned_trip.trip in old_trips:
                 continue
@@ -129,22 +130,20 @@ class Crosser(ABC):
         pass
 
     def mark_planned_trip_as_done(self, planned_trip: PlannedTrip) -> None:
+        logger.info(f'Marking trip with "{planned_trip.trip_identifier}" identifier as done '
+                    f'over vehicle with "{planned_trip.vehicle_identifier}" identifier...')
         self.mark_trip_as_done(planned_trip.trip)
 
     def mark_trip_as_done(self, trip: Trip) -> None:
-        logger.info(f'Marked "{trip}" as done.')
-        self._pending_trips.remove(trip)
+        logger.debug(f'Marked trip with "{trip.identifier}" identifier as done.')
+        self.pending_trips.remove(trip)
 
     def mark_planned_trip_as_undone(self, planned_trip: PlannedTrip) -> None:
         self.mark_trip_as_undone(planned_trip.trip)
 
     def mark_trip_as_undone(self, trip: Trip) -> None:
-        logger.info(f'Marked "{trip}" as undone.')
-        self._pending_trips.add(trip)
-
-    @property
-    def pending_trips(self) -> Set[Trip]:
-        return self._pending_trips
+        logger.debug(f'Marked trip with "{trip.identifier}" identifier as undone.')
+        self.pending_trips.add(trip)
 
     @property
     def done_trips(self) -> Set[Trip]:
