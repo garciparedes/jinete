@@ -50,16 +50,19 @@ class PlannedTrip(Model):
     pickup: Stop
     delivery: Stop
 
-    def __init__(self, vehicle: Vehicle, trip: Trip, pickup: Stop, delivery: Stop, down_time: float = 0.0):
+    def __init__(self, vehicle: Vehicle, trip: Trip, pickup: Stop = None, delivery: Stop = None,
+                 down_time: float = 0.0):
         self.vehicle = vehicle
         self.trip = trip
         self.down_time = down_time
 
         self.pickup = pickup
-        pickup.append_pickup(self)
-
         self.delivery = delivery
-        delivery.append_delivery(self)
+
+        if self.pickup is not None:
+            self.pickup.append_pickup(self)
+        if self.delivery is not None:
+            self.delivery.append_delivery(self)
 
     @property
     def pickup_time(self) -> float:

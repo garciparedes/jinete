@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 import logging
-from copy import deepcopy
 from random import Random
 from typing import (
     TYPE_CHECKING,
-    Union)
+)
 
 from ...models import (
     Route,
@@ -18,9 +17,54 @@ if TYPE_CHECKING:
     from typing import (
         Iterable,
         List,
+        Union,
     )
 
 logger = logging.getLogger(__name__)
+
+
+def fn(stops: List[Stop], idx: int):
+    # FIXME
+    # FIXME
+    # FIXME
+    # FIXME
+
+    i = len(stops)
+    mapper = dict()
+    mismatches = set()
+    while (any(mismatches) or not i < idx) and i > 0:
+        i -= 1
+
+        for planned_trip in stops[i].deliveries:
+            mapper[planned_trip] = PlannedTrip(planned_trip.vehicle, planned_trip.trip)
+
+        mismatches = (mismatches | stops[i].deliveries) - stops[i].pickups
+    assert not any(mismatches)
+    idx = i
+
+    def a(s, pt: PlannedTrip):
+        npt = mapper[pt]
+        npt.pickup = s
+        return npt
+
+    def b(s, pt: PlannedTrip):
+        npt = mapper[pt]
+        npt.delivery = s
+        return npt
+
+    result = stops[:idx]
+    for stop in stops[idx:]:
+        new_stop = Stop(stop.vehicle, stop.position, result[-1] if len(result) else None)
+
+        pickups = {a(new_stop, pickup) for pickup in stop.pickups}
+        deliveries = {b(new_stop, delivery) for delivery in stop.deliveries}
+
+        new_stop.pickups = pickups
+        new_stop.deliveries = deliveries
+
+        result.append(new_stop)
+
+    return result
 
 
 class Conjecturer(object):
@@ -39,17 +83,17 @@ class Conjecturer(object):
         assert following_idx is None or (previous_idx is not None and following_idx is not None)
 
         if previous_idx is None:
-            previous_idx = - 2
+            previous_idx = max(len(route.stops) - 2, 0)
         if following_idx is None:
-            following_idx = - 1
+            following_idx = max(len(route.stops) - 1, 0)
 
-        vehicle = route.vehicle
-        route = deepcopy(route)
+        stops = fn(route.stops, previous_idx + 1)
+        route = Route(route.vehicle, stops)
 
         pickup = self._build_pickup(route, trip, previous_idx)
         delivery = self._build_delivery(route, trip, previous_idx, following_idx, pickup)
 
-        planned_trip = PlannedTrip(vehicle, trip, pickup, delivery)
+        planned_trip = PlannedTrip(route.vehicle, trip, pickup, delivery)
 
         route.append_planned_trip(planned_trip)
         return route

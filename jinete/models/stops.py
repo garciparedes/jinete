@@ -20,6 +20,7 @@ if TYPE_CHECKING:
         Optional,
         Iterable,
         List,
+        Set,
     )
     from .positions import (
         Position,
@@ -45,11 +46,16 @@ class Stop(Model):
     vehicle: Vehicle
     position: Position
     previous: Optional[Stop]
-    pickups: Tuple[PlannedTrip, ...]
-    deliveries: Tuple[PlannedTrip, ...]
+    pickups: Set[PlannedTrip, ...]
+    deliveries: Set[PlannedTrip, ...]
 
     def __init__(self, vehicle: Vehicle, position: Position, previous: Optional[Stop],
-                 pickups: Tuple[PlannedTrip, ...] = tuple(), deliveries: Tuple[PlannedTrip, ...] = tuple()):
+                 pickups: Set[PlannedTrip, ...] = None, deliveries: Set[PlannedTrip, ...] = None):
+
+        if pickups is None:
+            pickups = set()
+        if deliveries is None:
+            deliveries = set()
 
         self.vehicle = vehicle
         self.position = position
@@ -96,17 +102,17 @@ class Stop(Model):
 
     def append_pickup(self, planned_trip: PlannedTrip) -> None:
         assert planned_trip.origin == self.position
-        self.extend_pickups((planned_trip,))
+        self.pickups.add(planned_trip)
 
     def append_delivery(self, planned_trip: PlannedTrip) -> None:
         assert planned_trip.destination == self.position
-        self.extend_deliveries((planned_trip,))
+        self.deliveries.add(planned_trip)
 
     def extend_pickups(self, iterable: Iterable[PlannedTrip]) -> None:
-        self.pickups = (*self.pickups, *iterable)
+        self.pickups.update(iterable)
 
     def extend_deliveries(self, iterable: Iterable[PlannedTrip]) -> None:
-        self.deliveries = (*self.deliveries, *iterable)
+        self.deliveries.update(iterable)
 
     @property
     def down_time(self) -> float:

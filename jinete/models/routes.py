@@ -6,6 +6,7 @@ from typing import (
     TYPE_CHECKING,
 )
 from cached_property import cached_property
+import itertools as it
 
 from ..exceptions import (
     PreviousStopNotInRouteException,
@@ -81,17 +82,15 @@ class Route(Model):
 
     @property
     def planned_trips(self) -> Iterator[PlannedTrip]:
-        yield from self.deliveries
+        return self.deliveries
 
     @property
     def pickups(self) -> Iterator[PlannedTrip]:
-        for stop in self.stops:
-            yield from stop.pickups
+        return it.chain.from_iterable(stop.pickups for stop in self.stops)
 
     @property
     def deliveries(self) -> Iterator[PlannedTrip]:
-        for stop in self.stops:
-            yield from stop.deliveries
+        return it.chain.from_iterable(stop.deliveries for stop in self.stops)
 
     @property
     def positions(self) -> Iterator[Position]:
@@ -222,7 +221,6 @@ class Route(Model):
 
         for stop in self.stops[idx + 1:]:
             stop.flush()
-
         return stop
 
     def append_planned_trip(self, planned_trip: PlannedTrip):
