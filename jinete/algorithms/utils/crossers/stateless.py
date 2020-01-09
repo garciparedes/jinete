@@ -14,14 +14,12 @@ from .abc import (
 
 if TYPE_CHECKING:
     from typing import (
-        Set,
         Optional,
         Iterator,
     )
     from ....models import (
         PlannedTrip,
         Trip,
-        Route,
     )
 
 logger = logging.getLogger(__name__)
