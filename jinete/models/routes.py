@@ -76,6 +76,45 @@ class Route(Model):
 
         return route
 
+    def clone(self, idx: int = 0) -> Route:
+        i = len(self.stops)
+        mapper = dict()
+        mismatches = set()
+        while (i > 0) and (any(mismatches) or not i < idx):
+            i -= 1
+
+            for planned_trip in self.stops[i].deliveries:
+                mapper[planned_trip] = PlannedTrip(planned_trip.vehicle, planned_trip.trip)
+
+            mismatches = (mismatches | self.stops[i].deliveries) - self.stops[i].pickups
+        assert not any(mismatches)
+        idx = i
+
+        def a(s, pt: PlannedTrip):
+            npt = mapper[pt]
+            npt.pickup = s
+            return npt
+
+        def b(s, pt: PlannedTrip):
+            npt = mapper[pt]
+            npt.delivery = s
+            return npt
+
+        cloned_stops = self.stops[:idx]
+        for stop in self.stops[idx:]:
+            new_stop = Stop(stop.vehicle, stop.position, cloned_stops[-1] if len(cloned_stops) else None)
+
+            pickups = {a(new_stop, pickup) for pickup in stop.pickups}
+            deliveries = {b(new_stop, delivery) for delivery in stop.deliveries}
+
+            new_stop.pickups = pickups
+            new_stop.deliveries = deliveries
+
+            cloned_stops.append(new_stop)
+
+        cloned_route = Route(self.vehicle, cloned_stops)
+        return cloned_route
+
     @property
     def identifier(self):
         return '|'.join(stop.identifier for stop in self.stops)

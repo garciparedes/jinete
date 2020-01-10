@@ -29,6 +29,7 @@ if TYPE_CHECKING:
         Set,
         Optional,
         Type,
+        Dict,
     )
     from ....models import (
         PlannedTrip,
@@ -46,6 +47,7 @@ class Crosser(ABC):
     fleet: Fleet
     job: Job
     criterion_cls: Type[RouteCriterion]
+    routes_container: Dict[Vehicle, Route]
 
     def __init__(self, fleet: Fleet, job: Job, conjecturer_cls: Type[Conjecturer] = None,
                  criterion_cls: Type[RouteCriterion] = None, routes: Set[Route] = None, *args, **kwargs):
@@ -92,7 +94,7 @@ class Crosser(ABC):
                 self._attractive_routes.add(empty_route)
         return self._attractive_routes
 
-    def set_route(self, route: Route):
+    def set_route(self, route: Route) -> None:
         vehicle = route.vehicle
         logger.debug(f'Updating route for vehicle with "{vehicle.identifier}" identifier...')
         old_trips = set(self.routes_container[vehicle].trips)
