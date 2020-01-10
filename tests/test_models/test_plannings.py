@@ -61,7 +61,7 @@ class TestPlanning(unittest.TestCase):
         planning = jit.Planning(self.routes)
         expected = (
             ('uuid', planning.uuid),
-            ('route_uuids', tuple(route.uuid for route in self.routes)),
+            ('route_identifiers', tuple(route.identifier for route in self.routes)),
         )
         self.assertEqual(expected, tuple(planning))
 

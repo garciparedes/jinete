@@ -22,11 +22,11 @@ from .services import (
     Service,
 )
 from .criterions import (
-    PlannedTripCriterion,
-    ShortestTimePlannedTripCriterion,
-    LongestTimePlannedTripCriterion,
-    LongestUtilTimePlannedTripCriterion,
-    HashCodePlannedTripCriterion,
+    RouteCriterion,
+    ShortestTimeRouteCriterion,
+    LongestTimeRouteCriterion,
+    LongestUtilTimeRouteCriterion,
+    HashCodeRouteCriterion,
 )
 from .constants import (
     OptimizationDirection,

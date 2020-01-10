@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import logging
 from copy import deepcopy
+from functools import reduce
+from operator import and_
 from typing import TYPE_CHECKING
 from uuid import (
     uuid4,
@@ -69,10 +71,14 @@ class Planning(Model):
     def trips(self) -> Iterator[Trip]:
         yield from (planned_trip.trip for planned_trip in self.planned_trips)
 
+    @property
+    def feasible(self) -> bool:
+        return reduce(and_, (route.feasible for route in self.routes))
+
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
         yield from (
             ('uuid', self.uuid),
-            ('route_uuids', tuple(route.uuid for route in self.routes))
+            ('route_identifiers', tuple(route.identifier for route in self.routes))
         )
 
     def __deepcopy__(self, memo: Dict[int, Any]) -> Planning:

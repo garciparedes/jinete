@@ -21,4 +21,9 @@ from .utils import (
     BestStatelessCrosser,
     OrderedCrosser,
     RandomizedCrosser,
+    Breeder,
+    FlipBreeder,
+    Conjecturer,
+    SamplingConjecturer,
+    IntensiveConjecturer,
 )

@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 
 class IterativeAlgorithm(Algorithm):
 
-    def __init__(self, episodes: int = 100, algorithm_cls: Type[Algorithm] = None, seed: int = 56, *args, **kwargs):
+    def __init__(self, episodes: int = 10, algorithm_cls: Type[Algorithm] = None, seed: int = 56, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if algorithm_cls is None:
             algorithm_cls = InsertionAlgorithm

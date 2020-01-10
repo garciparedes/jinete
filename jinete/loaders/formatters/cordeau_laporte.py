@@ -50,7 +50,7 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
 
             vehicles.add(vehicle)
         fleet = Fleet(vehicles)
-        logger.info(f'Created fleet!')
+        logger.info(f'Created {fleet}!')
         return fleet
 
     def job(self, surface: Surface, *args, **kwargs) -> Job:
@@ -62,7 +62,7 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
             trip = self.build_trip(surface, idx, n)
             trips.add(trip)
         job = Job(trips, objective_cls=DialARideObjective)
-        logger.info(f'Created job!')
+        logger.info(f'Created "{job}"!')
         return job
 
     def build_trip(self, surface: Surface, idx: int, n: int) -> Trip:

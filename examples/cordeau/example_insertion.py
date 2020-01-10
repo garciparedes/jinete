@@ -31,6 +31,7 @@ def main():
     class MyAlgorithm(jit.InsertionAlgorithm):
         def __init__(self, *args, **kwargs):
             super().__init__(
+                conjecturer_cls=jit.IntensiveConjecturer,
                 *args, **kwargs,
             )
 
