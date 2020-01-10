@@ -4,6 +4,9 @@ import logging
 from typing import (
     TYPE_CHECKING,
 )
+
+from cached_property import cached_property
+
 from .abc import (
     Model,
 )
@@ -91,7 +94,7 @@ class Trip(Model):
     def empty(self) -> bool:
         return self.capacity == 0
 
-    @property
+    @cached_property
     def distance(self) -> float:
         return self.origin_position.distance_to(self.destination_position)
 

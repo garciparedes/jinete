@@ -4,13 +4,21 @@ from abc import (
     ABC,
     abstractmethod,
 )
+from typing import (
+    TYPE_CHECKING,
+)
 from copy import deepcopy
 
-from ....models import (
-    Planning,
-    Result,
-    Objective,
-)
+if TYPE_CHECKING:
+    from typing import (
+        Set,
+    )
+    from ....models import (
+        Planning,
+        Result,
+        Objective,
+        Route
+    )
 
 
 class Breeder(ABC):
@@ -29,6 +37,27 @@ class Breeder(ABC):
     def planning(self) -> Planning:
         return self.result.planning
 
-    @abstractmethod
+    @property
+    def routes(self) -> Set[Route]:
+        return self.planning.routes
+
     def improve(self) -> Result:
+
+        if __debug__:
+            for route in self.routes:
+                assert all(s1 == s2.previous for s1, s2 in zip(route.stops[:-1], route.stops[1:]))
+                assert all(s1.departure_time <= s2.arrival_time for s1, s2 in zip(route.stops[:-1], route.stops[1:]))
+
+        result = self._improve()
+
+        if __debug__:
+            for route in result.routes:
+                assert all(s1 == s2.previous for s1, s2 in zip(route.stops[:-1], route.stops[1:]))
+                if not all(s1.departure_time <= s2.arrival_time for s1, s2 in zip(route.stops[:-1], route.stops[1:])):
+                    assert False
+
+        return result
+
+    @abstractmethod
+    def _improve(self) -> Result:
         pass

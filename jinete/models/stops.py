@@ -4,6 +4,7 @@ import logging
 from typing import (
     TYPE_CHECKING,
 )
+import itertools as it
 
 from cached_property import cached_property
 
@@ -19,15 +20,13 @@ if TYPE_CHECKING:
         Optional,
         Iterable,
         List,
+        Set,
     )
     from .positions import (
         Position,
     )
     from .planned_trips import (
         PlannedTrip
-    )
-    from .routes import (
-        Route,
     )
     from .vehicles import (
         Vehicle,
@@ -38,74 +37,100 @@ logger = logging.getLogger(__name__)
 
 class Stop(Model):
     __slots__ = [
-        'route',
+        'vehicle',
         'position',
         'pickups',
         'deliveries',
         'previous',
-        'following',
     ]
-    route: Route
+    vehicle: Vehicle
     position: Position
     previous: Optional[Stop]
-    following: Optional[Stop]
-    pickups: Tuple[PlannedTrip, ...]
-    deliveries: Tuple[PlannedTrip, ...]
+    pickups: Set[PlannedTrip, ...]
+    deliveries: Set[PlannedTrip, ...]
 
-    def __init__(self, route: Route, position: Position, previous: Optional[Stop], following: Optional[Stop] = None,
-                 pickups: Tuple[PlannedTrip, ...] = tuple(), deliveries: Tuple[PlannedTrip, ...] = tuple()):
+    def __init__(self, vehicle: Vehicle, position: Position, previous: Optional[Stop],
+                 pickups: Set[PlannedTrip, ...] = None, deliveries: Set[PlannedTrip, ...] = None):
 
-        self.route = route
+        if pickups is None:
+            pickups = set()
+        if deliveries is None:
+            deliveries = set()
+
+        self.vehicle = vehicle
         self.position = position
 
         self.pickups = pickups
         self.deliveries = deliveries
 
         self.previous = previous
-        self.following = following
+
+    @property
+    def identifier(self) -> str:
+        trips_sequence = ''.join(
+            it.chain(
+                (f'P{planned_trip.trip_identifier}' for planned_trip in self.pickups),
+                (f'D{planned_trip.trip_identifier}' for planned_trip in self.deliveries),
+            )
+        )
+        return ','.join((
+            f'{self.position}',
+            f'{self.arrival_time:.2f}:{self.departure_time:.2f}',
+            f'({trips_sequence})',
+        ))
 
     @property
     def planned_trips(self) -> Iterable[PlannedTrip]:
         yield from self.pickups
         yield from self.deliveries
 
+    @property
+    def trips(self):
+        yield from (planned_trip.trip for planned_trip in self.planned_trips)
+
+    @property
+    def capacity(self) -> float:
+        result = sum(trip.capacity for trip in self.planned_trips)
+        assert 0 <= result
+        return result
+
+    @property
+    def all_previous(self) -> List[Stop]:
+        if self.previous is None:
+            return []
+        return [self.previous] + self.previous.all_previous
+
     def append_pickup(self, planned_trip: PlannedTrip) -> None:
         assert planned_trip.origin == self.position
-        self.extend_pickups((planned_trip,))
+        self.pickups.add(planned_trip)
 
     def append_delivery(self, planned_trip: PlannedTrip) -> None:
         assert planned_trip.destination == self.position
-        self.extend_deliveries((planned_trip,))
+        self.deliveries.add(planned_trip)
 
     def extend_pickups(self, iterable: Iterable[PlannedTrip]) -> None:
-        self.pickups = (*self.pickups, *iterable)
+        self.pickups.update(iterable)
 
     def extend_deliveries(self, iterable: Iterable[PlannedTrip]) -> None:
-        self.deliveries = (*self.deliveries, *iterable)
+        self.deliveries.update(iterable)
 
     @property
     def down_time(self) -> float:
-        return max((pt.down_time for pt in self.pickups), default=0.0)
+        if not any(self.pickups):
+            return 0.0
+        return max(pt.down_time for pt in self.pickups)
 
     @property
     def earliest(self):
-        return max((pt.trip.origin_earliest for pt in self.pickups), default=0.0)
+        if not any(self.pickups):
+            return 0.0
+        return max(pt.trip.origin_earliest for pt in self.pickups)
 
     @property
     def load_time(self) -> float:
-        return max((pt.trip.origin_duration for pt in self.planned_trips), default=0.0)
-
-    @property
-    def vehicle(self) -> Vehicle:
-        return self.route.vehicle
-
-    @property
-    def stops(self) -> List[Stop]:
-        return self.route.stops
-
-    @property
-    def index(self) -> int:
-        return self.stops.index(self)
+        if not any(self.planned_trips):
+            return 0.0
+        return max(pt.trip.origin_duration for pt in self.planned_trips)
 
     @property
     def previous_departure_time(self) -> float:
@@ -141,30 +166,25 @@ class Stop(Model):
 
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
         yield from (
-            ('route_uuid', self.route.uuid),
             ('position', self.position),
+            ('identifier', self.identifier),
         )
 
     def flush(self) -> None:
         for key in ('arrival_time', 'departure_time',):
             self.__dict__.pop(key, None)
+        for planned_trip in self.planned_trips:
+            planned_trip.flush()
 
     def flush_all_previous(self):
         self.flush()
         if self.previous is not None:
             self.previous.flush_all_previous()
 
-    def flush_all_following(self):
-        self.flush()
-        if self.following is not None:
-            self.following.flush_all_following()
-
     def merge(self, other: Stop) -> None:
         if self == other:
             return
-        assert self.route == other.route
         assert self.position == other.position
-        assert self.following == other.following
 
         self.extend_pickups(other.pickups)
         for planned_trip in other.pickups:
@@ -173,30 +193,3 @@ class Stop(Model):
         self.extend_deliveries(other.deliveries)
         for planned_trip in other.deliveries:
             planned_trip.delivery = self
-
-        self.flush()
-
-    def flip(self, other: Stop) -> None:
-        # assert other.previous == self
-        assert self.route == other.route
-
-        self_index = self.index
-        other_index = other.index
-        self.stops[self_index], self.stops[other_index] = self.stops[other_index], self.stops[self_index]
-
-        following = other.following
-        other.following = self
-        if following is not None:
-            following.previous = self
-        self.following = following
-
-        previous = self.previous
-        other.previous = previous
-        if previous is not None:
-            previous.following = other
-        self.previous = other
-
-        other.flush_all_following()
-
-    def flip_with_following(self):
-        self.flip(self.following)

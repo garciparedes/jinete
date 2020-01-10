@@ -1,5 +1,4 @@
 import unittest
-from uuid import UUID
 
 import jinete as jit
 
@@ -14,7 +13,7 @@ class TestRoutes(unittest.TestCase):
     def test_route(self):
         vehicle = generate_one_vehicle()
         route = jit.Route(vehicle)
-        self.assertIsInstance(route.uuid, UUID)
+        self.assertIsInstance(route.identifier, str)
         self.assertEqual(list(), list(route.planned_trips))
         self.assertEqual(vehicle, route.vehicle)
 

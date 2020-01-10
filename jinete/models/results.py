@@ -71,6 +71,10 @@ class Result(Model):
         return self.planning.uuid
 
     @property
+    def feasible(self) -> bool:
+        return self.planning.feasible
+
+    @property
     def completed_trips(self) -> Set[Trip]:
         trips: Set[Trip] = set()
         for route in self.routes:
@@ -86,7 +90,7 @@ class Result(Model):
         return self.job.objective
 
     @property
-    def optimization_function(self) -> float:
+    def optimization_function(self) -> Tuple[float, ...]:
         return self.objective.optimization_function(self)
 
     @property

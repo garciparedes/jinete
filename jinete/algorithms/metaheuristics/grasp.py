@@ -26,12 +26,12 @@ logger = logging.getLogger(__name__)
 
 class GraspAlgorithm(Algorithm):
 
-    def __init__(self, first_solution_episodes: int = 3, local_search_episodes: int = 10,
+    def __init__(self, first_solution_episodes: int = 1, no_improvement_threshold: int = 10,
                  seed: int = 56, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.first_solution_episodes = first_solution_episodes
-        self.local_search_episodes = local_search_episodes
+        self.no_improvement_threshold = no_improvement_threshold
         self.random = Random(seed)
 
         self.args = args
@@ -54,16 +54,19 @@ class GraspAlgorithm(Algorithm):
 
         return LocalSearchAlgorithm(*args, **kwargs)
 
-    def again(self, episode_count: int, *args, **kwargs):
-        return episode_count < self.first_solution_episodes
-
     def _optimize(self) -> Planning:
         iterative = self.build_first_solution_algorithm()
         best = iterative.optimize()
 
-        i = 0
-        while self.again(i):
+        no_improvement_count = 0
+        while no_improvement_count < self.no_improvement_threshold:
+            no_improvement_count += 1
+
             current = self.build_local_search_algorithm(initial=best).optimize()
+            current = self.build_first_solution_algorithm(routes=current.routes).optimize()
             best = self.objective.best(best, current)
-            i += 1
+
+            if best == current:
+                no_improvement_count = 0
+
         return best.planning

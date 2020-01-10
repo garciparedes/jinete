@@ -38,7 +38,7 @@ class ColumnarStorerFormatter(StorerFormatter):
                 f'TT: {planned_trip.duration:6.01f}',
                 f'T: {planned_trip.pickup_time:6.01f} to {planned_trip.delivery_time:6.01f}',
                 f'L: {planned_trip.capacity}',
-                f'OF: {self.objective.optimization_function(planned_trip):7.02f}'
+                f'OF: {self.objective.optimization_function(planned_trip)}'
             )),
         ]
 
@@ -60,6 +60,6 @@ class ColumnarStorerFormatter(StorerFormatter):
             '\n'.join(f'{self.tab_character}{row}' for row in rows),
             f'Computation time: "{self.result.computation_time:0.4f}" seconds',
             f'Coverage Rate: "{self.result.coverage_rate}"',
-            f'Optimization Function: "{self.result.optimization_function:0.5f}"',
+            f'Optimization Function: "{self.result.optimization_function}"',
             f'Direction: "{self.result.direction}"',
         ))

@@ -27,7 +27,7 @@ class HashCodeLoaderFormatter(LoaderFormatter):
         origin = Service(surface.get_or_create_position([0, 0]), latest=latest)
         vehicles = set(Vehicle(str(idx), origin, capacity=capacity) for idx in range(n))
         fleet = Fleet(vehicles)
-        logger.info(f'Created fleet!')
+        logger.info(f'Created {fleet}!')
         return fleet
 
     def job(self, surface: Surface, *args, **kwargs) -> Job:
@@ -38,7 +38,7 @@ class HashCodeLoaderFormatter(LoaderFormatter):
         kwargs['objective_cls'] = HashCodeObjective
         job = Job(trips, *args, **kwargs)
 
-        logger.info(f'Created job!')
+        logger.info(f'Created "{job}"!')
         return job
 
     def _build_trip(self, surface: Surface, identifier: str, bonus: float, x1: float, y1: float, x2: float, y2: float,

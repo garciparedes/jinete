@@ -29,11 +29,11 @@ from .models import (
     TaxiSharingObjective,
     HashCodeObjective,
 
-    PlannedTripCriterion,
-    ShortestTimePlannedTripCriterion,
-    LongestTimePlannedTripCriterion,
-    LongestUtilTimePlannedTripCriterion,
-    HashCodePlannedTripCriterion,
+    RouteCriterion,
+    ShortestTimeRouteCriterion,
+    LongestTimeRouteCriterion,
+    LongestUtilTimeRouteCriterion,
+    HashCodeRouteCriterion,
 
     MAX_INT,
     MIN_INT,
@@ -80,6 +80,11 @@ from .algorithms import (
     BestStatelessCrosser,
     OrderedCrosser,
     RandomizedCrosser,
+    Breeder,
+    FlipBreeder,
+    Conjecturer,
+    SamplingConjecturer,
+    IntensiveConjecturer,
 )
 
 from .exceptions import (
@@ -87,4 +92,5 @@ from .exceptions import (
     StopPlannedTripIterationException,
     NonFeasiblePlannedTripException,
     NonFeasibleRouteException,
+    PreviousStopNotInRouteException,
 )
