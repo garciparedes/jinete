@@ -32,36 +32,12 @@ import jinete as jit
 
 file_path = './res/datasets/hashcode/a_example.in'
 
-class MyLoader(jit.FileLoader):
-    def __init__(self, *args, **kwargs):
-        super().__init__(
-            file_path=file_path,
-            formatter_cls=jit.HashCodeLoaderFormatter,
-            *args, **kwargs,
-        )
-
-class MyAlgorithm(jit.InsertionAlgorithm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(
-            crosser_cls=jit.BestStatelessCrosser,
-            *args, **kwargs
-        )
-
-class MyStorer(jit.PromptStorer):
-    def __init__(self, *args, **kwargs):
-        super().__init__(
-            formatter_cls=jit.ColumnarStorerFormatter,
-            *args, **kwargs,
-        )
-
-dispatcher = jit.StaticDispatcher(
-    MyLoader,
-    MyAlgorithm,
-    MyStorer,
+solver = jit.Solver(
+    algorithm=jit.InsertionAlgorithm,
+    instance_file_path=file_path,
+    instance_format=jit.HashCodeLoaderFormatter,
 )
-
-result = dispatcher.run()
-
+result = solver.solve()
 # ...
 
 ```
