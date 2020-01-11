@@ -27,15 +27,15 @@ logger = logging.getLogger(__name__)
 
 class StatelessCrosser(Crosser):
 
-    def __next__(self) -> Optional[Route]:
-        return next(self.iterator)
-
     @cached_property
     def iterator(self) -> Iterator[Route]:
         for route, trip in it.product(self.attractive_routes, self.pending_trips):
             logger.debug(f'Yielding ({route}, {trip})...')
             planned_trip = self.conjecturer.compute_one(route, trip)
             yield planned_trip
+
+    def __next__(self) -> Route:
+        return next(self.iterator)
 
     def mark_trip_as_done(self, trip: Trip):
         super().mark_trip_as_done(trip)
@@ -48,7 +48,7 @@ class StatelessCrosser(Crosser):
 
 class BestStatelessCrosser(StatelessCrosser):
 
-    def __next__(self) -> Optional[Route]:
+    def __next__(self) -> Route:
         best = self.criterion.best(*self.iterator)
         if best is None:
             raise StopIteration

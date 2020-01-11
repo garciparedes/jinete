@@ -25,9 +25,9 @@ class RandomizedCrosser(OrderedCrosser):
         self.randomized_size = randomized_size
         self.random = Random(seed)
 
-    def __next__(self) -> Optional[Route]:
+    def __next__(self) -> Route:
         if len(self.ranking) == 0:
-            return None
+            raise StopIteration
 
         candidates = list()
         for sub_ranking in self.ranking.values():
@@ -44,6 +44,6 @@ class RandomizedCrosser(OrderedCrosser):
                 candidates.append(current)
             self.criterion.sorted(candidates, inplace=True)
         if len(candidates) == 0:
-            return None
+            raise StopIteration
         best = self.random.choice(candidates)
         return best

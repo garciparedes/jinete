@@ -120,7 +120,7 @@ class Crosser(ABC):
         return self
 
     @abstractmethod
-    def __next__(self) -> Optional[Route]:
+    def __next__(self) -> Route:
         pass
 
     def mark_planned_trip_as_done(self, planned_trip: PlannedTrip) -> None:

@@ -69,7 +69,7 @@ class OrderedCrosser(Crosser):
         self.criterion.sorted(raw_sub_ranking, inplace=True)
         return raw_sub_ranking
 
-    def __next__(self) -> Optional[Route]:
+    def __next__(self) -> Route:
         if len(self.ranking) == 0:
             raise StopIteration
 
