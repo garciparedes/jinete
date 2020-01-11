@@ -33,6 +33,7 @@ import jinete as jit
 file_path = './res/datasets/hashcode/a_example.in'
 
 solver = jit.Solver(
+    loader=jit.FileLoader,
     loader_kwargs={
         'file_path': file_path,
         'formatter_cls': jit.HashCodeLoaderFormatter
