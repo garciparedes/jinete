@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from random import Random
 from typing import TYPE_CHECKING
 import itertools as it
 
@@ -47,8 +48,16 @@ class StatelessCrosser(Crosser):
 
 class BestStatelessCrosser(StatelessCrosser):
 
+    def __init__(self, randomized_size: int = 1, seed: int = 56, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.randomized_size = randomized_size
+        self.random = Random(seed)
+
     def __next__(self) -> Route:
-        best = self.criterion.best(*self.iterator)
-        if best is None:
+        candidates = self.criterion.nbest(self.randomized_size, *self.iterator)
+
+        if not any(candidates):
             raise StopIteration
+
+        best = self.random.choice(candidates)
         return best

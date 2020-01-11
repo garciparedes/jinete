@@ -9,7 +9,7 @@ from tests.utils import (
 )
 
 
-class TestRandomizedCrosser(unittest.TestCase):
+class TestOrderedCrosser(unittest.TestCase):
 
     def test_creation(self):
         surface = generate_one_surface()
@@ -19,7 +19,7 @@ class TestRandomizedCrosser(unittest.TestCase):
         )
         fleet = jit.Fleet(generate_vehicles(10, surface=surface))
         randomized_size = 2
-        dispatcher = jit.RandomizedCrosser(
+        dispatcher = jit.OrderedCrosser(
             randomized_size=randomized_size,
             job=job,
             fleet=fleet,

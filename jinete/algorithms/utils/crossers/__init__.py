@@ -8,6 +8,3 @@ from .stateless import (
 from .ordered import (
     OrderedCrosser,
 )
-from .randomized import (
-    RandomizedCrosser,
-)

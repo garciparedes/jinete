@@ -3,7 +3,6 @@ from .crossers import (
     StatelessCrosser,
     BestStatelessCrosser,
     OrderedCrosser,
-    RandomizedCrosser,
 )
 from .models import (
     Model,

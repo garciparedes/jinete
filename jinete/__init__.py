@@ -79,7 +79,6 @@ from .algorithms import (
     StatelessCrosser,
     BestStatelessCrosser,
     OrderedCrosser,
-    RandomizedCrosser,
     Breeder,
     FlipBreeder,
     Conjecturer,

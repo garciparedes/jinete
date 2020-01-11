@@ -20,7 +20,6 @@ from .utils import (
     StatelessCrosser,
     BestStatelessCrosser,
     OrderedCrosser,
-    RandomizedCrosser,
     Breeder,
     FlipBreeder,
     Conjecturer,
