@@ -94,3 +94,6 @@ from .exceptions import (
     NonFeasibleRouteException,
     PreviousStopNotInRouteException,
 )
+from .solvers import (
+    Solver,
+)
