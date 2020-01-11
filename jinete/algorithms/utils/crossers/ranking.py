@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class OrderedCrosser(Crosser):
+class RankingCrosser(Crosser):
     ranking: Dict[Vehicle, List[Route]]
 
     def __init__(self, neighborhood_max_size: int = 250, randomized_size: int = 1, seed: int = 56, *args, **kwargs):

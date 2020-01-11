@@ -2,7 +2,7 @@ from .crossers import (
     Crosser,
     StatelessCrosser,
     BestStatelessCrosser,
-    OrderedCrosser,
+    RankingCrosser,
 )
 from .models import (
     Model,

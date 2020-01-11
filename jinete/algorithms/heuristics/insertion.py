@@ -10,7 +10,7 @@ from ..abc import (
     Algorithm,
 )
 from ..utils import (
-    OrderedCrosser,
+    RankingCrosser,
 )
 
 if TYPE_CHECKING:
@@ -29,7 +29,7 @@ class InsertionAlgorithm(Algorithm):
     def __init__(self, crosser_cls: Type[Crosser] = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if crosser_cls is None:
-            crosser_cls = OrderedCrosser
+            crosser_cls = RankingCrosser
         self.crosser_cls = crosser_cls
         self.args = args
         self.kwargs = kwargs

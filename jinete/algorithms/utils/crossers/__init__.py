@@ -5,6 +5,6 @@ from .stateless import (
     StatelessCrosser,
     BestStatelessCrosser,
 )
-from .ordered import (
-    OrderedCrosser,
+from .ranking import (
+    RankingCrosser,
 )
