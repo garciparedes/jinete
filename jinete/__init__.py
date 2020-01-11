@@ -78,8 +78,7 @@ from .algorithms import (
     Crosser,
     StatelessCrosser,
     BestStatelessCrosser,
-    OrderedCrosser,
-    RandomizedCrosser,
+    RankingCrosser,
     Breeder,
     FlipBreeder,
     Conjecturer,
@@ -89,7 +88,6 @@ from .algorithms import (
 
 from .exceptions import (
     JineteException,
-    StopPlannedTripIterationException,
     NonFeasiblePlannedTripException,
     NonFeasibleRouteException,
     PreviousStopNotInRouteException,

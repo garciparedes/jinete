@@ -12,10 +12,6 @@ from typing import (
 from cached_property import (
     cached_property,
 )
-
-from ....exceptions import (
-    StopPlannedTripIterationException,
-)
 from ....models import (
     Route,
     ShortestTimeRouteCriterion,
@@ -27,7 +23,6 @@ from ..conjecturer import (
 if TYPE_CHECKING:
     from typing import (
         Set,
-        Optional,
         Type,
         Dict,
     )
@@ -123,16 +118,8 @@ class Crosser(ABC):
     def __iter__(self):
         return self
 
-    def __next__(self):
-        while True:
-            planned_trip = self.get_planned_trip()
-            if planned_trip is None:
-                raise StopPlannedTripIterationException()
-            logger.debug(f'Yielding {planned_trip}...')
-            return planned_trip
-
     @abstractmethod
-    def get_planned_trip(self) -> Optional[PlannedTrip]:
+    def __next__(self) -> Route:
         pass
 
     def mark_planned_trip_as_done(self, planned_trip: PlannedTrip) -> None:

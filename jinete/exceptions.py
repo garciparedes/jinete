@@ -20,13 +20,6 @@ class JineteException(Exception):
         self.message = message
 
 
-class StopPlannedTripIterationException(JineteException):
-
-    def __init__(self):
-        message = f'There are no more Planned Trips to iterate over them.'
-        super().__init__(message=message)
-
-
 class PreviousStopNotInRouteException(JineteException):
 
     def __init__(self, stop: Stop):

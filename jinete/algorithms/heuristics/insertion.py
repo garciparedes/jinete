@@ -6,14 +6,11 @@ from typing import TYPE_CHECKING
 from ...models import (
     Planning,
 )
-from ...exceptions import (
-    StopPlannedTripIterationException,
-)
 from ..abc import (
     Algorithm,
 )
 from ..utils import (
-    OrderedCrosser,
+    RankingCrosser,
 )
 
 if TYPE_CHECKING:
@@ -32,7 +29,7 @@ class InsertionAlgorithm(Algorithm):
     def __init__(self, crosser_cls: Type[Crosser] = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if crosser_cls is None:
-            crosser_cls = OrderedCrosser
+            crosser_cls = RankingCrosser
         self.crosser_cls = crosser_cls
         self.args = args
         self.kwargs = kwargs
@@ -43,11 +40,7 @@ class InsertionAlgorithm(Algorithm):
     def _optimize(self) -> Planning:
         crosser = self.build_crosser()
 
-        while not crosser.completed:
-            try:
-                route = next(crosser)
-            except StopPlannedTripIterationException:
-                break
+        for route in crosser:
             crosser.set_route(route)
 
         planning = Planning(crosser.routes)

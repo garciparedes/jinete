@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import itertools as it
+from random import Random
 from typing import TYPE_CHECKING
 
 from .abc import (
@@ -10,7 +11,6 @@ from .abc import (
 
 if TYPE_CHECKING:
     from typing import (
-        Optional,
         Dict,
         List,
     )
@@ -23,18 +23,20 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class OrderedCrosser(Crosser):
+class RankingCrosser(Crosser):
     ranking: Dict[Vehicle, List[Route]]
 
-    def __init__(self, neighborhood_max_size: int = 250, *args, **kwargs):
+    def __init__(self, neighborhood_max_size: int = 250, randomized_size: int = 1, seed: int = 56, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         if neighborhood_max_size is None:
             neighborhood_max_size = len(self.trips)
-        else:
-            neighborhood_max_size = min(neighborhood_max_size, len(self.trips))
 
-        self.neighborhood_max_size = neighborhood_max_size
+        self.neighborhood_max_size = min(neighborhood_max_size, len(self.trips))
+
+        self.randomized_size = randomized_size
+        self.random = Random(seed)
+
         self.ranking = dict()
         self.initialize_ranking()
 
@@ -69,16 +71,28 @@ class OrderedCrosser(Crosser):
         self.criterion.sorted(raw_sub_ranking, inplace=True)
         return raw_sub_ranking
 
-    def get_planned_trip(self) -> Optional[PlannedTrip]:
-        if len(self.ranking) == 0:
-            return None
+    def __next__(self) -> Route:
+        if not any(self.ranking):
+            raise StopIteration
 
-        best = None
+        candidates = list()
         for sub_ranking in self.ranking.values():
-            if len(sub_ranking) == 0:
+            if not any(sub_ranking):
                 continue
-            current = sub_ranking[0]
-            if not current.feasible:
-                continue
-            best = self.criterion.best(best, current)
+
+            for current in sub_ranking:
+                if any(candidates) and self.criterion.best(candidates[-1], current) == candidates[-1]:
+                    break
+
+                if self.randomized_size <= len(candidates):
+                    candidates.pop()
+
+                candidates.append(current)
+
+            self.criterion.sorted(candidates, inplace=True)
+
+        if not any(candidates):
+            raise StopIteration
+
+        best = self.random.choice(candidates)
         return best
