@@ -53,7 +53,6 @@ class TestSolver(unittest.TestCase):
             loader_kwargs={
                 'file_path': self.file_path,
             },
-            instance_format=jit.CordeauLaporteLoaderFormatter,
         )
 
         self.assertIsInstance(solver.solve(), jit.Result)

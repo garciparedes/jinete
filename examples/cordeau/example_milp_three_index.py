@@ -34,7 +34,6 @@ def main():
             'solver': lp.SCIP(msg=1),
             # 'solver' :lp.PULP_CBC_CMD(msg=1, threads=4),
         },
-        instance_format=jit.CordeauLaporteLoaderFormatter,
         storer=jit.StorerSet,
         storer_kwargs={
             'storer_cls_set': {

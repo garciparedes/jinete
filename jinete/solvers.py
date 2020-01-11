@@ -1,18 +1,15 @@
 from __future__ import annotations
 
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 from .loaders import (
     FileLoader,
-    HashCodeLoaderFormatter,
 )
 from .algorithms import (
     InsertionAlgorithm,
 )
 from .storers import (
     PromptStorer,
-    ColumnarStorerFormatter,
 )
 from .dispatchers import (
     StaticDispatcher,
@@ -27,7 +24,6 @@ if TYPE_CHECKING:
     )
     from .loaders import (
         Loader,
-        LoaderFormatter,
     )
     from .algorithms import (
         Algorithm,
@@ -37,7 +33,6 @@ if TYPE_CHECKING:
     )
     from .storers import (
         Storer,
-        StorerFormatter,
     )
     from .dispatchers import (
         Dispatcher,
@@ -51,11 +46,8 @@ class Solver(object):
                  algorithm_kwargs: Dict[str, Any] = None,
                  loader: Union[str, Type[Loader]] = FileLoader,
                  loader_kwargs: Dict[str, Any] = None,
-                 instance_format: Union[str, Type[LoaderFormatter]] = HashCodeLoaderFormatter,
                  storer: Union[str, Type[Storer]] = PromptStorer,
                  storer_kwargs: Dict[str, Any] = None,
-                 output_format: Union[str, Type[StorerFormatter]] = ColumnarStorerFormatter,
-                 output_file_path: Union[str, Path] = None,
                  dispatcher: Union[str, Type[Dispatcher]] = StaticDispatcher,
                  dispatcher_kwargs: Dict[str, Any] = None):
         if algorithm_kwargs is None:
@@ -69,15 +61,12 @@ class Solver(object):
 
         self._base_loader_cls = loader
         self._loader_kwargs = loader_kwargs
-        self._instance_format = instance_format
 
         self._base_algorithm_cls = algorithm
         self._algorithm_kwargs = algorithm_kwargs
 
         self._base_storer_cls = storer
         self._storer_kwargs = storer_kwargs
-        self._output_file_path = output_file_path
-        self._output_format = output_format
 
         self._base_dispatcher_cls = dispatcher
         self._dispatcher_kwargs = dispatcher_kwargs
@@ -85,13 +74,11 @@ class Solver(object):
     @property
     def _loader_cls(self) -> Type[Loader]:
         base = self._base_loader_cls
-        instance_format = self._instance_format
         tuned_kwargs = self._loader_kwargs
 
         class TunedLoader(base):
             def __init__(self, *args, **kwargs):
                 super().__init__(
-                    formatter_cls=instance_format,
                     *args, **kwargs,
                     **tuned_kwargs,
                 )
@@ -115,13 +102,11 @@ class Solver(object):
     @property
     def _storer_cls(self) -> Type[Storer]:
         base = self._base_storer_cls
-        output_format = self._output_format
         tuned_kwargs = self._storer_kwargs
 
         class TunedStorer(base):
             def __init__(self, *args, **kwargs):
                 super().__init__(
-                    formatter_cls=output_format,
                     *args, **kwargs,
                     **tuned_kwargs,
                 )

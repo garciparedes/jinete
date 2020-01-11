@@ -31,13 +31,13 @@ def main():
     solver = jit.Solver(
         loader_kwargs={
             'file_path': file_path,
+            'formatter_cls': jit.HashCodeLoaderFormatter,
         },
         algorithm=jit.InsertionAlgorithm,
         algorithm_kwargs={
             'criterion': jit.HashCodeRouteCriterion,
             'neighborhood_max_size': None,
         },
-        instance_format=jit.HashCodeLoaderFormatter,
     )
     result = solver.solve()  # noqa
 

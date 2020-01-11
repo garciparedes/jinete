@@ -28,7 +28,6 @@ def main():
         algorithm_kwargs={
             'conjecturer_cls': jit.IntensiveConjecturer,
         },
-        instance_format=jit.CordeauLaporteLoaderFormatter,
         storer=jit.StorerSet,
         storer_kwargs={
             'storer_cls_set': {

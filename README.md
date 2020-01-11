@@ -35,9 +35,9 @@ file_path = './res/datasets/hashcode/a_example.in'
 solver = jit.Solver(
     loader_kwargs={
         'file_path': file_path,
+        'formatter_cls': jit.HashCodeLoaderFormatter
     },
     algorithm=jit.InsertionAlgorithm,
-    instance_format=jit.HashCodeLoaderFormatter,
 )
 result = solver.solve()
 # ...
