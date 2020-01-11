@@ -20,45 +20,22 @@ def main():
 
     file_path = DATASETS_PATH / 'cordeau-laporte' / 'a2-16.txt'
 
-    class MyLoader(jit.FileLoader):
-        def __init__(self, *args, **kwargs):
-            super().__init__(
-                file_path=file_path,
-                formatter_cls=jit.CordeauLaporteLoaderFormatter,
-                *args, **kwargs,
-            )
-
-    class MyAlgorithm(jit.InsertionAlgorithm):
-        def __init__(self, *args, **kwargs):
-            super().__init__(
-                conjecturer_cls=jit.IntensiveConjecturer,
-                *args, **kwargs,
-            )
-
-    class MyStorer(jit.PromptStorer):
-        def __init__(self, *args, **kwargs):
-            super().__init__(
-                formatter_cls=jit.ColumnarStorerFormatter,
-                *args, **kwargs,
-            )
-
-    class MyStorerSet(jit.StorerSet):
-        def __init__(self, *args, **kwargs):
-            super().__init__(
-                storer_cls_set={
-                    MyStorer,
-                    jit.GraphPlotStorer,
-                },
-                *args, **kwargs,
-            )
-
-    dispatcher = jit.StaticDispatcher(
-        MyLoader,
-        MyAlgorithm,
-        MyStorerSet,
+    solver = jit.Solver(
+        algorithm=jit.InsertionAlgorithm,
+        algorithm_kwargs={
+            'conjecturer_cls': jit.IntensiveConjecturer,
+        },
+        instance_file_path=file_path,
+        instance_format=jit.CordeauLaporteLoaderFormatter,
+        storer=jit.StorerSet,
+        storer_kwargs={
+            'storer_cls_set': {
+                jit.PromptStorer,
+                jit.GraphPlotStorer,
+            },
+        }
     )
-
-    result = dispatcher.run()  # noqa
+    result = solver.solve()  # noqa
 
     logger.info('Finished...')
 

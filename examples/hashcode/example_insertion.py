@@ -28,36 +28,16 @@ def main():
 
     file_path = DATASETS_PATH / 'hashcode' / FILES['b']
 
-    class MyLoader(jit.FileLoader):
-        def __init__(self, *args, **kwargs):
-            super().__init__(
-                file_path=file_path,
-                formatter_cls=jit.HashCodeLoaderFormatter,
-                *args, **kwargs,
-            )
-
-    class MyAlgorithm(jit.InsertionAlgorithm):
-        def __init__(self, *args, **kwargs):
-            super().__init__(
-                neighborhood_max_size=None,
-                criterion_cls=jit.HashCodeRouteCriterion,
-                *args, **kwargs,
-            )
-
-    class MyStorer(jit.PromptStorer):
-        def __init__(self, *args, **kwargs):
-            super().__init__(
-                formatter_cls=jit.ColumnarStorerFormatter,
-                *args, **kwargs,
-            )
-
-    dispatcher = jit.StaticDispatcher(
-        MyLoader,
-        MyAlgorithm,
-        MyStorer,
+    solver = jit.Solver(
+        algorithm=jit.InsertionAlgorithm,
+        algorithm_kwargs={
+            'criterion': jit.HashCodeRouteCriterion,
+            'neighborhood_max_size': None,
+        },
+        instance_file_path=file_path,
+        instance_format=jit.HashCodeLoaderFormatter,
     )
-
-    result = dispatcher.run()  # noqa
+    result = solver.solve()  # noqa
 
     logger.info('Finished...')
 
