@@ -69,9 +69,9 @@ class OrderedCrosser(Crosser):
         self.criterion.sorted(raw_sub_ranking, inplace=True)
         return raw_sub_ranking
 
-    def get_planned_trip(self) -> Optional[PlannedTrip]:
+    def __next__(self) -> Optional[Route]:
         if len(self.ranking) == 0:
-            return None
+            raise StopIteration
 
         best = None
         for sub_ranking in self.ranking.values():
@@ -81,4 +81,6 @@ class OrderedCrosser(Crosser):
             if not current.feasible:
                 continue
             best = self.criterion.best(best, current)
+        if best is None:
+            raise StopIteration
         return best

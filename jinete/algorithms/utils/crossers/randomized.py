@@ -10,10 +10,9 @@ from .ordered import (
 if TYPE_CHECKING:
     from typing import (
         Optional,
-        List,
     )
     from ....models import (
-        PlannedTrip,
+        Route,
     )
 
 logger = logging.getLogger(__name__)
@@ -26,15 +25,15 @@ class RandomizedCrosser(OrderedCrosser):
         self.randomized_size = randomized_size
         self.random = Random(seed)
 
-    def get_planned_trip(self) -> Optional[PlannedTrip]:
+    def __next__(self) -> Optional[Route]:
         if len(self.ranking) == 0:
             return None
 
-        candidates: List[PlannedTrip] = list()
+        candidates = list()
         for sub_ranking in self.ranking.values():
             if len(sub_ranking) == 0:
                 continue
-            for current in sub_ranking.values():
+            for current in sub_ranking:
                 if len(candidates) != 0:
                     best = self.criterion.best(candidates[-1], current)
                     if not best != candidates[-1]:

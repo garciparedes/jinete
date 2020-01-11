@@ -6,9 +6,6 @@ from typing import TYPE_CHECKING
 from ...models import (
     Planning,
 )
-from ...exceptions import (
-    StopPlannedTripIterationException,
-)
 from ..abc import (
     Algorithm,
 )
@@ -43,11 +40,7 @@ class InsertionAlgorithm(Algorithm):
     def _optimize(self) -> Planning:
         crosser = self.build_crosser()
 
-        while not crosser.completed:
-            try:
-                route = next(crosser)
-            except StopPlannedTripIterationException:
-                break
+        for route in crosser:
             crosser.set_route(route)
 
         planning = Planning(crosser.routes)
