@@ -21,11 +21,13 @@ def main():
     file_path = DATASETS_PATH / 'cordeau-laporte' / 'a2-16.txt'
 
     solver = jit.Solver(
+        loader_kwargs={
+            'file_path': file_path,
+        },
         algorithm=jit.GraspAlgorithm,
         algorithm_kwargs={
             'conjecturer_cls': jit.IntensiveConjecturer,
         },
-        instance_file_path=file_path,
         instance_format=jit.CordeauLaporteLoaderFormatter,
         storer=jit.StorerSet,
         storer_kwargs={

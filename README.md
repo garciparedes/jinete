@@ -33,8 +33,10 @@ import jinete as jit
 file_path = './res/datasets/hashcode/a_example.in'
 
 solver = jit.Solver(
+    loader_kwargs={
+        'file_path': file_path,
+    },
     algorithm=jit.InsertionAlgorithm,
-    instance_file_path=file_path,
     instance_format=jit.HashCodeLoaderFormatter,
 )
 result = solver.solve()

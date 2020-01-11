@@ -29,12 +29,14 @@ def main():
     file_path = DATASETS_PATH / 'hashcode' / FILES['b']
 
     solver = jit.Solver(
+        loader_kwargs={
+            'file_path': file_path,
+        },
         algorithm=jit.InsertionAlgorithm,
         algorithm_kwargs={
             'criterion': jit.HashCodeRouteCriterion,
             'neighborhood_max_size': None,
         },
-        instance_file_path=file_path,
         instance_format=jit.HashCodeLoaderFormatter,
     )
     result = solver.solve()  # noqa

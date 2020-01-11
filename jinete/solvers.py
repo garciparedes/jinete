@@ -52,7 +52,6 @@ class Solver(object):
                  loader: Union[str, Type[Loader]] = FileLoader,
                  loader_kwargs: Dict[str, Any] = None,
                  instance_format: Union[str, Type[LoaderFormatter]] = HashCodeLoaderFormatter,
-                 instance_file_path: Union[str, Path] = None,
                  storer: Union[str, Type[Storer]] = PromptStorer,
                  storer_kwargs: Dict[str, Any] = None,
                  output_format: Union[str, Type[StorerFormatter]] = ColumnarStorerFormatter,
@@ -70,7 +69,6 @@ class Solver(object):
 
         self._base_loader_cls = loader
         self._loader_kwargs = loader_kwargs
-        self._instance_file_path = instance_file_path
         self._instance_format = instance_format
 
         self._base_algorithm_cls = algorithm
@@ -87,14 +85,12 @@ class Solver(object):
     @property
     def _loader_cls(self) -> Type[Loader]:
         base = self._base_loader_cls
-        input_file_path = self._instance_file_path
         instance_format = self._instance_format
         tuned_kwargs = self._loader_kwargs
 
         class TunedLoader(base):
             def __init__(self, *args, **kwargs):
                 super().__init__(
-                    file_path=input_file_path,
                     formatter_cls=instance_format,
                     *args, **kwargs,
                     **tuned_kwargs,

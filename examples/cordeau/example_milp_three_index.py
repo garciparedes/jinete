@@ -23,6 +23,9 @@ def main():
     file_path = DATASETS_PATH / 'cordeau-laporte' / 'a2-16.txt'
 
     solver = jit.Solver(
+        loader_kwargs={
+            'file_path': file_path,
+        },
         algorithm=jit.MilpAlgorithm,
         algorithm_kwargs={
             # 'solver': lp.XPRESS(msg=1, path=str(BASE_PATH / 'tmp' / 'xpressmp' / 'bin' / 'optimizer')),
@@ -31,7 +34,6 @@ def main():
             'solver': lp.SCIP(msg=1),
             # 'solver' :lp.PULP_CBC_CMD(msg=1, threads=4),
         },
-        instance_file_path=file_path,
         instance_format=jit.CordeauLaporteLoaderFormatter,
         storer=jit.StorerSet,
         storer_kwargs={
