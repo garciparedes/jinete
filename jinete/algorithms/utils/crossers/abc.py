@@ -23,7 +23,6 @@ from ..conjecturer import (
 if TYPE_CHECKING:
     from typing import (
         Set,
-        Optional,
         Type,
         Dict,
     )

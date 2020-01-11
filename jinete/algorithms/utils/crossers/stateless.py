@@ -14,7 +14,6 @@ from .abc import (
 
 if TYPE_CHECKING:
     from typing import (
-        Optional,
         Iterator,
     )
     from ....models import (

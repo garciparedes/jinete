@@ -8,9 +8,6 @@ from .ordered import (
 )
 
 if TYPE_CHECKING:
-    from typing import (
-        Optional,
-    )
     from ....models import (
         Route,
     )
