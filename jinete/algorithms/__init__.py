@@ -7,15 +7,6 @@ from .naive import (
 from .heuristics import (
     InsertionAlgorithm,
     LocalSearchAlgorithm,
-)
-from .metaheuristics import (
-    GraspAlgorithm,
-    IterativeAlgorithm,
-)
-from .exacts import (
-    MilpAlgorithm,
-)
-from .utils import (
     Crosser,
     StatelessCrosser,
     BestStatelessCrosser,
@@ -25,4 +16,11 @@ from .utils import (
     Conjecturer,
     SamplingConjecturer,
     IntensiveConjecturer,
+)
+from .metaheuristics import (
+    GraspAlgorithm,
+    IterativeAlgorithm,
+)
+from .exacts import (
+    MilpAlgorithm,
 )

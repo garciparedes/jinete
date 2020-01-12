@@ -12,7 +12,7 @@ from typing import (
 from cached_property import (
     cached_property,
 )
-from ....models import (
+from .....models import (
     Route,
     ShortestTimeRouteCriterion,
 )
@@ -26,7 +26,7 @@ if TYPE_CHECKING:
         Type,
         Dict,
     )
-    from ....models import (
+    from .....models import (
         PlannedTrip,
         Vehicle,
         Fleet,

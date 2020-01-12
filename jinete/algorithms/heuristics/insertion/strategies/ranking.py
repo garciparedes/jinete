@@ -14,7 +14,7 @@ if TYPE_CHECKING:
         Dict,
         List,
     )
-    from ....models import (
+    from .....models import (
         PlannedTrip,
         Route,
         Vehicle

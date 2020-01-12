@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from typing import (
         Iterator,
     )
-    from ....models import (
+    from .....models import (
         Route,
         Trip,
     )

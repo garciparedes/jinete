@@ -3,7 +3,7 @@ import logging
 from .abc import (
     Breeder,
 )
-from ....models import (
+from .....models import (
     Result,
     Stop,
     Route,

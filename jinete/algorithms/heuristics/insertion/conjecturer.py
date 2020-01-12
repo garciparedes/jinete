@@ -6,7 +6,7 @@ from typing import (
     TYPE_CHECKING,
 )
 
-from ...models import (
+from ....models import (
     Route,
     Stop,
     PlannedTrip,

@@ -3,13 +3,13 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from ...models import (
+from ....models import (
     Planning,
 )
-from ..abc import (
+from ...abc import (
     Algorithm,
 )
-from ..utils import (
+from .strategies import (
     FlipBreeder
 )
 
@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from typing import (
         Set,
     )
-    from ...models import (
+    from ....models import (
         Result,
         Route,
     )
