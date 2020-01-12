@@ -10,7 +10,8 @@ from ...abc import (
     Algorithm,
 )
 from .strategies import (
-    OneShiftLocalSearchStrategy
+    OneShiftLocalSearchStrategy,
+    RelocationLocalSearchStrategy,
 )
 
 if TYPE_CHECKING:
@@ -27,12 +28,12 @@ logger = logging.getLogger(__name__)
 
 class LocalSearchAlgorithm(Algorithm):
 
-    def __init__(self, initial: Result, no_improvement_threshold: int = 10, *args, **kwargs):
+    def __init__(self, initial: Result, no_improvement_threshold: int = 1, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial = initial
         self.args = args
         self.kwargs = kwargs
-        self.strategy_cls = OneShiftLocalSearchStrategy
+        self.strategy_cls = RelocationLocalSearchStrategy
         self.no_improvement_threshold = no_improvement_threshold
 
     @property

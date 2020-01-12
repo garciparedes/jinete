@@ -152,6 +152,14 @@ class Route(Model):
                 return False
         return True
 
+    def flush(self):
+        self.__dict__.pop('feasible', None)
+
+        for stop in self.stops:
+            stop.flush()
+        for planned_trip in self.planned_trips:
+            planned_trip.flush()
+
     @property
     def loaded(self):
         return any(self.planned_trips)
@@ -262,6 +270,18 @@ class Route(Model):
             stop.flush()
         return stop
 
+    def remove_stop_at(self, idx: int):
+        previous_stop = self.stops[idx - 1]
+        following_stop = self.stops[idx + 1] or None
+
+        if following_stop is not None:
+            following_stop.previous = previous_stop
+
+        self.stops.pop(idx)
+
+        for stop in self.stops[idx:]:
+            stop.flush()
+
     def append_planned_trip(self, planned_trip: PlannedTrip):
         assert planned_trip.delivery is not None
         assert planned_trip.pickup is not None
@@ -274,3 +294,17 @@ class Route(Model):
         assert all(s1 == s2.previous for s1, s2 in zip(self.stops[:-1], self.stops[1:]))
         assert all(s1.departure_time <= s2.arrival_time for s1, s2 in zip(self.stops[:-1], self.stops[1:]))
         logger.debug(f'Append trip with "{planned_trip.trip_identifier}" identifier to route.')
+
+    def remove_trip(self, trip: Trip) -> None:
+
+        old_len = len(self.stops)
+
+        for i in reversed(range(len(self.stops))):
+            stop = self.stops[i]
+            if trip not in stop.trips:
+                continue
+            self.remove_stop_at(i)
+
+        assert old_len - 2 == len(self.stops)
+        assert all(s1 == s2.previous for s1, s2 in zip(self.stops[:-1], self.stops[1:]))
+        assert all(s1.departure_time <= s2.arrival_time for s1, s2 in zip(self.stops[:-1], self.stops[1:]))
