@@ -12,12 +12,12 @@ from typing import (
 from cached_property import (
     cached_property,
 )
-from ....models import (
+from .....models import (
     Route,
     ShortestTimeRouteCriterion,
 )
-from ..conjecturer import (
-    Conjecturer,
+from ..strategies import (
+    InsertionStrategy,
 )
 
 if TYPE_CHECKING:
@@ -26,7 +26,7 @@ if TYPE_CHECKING:
         Type,
         Dict,
     )
-    from ....models import (
+    from .....models import (
         PlannedTrip,
         Vehicle,
         Fleet,
@@ -38,16 +38,16 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class Crosser(ABC):
+class InsertionIterator(ABC):
     fleet: Fleet
     job: Job
     criterion_cls: Type[RouteCriterion]
     routes_container: Dict[Vehicle, Route]
 
-    def __init__(self, fleet: Fleet, job: Job, conjecturer_cls: Type[Conjecturer] = None,
+    def __init__(self, fleet: Fleet, job: Job, strategy_cls: Type[InsertionStrategy] = None,
                  criterion_cls: Type[RouteCriterion] = None, routes: Set[Route] = None, *args, **kwargs):
-        if conjecturer_cls is None:
-            conjecturer_cls = Conjecturer
+        if strategy_cls is None:
+            strategy_cls = InsertionStrategy
         if criterion_cls is None:
             criterion_cls = ShortestTimeRouteCriterion
 
@@ -68,7 +68,7 @@ class Crosser(ABC):
         self._attractive_routes = None
         self.pending_trips = pending_trips
 
-        self.conjecturer_cls = conjecturer_cls
+        self.strategy_cls = strategy_cls
         self.criterion_cls = criterion_cls
 
         self.args = args
@@ -100,8 +100,8 @@ class Crosser(ABC):
             self.mark_planned_trip_as_done(planned_trip)
 
     @cached_property
-    def conjecturer(self) -> Conjecturer:
-        return self.conjecturer_cls(*self.args, **self.kwargs)
+    def strategy(self) -> InsertionStrategy:
+        return self.strategy_cls(*self.args, **self.kwargs)
 
     @cached_property
     def criterion(self) -> RouteCriterion:

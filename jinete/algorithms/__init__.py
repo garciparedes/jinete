@@ -7,6 +7,15 @@ from .naive import (
 from .heuristics import (
     InsertionAlgorithm,
     LocalSearchAlgorithm,
+    InsertionIterator,
+    StatelessInsertionIterator,
+    BestStatelessInsertionIterator,
+    RankingInsertionIterator,
+    LocalSearchStrategy,
+    OneShiftLocalSearchStrategy,
+    InsertionStrategy,
+    SamplingInsertionStrategy,
+    IntensiveInsertionStrategy,
 )
 from .metaheuristics import (
     GraspAlgorithm,
@@ -14,15 +23,4 @@ from .metaheuristics import (
 )
 from .exacts import (
     MilpAlgorithm,
-)
-from .utils import (
-    Crosser,
-    StatelessCrosser,
-    BestStatelessCrosser,
-    RankingCrosser,
-    Breeder,
-    FlipBreeder,
-    Conjecturer,
-    SamplingConjecturer,
-    IntensiveConjecturer,
 )

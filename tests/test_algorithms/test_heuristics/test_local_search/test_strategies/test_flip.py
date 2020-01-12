@@ -11,7 +11,7 @@ from tests.utils import (
 )
 
 
-class TestFlipBreeder(unittest.TestCase):
+class TestFlipLocalSearchStrategy(unittest.TestCase):
     vehicle: jit.Vehicle
     position: jit.Position
     stops: List[jit.Stop]
@@ -44,17 +44,17 @@ class TestFlipBreeder(unittest.TestCase):
         self.result = jit.Result(self.fleet, self.job, jit.Algorithm, self.planning, computation_time=float(0.0))
 
     def test_creation(self):
-        breeder = jit.FlipBreeder(self.result)
+        strategy = jit.OneShiftLocalSearchStrategy(self.result)
 
-        self.assertNotEqual(self.planning, breeder.planning)
-        self.assertEqual(1, len(breeder.routes))
-        self.assertEqual(tuple(self.route.positions), tuple(next(iter(breeder.routes)).positions))
+        self.assertNotEqual(self.planning, strategy.planning)
+        self.assertEqual(1, len(strategy.routes))
+        self.assertEqual(tuple(self.route.positions), tuple(next(iter(strategy.routes)).positions))
 
     def test_flip(self):
-        breeder = jit.FlipBreeder(self.result)
+        strategy = jit.OneShiftLocalSearchStrategy(self.result)
         stops = self.route.stops
 
-        breeder.flip(self.route, stops[1], stops[2], stops[3])
+        strategy.flip(self.route, stops[1], stops[2], stops[3])
 
         self.assertEqual(stops[0].position, self.stops[0].position)
         self.assertEqual(stops[1].position, self.stops[2].position)

@@ -1,16 +1,14 @@
-from .insertion import (
+from .algorithm import (
     InsertionAlgorithm,
-
+)
+from .iterators import (
     InsertionIterator,
     StatelessInsertionIterator,
     BestStatelessInsertionIterator,
     RankingInsertionIterator,
+)
+from .strategies import (
     InsertionStrategy,
     SamplingInsertionStrategy,
     IntensiveInsertionStrategy,
-)
-from .local_search import (
-    LocalSearchAlgorithm,
-    LocalSearchStrategy,
-    OneShiftLocalSearchStrategy,
 )

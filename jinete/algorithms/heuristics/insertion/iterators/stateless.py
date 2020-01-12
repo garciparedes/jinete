@@ -10,14 +10,14 @@ from cached_property import (
 )
 
 from .abc import (
-    Crosser,
+    InsertionIterator,
 )
 
 if TYPE_CHECKING:
     from typing import (
         Iterator,
     )
-    from ....models import (
+    from .....models import (
         Route,
         Trip,
     )
@@ -25,13 +25,13 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class StatelessCrosser(Crosser):
+class StatelessInsertionIterator(InsertionIterator):
 
     @cached_property
     def iterator(self) -> Iterator[Route]:
         for route, trip in it.product(self.attractive_routes, self.pending_trips):
             logger.debug(f'Yielding ({route}, {trip})...')
-            planned_trip = self.conjecturer.compute_one(route, trip)
+            planned_trip = self.strategy.compute_one(route, trip)
             yield planned_trip
 
     def __next__(self) -> Route:
@@ -46,7 +46,7 @@ class StatelessCrosser(Crosser):
             self.__dict__.pop(key, None)
 
 
-class BestStatelessCrosser(StatelessCrosser):
+class BestStatelessInsertionIterator(StatelessInsertionIterator):
 
     def __init__(self, randomized_size: int = 1, seed: int = 56, *args, **kwargs):
         super().__init__(*args, **kwargs)

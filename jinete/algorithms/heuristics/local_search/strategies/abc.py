@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from typing import (
         Set,
     )
-    from ....models import (
+    from .....models import (
         Planning,
         Result,
         Objective,
@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     )
 
 
-class Breeder(ABC):
+class LocalSearchStrategy(ABC):
 
     def __init__(self, result: Result, with_copy: bool = True):
         if with_copy:
