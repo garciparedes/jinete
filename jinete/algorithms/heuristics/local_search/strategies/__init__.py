@@ -1,7 +1,7 @@
 from .abc import (
-    Breeder,
+    LocalSearchStrategy,
 )
 
 from .flips import (
-    FlipBreeder,
+    OneShiftLocalSearchStrategy,
 )

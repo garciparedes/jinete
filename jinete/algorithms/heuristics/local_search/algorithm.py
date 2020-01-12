@@ -10,7 +10,7 @@ from ...abc import (
     Algorithm,
 )
 from .strategies import (
-    FlipBreeder
+    OneShiftLocalSearchStrategy
 )
 
 if TYPE_CHECKING:
@@ -32,7 +32,7 @@ class LocalSearchAlgorithm(Algorithm):
         self.initial = initial
         self.args = args
         self.kwargs = kwargs
-        self.breeder_cls = FlipBreeder
+        self.strategy_cls = OneShiftLocalSearchStrategy
         self.no_improvement_threshold = no_improvement_threshold
 
     @property
@@ -50,7 +50,7 @@ class LocalSearchAlgorithm(Algorithm):
         while no_improvement_count < self.no_improvement_threshold:
             no_improvement_count += 1
 
-            current = self.breeder_cls(best).improve()
+            current = self.strategy_cls(best).improve()
             best = self.objective.best(best, current)
 
             if best == current:

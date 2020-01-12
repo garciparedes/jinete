@@ -3,6 +3,6 @@ from .algorithm import (
 )
 
 from .strategies import (
-    Breeder,
-    FlipBreeder,
+    LocalSearchStrategy,
+    OneShiftLocalSearchStrategy,
 )

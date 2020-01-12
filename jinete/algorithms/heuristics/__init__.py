@@ -11,6 +11,6 @@ from .insertion import (
 )
 from .local_search import (
     LocalSearchAlgorithm,
-    Breeder,
-    FlipBreeder,
+    LocalSearchStrategy,
+    OneShiftLocalSearchStrategy,
 )

@@ -1,7 +1,7 @@
 import logging
 
 from .abc import (
-    Breeder,
+    LocalSearchStrategy,
 )
 from .....models import (
     Result,
@@ -12,7 +12,7 @@ from .....models import (
 logger = logging.getLogger(__name__)
 
 
-class FlipBreeder(Breeder):
+class OneShiftLocalSearchStrategy(LocalSearchStrategy):
 
     def _improve(self) -> Result:
         logger.info(f'Starting to improve "Result" with "{self.__class__.__name__}"...')
