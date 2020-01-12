@@ -2,6 +2,6 @@ from .abc import (
     LocalSearchStrategy,
 )
 
-from .flips import (
+from .one_shift import (
     OneShiftLocalSearchStrategy,
 )
