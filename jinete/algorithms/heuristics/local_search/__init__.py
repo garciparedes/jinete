@@ -1,4 +1,4 @@
-from .local_search import (
+from .algorithm import (
     LocalSearchAlgorithm,
 )
 

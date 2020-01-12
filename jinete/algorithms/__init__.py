@@ -7,15 +7,15 @@ from .naive import (
 from .heuristics import (
     InsertionAlgorithm,
     LocalSearchAlgorithm,
-    Crosser,
-    StatelessCrosser,
-    BestStatelessCrosser,
-    RankingCrosser,
+    InsertionIterator,
+    StatelessInsertionIterator,
+    BestStatelessInsertionIterator,
+    RankingInsertionIterator,
     Breeder,
     FlipBreeder,
-    Conjecturer,
-    SamplingConjecturer,
-    IntensiveConjecturer,
+    InsertionStrategy,
+    SamplingInsertionStrategy,
+    IntensiveInsertionStrategy,
 )
 from .metaheuristics import (
     GraspAlgorithm,

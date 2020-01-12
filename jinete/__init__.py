@@ -75,15 +75,15 @@ from .algorithms import (
     GraspAlgorithm,
     MilpAlgorithm,
     IterativeAlgorithm,
-    Crosser,
-    StatelessCrosser,
-    BestStatelessCrosser,
-    RankingCrosser,
+    InsertionIterator,
+    StatelessInsertionIterator,
+    BestStatelessInsertionIterator,
+    RankingInsertionIterator,
     Breeder,
     FlipBreeder,
-    Conjecturer,
-    SamplingConjecturer,
-    IntensiveConjecturer,
+    InsertionStrategy,
+    SamplingInsertionStrategy,
+    IntensiveInsertionStrategy,
 )
 
 from .exceptions import (

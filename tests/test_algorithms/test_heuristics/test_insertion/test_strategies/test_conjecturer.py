@@ -9,24 +9,24 @@ from tests.utils import (
 )
 
 
-class TestConjecturer(unittest.TestCase):
+class TestStrategy(unittest.TestCase):
 
     def test_compute_one(self):
-        conjecturer = jit.Conjecturer()
+        strategy = jit.InsertionStrategy()
         route = generate_one_route()
         trip = generate_one_trip()
 
-        conjectured_route = conjecturer.compute_one(route, trip)
+        conjectured_route = strategy.compute_one(route, trip)
 
         self.assertIsInstance(conjectured_route, jit.Route)
         # TODO: Improve assertions
 
     def test_compute(self):
-        conjecturer = jit.Conjecturer()
+        strategy = jit.InsertionStrategy()
         route = generate_one_route()
         trips = generate_trips(5)
 
-        conjectured_routes = conjecturer.compute(route, trips)
+        conjectured_routes = strategy.compute(route, trips)
         self.assertEqual(len(trips), len(conjectured_routes))
         # TODO: Improve assertions
 

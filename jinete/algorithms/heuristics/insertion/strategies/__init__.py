@@ -1,10 +1,9 @@
 from .abc import (
-    Crosser,
+    InsertionStrategy,
 )
-from .stateless import (
-    StatelessCrosser,
-    BestStatelessCrosser,
+from .intensive import (
+    IntensiveInsertionStrategy,
 )
-from .ranking import (
-    RankingCrosser,
+from .sampling import (
+    SamplingInsertionStrategy,
 )

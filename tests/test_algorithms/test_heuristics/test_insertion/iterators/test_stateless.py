@@ -8,28 +8,23 @@ from tests.utils import (
 )
 
 
-class TestStatelessCrosser(unittest.TestCase):
+class TestStatelessInsertionIterator(unittest.TestCase):
 
     def test_creation(self):
         job = jit.Job(generate_trips(10), objective_cls=jit.DialARideObjective)
         fleet = jit.Fleet(generate_vehicles(10))
-        randomized_size = 2
-        dispatcher = jit.BestStatelessCrosser(
-            randomized_size=randomized_size,
+        dispatcher = jit.StatelessInsertionIterator(
             job=job,
             fleet=fleet,
         )
         self.assertEqual(job, dispatcher.job)
         self.assertEqual(fleet, dispatcher.fleet)
         self.assertEqual(len(job.trips), len(list(dispatcher.iterator)))
-        self.assertEqual(dispatcher.randomized_size, randomized_size)
 
     def test_flush(self):
         job = jit.Job(generate_trips(10), objective_cls=jit.DialARideObjective)
         fleet = jit.Fleet(generate_vehicles(10))
-        randomized_size = 2
-        dispatcher = jit.BestStatelessCrosser(
-            randomized_size=randomized_size,
+        dispatcher = jit.StatelessInsertionIterator(
             job=job,
             fleet=fleet,
         )

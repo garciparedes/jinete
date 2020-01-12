@@ -1,14 +1,14 @@
-from .insertion import (
+from .algorithm import (
     InsertionAlgorithm,
 )
-from .strategies import (
-    Crosser,
-    StatelessCrosser,
-    BestStatelessCrosser,
-    RankingCrosser,
+from .iterators import (
+    InsertionIterator,
+    StatelessInsertionIterator,
+    BestStatelessInsertionIterator,
+    RankingInsertionIterator,
 )
-from .conjecturer import (
-    Conjecturer,
-    SamplingConjecturer,
-    IntensiveConjecturer,
+from .strategies import (
+    InsertionStrategy,
+    SamplingInsertionStrategy,
+    IntensiveInsertionStrategy,
 )

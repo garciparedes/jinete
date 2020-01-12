@@ -9,7 +9,7 @@ from tests.utils import (
 )
 
 
-class TestRankingCrosser(unittest.TestCase):
+class TestRankingInsertionIterator(unittest.TestCase):
 
     def test_creation(self):
         surface = generate_one_surface()
@@ -19,7 +19,7 @@ class TestRankingCrosser(unittest.TestCase):
         )
         fleet = jit.Fleet(generate_vehicles(10, surface=surface))
         randomized_size = 2
-        dispatcher = jit.RankingCrosser(
+        dispatcher = jit.RankingInsertionIterator(
             randomized_size=randomized_size,
             job=job,
             fleet=fleet,

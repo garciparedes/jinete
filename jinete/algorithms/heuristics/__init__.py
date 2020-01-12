@@ -1,13 +1,13 @@
 from .insertion import (
     InsertionAlgorithm,
 
-    Crosser,
-    StatelessCrosser,
-    BestStatelessCrosser,
-    RankingCrosser,
-    Conjecturer,
-    SamplingConjecturer,
-    IntensiveConjecturer,
+    InsertionIterator,
+    StatelessInsertionIterator,
+    BestStatelessInsertionIterator,
+    RankingInsertionIterator,
+    InsertionStrategy,
+    SamplingInsertionStrategy,
+    IntensiveInsertionStrategy,
 )
 from .local_search import (
     LocalSearchAlgorithm,

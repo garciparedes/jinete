@@ -19,11 +19,11 @@ class TestInsertionAlgorithm(unittest.TestCase):
 
     def test_creation(self):
         algorithm = jit.InsertionAlgorithm(
-            crosser_cls=jit.Crosser,
+            iterator_cls=jit.InsertionIterator,
             job=self.job,
             fleet=self.fleet,
         )
-        self.assertEqual(algorithm.crosser_cls, jit.Crosser)
+        self.assertEqual(algorithm.iterator_cls, jit.InsertionIterator)
         self.assertEqual(algorithm.job, self.job)
         self.assertEqual(algorithm.fleet, self.fleet)
 

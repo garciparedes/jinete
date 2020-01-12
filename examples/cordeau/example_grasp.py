@@ -26,7 +26,7 @@ def main():
         },
         algorithm=jit.GraspAlgorithm,
         algorithm_kwargs={
-            'conjecturer_cls': jit.IntensiveConjecturer,
+            'strategy_cls': jit.IntensiveInsertionStrategy,
         },
         storer=jit.StorerSet,
         storer_kwargs={

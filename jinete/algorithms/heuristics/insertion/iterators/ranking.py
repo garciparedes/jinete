@@ -6,7 +6,7 @@ from random import Random
 from typing import TYPE_CHECKING
 
 from .abc import (
-    Crosser,
+    InsertionIterator,
 )
 
 if TYPE_CHECKING:
@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class RankingCrosser(Crosser):
+class RankingInsertionIterator(InsertionIterator):
     ranking: Dict[Vehicle, List[Route]]
 
     def __init__(self, neighborhood_max_size: int = 250, randomized_size: int = 1, seed: int = 56, *args, **kwargs):
@@ -66,7 +66,7 @@ class RankingCrosser(Crosser):
         logger.debug(f'Creating sub_ranking for vehicle "{route.vehicle_identifier}"...')
         pending_trips = it.islice(self.pending_trips, self.neighborhood_max_size)
 
-        raw_sub_ranking = self.conjecturer.compute(route, pending_trips)
+        raw_sub_ranking = self.strategy.compute(route, pending_trips)
 
         self.criterion.sorted(raw_sub_ranking, inplace=True)
         return raw_sub_ranking
