@@ -2,6 +2,6 @@ from .abc import (
     LocalSearchStrategy,
 )
 
-from .one_shift import (
+from .routes import (
     OneShiftLocalSearchStrategy,
 )

@@ -1,9 +1,9 @@
 import logging
 
-from .abc import (
+from ..abc import (
     LocalSearchStrategy,
 )
-from .....models import (
+from ......models import (
     Result,
     Stop,
     Route,
