@@ -34,7 +34,7 @@ class IntensiveInsertionStrategy(InsertionStrategy):
         trip = trips
 
         routes = list()
-        for i, j in it.combinations(range(len(route.stops) - 1), 2):
+        for i, j in it.combinations(range(len(route.stops)), 2):
             conjectured_route = self.compute_one(route, trip, i, j)
             routes.append(conjectured_route)
         return routes
