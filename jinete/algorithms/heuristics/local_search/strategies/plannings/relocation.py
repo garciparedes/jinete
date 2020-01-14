@@ -14,16 +14,15 @@ logger = logging.getLogger(__name__)
 class RelocationLocalSearchStrategy(LocalSearchStrategy):
 
     def _improve(self) -> Result:
-        from ....insertion import InsertionStrategy
+        from ....insertion import InsertionStrategy  # FIXME Should this import come from "insertion" module?
         strategy = InsertionStrategy()
         logger.info(f'Starting to improve "Result" with "{self.__class__.__name__}"...')
         best = None
-        cost = - float('inf')
         for origin, destination in it.permutations(self.routes, 2):
-            cost = max(sum([
+            cost = sum([
                 self.objective.optimization_function(origin)[-1],
-                self.objective.optimization_function(origin)[-1],
-            ]), cost)
+                self.objective.optimization_function(destination)[-1],
+            ])
 
             for trip in origin.trips:
                 new_origin = origin.clone()
@@ -42,16 +41,18 @@ class RelocationLocalSearchStrategy(LocalSearchStrategy):
                         continue
 
                     new_cost = partial_cost[-1] + self.objective.optimization_function(new_destination)[-1]
-                    if new_cost > cost:
-                        print(f'Improved! {new_cost} < {cost}')
-                        if new_cost > -294:
-                            new_origin.flush()
-                            new_destination.flush()
-                            new_origin.feasible
-                            new_destination.feasible
+                    if not new_cost > cost:
+                        continue
 
-                        best = {new_origin, new_destination}
-                        cost = new_cost
-        if best:
-            self.planning.routes = best
+                    logger.info(f'Improved planning! "{new_cost}" < "{cost}"')
+                    best = {new_origin, new_destination}
+                    cost = new_cost
+
+        if best is not None:
+            assert len(best) == 2
+            new_vehicles = {route.vehicle for route in best}
+            routes = {route for route in self.planning.routes if route.vehicle not in new_vehicles}
+            routes |= best
+            self.planning.routes = routes
+
         return self.result
