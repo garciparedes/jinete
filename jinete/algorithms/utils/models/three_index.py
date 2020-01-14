@@ -419,6 +419,8 @@ class ThreeIndexModel(Model):
     def _positions_to_stops(self, route, positions) -> List[Stop]:
         stops = [route.first_stop]
         for position in positions:
+            if position == stops[-1].position:
+                continue
             pickup = Stop(route, position, stops[-1])
             stops.append(pickup)
         stops.pop(0)
