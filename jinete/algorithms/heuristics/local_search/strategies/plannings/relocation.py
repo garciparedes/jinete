@@ -18,11 +18,12 @@ class RelocationLocalSearchStrategy(LocalSearchStrategy):
         strategy = InsertionStrategy()
         logger.info(f'Starting to improve "Result" with "{self.__class__.__name__}"...')
         best = None
+        cost = - float('inf')
         for origin, destination in it.permutations(self.routes, 2):
-            cost = sum([
+            cost = max(cost, sum([
                 self.objective.optimization_function(origin)[-1],
                 self.objective.optimization_function(destination)[-1],
-            ])
+            ]))
 
             for trip in origin.trips:
                 new_origin = origin.clone()

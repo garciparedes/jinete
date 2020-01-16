@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Tuple
 
 from .constants import (
     OptimizationDirection,
@@ -55,11 +55,11 @@ class ShortestTimeRouteCriterion(RouteCriterion):
             *args, **kwargs,
         )
 
-    def scoring(self, route: Route) -> float:
+    def scoring(self, route: Route) -> Tuple[float, int]:
         if not route.feasible:
-            return MAX_FLOAT
+            return MAX_FLOAT, MAX_FLOAT
 
-        return route.duration
+        return route.duration, len(route.stops)
 
 
 class LongestTimeRouteCriterion(RouteCriterion):

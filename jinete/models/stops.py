@@ -157,11 +157,15 @@ class Stop(Model):
 
     @cached_property
     def arrival_time(self):
-        return max(self.previous_departure_time + self.down_time + self.navigation_time, self.earliest)
+        return self.previous_departure_time + self.down_time + self.navigation_time
+
+    @property
+    def service_starting_time(self) -> float:
+        return max(self.arrival_time + self.waiting_time, self.earliest)
 
     @cached_property
     def departure_time(self) -> float:
-        return self.arrival_time + self.load_time + self.waiting_time
+        return self.service_starting_time + self.load_time
 
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
         yield from (

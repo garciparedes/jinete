@@ -121,7 +121,7 @@ class Route(Model):
 
     @property
     def planned_trips(self) -> Iterator[PlannedTrip]:
-        return self.deliveries
+        return self.pickups
 
     @property
     def pickups(self) -> Iterator[PlannedTrip]:
@@ -148,6 +148,7 @@ class Route(Model):
         if not self.duration <= self.vehicle.timeout:
             return False
         for planned_trip in self.planned_trips:
+            planned_trip.flush()
             if not planned_trip.feasible:
                 return False
         return True
@@ -187,12 +188,14 @@ class Route(Model):
         return stop
 
     @property
-    def first_arrival_time(self) -> float:
-        return self.first_stop.arrival_time
+    def second_stop(self) -> Stop:
+        stop = self.stops[1]
+        assert stop.previous is self.first_stop
+        return stop
 
     @property
-    def first_departure_time(self) -> float:
-        return self.first_stop.departure_time
+    def second_starting_time(self) -> float:
+        return self.second_stop.arrival_time
 
     @property
     def last_stop(self) -> Stop:
@@ -230,7 +233,15 @@ class Route(Model):
 
     @property
     def duration(self) -> float:
-        return self.last_departure_time - self.first_arrival_time
+        return self.last_departure_time - self.second_starting_time
+
+    @property
+    def transit_time(self) -> float:
+        return sum((planned_trip.duration for planned_trip in self.planned_trips), 0.0)
+
+    @property
+    def waiting_time(self) -> float:
+        return sum((stop.waiting_time for stop in self.stops), 0.0)
 
     @property
     def distance(self) -> float:
