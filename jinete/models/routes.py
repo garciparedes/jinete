@@ -233,6 +233,10 @@ class Route(Model):
         return self.last_departure_time - self.first_arrival_time
 
     @property
+    def distance(self) -> float:
+        return sum(stop.distance for stop in self.stops)
+
+    @property
     def vehicle_identifier(self) -> Optional[str]:
         if self.vehicle is None:
             return None
@@ -266,8 +270,9 @@ class Route(Model):
 
         self.stops.insert(idx, stop)
 
-        for stop in self.stops[idx + 1:]:
+        for stop in self.stops[idx:]:
             stop.flush()
+
         return stop
 
     def remove_stop_at(self, idx: int):

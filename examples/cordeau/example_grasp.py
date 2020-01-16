@@ -27,7 +27,7 @@ def main():
         algorithm=jit.GraspAlgorithm,
         algorithm_kwargs={
             'first_solution_kwargs': {
-                'episodes': 10,
+                'episodes': 1,
                 'strategy_cls': jit.IntensiveInsertionStrategy,
             }
         },
