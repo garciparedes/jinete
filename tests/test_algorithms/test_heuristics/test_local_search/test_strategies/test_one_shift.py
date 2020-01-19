@@ -11,7 +11,7 @@ from tests.utils import (
 )
 
 
-class TestFlipLocalSearchStrategy(unittest.TestCase):
+class TestOneShiftLocalSearchStrategy(unittest.TestCase):
     vehicle: jit.Vehicle
     position: jit.Position
     stops: List[jit.Stop]
@@ -50,7 +50,7 @@ class TestFlipLocalSearchStrategy(unittest.TestCase):
         self.assertEqual(1, len(strategy.routes))
         self.assertEqual(tuple(self.route.positions), tuple(next(iter(strategy.routes)).positions))
 
-    def test_flip(self):
+    def test_one_shift(self):
         strategy = jit.OneShiftLocalSearchStrategy(self.result)
         stops = self.route.stops
 
