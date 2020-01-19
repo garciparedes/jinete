@@ -11,7 +11,7 @@ from tests.utils import (
 )
 
 
-class TestOneShiftLocalSearchStrategy(unittest.TestCase):
+class TestReallocationLocalSearchStrategy(unittest.TestCase):
     vehicle: jit.Vehicle
     position: jit.Position
     stops: List[jit.Stop]
@@ -44,31 +44,17 @@ class TestOneShiftLocalSearchStrategy(unittest.TestCase):
         self.result = jit.Result(self.fleet, self.job, jit.Algorithm, self.planning, computation_time=float(0.0))
 
     def test_creation(self):
-        strategy = jit.OneShiftLocalSearchStrategy(self.result)
+        strategy = jit.ReallocationLocalSearchStrategy(self.result)
 
         self.assertNotEqual(self.planning, strategy.planning)
         self.assertEqual(1, len(strategy.routes))
         self.assertEqual(tuple(self.route.positions), tuple(next(iter(strategy.routes)).positions))
 
     def test_improve(self):
-        strategy = jit.OneShiftLocalSearchStrategy(self.result)
+        strategy = jit.ReallocationLocalSearchStrategy(self.result)
         result = strategy.improve()
         self.assertIsInstance(result, jit.Result)
         # TODO: Improve test validations.
-
-    def test_one_shift(self):
-        strategy = jit.OneShiftLocalSearchStrategy(self.result)
-        stops = self.route.stops
-
-        strategy.flip(self.route, stops[1], stops[2], stops[3])
-
-        self.assertEqual(stops[0].position, self.stops[0].position)
-        self.assertEqual(stops[1].position, self.stops[2].position)
-        self.assertEqual(stops[2].position, self.stops[1].position)
-        self.assertEqual(stops[3].position, self.stops[3].position)
-
-        for first, second in zip(stops[:-1], stops[1:]):
-            self.assertEqual(second.previous, first)
 
 
 if __name__ == '__main__':
