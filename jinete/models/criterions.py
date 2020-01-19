@@ -55,11 +55,11 @@ class ShortestTimeRouteCriterion(RouteCriterion):
             *args, **kwargs,
         )
 
-    def scoring(self, route: Route) -> Tuple[float, int]:
+    def scoring(self, route: Route) -> float:
         if not route.feasible:
-            return MAX_FLOAT, MAX_FLOAT
+            return MAX_FLOAT
 
-        return route.duration, len(route.stops)
+        return route.duration
 
 
 class LongestTimeRouteCriterion(RouteCriterion):

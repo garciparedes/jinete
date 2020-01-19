@@ -10,7 +10,6 @@ from ...abc import (
     Algorithm,
 )
 from .strategies import (
-    OneShiftLocalSearchStrategy,
     RelocationLocalSearchStrategy,
 )
 
