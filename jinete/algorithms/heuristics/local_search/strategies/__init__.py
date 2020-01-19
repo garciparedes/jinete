@@ -6,5 +6,5 @@ from .routes import (
     OneShiftLocalSearchStrategy,
 )
 from .plannings import (
-    RelocationLocalSearchStrategy,
+    ReallocationLocalSearchStrategy,
 )

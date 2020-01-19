@@ -1,3 +1,3 @@
-from .relocation import (
-    RelocationLocalSearchStrategy,
+from .reallocation import (
+    ReallocationLocalSearchStrategy,
 )

@@ -10,7 +10,7 @@ from ...abc import (
     Algorithm,
 )
 from .strategies import (
-    RelocationLocalSearchStrategy,
+    ReallocationLocalSearchStrategy,
 )
 
 if TYPE_CHECKING:
@@ -32,7 +32,7 @@ class LocalSearchAlgorithm(Algorithm):
         self.initial = initial
         self.args = args
         self.kwargs = kwargs
-        self.strategy_cls = RelocationLocalSearchStrategy
+        self.strategy_cls = ReallocationLocalSearchStrategy
         self.no_improvement_threshold = no_improvement_threshold
 
     @property

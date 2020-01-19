@@ -11,7 +11,7 @@ from ......models import (
 logger = logging.getLogger(__name__)
 
 
-class RelocationLocalSearchStrategy(LocalSearchStrategy):
+class ReallocationLocalSearchStrategy(LocalSearchStrategy):
 
     def _improve(self) -> Result:
         from ....insertion import InsertionStrategy  # FIXME Should this import come from "insertion" module?

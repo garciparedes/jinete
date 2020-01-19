@@ -5,5 +5,5 @@ from .algorithm import (
 from .strategies import (
     LocalSearchStrategy,
     OneShiftLocalSearchStrategy,
-    RelocationLocalSearchStrategy,
+    ReallocationLocalSearchStrategy,
 )
