@@ -69,6 +69,7 @@ class RankingInsertionIterator(InsertionIterator):
         raw_sub_ranking = self.strategy.compute(route, pending_trips)
 
         self.criterion.sorted(raw_sub_ranking, inplace=True)
+
         return raw_sub_ranking
 
     def __next__(self) -> Route:

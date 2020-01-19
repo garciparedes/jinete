@@ -23,8 +23,8 @@ class TestShortestTimeRouteCriterion(TestRouteCriterion):
         criterion = jit.ShortestTimeRouteCriterion()
 
         self.assertEqual(
-            self.routes,
-            criterion.sorted(reversed(self.routes)),
+            [self.routes[0], self.routes[1], self.routes[2]],
+            criterion.sorted(self.routes),
         )
 
     def test_scoring(self):
@@ -40,12 +40,25 @@ class TestShortestTimeRouteCriterion(TestRouteCriterion):
             criterion.scoring(self.routes[1]),
         )
 
+        self.assertEqual(
+            jit.MAX_FLOAT,
+            criterion.scoring(self.routes[2]),
+        )
+
     def test_best(self):
         criterion = jit.ShortestTimeRouteCriterion()
 
         self.assertEqual(
             self.routes[0],
             criterion.best(*self.routes),
+        )
+
+    def test_nbest(self):
+        criterion = jit.ShortestTimeRouteCriterion()
+
+        self.assertEqual(
+            [self.routes[0], self.routes[1]],
+            criterion.nbest(2, self.routes),
         )
 
 

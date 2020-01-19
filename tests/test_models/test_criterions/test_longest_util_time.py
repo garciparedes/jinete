@@ -22,7 +22,7 @@ class TestLongestUtilRouteCriterion(TestRouteCriterion):
         criterion = jit.LongestUtilTimeRouteCriterion()
 
         self.assertEqual(
-            self.routes[::-1],
+            [self.routes[1], self.routes[0], self.routes[2]],
             criterion.sorted(self.routes),
         )
 
@@ -39,12 +39,25 @@ class TestLongestUtilRouteCriterion(TestRouteCriterion):
             criterion.scoring(self.routes[1]),
         )
 
+        self.assertEqual(
+            -jit.MAX_FLOAT,
+            criterion.scoring(self.routes[2]),
+        )
+
     def test_best(self):
         criterion = jit.LongestUtilTimeRouteCriterion()
 
         self.assertEqual(
             self.routes[1],
             criterion.best(*self.routes),
+        )
+
+    def test_nbest(self):
+        criterion = jit.LongestUtilTimeRouteCriterion()
+
+        self.assertEqual(
+            [self.routes[1], self.routes[0]],
+            criterion.nbest(2, self.routes),
         )
 
 

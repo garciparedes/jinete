@@ -41,6 +41,8 @@ class InsertionAlgorithm(Algorithm):
         iterator = self.build_iterator()
 
         for route in iterator:
+            if not route.feasible:
+                break
             iterator.set_route(route)
 
         planning = Planning(iterator.routes)

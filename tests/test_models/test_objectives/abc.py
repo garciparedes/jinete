@@ -40,7 +40,7 @@ class TestObjective(unittest.TestCase, ABC):
                 ),
             ),
             jit.Trip(
-                identifier='TEST_1',
+                identifier='TEST_2',
                 origin=jit.Service(
                     position=surface.get_or_create_position([1, 1]),
                     earliest=0.0,

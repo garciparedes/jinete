@@ -116,15 +116,14 @@ class Stop(Model):
 
     @property
     def down_time(self) -> float:
-        if not any(self.pickups):
-            return 0.0
-        return max(pt.down_time for pt in self.pickups)
+        return max((pt.down_time for pt in self.planned_trips), default=0.0)
 
     @property
     def earliest(self):
-        if not any(self.pickups):
-            return 0.0
-        return max(pt.trip.origin_earliest for pt in self.pickups)
+        return max(it.chain(
+            (pt.trip.origin_earliest for pt in self.pickups),
+            (pt.trip.destination_earliest for pt in self.deliveries),
+        ), default=0.0)
 
     @property
     def load_time(self) -> float:
@@ -158,11 +157,15 @@ class Stop(Model):
 
     @cached_property
     def arrival_time(self):
-        return max(self.previous_departure_time + self.down_time + self.navigation_time, self.earliest)
+        return self.previous_departure_time + self.down_time + self.navigation_time
+
+    @property
+    def service_starting_time(self) -> float:
+        return max(self.arrival_time + self.waiting_time, self.earliest)
 
     @cached_property
     def departure_time(self) -> float:
-        return self.arrival_time + self.load_time
+        return self.service_starting_time + self.load_time
 
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
         yield from (

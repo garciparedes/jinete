@@ -19,40 +19,46 @@ from .iterative import (
 )
 
 if TYPE_CHECKING:
-    pass
+    from typing import (
+        Dict,
+        Any,
+    )
 
 logger = logging.getLogger(__name__)
 
 
 class GraspAlgorithm(Algorithm):
 
-    def __init__(self, first_solution_episodes: int = 1, no_improvement_threshold: int = 10,
+    def __init__(self, no_improvement_threshold: int = 1, first_solution_kwargs: Dict[str, Any] = None,
+                 local_search_kwargs: Dict[str, Any] = None,
                  seed: int = 56, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.first_solution_episodes = first_solution_episodes
+        if first_solution_kwargs is None:
+            first_solution_kwargs = dict()
+        if local_search_kwargs is None:
+            local_search_kwargs = dict()
+
         self.no_improvement_threshold = no_improvement_threshold
+        self.first_solution_kwargs = first_solution_kwargs
+        self.local_search_kwargs = local_search_kwargs
         self.random = Random(seed)
 
-        self.args = args
-        self.kwargs = kwargs
-
-    def build_first_solution_algorithm(self, *args, **kwargs) -> Algorithm:
-        args = (*self.args, *args)
-        kwargs.update(self.kwargs)
-
-        kwargs['episodes'] = self.first_solution_episodes
+    def build_first_solution_algorithm(self, **kwargs) -> Algorithm:
+        kwargs.update(self.first_solution_kwargs.copy())
         kwargs['seed'] = self.random.randint(0, MAX_INT)
+        kwargs['fleet'] = self.fleet
+        kwargs['job'] = self.job
 
-        return IterativeAlgorithm(*args, **kwargs)
+        return IterativeAlgorithm(**kwargs)
 
-    def build_local_search_algorithm(self, *args, **kwargs) -> Algorithm:
-        args = (*self.args, *args)
-        kwargs.update(self.kwargs)
-
+    def build_local_search_algorithm(self, **kwargs) -> Algorithm:
+        kwargs.update(self.local_search_kwargs.copy())
         kwargs['seed'] = self.random.randint(0, MAX_INT),
+        kwargs['fleet'] = self.fleet
+        kwargs['job'] = self.job
 
-        return LocalSearchAlgorithm(*args, **kwargs)
+        return LocalSearchAlgorithm(**kwargs)
 
     def _optimize(self) -> Planning:
         iterative = self.build_first_solution_algorithm()

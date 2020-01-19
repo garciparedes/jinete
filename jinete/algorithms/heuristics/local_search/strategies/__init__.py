@@ -5,3 +5,6 @@ from .abc import (
 from .routes import (
     OneShiftLocalSearchStrategy,
 )
+from .plannings import (
+    ReallocationLocalSearchStrategy,
+)
