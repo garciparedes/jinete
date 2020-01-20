@@ -105,10 +105,10 @@ class PlannedTrip(Model):
         assert self.pickup in self.delivery.all_previous
         assert self.pickup_time <= self.delivery_time
 
-        if not self.pickup_time <= self.trip.origin_latest:
+        if not self.trip.origin_earliest <= self.pickup_time <= self.trip.origin_latest:
             return False
 
-        if not self.delivery_time <= self.trip.destination_latest:
+        if not self.trip.destination_latest <= self.delivery_time <= self.trip.destination_latest:
             return False
 
         if not self.pickup.capacity <= self.vehicle.capacity:
