@@ -8,7 +8,9 @@ from typing import (
 from cached_property import (
     cached_property,
 )
-
+from .constants import (
+    ERROR_BOUND,
+)
 from .abc import (
     Model,
 )
@@ -66,7 +68,7 @@ class PlannedTrip(Model):
 
     @property
     def pickup_time(self) -> float:
-        return self.pickup.departure_time
+        return self.pickup.service_starting_time
 
     @property
     def delivery_time(self) -> float:
@@ -94,7 +96,7 @@ class PlannedTrip(Model):
 
     @property
     def duration(self) -> float:
-        return self.delivery_time - self.pickup_time
+        return self.delivery.service_starting_time - self.pickup.departure_time
 
     @property
     def capacity(self):
@@ -105,16 +107,16 @@ class PlannedTrip(Model):
         assert self.pickup in self.delivery.all_previous
         assert self.pickup_time <= self.delivery_time
 
-        if not self.trip.origin_earliest <= self.pickup_time <= self.trip.origin_latest:
+        if not self.trip.origin_earliest - ERROR_BOUND <= self.pickup_time <= self.trip.origin_latest + ERROR_BOUND:
             return False
 
-        if not self.trip.destination_earliest <= self.delivery_time <= self.trip.destination_latest:
+        if not self.trip.destination_earliest - ERROR_BOUND <= self.delivery_time <= self.trip.destination_latest + ERROR_BOUND:  # noqa
             return False
 
-        if not self.pickup.capacity <= self.vehicle.capacity:
+        if not self.pickup.capacity <= self.vehicle.capacity + ERROR_BOUND:
             return False
 
-        if not self.duration <= self.trip.timeout:
+        if not self.duration <= self.trip.timeout + ERROR_BOUND:
             return False
 
         return True

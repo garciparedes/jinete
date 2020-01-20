@@ -176,6 +176,9 @@ class ThreeIndexModel(Model):
             return None
         return self.trips[(idx % self.n) - 1]
 
+    def idx_by_position(self, position: Position):
+        return self.positions.index(position)
+
     def time_window_by_position_idx(self, idx: int) -> Tuple[float, float]:
         position = self.positions[idx]
         trip = self.trip_by_position_idx(idx)
@@ -378,10 +381,26 @@ class ThreeIndexModel(Model):
             positions = self._solution_to_positions(k, ordered_trip_indexes)
             stops = self._positions_to_stops(route, positions)
             trips = self._positions_to_trips(positions)
-            self._build_planned_trips(vehicle, trips, stops)
+
+            service_starting_times = tuple(u_k.varValue for u_k in self.u[k])
+            self._build_planned_trips(vehicle, trips, stops, service_starting_times)
 
             for stop in stops:
                 route.insert_stop(stop)
+
+            # FIXME: Move this logic to a corresponding StorerFormatter
+            # print('\n'.join([
+            #     f'{stop.earliest:7.2f}  {stop.latest:7.2f}  {stop.arrival_time:7.2f}  '
+            #     f'{stop.down_time:7.2f}  {stop.waiting_time:7.2f}  {stop.service_starting_time:7.2f}  '
+            #     f'{stop.departure_time:7.2f} {stop.transit_time:7.2f}'
+            #     for stop in route.stops
+            # ]))
+            #
+            # print('\n'.join([
+            #     f'{pt.delivery_time:7.2f}  {pt.pickup_time:7.2f}  {pt.duration}'
+            #     for pt in route.planned_trips
+            # ]))
+
             routes.add(route)
         return routes
 
@@ -396,15 +415,21 @@ class ThreeIndexModel(Model):
             trips.append(trip)
         return trips
 
-    def _build_planned_trips(self, vehicle: Vehicle, trips: List[Trip], stops: List[Stop]) -> List[PlannedTrip]:
+    def _build_planned_trips(self, vehicle: Vehicle, trips: List[Trip], stops: List[Stop],
+                             service_starting_times: Tuple[float]) -> List[PlannedTrip]:
         stop_mapper = self._stop_to_stop_mapper(stops)
 
         planned_trips = list()
         for trip in trips:
+            service_starting_time = service_starting_times[self.idx_by_position(trip.origin_position)]
             pickup = stop_mapper[trip.origin_position].pop(0)
             delivery = stop_mapper[trip.destination_position].pop(0)
+            down_time = max([
+                0.0,
+                service_starting_time - (pickup.previous_departure_time + pickup.transit_time),
+            ])
 
-            planned_trip = PlannedTrip(vehicle, trip, pickup, delivery)
+            planned_trip = PlannedTrip(vehicle, trip, pickup, delivery, down_time=down_time)
             planned_trips.append(planned_trip)
         return planned_trips
 
