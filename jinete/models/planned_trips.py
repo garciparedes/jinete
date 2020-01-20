@@ -108,7 +108,7 @@ class PlannedTrip(Model):
         if not self.trip.origin_earliest <= self.pickup_time <= self.trip.origin_latest:
             return False
 
-        if not self.trip.destination_latest <= self.delivery_time <= self.trip.destination_latest:
+        if not self.trip.destination_earliest <= self.delivery_time <= self.trip.destination_latest:
             return False
 
         if not self.pickup.capacity <= self.vehicle.capacity:
