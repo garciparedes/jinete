@@ -32,7 +32,7 @@ class InsertionStrategy(object):
     def compute(self, route: Route, trips: Union[Trip, Iterable[Trip]], only_feasible: bool = True,
                 *args, **kwargs) -> List[Route]:
         if not isinstance(trips, Trip):
-            return sum((self.compute(route, trip, *args, **kwargs) for trip in trips), [])
+            return sum((self.compute(route, trip, only_feasible=only_feasible, *args, **kwargs) for trip in trips), [])
         trip = trips
 
         planned_trip = self.compute_one(route, trip, *args, **kwargs)
