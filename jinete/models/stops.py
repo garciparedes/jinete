@@ -11,6 +11,9 @@ from cached_property import cached_property
 from .abc import (
     Model,
 )
+from .constants import (
+    MAX_FLOAT,
+)
 
 if TYPE_CHECKING:
     from typing import (
@@ -119,11 +122,18 @@ class Stop(Model):
         return max((pt.down_time for pt in self.planned_trips), default=0.0)
 
     @property
-    def earliest(self):
+    def earliest(self) -> float:
         return max(it.chain(
             (pt.trip.origin_earliest for pt in self.pickups),
             (pt.trip.destination_earliest for pt in self.deliveries),
         ), default=0.0)
+
+    @property
+    def latest(self) -> float:
+        return min(it.chain(
+            (pt.trip.origin_latest for pt in self.pickups),
+            (pt.trip.destination_latest for pt in self.deliveries),
+        ), default=MAX_FLOAT)
 
     @property
     def load_time(self) -> float:
