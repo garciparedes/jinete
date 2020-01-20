@@ -119,7 +119,7 @@ class Stop(Model):
 
     @property
     def down_time(self) -> float:
-        return max((pt.down_time for pt in self.planned_trips), default=0.0)
+        return max((pt.down_time for pt in self.pickups), default=0.0)
 
     @property
     def earliest(self) -> float:

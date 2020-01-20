@@ -66,11 +66,11 @@ class PlannedTrip(Model):
 
     @property
     def pickup_time(self) -> float:
-        return self.pickup.service_starting_time
+        return self.pickup.departure_time
 
     @property
     def delivery_time(self) -> float:
-        return self.delivery.departure_time
+        return self.delivery.service_starting_time
 
     @property
     def trip_identifier(self) -> str:
