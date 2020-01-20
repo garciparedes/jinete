@@ -157,21 +157,21 @@ class Stop(Model):
     def distance(self) -> float:
         return self.position.distance_to(self.previous_position)
 
-    @property
-    def navigation_time(self):
-        return self.previous_position.time_to(self.position, self.previous_departure_time)
-
-    @property
-    def waiting_time(self):
-        return max(self.earliest - self.arrival_time, 0.0)
-
     @cached_property
     def arrival_time(self):
-        return self.previous_departure_time + self.down_time + self.navigation_time
+        return self.previous_departure_time + self.down_time + self.transit_time
+
+    @property
+    def transit_time(self):
+        return self.previous_position.time_to(self.position, self.previous_departure_time)
 
     @property
     def service_starting_time(self) -> float:
         return max(self.arrival_time + self.waiting_time, self.earliest)
+
+    @property
+    def waiting_time(self):
+        return max(self.earliest - self.arrival_time, 0.0)
 
     @cached_property
     def departure_time(self) -> float:
