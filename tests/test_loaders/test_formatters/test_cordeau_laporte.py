@@ -83,27 +83,27 @@ class TestCordeauLaporteLoaderFormatter(unittest.TestCase):
             self.assertEqual(0.0, trip.on_time_bonus)
 
             self.assertEqual(
+                max(destination_earliest - destination_duration - timeout, origin_earliest),
                 trip.origin_earliest,
-                max(destination_earliest - destination_duration - timeout, origin_earliest)
             )
             self.assertEqual(
-                trip.origin_latest,
                 min(
                     destination_latest - destination_duration - origin_position.time_to(destination_position),
                     origin_latest
-                )
+                ),
+                trip.origin_latest,
             )
 
             self.assertEqual(
-                trip.destination_earliest,
                 max(
                     origin_earliest + origin_duration + origin_position.time_to(destination_position),
                     destination_earliest
-                )
+                ),
+                trip.destination_earliest,
             )
             self.assertEqual(
+                min(origin_latest + origin_duration + timeout, destination_latest),
                 trip.destination_latest,
-                min(origin_latest + origin_duration + timeout, destination_latest)
             )
 
             self.assertIsInstance(trip.origin_position, jit.GeometricPosition)

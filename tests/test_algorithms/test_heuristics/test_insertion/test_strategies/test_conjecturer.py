@@ -31,8 +31,8 @@ class TestStrategy(unittest.TestCase):
         # TODO: Improve assertions
 
         self.assertEqual(
+            sum(route.feasible for route in conjectured_routes),
             len(strategy.compute(route, trips, only_feasible=True)),
-            sum(route.feasible for route in conjectured_routes)
         )
         # TODO: Improve assertions
 
