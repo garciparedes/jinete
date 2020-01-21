@@ -48,7 +48,7 @@ class TestResult(unittest.TestCase):
         self.assertEqual(self.job, result.job)
         self.assertEqual(self.job.trips, result.trips)
         self.assertEqual(self.job.objective, result.objective)
-        self.assertEqual(self.job.objective.optimization_function(result), result.optimization_function)
+        self.assertEqual(self.job.objective.optimization_function(result), result.optimization_value)
         self.assertEqual(self.job.objective.direction, result.direction)
 
         self.assertEqual(self.algorithm_cls, result.algorithm_cls)

@@ -118,8 +118,44 @@ class Stop(Model):
         self.deliveries.update(iterable)
 
     @property
+    def previous_position(self) -> Position:
+        if self.previous is None:
+            return self.vehicle.origin_position
+        return self.previous.position
+
+    @property
+    def distance(self) -> float:
+        return self.position.distance_to(self.previous_position)
+
+    @cached_property
+    def arrival_time(self):
+        return self.previous_departure_time + self.down_time + self.transit_time
+
+    @property
+    def previous_departure_time(self) -> float:
+        if self.previous is None:
+            return self.vehicle.origin_earliest
+        return self.previous.departure_time
+
+    @property
     def down_time(self) -> float:
         return max((pt.down_time for pt in self.pickups), default=0.0)
+
+    @property
+    def transit_time(self):
+        return self.previous_position.time_to(self.position, self.previous_departure_time)
+
+    @property
+    def waiting_time(self):
+        return max(self.earliest - self.arrival_time, 0.0)
+
+    @cached_property
+    def departure_time(self) -> float:
+        return self.service_starting_time + self.load_time
+
+    @property
+    def service_starting_time(self) -> float:
+        return max(self.arrival_time + self.waiting_time, self.earliest)
 
     @property
     def earliest(self) -> float:
@@ -140,42 +176,6 @@ class Stop(Model):
         if not any(self.planned_trips):
             return 0.0
         return max(pt.trip.origin_duration for pt in self.planned_trips)
-
-    @property
-    def previous_departure_time(self) -> float:
-        if self.previous is None:
-            return self.vehicle.origin_earliest
-        return self.previous.departure_time
-
-    @property
-    def previous_position(self) -> Position:
-        if self.previous is None:
-            return self.vehicle.origin_position
-        return self.previous.position
-
-    @property
-    def distance(self) -> float:
-        return self.position.distance_to(self.previous_position)
-
-    @cached_property
-    def arrival_time(self):
-        return self.previous_departure_time + self.down_time + self.transit_time
-
-    @property
-    def transit_time(self):
-        return self.previous_position.time_to(self.position, self.previous_departure_time)
-
-    @property
-    def service_starting_time(self) -> float:
-        return max(self.arrival_time + self.waiting_time, self.earliest)
-
-    @property
-    def waiting_time(self):
-        return max(self.earliest - self.arrival_time, 0.0)
-
-    @cached_property
-    def departure_time(self) -> float:
-        return self.service_starting_time + self.load_time
 
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
         yield from (

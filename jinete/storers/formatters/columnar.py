@@ -60,6 +60,8 @@ class ColumnarStorerFormatter(StorerFormatter):
             '\n'.join(f'{self.tab_character}{row}' for row in rows),
             f'Computation time: "{self.result.computation_time:0.4f}" seconds',
             f'Coverage Rate: "{self.result.coverage_rate}"',
-            f'Optimization Function: "{self.result.optimization_function}"',
+            f'Objective: "{self.result.objective.__class__.__name__}"',
+            f'Optimization Value: "{self.result.optimization_value}"',
+            f'Feasible: "{self.result.feasible}"',
             f'Direction: "{self.result.direction}"',
         ))
