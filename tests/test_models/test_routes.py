@@ -17,6 +17,11 @@ class TestRoutes(unittest.TestCase):
         self.assertEqual(list(), list(route.planned_trips))
         self.assertEqual(vehicle, route.vehicle)
 
+    def test_identifier(self):
+        route = generate_one_route()
+        expected = '|'.join(stop.identifier for stop in route.stops)
+        self.assertEqual(expected, route.identifier)
+
     def test_feasible_route(self):
         route = generate_one_route(True)
         self.assertTrue(route.feasible)

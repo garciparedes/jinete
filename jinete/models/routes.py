@@ -11,6 +11,9 @@ import itertools as it
 from ..exceptions import (
     PreviousStopNotInRouteException,
 )
+from .constants import (
+    ERROR_BOUND,
+)
 from .abc import (
     Model,
 )
@@ -121,7 +124,7 @@ class Route(Model):
 
     @property
     def planned_trips(self) -> Iterator[PlannedTrip]:
-        return self.deliveries
+        return self.pickups
 
     @property
     def pickups(self) -> Iterator[PlannedTrip]:
@@ -139,18 +142,27 @@ class Route(Model):
     def feasible(self) -> bool:
         if not self.first_stop.position == self.vehicle.origin_position:
             return False
-        if not self.vehicle.origin_earliest <= self.first_stop.arrival_time:
+        if not self.vehicle.origin_earliest - ERROR_BOUND <= self.first_stop.arrival_time:
             return False
         if not self.last_position == self.vehicle.destination_position:
             return False
-        if not self.last_departure_time <= self.vehicle.destination_latest:
+        if not self.last_departure_time <= self.vehicle.destination_latest + ERROR_BOUND:
             return False
-        if not self.duration <= self.vehicle.timeout:
+        if not self.duration <= self.vehicle.timeout + ERROR_BOUND:
             return False
         for planned_trip in self.planned_trips:
+            planned_trip.flush()
             if not planned_trip.feasible:
                 return False
         return True
+
+    def flush(self):
+        self.__dict__.pop('feasible', None)
+
+        for stop in self.stops:
+            stop.flush()
+        for planned_trip in self.planned_trips:
+            planned_trip.flush()
 
     @property
     def loaded(self):
@@ -179,12 +191,14 @@ class Route(Model):
         return stop
 
     @property
-    def first_arrival_time(self) -> float:
-        return self.first_stop.arrival_time
+    def second_stop(self) -> Stop:
+        stop = self.stops[1]
+        assert stop.previous is self.first_stop
+        return stop
 
     @property
-    def first_departure_time(self) -> float:
-        return self.first_stop.departure_time
+    def second_starting_time(self) -> float:
+        return self.second_stop.arrival_time
 
     @property
     def last_stop(self) -> Stop:
@@ -222,7 +236,19 @@ class Route(Model):
 
     @property
     def duration(self) -> float:
-        return self.last_departure_time - self.first_arrival_time
+        return self.last_departure_time - self.second_starting_time
+
+    @property
+    def transit_time(self) -> float:
+        return sum((planned_trip.duration for planned_trip in self.planned_trips), 0.0)
+
+    @property
+    def waiting_time(self) -> float:
+        return sum((stop.waiting_time for stop in self.stops), 0.0)
+
+    @property
+    def distance(self) -> float:
+        return sum(stop.distance for stop in self.stops)
 
     @property
     def vehicle_identifier(self) -> Optional[str]:
@@ -258,9 +284,22 @@ class Route(Model):
 
         self.stops.insert(idx, stop)
 
-        for stop in self.stops[idx + 1:]:
+        for stop in self.stops[idx:]:
             stop.flush()
+
         return stop
+
+    def remove_stop_at(self, idx: int):
+        previous_stop = self.stops[idx - 1]
+        following_stop = self.stops[idx + 1] or None
+
+        if following_stop is not None:
+            following_stop.previous = previous_stop
+
+        self.stops.pop(idx)
+
+        for stop in self.stops[idx:]:
+            stop.flush()
 
     def append_planned_trip(self, planned_trip: PlannedTrip):
         assert planned_trip.delivery is not None
@@ -274,3 +313,17 @@ class Route(Model):
         assert all(s1 == s2.previous for s1, s2 in zip(self.stops[:-1], self.stops[1:]))
         assert all(s1.departure_time <= s2.arrival_time for s1, s2 in zip(self.stops[:-1], self.stops[1:]))
         logger.debug(f'Append trip with "{planned_trip.trip_identifier}" identifier to route.')
+
+    def remove_trip(self, trip: Trip) -> None:
+
+        old_len = len(self.stops)
+
+        for i in reversed(range(len(self.stops))):
+            stop = self.stops[i]
+            if trip not in stop.trips:
+                continue
+            self.remove_stop_at(i)
+
+        assert old_len - 2 == len(self.stops)
+        assert all(s1 == s2.previous for s1, s2 in zip(self.stops[:-1], self.stops[1:]))
+        assert all(s1.departure_time <= s2.arrival_time for s1, s2 in zip(self.stops[:-1], self.stops[1:]))

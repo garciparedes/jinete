@@ -43,8 +43,8 @@ class TestMilpAlgorithm(unittest.TestCase):
         self.assertIsInstance(result, jit.Result)
         self.assertEqual(1, result.coverage_rate)
 
-        self.assertEqual(4, result.optimization_function[0])
-        self.assertAlmostEqual(-85.4, result.optimization_function[1], delta=0.1)
+        self.assertEqual(4, result.optimization_value[0])
+        self.assertAlmostEqual(-85.4, result.optimization_value[1], delta=0.1)
 
 
 if __name__ == '__main__':

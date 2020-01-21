@@ -27,6 +27,7 @@ class TestRouteCriterion(unittest.TestCase, ABC):
         cls.routes = [
             cls._build_route_1(vehicle, surface),
             cls._build_route_2(vehicle, surface),
+            cls._build_route_3(vehicle, surface),
         ]
 
     @classmethod
@@ -71,6 +72,35 @@ class TestRouteCriterion(unittest.TestCase, ABC):
             destination=jit.Service(
                 position=surface.get_or_create_position([10, 10]),
             ),
+        )
+
+        pickup_stop = jit.Stop(vehicle, surface.get_or_create_position([0, 0]), route.current_stop)
+        delivery_stop = jit.Stop(vehicle, surface.get_or_create_position([10, 10]), pickup_stop)
+
+        planned_trip = jit.PlannedTrip(
+            vehicle=vehicle,
+            trip=trip,
+            pickup=pickup_stop,
+            delivery=delivery_stop,
+        )
+        route.append_planned_trip(planned_trip)
+        return route
+
+    @classmethod
+    def _build_route_3(cls, vehicle: jit.Vehicle, surface: jit.Surface) -> jit.Route:
+        route = jit.Route(vehicle)
+
+        trip = jit.Trip(
+            identifier='TEST_3',
+            origin=jit.Service(
+                position=surface.get_or_create_position([0, 0]),
+                earliest=1.0,
+                latest=20.0,
+            ),
+            destination=jit.Service(
+                position=surface.get_or_create_position([10, 10]),
+            ),
+            timeout=1.0
         )
 
         pickup_stop = jit.Stop(vehicle, surface.get_or_create_position([0, 0]), route.current_stop)

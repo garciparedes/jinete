@@ -42,7 +42,7 @@ class RouteCriterion(ABC):
     def sorted(self, routes: Iterable[Route], inplace: bool = False) -> List[Route]:
         return self.direction.sorted(routes, key=self.scoring, inplace=inplace)
 
-    def nbest(self, n: int, routes: Iterable[Route], inplace: bool = False):
+    def nbest(self, n: int, routes: Iterable[Route], inplace: bool = False) -> List[Route]:
         return self.direction.nbest(n, routes, key=self.scoring, inplace=inplace)
 
 

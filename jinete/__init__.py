@@ -75,22 +75,24 @@ from .algorithms import (
     GraspAlgorithm,
     MilpAlgorithm,
     IterativeAlgorithm,
-    Crosser,
-    StatelessCrosser,
-    BestStatelessCrosser,
-    OrderedCrosser,
-    RandomizedCrosser,
-    Breeder,
-    FlipBreeder,
-    Conjecturer,
-    SamplingConjecturer,
-    IntensiveConjecturer,
+    InsertionIterator,
+    StatelessInsertionIterator,
+    BestStatelessInsertionIterator,
+    RankingInsertionIterator,
+    LocalSearchStrategy,
+    OneShiftLocalSearchStrategy,
+    ReallocationLocalSearchStrategy,
+    InsertionStrategy,
+    SamplingInsertionStrategy,
+    IntensiveInsertionStrategy,
 )
 
 from .exceptions import (
     JineteException,
-    StopPlannedTripIterationException,
     NonFeasiblePlannedTripException,
     NonFeasibleRouteException,
     PreviousStopNotInRouteException,
+)
+from .solvers import (
+    Solver,
 )

@@ -17,15 +17,6 @@ class TestJineteException(unittest.TestCase):
         self.assertEqual(exc.message, message)
 
 
-class TestStopPlannedTripIterationException(unittest.TestCase):
-
-    def test_creation(self):
-        exc = jit.StopPlannedTripIterationException()
-
-        self.assertIsInstance(exc, jit.JineteException)
-        self.assertEqual(exc.message, 'There are no more Planned Trips to iterate over them.')
-
-
 class TestNonFeasiblePlannedTripException(unittest.TestCase):
 
     def test_creation(self):

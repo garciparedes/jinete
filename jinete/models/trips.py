@@ -64,11 +64,17 @@ class Trip(Model):
 
     @property
     def origin_earliest(self) -> float:
-        return self.origin.earliest
+        return max(
+            self.destination.earliest - self.destination.duration - self.timeout,
+            self.origin.earliest,
+        )
 
     @property
     def origin_latest(self) -> float:
-        return self.origin.latest
+        return min(
+            self.destination.latest - self.destination.duration - self.origin.time_to(self.destination),
+            self.origin.latest,
+        )
 
     @property
     def origin_duration(self) -> float:
@@ -78,13 +84,19 @@ class Trip(Model):
     def destination_position(self) -> Position:
         return self.destination.position
 
-    @property
+    @cached_property
     def destination_earliest(self) -> float:
-        return self.destination.earliest
+        return max(
+            self.origin.earliest + self.origin.duration + self.origin.time_to(self.destination),
+            self.destination.earliest,
+        )
 
-    @property
+    @cached_property
     def destination_latest(self) -> float:
-        return self.destination.latest
+        return min(
+            self.origin.latest + self.origin.duration + self.timeout,
+            self.destination.latest,
+        )
 
     @property
     def destination_duration(self) -> float:

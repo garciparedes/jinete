@@ -15,6 +15,7 @@ if TYPE_CHECKING:
         Tuple,
         Any,
         Type,
+        Callable,
     )
     from uuid import (
         UUID,
@@ -38,6 +39,7 @@ if TYPE_CHECKING:
     from .objectives import (
         Objective,
         OptimizationDirection,
+        Optimizable,
     )
     from ..algorithms import (
         Algorithm,
@@ -90,8 +92,12 @@ class Result(Model):
         return self.job.objective
 
     @property
-    def optimization_function(self) -> Tuple[float, ...]:
-        return self.objective.optimization_function(self)
+    def optimization_function(self) -> Callable[[Optimizable], Tuple[float, ...]]:
+        return self.objective.optimization_function
+
+    @property
+    def optimization_value(self) -> Tuple[float, ...]:
+        return self.optimization_function(self)
 
     @property
     def direction(self) -> OptimizationDirection:
