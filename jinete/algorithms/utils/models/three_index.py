@@ -7,9 +7,6 @@ from collections import (
 from itertools import (
     product,
 )
-from operator import (
-    itemgetter,
-)
 from typing import (
     TYPE_CHECKING,
 )
@@ -373,33 +370,15 @@ class ThreeIndexModel(Model):
             vehicle = self.vehicles[k]
             route = Route(vehicle)
 
-            ordered_trip_indexes = [
-                idx
-                for idx, u_k in sorted(enumerate(u_k.varValue for u_k in self.u[k]), key=itemgetter(1))
-            ]
-
-            positions = self._solution_to_positions(k, ordered_trip_indexes)
+            positions = self._solution_to_positions(k)
             stops = self._positions_to_stops(route, positions)
             trips = self._positions_to_trips(positions)
 
-            service_starting_times = tuple(u_k.varValue for u_k in self.u[k])
-            self._build_planned_trips(vehicle, trips, stops, service_starting_times)
+            self._build_planned_trips(vehicle, trips, stops)
+            self._adjust_waiting_times(stops, k)
 
             for stop in stops:
                 route.insert_stop(stop)
-
-            # FIXME: Move this logic to a corresponding StorerFormatter
-            # print('\n'.join([
-            #     f'{stop.earliest:7.2f}  {stop.latest:7.2f}  {stop.arrival_time:7.2f}  '
-            #     f'{stop.down_time:7.2f}  {stop.waiting_time:7.2f}  {stop.service_starting_time:7.2f}  '
-            #     f'{stop.departure_time:7.2f} {stop.transit_time:7.2f}'
-            #     for stop in route.stops
-            # ]))
-            #
-            # print('\n'.join([
-            #     f'{pt.delivery_time:7.2f}  {pt.pickup_time:7.2f}  {pt.duration}'
-            #     for pt in route.planned_trips
-            # ]))
 
             routes.add(route)
         return routes
@@ -415,25 +394,20 @@ class ThreeIndexModel(Model):
             trips.append(trip)
         return trips
 
-    def _build_planned_trips(self, vehicle: Vehicle, trips: List[Trip], stops: List[Stop],
-                             service_starting_times: Tuple[float]) -> List[PlannedTrip]:
+    def _build_planned_trips(self, vehicle: Vehicle, trips: List[Trip], stops: List[Stop]) -> List[PlannedTrip]:
         stop_mapper = self._stop_to_stop_mapper(stops)
 
         planned_trips = list()
         for trip in trips:
-            service_starting_time = service_starting_times[self.idx_by_position(trip.origin_position)]
             pickup = stop_mapper[trip.origin_position].pop(0)
             delivery = stop_mapper[trip.destination_position].pop(0)
-            down_time = max([
-                0.0,
-                service_starting_time - (pickup.previous_departure_time + pickup.transit_time),
-            ])
-
-            planned_trip = PlannedTrip(vehicle, trip, pickup, delivery, down_time=down_time)
+            planned_trip = PlannedTrip(vehicle, trip, pickup, delivery)
             planned_trips.append(planned_trip)
         return planned_trips
 
-    def _solution_to_positions(self, k, ordered_trip_indexes) -> List[Position]:
+    def _solution_to_positions(self, k: int) -> List[Position]:
+        ordered_trip_indexes = [idx for idx in sorted(range(len(self.u[k])), key=lambda x: self.u[k][x].varValue)]
+
         positions = list()
         for i, j in product(ordered_trip_indexes, self.positions_indexer):
             if not int(self.x[k][i][j].varValue) == 1:
@@ -456,3 +430,10 @@ class ThreeIndexModel(Model):
         for stop in stops:
             mapper[stop.position].append(stop)
         return mapper
+
+    def _adjust_waiting_times(self, stops: List[Stop], k: int):
+        service_starting_times = tuple(float(u_k.varValue) for u_k in self.u[k])
+        for stop in stops:
+            stop.flush()
+            service_starting_time = service_starting_times[self.idx_by_position(stop.position)]
+            stop.waiting_time = max(0, service_starting_time - stop.arrival_time)

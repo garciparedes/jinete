@@ -62,7 +62,6 @@ class TestStop(unittest.TestCase):
             stop.transit_time,
         )
         self.assertEqual(0, stop.waiting_time)
-        self.assertEqual(0, stop.down_time)
         self.assertEqual(0, stop.load_time)
         self.assertEqual(0, len(tuple(stop.planned_trips)))
         self.assertEqual(0, len(tuple(stop.trips)))
@@ -172,13 +171,12 @@ class TestStop(unittest.TestCase):
         self.assertIn(pickup_planned_trip, stop.pickups)
         self.assertIsInstance(stop.identifier, str)
 
-        trips_seq = ''.join(
+        identifier = ''.join(
             it.chain(
                 (f'P{planned_trip.trip_identifier}' for planned_trip in stop.pickups),
                 (f'D{planned_trip.trip_identifier}' for planned_trip in stop.deliveries),
             )
         )
-        identifier = f'{stop.position},{stop.arrival_time:.2f}:{stop.departure_time:.2f},({trips_seq})'
         self.assertEqual(identifier, stop.identifier)
 
 

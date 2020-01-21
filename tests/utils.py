@@ -123,12 +123,11 @@ def generate_one_planned_trip(feasible: bool, vehicle: jit.Vehicle = None, previ
         previous_stop = jit.Stop(vehicle, vehicle.origin_position, previous_stop)
 
     if feasible:
-        down_time = 0.0
         kwargs['earliest'] = 0.0
         kwargs['timeout'] = float('inf')
         kwargs['capacity'] = vehicle.capacity
     else:
-        down_time = jit.MAX_FLOAT
+        previous_stop.waiting_time = jit.MAX_FLOAT
 
     if origin_position is None:
         origin_position = generate_one_position()
@@ -157,7 +156,6 @@ def generate_one_planned_trip(feasible: bool, vehicle: jit.Vehicle = None, previ
         trip=trip,
         pickup=pickup_stop,
         delivery=delivery_stop,
-        down_time=down_time,
     )
 
 

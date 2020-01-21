@@ -53,11 +53,7 @@ class InsertionStrategy(object):
         pickup = self._build_pickup(route, trip, previous_idx)
         delivery = self._build_delivery(route, trip, previous_idx, following_idx, pickup)
 
-        down_time = max([
-            0.0,
-            trip.origin_earliest - pickup.arrival_time,
-        ])
-        planned_trip = PlannedTrip(route.vehicle, trip, pickup, delivery, down_time=down_time)
+        planned_trip = PlannedTrip(route.vehicle, trip, pickup, delivery)
         route.append_planned_trip(planned_trip)
         return route
 

@@ -41,22 +41,18 @@ class PlannedTrip(Model):
     __slots__ = [
         'vehicle',
         'trip',
-        'down_time',
         'pickup',
         'delivery',
     ]
 
     vehicle: Vehicle
     trip: Trip
-    down_time: float
     pickup: Stop
     delivery: Stop
 
-    def __init__(self, vehicle: Vehicle, trip: Trip, pickup: Stop = None, delivery: Stop = None,
-                 down_time: float = 0.0):
+    def __init__(self, vehicle: Vehicle, trip: Trip, pickup: Stop = None, delivery: Stop = None):
         self.vehicle = vehicle
         self.trip = trip
-        self.down_time = down_time
 
         self.pickup = pickup
         self.delivery = delivery
@@ -95,6 +91,28 @@ class PlannedTrip(Model):
         return self.trip.distance
 
     @property
+    def waiting_time(self) -> float:
+        result = 0
+        current = self.delivery
+        while current != self.pickup:
+            result += current.waiting_time
+            current = current.previous
+        return result
+
+    @property
+    def transit_time(self) -> float:
+        result = 0
+        current = self.delivery
+        while current != self.pickup:
+            result += current.transit_time
+            current = current.previous
+        return result
+
+    @property
+    def load_time(self) -> float:
+        return self.delivery.load_time + self.pickup.load_time
+
+    @property
     def duration(self) -> float:
         return self.delivery.service_starting_time - self.pickup.departure_time
 
@@ -130,7 +148,6 @@ class PlannedTrip(Model):
             ('trip_identifier', self.trip_identifier),
             ('pickup', self.pickup),
             ('delivery', self.delivery),
-            ('down_time', self.down_time),
             ('feasible', self.feasible),
         )
 
