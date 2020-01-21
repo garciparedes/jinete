@@ -18,18 +18,18 @@ class ColumnarStorerFormatter(StorerFormatter):
         self.tab_character = tab_character
 
     def format(self) -> str:
-        rows = it.chain.from_iterable(self.route_to_str(route) for route in self.planning.routes)
+        rows = it.chain.from_iterable(self.route_to_str(route) for route in self.routes)
         return '\n'.join((
             f'Planning UUID: "{self.planning.uuid}"',
-            f'Routes count: "{len(self.planning.routes)}"',
+            f'Routes count: "{len(self.routes)}"',
             f'Routes: ',
             '\n'.join(f'{self.tab_character}{row}' for row in rows),
-            f'Computation time: "{self.result.computation_time:0.4f}" seconds',
-            f'Coverage Rate: "{self.result.coverage_rate}"',
-            f'Objective: "{self.result.objective.__class__.__name__}"',
-            f'Optimization Value: "{self.result.optimization_value}"',
-            f'Feasible: "{self.result.feasible}"',
-            f'Direction: "{self.result.direction}"',
+            f'Computation time: "{self.computation_time:0.4f}" seconds',
+            f'Coverage Rate: "{self.coverage_rate}"',
+            f'Objective: "{self.objective.__class__.__name__}"',
+            f'Optimization Value: "{self.optimization_value}"',
+            f'Feasible: "{self.feasible}"',
+            f'Direction: "{self.direction}"',
         ))
 
     def route_to_str(self, route: Route) -> List[str]:
