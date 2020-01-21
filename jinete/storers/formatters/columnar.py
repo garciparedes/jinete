@@ -59,12 +59,12 @@ class ColumnarStorerFormatter(StorerFormatter):
         return self.tab_character.join((
             f'ID: {planned_trip.trip.identifier:5}',
             f'P: {planned_trip.origin} to {planned_trip.destination}',
-            f'TW: {planned_trip.trip.origin_earliest:6.01f} to {planned_trip.trip.destination_latest:6.01f}',
-            f'WT: {planned_trip.waiting_time:5.01f}',
-            f'NT: {planned_trip.transit_time:5.01f}',
+            f'TW: {planned_trip.trip.origin_earliest:7.01f} to {planned_trip.trip.destination_latest:7.01f}',
+            f'WT: {planned_trip.waiting_time:7.01f}',
+            f'NT: {planned_trip.transit_time:7.01f}',
             f'LT: {planned_trip.load_time:4.01f}',
             f'TT: {planned_trip.duration:6.01f}',
-            f'T: {planned_trip.pickup_time:6.01f} to {planned_trip.delivery_time:6.01f}',
+            f'T: {planned_trip.pickup_time:7.01f} to {planned_trip.delivery_time:7.01f}',
             f'L: {planned_trip.capacity}',
         ))
 
@@ -72,10 +72,10 @@ class ColumnarStorerFormatter(StorerFormatter):
         return self.tab_character.join((
             f'ID: {stop.identifier:5}',
             f'P: {stop.position}',
-            f'TW: {stop.earliest:6.01f} to {stop.latest:6.01f}',
-            f'WT: {stop.waiting_time:5.01f}',
-            f'NT: {stop.transit_time:5.01f}',
-            f'LT: {stop.load_time:4.01f}',
-            f'DT: {stop.departure_time:6.01f}',
+            f'TW: {stop.earliest:7.01f} to {stop.latest:7.01f}',
+            f'WT: {stop.waiting_time:7.01f}',
+            f'NT: {stop.transit_time:7.01f}',
+            f'LT: {stop.load_time:5.01f}',
+            f'DT: {stop.departure_time:7.01f}',
             f'L: {stop.capacity}',
         ))
