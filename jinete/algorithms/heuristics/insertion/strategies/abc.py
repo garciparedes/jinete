@@ -29,12 +29,16 @@ class InsertionStrategy(object):
     def __init__(self, *args, **kwargs):
         pass
 
-    def compute(self, route: Route, trips: Union[Trip, Iterable[Trip]], *args, **kwargs) -> List[Route]:
+    def compute(self, route: Route, trips: Union[Trip, Iterable[Trip]], only_feasible: bool = True,
+                *args, **kwargs) -> List[Route]:
         if not isinstance(trips, Trip):
-            return sum((self.compute(route, trip, *args, **kwargs) for trip in trips), [])
+            return sum((self.compute(route, trip, only_feasible=only_feasible, *args, **kwargs) for trip in trips), [])
         trip = trips
 
-        return [self.compute_one(route, trip, *args, **kwargs)]
+        planned_trip = self.compute_one(route, trip, *args, **kwargs)
+        if only_feasible and not planned_trip.feasible:
+            return []
+        return [planned_trip]
 
     def compute_one(self, route: Route, trip: Trip, previous_idx: int = None, following_idx: int = None) -> Route:
         assert following_idx is None or (previous_idx is not None and following_idx is not None)
@@ -50,7 +54,6 @@ class InsertionStrategy(object):
         delivery = self._build_delivery(route, trip, previous_idx, following_idx, pickup)
 
         planned_trip = PlannedTrip(route.vehicle, trip, pickup, delivery)
-
         route.append_planned_trip(planned_trip)
         return route
 

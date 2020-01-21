@@ -8,6 +8,7 @@ from typing import (
 if TYPE_CHECKING:
     from typing import (
         Set,
+        Tuple,
     )
     from ...models import (
         Result,
@@ -15,6 +16,7 @@ if TYPE_CHECKING:
         Job,
         Route,
         Objective,
+        OptimizationDirection,
     )
 
 
@@ -38,8 +40,28 @@ class StorerFormatter(ABC):
         return self.planning.routes
 
     @property
+    def computation_time(self) -> float:
+        return self.result.computation_time
+
+    @property
+    def coverage_rate(self) -> float:
+        return self.result.coverage_rate
+
+    @property
     def objective(self) -> Objective:
         return self.result.objective
+
+    @property
+    def optimization_value(self) -> Tuple[float, ...]:
+        return self.result.optimization_value
+
+    @property
+    def feasible(self) -> bool:
+        return self.result.feasible
+
+    @property
+    def direction(self) -> OptimizationDirection:
+        return self.result.direction
 
     @abstractmethod
     def format(self) -> str:

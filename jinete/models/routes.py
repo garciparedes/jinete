@@ -11,6 +11,9 @@ import itertools as it
 from ..exceptions import (
     PreviousStopNotInRouteException,
 )
+from .constants import (
+    ERROR_BOUND,
+)
 from .abc import (
     Model,
 )
@@ -139,13 +142,13 @@ class Route(Model):
     def feasible(self) -> bool:
         if not self.first_stop.position == self.vehicle.origin_position:
             return False
-        if not self.vehicle.origin_earliest <= self.first_stop.arrival_time:
+        if not self.vehicle.origin_earliest - ERROR_BOUND <= self.first_stop.arrival_time:
             return False
         if not self.last_position == self.vehicle.destination_position:
             return False
-        if not self.last_departure_time <= self.vehicle.destination_latest:
+        if not self.last_departure_time <= self.vehicle.destination_latest + ERROR_BOUND:
             return False
-        if not self.duration <= self.vehicle.timeout:
+        if not self.duration <= self.vehicle.timeout + ERROR_BOUND:
             return False
         for planned_trip in self.planned_trips:
             planned_trip.flush()

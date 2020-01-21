@@ -30,6 +30,8 @@ MIN_INT = -maxsize
 MAX_FLOAT = float('inf')
 MIN_FLOAT = float('-inf')
 
+ERROR_BOUND = 10e-4
+
 
 @unique
 class OptimizationDirection(Enum):

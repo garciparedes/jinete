@@ -11,6 +11,9 @@ from cached_property import cached_property
 from .abc import (
     Model,
 )
+from .constants import (
+    MAX_FLOAT,
+)
 
 if TYPE_CHECKING:
     from typing import (
@@ -42,6 +45,7 @@ class Stop(Model):
         'pickups',
         'deliveries',
         'previous',
+        '_waiting_time',
     ]
     vehicle: Vehicle
     position: Position
@@ -50,7 +54,8 @@ class Stop(Model):
     deliveries: Set[PlannedTrip, ...]
 
     def __init__(self, vehicle: Vehicle, position: Position, previous: Optional[Stop],
-                 pickups: Set[PlannedTrip, ...] = None, deliveries: Set[PlannedTrip, ...] = None):
+                 pickups: Set[PlannedTrip, ...] = None, deliveries: Set[PlannedTrip, ...] = None,
+                 waiting_time: float = None):
 
         if pickups is None:
             pickups = set()
@@ -64,6 +69,7 @@ class Stop(Model):
         self.deliveries = deliveries
 
         self.previous = previous
+        self._waiting_time = waiting_time
 
     @property
     def identifier(self) -> str:
@@ -73,11 +79,7 @@ class Stop(Model):
                 (f'D{planned_trip.trip_identifier}' for planned_trip in self.deliveries),
             )
         )
-        return ','.join((
-            f'{self.position}',
-            f'{self.arrival_time:.2f}:{self.departure_time:.2f}',
-            f'({trips_sequence})',
-        ))
+        return trips_sequence
 
     @property
     def planned_trips(self) -> Iterable[PlannedTrip]:
@@ -88,11 +90,19 @@ class Stop(Model):
     def trips(self):
         yield from (planned_trip.trip for planned_trip in self.planned_trips)
 
-    @property
+    @cached_property
     def capacity(self) -> float:
-        result = sum(trip.capacity for trip in self.planned_trips)
+        result = self.previous_capacity
+        result += sum(trip.capacity for trip in self.pickups)
+        result -= sum(trip.capacity for trip in self.deliveries)
         assert 0 <= result
         return result
+
+    @property
+    def previous_capacity(self) -> float:
+        if self.previous is None:
+            return 0
+        return self.previous.capacity
 
     @property
     def all_previous(self) -> List[Stop]:
@@ -115,29 +125,6 @@ class Stop(Model):
         self.deliveries.update(iterable)
 
     @property
-    def down_time(self) -> float:
-        return max((pt.down_time for pt in self.planned_trips), default=0.0)
-
-    @property
-    def earliest(self):
-        return max(it.chain(
-            (pt.trip.origin_earliest for pt in self.pickups),
-            (pt.trip.destination_earliest for pt in self.deliveries),
-        ), default=0.0)
-
-    @property
-    def load_time(self) -> float:
-        if not any(self.planned_trips):
-            return 0.0
-        return max(pt.trip.origin_duration for pt in self.planned_trips)
-
-    @property
-    def previous_departure_time(self) -> float:
-        if self.previous is None:
-            return self.vehicle.origin_earliest
-        return self.previous.departure_time
-
-    @property
     def previous_position(self) -> Position:
         if self.previous is None:
             return self.vehicle.origin_position
@@ -147,25 +134,59 @@ class Stop(Model):
     def distance(self) -> float:
         return self.position.distance_to(self.previous_position)
 
+    @cached_property
+    def arrival_time(self):
+        return self.previous_departure_time + self.transit_time
+
     @property
-    def navigation_time(self):
+    def previous_departure_time(self) -> float:
+        if self.previous is None:
+            return self.vehicle.origin_earliest
+        return self.previous.departure_time
+
+    @property
+    def transit_time(self):
         return self.previous_position.time_to(self.position, self.previous_departure_time)
 
     @property
     def waiting_time(self):
-        return max(self.earliest - self.arrival_time, 0.0)
+        if self._waiting_time is None:
+            return max(self.earliest - self.arrival_time, 0.0)
+        return self._waiting_time
+
+    @waiting_time.setter
+    def waiting_time(self, value: float) -> None:
+        self._waiting_time = value
+        self.flush()
 
     @cached_property
-    def arrival_time(self):
-        return self.previous_departure_time + self.down_time + self.navigation_time
+    def departure_time(self) -> float:
+        return self.service_starting_time + self.load_time
 
     @property
     def service_starting_time(self) -> float:
         return max(self.arrival_time + self.waiting_time, self.earliest)
 
-    @cached_property
-    def departure_time(self) -> float:
-        return self.service_starting_time + self.load_time
+    @property
+    def earliest(self) -> float:
+        return max(it.chain(
+            (pt.trip.origin_earliest for pt in self.pickups),
+            (pt.trip.destination_earliest for pt in self.deliveries),
+        ), default=0.0)
+
+    @property
+    def latest(self) -> float:
+        return min(it.chain(
+            (pt.trip.origin_latest for pt in self.pickups),
+            (pt.trip.destination_latest for pt in self.deliveries),
+        ), default=MAX_FLOAT)
+
+    @property
+    def load_time(self) -> float:
+        return max(it.chain(
+            (pt.trip.origin_duration for pt in self.pickups),
+            (pt.trip.destination_duration for pt in self.deliveries),
+        ), default=0.0)
 
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
         yield from (
@@ -174,7 +195,7 @@ class Stop(Model):
         )
 
     def flush(self) -> None:
-        for key in ('arrival_time', 'departure_time',):
+        for key in ('arrival_time', 'departure_time', 'capacity',):
             self.__dict__.pop(key, None)
         for planned_trip in self.planned_trips:
             planned_trip.flush()

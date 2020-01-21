@@ -52,18 +52,17 @@ class TestStop(unittest.TestCase):
         self.assertNotIn('arrival_time', stop.__dict__)
         self.assertNotIn('departure_time', stop.__dict__)
 
-        self.assertEqual(stop.vehicle, self.vehicle)
-        self.assertEqual(stop.position, self.position)
-        self.assertEqual(stop.previous, None)
-        self.assertEqual(stop.previous_position, self.vehicle.origin_position)
-        self.assertEqual(stop.previous_departure_time, self.vehicle.origin_earliest)
+        self.assertEqual(self.vehicle, stop.vehicle)
+        self.assertEqual(self.position, stop.position)
+        self.assertIsNone(stop.previous)
+        self.assertEqual(self.vehicle.origin_position, stop.previous_position)
+        self.assertEqual(self.vehicle.origin_earliest, stop.previous_departure_time)
         self.assertEqual(
-            stop.navigation_time,
             stop.position.time_to(self.vehicle.origin_position, stop.previous_departure_time),
+            stop.transit_time,
         )
-        self.assertEqual(stop.waiting_time, 0.0)
-        self.assertEqual(stop.down_time, 0.0)
-        self.assertEqual(stop.load_time, 0.0)
+        self.assertEqual(0, stop.waiting_time)
+        self.assertEqual(0, stop.load_time)
         self.assertEqual(0, len(tuple(stop.planned_trips)))
         self.assertEqual(0, len(tuple(stop.trips)))
 
@@ -104,16 +103,15 @@ class TestStop(unittest.TestCase):
         previous_stop.following = stop
 
         self.assertEqual(previous_stop.following, stop)
-
-        self.assertEqual(stop.vehicle, self.vehicle)
-        self.assertEqual(stop.position, self.position)
-        self.assertEqual(stop.previous, previous_stop)
-        self.assertEqual(stop.distance, stop.position.distance_to(previous_stop.position))
-        self.assertEqual(stop.previous_position, previous_stop.position)
-        self.assertEqual(stop.previous_departure_time, previous_stop.departure_time)
+        self.assertEqual(self.vehicle, stop.vehicle)
+        self.assertEqual(self.position, stop.position)
+        self.assertEqual(previous_stop, stop.previous)
+        self.assertEqual(stop.position.distance_to(previous_stop.position), stop.distance)
+        self.assertEqual(previous_stop.position, stop.previous_position)
+        self.assertEqual(previous_stop.departure_time, stop.previous_departure_time)
         self.assertEqual(
-            stop.navigation_time,
             stop.position.time_to(previous_stop.position, stop.previous_departure_time),
+            stop.transit_time,
         )
 
     def test_flush(self):
@@ -173,13 +171,12 @@ class TestStop(unittest.TestCase):
         self.assertIn(pickup_planned_trip, stop.pickups)
         self.assertIsInstance(stop.identifier, str)
 
-        trips_seq = ''.join(
+        identifier = ''.join(
             it.chain(
                 (f'P{planned_trip.trip_identifier}' for planned_trip in stop.pickups),
                 (f'D{planned_trip.trip_identifier}' for planned_trip in stop.deliveries),
             )
         )
-        identifier = f'{stop.position},{stop.arrival_time:.2f}:{stop.departure_time:.2f},({trips_seq})'
         self.assertEqual(identifier, stop.identifier)
 
 

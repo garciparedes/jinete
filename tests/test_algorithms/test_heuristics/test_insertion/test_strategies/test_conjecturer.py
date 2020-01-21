@@ -26,8 +26,14 @@ class TestStrategy(unittest.TestCase):
         route = generate_one_route()
         trips = generate_trips(5)
 
-        conjectured_routes = strategy.compute(route, trips)
+        conjectured_routes = strategy.compute(route, trips, only_feasible=False)
         self.assertEqual(len(trips), len(conjectured_routes))
+        # TODO: Improve assertions
+
+        self.assertEqual(
+            sum(route.feasible for route in conjectured_routes),
+            len(strategy.compute(route, trips, only_feasible=True)),
+        )
         # TODO: Improve assertions
 
 
