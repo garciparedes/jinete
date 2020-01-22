@@ -21,6 +21,7 @@ if TYPE_CHECKING:
         Tuple,
         Any,
         Optional,
+        Iterator,
         Iterable,
         List,
         Set,
@@ -82,7 +83,7 @@ class Stop(Model):
         return trips_sequence
 
     @property
-    def planned_trips(self) -> Iterable[PlannedTrip]:
+    def planned_trips(self) -> Iterator[PlannedTrip]:
         yield from self.pickups
         yield from self.deliveries
 
@@ -109,6 +110,10 @@ class Stop(Model):
         if self.previous is None:
             return []
         return [self.previous] + self.previous.all_previous
+
+    @property
+    def all_previous_pickups(self) -> Iterator[PlannedTrip]:
+        return it.chain.from_iterable(stop.pickups for stop in self.all_previous)
 
     def append_pickup(self, planned_trip: PlannedTrip) -> None:
         assert planned_trip.origin == self.position

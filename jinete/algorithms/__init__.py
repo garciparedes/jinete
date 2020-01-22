@@ -13,6 +13,7 @@ from .heuristics import (
     RankingInsertionIterator,
     LocalSearchStrategy,
     OneShiftLocalSearchStrategy,
+    TwoOPTLocalSearchStrategy,
     ReallocationLocalSearchStrategy,
     InsertionStrategy,
     SamplingInsertionStrategy,
@@ -21,6 +22,7 @@ from .heuristics import (
 from .metaheuristics import (
     GraspAlgorithm,
     IterativeAlgorithm,
+    SequentialAlgorithm,
 )
 from .exacts import (
     MilpAlgorithm,

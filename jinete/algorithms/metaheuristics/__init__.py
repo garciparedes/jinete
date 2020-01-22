@@ -4,3 +4,6 @@ from .grasp import (
 from .iterative import (
     IterativeAlgorithm,
 )
+from .sequential import (
+    SequentialAlgorithm,
+)
