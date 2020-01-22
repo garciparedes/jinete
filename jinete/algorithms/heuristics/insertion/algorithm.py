@@ -17,6 +17,9 @@ if TYPE_CHECKING:
     from typing import (
         Type,
     )
+    from ....models import (
+        Result,
+    )
     from .iterators import (
         InsertionIterator,
     )
@@ -26,16 +29,19 @@ logger = logging.getLogger(__name__)
 
 class InsertionAlgorithm(Algorithm):
 
-    def __init__(self, iterator_cls: Type[InsertionIterator] = None, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, iterator_cls: Type[InsertionIterator] = None, initial: Result = None, **kwargs):
+        super().__init__(**kwargs)
         if iterator_cls is None:
             iterator_cls = RankingInsertionIterator
+        self.initial = initial
         self.iterator_cls = iterator_cls
-        self.args = args
         self.kwargs = kwargs
 
     def build_iterator(self) -> InsertionIterator:
-        return self.iterator_cls(*self.args, **self.kwargs)
+        kwargs = self.kwargs.copy()
+        if self.initial is not None and 'routes' not in kwargs:
+            kwargs['routes'] = self.initial.routes
+        return self.iterator_cls(**kwargs)
 
     def _optimize(self) -> Planning:
         iterator = self.build_iterator()

@@ -11,8 +11,8 @@ from ...models import (
 from ..abc import (
     Algorithm,
 )
-from ..heuristics import (
-    LocalSearchAlgorithm,
+from .sequential import (
+    SequentialAlgorithm,
 )
 from .iterative import (
     IterativeAlgorithm,
@@ -46,19 +46,23 @@ class GraspAlgorithm(Algorithm):
 
     def build_first_solution_algorithm(self, **kwargs) -> Algorithm:
         kwargs.update(self.first_solution_kwargs.copy())
-        kwargs['seed'] = self.random.randint(0, MAX_INT)
-        kwargs['fleet'] = self.fleet
-        kwargs['job'] = self.job
-
+        if 'fleet' not in kwargs:
+            kwargs['fleet'] = self.fleet
+        if 'job' not in kwargs:
+            kwargs['job'] = self.job
+        if 'seed' not in kwargs:
+            kwargs['seed'] = self.random.randint(0, MAX_INT)
         return IterativeAlgorithm(**kwargs)
 
     def build_local_search_algorithm(self, **kwargs) -> Algorithm:
         kwargs.update(self.local_search_kwargs.copy())
-        kwargs['seed'] = self.random.randint(0, MAX_INT),
-        kwargs['fleet'] = self.fleet
-        kwargs['job'] = self.job
-
-        return LocalSearchAlgorithm(**kwargs)
+        if 'fleet' not in kwargs:
+            kwargs['fleet'] = self.fleet
+        if 'job' not in kwargs:
+            kwargs['job'] = self.job
+        if 'seed' not in kwargs:
+            kwargs['seed'] = self.random.randint(0, MAX_INT)
+        return SequentialAlgorithm(**kwargs)
 
     def _optimize(self) -> Planning:
         iterative = self.build_first_solution_algorithm()
@@ -69,7 +73,7 @@ class GraspAlgorithm(Algorithm):
             no_improvement_count += 1
 
             current = self.build_local_search_algorithm(initial=best).optimize()
-            current = self.build_first_solution_algorithm(routes=current.routes).optimize()
+
             best = self.objective.best(best, current)
 
             if best == current:
