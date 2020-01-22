@@ -13,5 +13,6 @@ from .local_search import (
     LocalSearchAlgorithm,
     LocalSearchStrategy,
     OneShiftLocalSearchStrategy,
+    TwoOPTLocalSearchStrategy,
     ReallocationLocalSearchStrategy,
 )

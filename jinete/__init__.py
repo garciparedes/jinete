@@ -81,6 +81,7 @@ from .algorithms import (
     RankingInsertionIterator,
     LocalSearchStrategy,
     OneShiftLocalSearchStrategy,
+    TwoOPTLocalSearchStrategy,
     ReallocationLocalSearchStrategy,
     InsertionStrategy,
     SamplingInsertionStrategy,
