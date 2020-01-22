@@ -21,18 +21,25 @@ if TYPE_CHECKING:
         Result,
         Route,
     )
+    from .strategies import (
+        LocalSearchStrategy,
+    )
 
 logger = logging.getLogger(__name__)
 
 
 class LocalSearchAlgorithm(Algorithm):
 
-    def __init__(self, initial: Result, no_improvement_threshold: int = 1, *args, **kwargs):
+    def __init__(self, initial: Result, no_improvement_threshold: int = 1, strategy_cls: LocalSearchStrategy = None,
+                 *args, **kwargs):
         super().__init__(*args, **kwargs)
+        if strategy_cls is None:
+            strategy_cls = ReallocationLocalSearchStrategy
+
         self.initial = initial
         self.args = args
         self.kwargs = kwargs
-        self.strategy_cls = ReallocationLocalSearchStrategy
+        self.strategy_cls = strategy_cls
         self.no_improvement_threshold = no_improvement_threshold
 
     @property

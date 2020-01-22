@@ -4,20 +4,18 @@ import itertools as it
 from ..abc import (
     LocalSearchStrategy,
 )
-from ......models import (
-    Result,
-)
+
 
 logger = logging.getLogger(__name__)
 
 
 class ReallocationLocalSearchStrategy(LocalSearchStrategy):
 
-    def _improve(self) -> Result:
+    def _improve(self) -> None:
         from ....insertion import InsertionStrategy  # FIXME Should this import come from "insertion" module?
         strategy = InsertionStrategy()
         logger.info(f'Starting to improve "Result" with "{self.__class__.__name__}"...')
-        best = None
+        overwritten_routes = set()
         cost = - float('inf')
         for origin, destination in it.permutations(self.routes, 2):
             cost = max(cost, sum([
@@ -45,15 +43,8 @@ class ReallocationLocalSearchStrategy(LocalSearchStrategy):
                     if not new_cost > cost:
                         continue
 
-                    logger.info(f'Improved planning! "{new_cost}" < "{cost}"')
-                    best = {new_origin, new_destination}
+                    logger.info(f'Improved planning with "{self.__class__.__name__}": "{new_cost}" > "{cost}"')
+                    overwritten_routes = {new_origin, new_destination}
                     cost = new_cost
 
-        if best is not None:
-            assert len(best) == 2
-            new_vehicles = {route.vehicle for route in best}
-            routes = {route for route in self.planning.routes if route.vehicle not in new_vehicles}
-            routes |= best
-            self.planning.routes = routes
-
-        return self.result
+        self._update_routes(overwritten_routes)

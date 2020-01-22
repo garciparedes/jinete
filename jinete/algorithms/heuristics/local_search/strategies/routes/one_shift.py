@@ -4,7 +4,6 @@ from ..abc import (
     LocalSearchStrategy,
 )
 from ......models import (
-    Result,
     Stop,
     Route,
 )
@@ -14,9 +13,9 @@ logger = logging.getLogger(__name__)
 
 class OneShiftLocalSearchStrategy(LocalSearchStrategy):
 
-    def _improve(self) -> Result:
+    def _improve(self) -> None:
         logger.info(f'Starting to improve "Result" with "{self.__class__.__name__}"...')
-        for idx, route in enumerate(self.routes):
+        for route in self.routes:
             cost = self.objective.optimization_function(route)
 
             for i in range(1, len(route.stops) - 1):
@@ -36,7 +35,6 @@ class OneShiftLocalSearchStrategy(LocalSearchStrategy):
 
                 cost = self.objective.optimization_function(route)
                 logger.info(f'Flipped "{i}"-th and "{j}"-th stops from "{route}".')
-        return self.result
 
     def flip(self, route: Route, previous: Stop, other: Stop, following: Stop = None) -> None:
         assert following is None or following.previous == other

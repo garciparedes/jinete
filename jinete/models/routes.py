@@ -289,17 +289,18 @@ class Route(Model):
 
         return stop
 
-    def remove_stop_at(self, idx: int):
+    def remove_stop_at(self, idx: int) -> Stop:
         previous_stop = self.stops[idx - 1]
         following_stop = self.stops[idx + 1] or None
 
         if following_stop is not None:
             following_stop.previous = previous_stop
 
-        self.stops.pop(idx)
+        removed_stop = self.stops.pop(idx)
 
         for stop in self.stops[idx:]:
             stop.flush()
+        return removed_stop
 
     def append_planned_trip(self, planned_trip: PlannedTrip):
         assert planned_trip.delivery is not None

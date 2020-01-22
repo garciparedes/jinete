@@ -108,7 +108,7 @@ class DialARideObjective(Objective):
         )
 
     def _route_optimization_function(self, route: Route) -> Tuple[float, ...]:
-        return len(tuple(route.trips)), -route.distance
+        return route.feasible, len(tuple(route.trips)), -route.distance
 
     def _planned_trip_optimization_function(self, planned_trip: PlannedTrip) -> Tuple[float, ...]:
         scoring = 0.0
