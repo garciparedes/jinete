@@ -73,6 +73,7 @@ from .algorithms import (
     InsertionAlgorithm,
     LocalSearchAlgorithm,
     GraspAlgorithm,
+    SequentialAlgorithm,
     MilpAlgorithm,
     IterativeAlgorithm,
     InsertionIterator,

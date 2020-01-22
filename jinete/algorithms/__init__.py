@@ -22,6 +22,7 @@ from .heuristics import (
 from .metaheuristics import (
     GraspAlgorithm,
     IterativeAlgorithm,
+    SequentialAlgorithm,
 )
 from .exacts import (
     MilpAlgorithm,
