@@ -74,13 +74,13 @@ class Stop(Model):
 
     @property
     def identifier(self) -> str:
-        trips_sequence = ''.join(
-            it.chain(
-                (f'P{planned_trip.trip_identifier}' for planned_trip in self.pickups),
-                (f'D{planned_trip.trip_identifier}' for planned_trip in self.deliveries),
-            )
+        iterable = it.chain(
+            (f'P{planned_trip.trip_identifier}' for planned_trip in self.pickups),
+            (f'D{planned_trip.trip_identifier}' for planned_trip in self.deliveries),
         )
-        return trips_sequence
+        identifier = '|'.join(iterable)
+        identifier = f'[{identifier}]'
+        return identifier
 
     @property
     def planned_trips(self) -> Iterator[PlannedTrip]:

@@ -171,12 +171,12 @@ class TestStop(unittest.TestCase):
         self.assertIn(pickup_planned_trip, stop.pickups)
         self.assertIsInstance(stop.identifier, str)
 
-        identifier = ''.join(
-            it.chain(
-                (f'P{planned_trip.trip_identifier}' for planned_trip in stop.pickups),
-                (f'D{planned_trip.trip_identifier}' for planned_trip in stop.deliveries),
-            )
+        iterable = it.chain(
+            (f'P{planned_trip.trip_identifier}' for planned_trip in stop.pickups),
+            (f'D{planned_trip.trip_identifier}' for planned_trip in stop.deliveries),
         )
+        identifier = '|'.join(iterable)
+        identifier = f'[{identifier}]'
         self.assertEqual(identifier, stop.identifier)
 
 

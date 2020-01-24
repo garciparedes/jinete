@@ -259,7 +259,7 @@ class Route(Model):
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
         yield from (
             ('vehicle_identifier', self.vehicle_identifier),
-            ('trip_identifiers', tuple(trip.identifier for trip in self.trips))
+            ('stops_identifiers', tuple(stop.identifier for stop in self.stops))
         )
 
     def insert_stop(self, stop: Stop) -> Stop:
