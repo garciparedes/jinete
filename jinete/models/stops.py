@@ -13,6 +13,7 @@ from .abc import (
 )
 from .constants import (
     MAX_FLOAT,
+    ERROR_BOUND,
 )
 
 if TYPE_CHECKING:
@@ -46,7 +47,7 @@ class Stop(Model):
         'pickups',
         'deliveries',
         'previous',
-        '_waiting_time',
+        '_starting_time',
     ]
     vehicle: Vehicle
     position: Position
@@ -56,7 +57,7 @@ class Stop(Model):
 
     def __init__(self, vehicle: Vehicle, position: Position, previous: Optional[Stop],
                  pickups: Set[PlannedTrip, ...] = None, deliveries: Set[PlannedTrip, ...] = None,
-                 waiting_time: float = None):
+                 starting_time: float = None):
 
         if pickups is None:
             pickups = set()
@@ -70,7 +71,7 @@ class Stop(Model):
         self.deliveries = deliveries
 
         self.previous = previous
-        self._waiting_time = waiting_time
+        self._starting_time = starting_time
 
     @property
     def identifier(self) -> str:
@@ -155,22 +156,26 @@ class Stop(Model):
 
     @property
     def waiting_time(self):
-        if self._waiting_time is None:
-            return max(self.earliest - self.arrival_time, 0.0)
-        return self._waiting_time
-
-    @waiting_time.setter
-    def waiting_time(self, value: float) -> None:
-        self._waiting_time = value
-        self.flush()
+        waiting_time = self.starting_time - self.arrival_time
+        assert waiting_time >= 0 - ERROR_BOUND
+        return waiting_time
 
     @cached_property
     def departure_time(self) -> float:
-        return self.service_starting_time + self.load_time
+        return self.starting_time + self.load_time
 
     @property
-    def service_starting_time(self) -> float:
-        return max(self.arrival_time + self.waiting_time, self.earliest)
+    def starting_time(self) -> float:
+        value = self._starting_time
+        if value is None:
+            value = max(self.arrival_time, self.earliest)
+        assert value >= max(self.arrival_time, self.earliest) - ERROR_BOUND
+        return value
+
+    @starting_time.setter
+    def starting_time(self, value: float) -> None:
+        self._starting_time = value
+        self.flush()
 
     @property
     def earliest(self) -> float:

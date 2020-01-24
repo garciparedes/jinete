@@ -191,23 +191,13 @@ class Route(Model):
         return stop
 
     @property
-    def second_stop(self) -> Stop:
-        stop = self.stops[1]
-        assert stop.previous is self.first_stop
-        return stop
-
-    @property
-    def second_starting_time(self) -> float:
-        return self.second_stop.arrival_time
+    def first_departure_time(self) -> float:
+        return self.first_stop.departure_time
 
     @property
     def last_stop(self) -> Stop:
         stop = self.stops[-1]
         return stop
-
-    @property
-    def last_arrival_time(self) -> float:
-        return self.last_stop.arrival_time
 
     @property
     def last_departure_time(self) -> float:
@@ -236,7 +226,7 @@ class Route(Model):
 
     @property
     def duration(self) -> float:
-        return self.last_departure_time - self.second_starting_time
+        return self.last_departure_time - self.first_departure_time
 
     @property
     def transit_time(self) -> float:
@@ -263,6 +253,9 @@ class Route(Model):
         )
 
     def insert_stop(self, stop: Stop) -> Stop:
+        if stop.previous is None:
+            self.remove_stop_at(0)
+            return self.insert_stop_at(0, stop)
         for idx in range(len(self.stops)):
             if self.stops[idx] != stop.previous:
                 continue
@@ -270,12 +263,7 @@ class Route(Model):
         raise PreviousStopNotInRouteException(stop)
 
     def insert_stop_at(self, idx: int, stop: Stop) -> Stop:
-        previous_stop = self.stops[idx - 1]
         following_stop = self.stops[idx] or None
-
-        if stop == previous_stop:
-            # previous_stop.merge(stop)
-            return stop
 
         assert set(stop.pickups).isdisjoint(stop.deliveries)
 

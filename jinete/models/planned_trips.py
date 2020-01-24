@@ -64,11 +64,11 @@ class PlannedTrip(Model):
 
     @property
     def pickup_time(self) -> float:
-        return self.pickup.service_starting_time
+        return self.pickup.starting_time
 
     @property
     def delivery_time(self) -> float:
-        return self.delivery.service_starting_time
+        return self.delivery.starting_time
 
     @property
     def trip_identifier(self) -> str:
@@ -114,7 +114,7 @@ class PlannedTrip(Model):
 
     @property
     def duration(self) -> float:
-        return self.delivery.service_starting_time - self.pickup.departure_time
+        return self.delivery.starting_time - self.pickup.departure_time
 
     @property
     def capacity(self):
