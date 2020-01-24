@@ -8,6 +8,7 @@ from .insertion import (
     InsertionStrategy,
     SamplingInsertionStrategy,
     IntensiveInsertionStrategy,
+    TailInsertionStrategy,
 )
 from .local_search import (
     LocalSearchAlgorithm,

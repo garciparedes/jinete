@@ -11,4 +11,5 @@ from .strategies import (
     InsertionStrategy,
     SamplingInsertionStrategy,
     IntensiveInsertionStrategy,
+    TailInsertionStrategy,
 )

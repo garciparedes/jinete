@@ -7,3 +7,6 @@ from .intensive import (
 from .sampling import (
     SamplingInsertionStrategy,
 )
+from .tail import (
+    TailInsertionStrategy,
+)

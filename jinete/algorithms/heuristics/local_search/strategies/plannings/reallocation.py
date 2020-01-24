@@ -5,7 +5,6 @@ from ..abc import (
     LocalSearchStrategy,
 )
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -33,11 +32,10 @@ class ReallocationLocalSearchStrategy(LocalSearchStrategy):
 
                 partial_cost = self.objective.optimization_function(new_origin)
                 for i, j in it.combinations(range(len(destination.stops) - 1), 2):
-                    new_destination = strategy.compute_one(destination, trip, i, j)
-
-                    new_destination.flush()
-                    if not new_destination.feasible:
+                    destinations = strategy.compute(destination, trip, i, j)
+                    if not any(destinations):
                         continue
+                    new_destination = destinations[0]
 
                     new_cost = partial_cost[-1] + self.objective.optimization_function(new_destination)[-1]
                     if not new_cost > cost:

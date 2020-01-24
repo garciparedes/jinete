@@ -26,27 +26,24 @@ logger = logging.getLogger(__name__)
 
 class InsertionStrategy(object):
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, only_feasible: bool = True, *args, **kwargs):
+        self.only_feasible = only_feasible
 
-    def compute(self, route: Route, trips: Union[Trip, Iterable[Trip]], only_feasible: bool = True,
-                *args, **kwargs) -> List[Route]:
-        if not isinstance(trips, Trip):
-            return sum((self.compute(route, trip, only_feasible=only_feasible, *args, **kwargs) for trip in trips), [])
-        trip = trips
+    def compute(self, route: Route, trips: Union[Trip, Iterable[Trip]], previous_idx: int = None,
+                following_idx: int = None, only_feasible: bool = None, *args, **kwargs) -> List[Route]:
+        assert (previous_idx is not None and following_idx is not None)
 
-        planned_trip = self.compute_one(route, trip, *args, **kwargs)
-        if only_feasible and not planned_trip.feasible:
-            return []
-        return [planned_trip]
+        if only_feasible is None:
+            only_feasible = self.only_feasible
 
-    def compute_one(self, route: Route, trip: Trip, previous_idx: int = None, following_idx: int = None) -> Route:
-        assert following_idx is None or (previous_idx is not None and following_idx is not None)
+        if isinstance(trips, Trip):
+            trips = [trips]
 
-        if previous_idx is None:
-            previous_idx = max(len(route.stops) - 2, 0)
-        if following_idx is None:
-            following_idx = max(len(route.stops) - 1, 0)
+        routes = (self._compute_one(route, trip, previous_idx, following_idx, *args, **kwargs) for trip in trips)
+        routes = [r for r in routes if not only_feasible or r.feasible]
+        return routes
+
+    def _compute_one(self, route: Route, trip: Trip, previous_idx: int, following_idx: int, *args, **kwargs) -> Route:
 
         route = route.clone(previous_idx + 1)
 

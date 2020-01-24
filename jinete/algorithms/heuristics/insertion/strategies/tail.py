@@ -4,7 +4,6 @@ import logging
 from typing import (
     TYPE_CHECKING,
 )
-import itertools as it
 
 from .....models import (
     Trip,
@@ -26,12 +25,9 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class IntensiveInsertionStrategy(InsertionStrategy):
+class TailInsertionStrategy(InsertionStrategy):
 
     def compute(self, route: Route, trips: Union[Trip, Iterable[Trip]], *args, **kwargs) -> List[Route]:
-        if not isinstance(trips, Trip):
-            trips = tuple(trips)
-        routes = list()
-        for i, j in it.combinations(range(len(route.stops)), 2):
-            routes += super().compute(route, trips, i, j, *args, **kwargs)
-        return routes
+        previous_idx = max(len(route.stops) - 2, 0)
+        following_idx = max(len(route.stops) - 1, 0)
+        return super().compute(route, trips, previous_idx, following_idx, *args, **kwargs)

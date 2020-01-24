@@ -87,6 +87,7 @@ from .algorithms import (
     InsertionStrategy,
     SamplingInsertionStrategy,
     IntensiveInsertionStrategy,
+    TailInsertionStrategy,
 )
 
 from .exceptions import (

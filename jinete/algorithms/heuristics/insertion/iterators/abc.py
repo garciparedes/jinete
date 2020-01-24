@@ -14,10 +14,6 @@ from cached_property import (
 )
 from .....models import (
     Route,
-    ShortestTimeRouteCriterion,
-)
-from ..strategies import (
-    InsertionStrategy,
 )
 
 if TYPE_CHECKING:
@@ -34,6 +30,9 @@ if TYPE_CHECKING:
         Job,
         RouteCriterion,
     )
+    from ..strategies import (
+        InsertionStrategy,
+    )
 
 logger = logging.getLogger(__name__)
 
@@ -47,8 +46,10 @@ class InsertionIterator(ABC):
     def __init__(self, fleet: Fleet, job: Job, strategy_cls: Type[InsertionStrategy] = None,
                  criterion_cls: Type[RouteCriterion] = None, routes: Set[Route] = None, *args, **kwargs):
         if strategy_cls is None:
-            strategy_cls = InsertionStrategy
+            from ..strategies import TailInsertionStrategy
+            strategy_cls = TailInsertionStrategy
         if criterion_cls is None:
+            from .....models import ShortestTimeRouteCriterion
             criterion_cls = ShortestTimeRouteCriterion
 
         pending_trips = set(job.trips)
