@@ -31,7 +31,7 @@ class InsertionStrategy(object):
 
     def compute(self, route: Route, trips: Union[Trip, Iterable[Trip]], previous_idx: int = None,
                 following_idx: int = None, only_feasible: bool = None, *args, **kwargs) -> List[Route]:
-        assert (previous_idx is not None and following_idx is not None)
+        assert previous_idx < following_idx
 
         if only_feasible is None:
             only_feasible = self.only_feasible
