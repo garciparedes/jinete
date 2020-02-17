@@ -125,13 +125,10 @@ class PlannedTrip(Model):
         assert self.pickup in self.delivery.all_previous
         assert self.pickup_time <= self.delivery_time
 
-        if not self.trip.origin_earliest - ERROR_BOUND <= self.pickup_time <= self.trip.origin_latest + ERROR_BOUND:
+        if not self.pickup.feasible:
             return False
 
-        if not self.trip.destination_earliest - ERROR_BOUND <= self.delivery_time <= self.trip.destination_latest + ERROR_BOUND:  # noqa
-            return False
-
-        if not self.pickup.capacity <= self.vehicle.capacity + ERROR_BOUND:
+        if not self.delivery.feasible:
             return False
 
         if not self.duration <= self.trip.timeout + ERROR_BOUND:

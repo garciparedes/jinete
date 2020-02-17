@@ -420,7 +420,7 @@ class ThreeIndexModel(Model):
         for position in positions:
             if position == stops[-1].position:
                 continue
-            pickup = Stop(route, position, stops[-1])
+            pickup = Stop(route.vehicle, position, stops[-1])
             stops.append(pickup)
         return stops
 

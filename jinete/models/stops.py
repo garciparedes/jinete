@@ -130,6 +130,19 @@ class Stop(Model):
     def extend_deliveries(self, iterable: Iterable[PlannedTrip]) -> None:
         self.deliveries.update(iterable)
 
+    @cached_property
+    def feasible(self) -> bool:
+        if not self.earliest <= self.starting_time + ERROR_BOUND:
+            return False
+
+        if not self.starting_time <= self.latest + ERROR_BOUND:
+            return False
+
+        if not self.capacity <= self.vehicle.capacity + ERROR_BOUND:
+            return False
+
+        return True
+
     @property
     def previous_position(self) -> Position:
         if self.previous is None:
