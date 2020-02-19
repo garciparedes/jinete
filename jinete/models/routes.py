@@ -313,19 +313,19 @@ class _RouteCloner(object):
         return self._mapper
 
     def _initialize(self) -> None:
-        i = len(self.stops)
+        idx = len(self.stops)
         mapper = dict()
         mismatches = set()
-        while (i > 0) and (any(mismatches) or not i < self.desired_idx):
-            i -= 1
+        while (idx > 0) and (any(mismatches) or not idx < self.desired_idx):
+            idx -= 1
 
-            for planned_trip in self.stops[i].deliveries:
+            for planned_trip in self.stops[idx].deliveries:
                 mapper[planned_trip] = PlannedTrip(planned_trip.vehicle, planned_trip.trip)
 
-            mismatches = (mismatches | self.stops[i].deliveries) - self.stops[i].pickups
+            mismatches = (mismatches | self.stops[idx].deliveries) - self.stops[idx].pickups
         assert not any(mismatches)
         self._mapper = mapper
-        self._idx = i
+        self._idx = idx
 
     def map_pickup(self, stop: Stop, planned_trip: PlannedTrip):
         new_planner_trip = self.mapper[planned_trip]
@@ -338,17 +338,12 @@ class _RouteCloner(object):
         return new_planned_trip
 
     def clone(self) -> Route:
-        self._initialize()
-
         cloned_stops = self.stops[:self.idx]
         for stop in self.stops[self.idx:]:
             new_stop = Stop(stop.vehicle, stop.position, cloned_stops[-1] if len(cloned_stops) else None)
 
-            pickups = set(self.map_pickup(new_stop, pickup) for pickup in stop.pickups)
-            deliveries = set(self.map_delivery(new_stop, delivery) for delivery in stop.deliveries)
-
-            new_stop.pickups = pickups
-            new_stop.deliveries = deliveries
+            new_stop.pickups = set(self.map_pickup(new_stop, pickup) for pickup in stop.pickups)
+            new_stop.deliveries = set(self.map_delivery(new_stop, delivery) for delivery in stop.deliveries)
 
             cloned_stops.append(new_stop)
 
