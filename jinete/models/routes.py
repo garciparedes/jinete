@@ -93,22 +93,22 @@ class Route(Model):
         assert not any(mismatches)
         idx = i
 
-        def a(s, pt: PlannedTrip):
-            npt = mapper[pt]
-            npt.pickup = s
-            return npt
+        def map_pickup(stop: Stop, planned_trip: PlannedTrip):
+            new_planner_trip = mapper[planned_trip]
+            new_planner_trip.pickup = stop
+            return new_planner_trip
 
-        def b(s, pt: PlannedTrip):
-            npt = mapper[pt]
-            npt.delivery = s
-            return npt
+        def map_delivery(stop: Stop, planned_trip: PlannedTrip):
+            new_planned_trip = mapper[planned_trip]
+            new_planned_trip.delivery = stop
+            return new_planned_trip
 
         cloned_stops = self.stops[:idx]
         for stop in self.stops[idx:]:
             new_stop = Stop(stop.vehicle, stop.position, cloned_stops[-1] if len(cloned_stops) else None)
 
-            pickups = {a(new_stop, pickup) for pickup in stop.pickups}
-            deliveries = {b(new_stop, delivery) for delivery in stop.deliveries}
+            pickups = set(map_pickup(new_stop, pickup) for pickup in stop.pickups)
+            deliveries = set(map_delivery(new_stop, delivery) for delivery in stop.deliveries)
 
             new_stop.pickups = pickups
             new_stop.deliveries = deliveries
