@@ -80,43 +80,8 @@ class Route(Model):
         return route
 
     def clone(self, idx: int = 0) -> Route:
-        i = len(self.stops)
-        mapper = dict()
-        mismatches = set()
-        while (i > 0) and (any(mismatches) or not i < idx):
-            i -= 1
-
-            for planned_trip in self.stops[i].deliveries:
-                mapper[planned_trip] = PlannedTrip(planned_trip.vehicle, planned_trip.trip)
-
-            mismatches = (mismatches | self.stops[i].deliveries) - self.stops[i].pickups
-        assert not any(mismatches)
-        idx = i
-
-        def map_pickup(stop: Stop, planned_trip: PlannedTrip):
-            new_planner_trip = mapper[planned_trip]
-            new_planner_trip.pickup = stop
-            return new_planner_trip
-
-        def map_delivery(stop: Stop, planned_trip: PlannedTrip):
-            new_planned_trip = mapper[planned_trip]
-            new_planned_trip.delivery = stop
-            return new_planned_trip
-
-        cloned_stops = self.stops[:idx]
-        for stop in self.stops[idx:]:
-            new_stop = Stop(stop.vehicle, stop.position, cloned_stops[-1] if len(cloned_stops) else None)
-
-            pickups = set(map_pickup(new_stop, pickup) for pickup in stop.pickups)
-            deliveries = set(map_delivery(new_stop, delivery) for delivery in stop.deliveries)
-
-            new_stop.pickups = pickups
-            new_stop.deliveries = deliveries
-
-            cloned_stops.append(new_stop)
-
-        cloned_route = Route(self.vehicle, cloned_stops)
-        return cloned_route
+        cloner = _RouteCloner(self, idx)
+        return cloner.clone()
 
     @property
     def identifier(self):
@@ -316,3 +281,76 @@ class Route(Model):
         assert old_len - 2 == len(self.stops)
         assert all(s1 == s2.previous for s1, s2 in zip(self.stops[:-1], self.stops[1:]))
         assert all(s1.departure_time <= s2.arrival_time for s1, s2 in zip(self.stops[:-1], self.stops[1:]))
+
+
+class _RouteCloner(object):
+
+    def __init__(self, route: Route, idx: int = 0):
+        self.route = route
+        self.desired_idx = idx
+
+        self._idx = None
+        self._mapper = None
+
+    @property
+    def stops(self) -> List[Stop]:
+        return self.route.stops
+
+    @property
+    def vehicle(self) -> Vehicle:
+        return self.route.vehicle
+
+    @property
+    def idx(self) -> int:
+        if self._idx is None:
+            self._initialize()
+        return self._idx
+
+    @property
+    def mapper(self) -> Dict[PlannedTrip, PlannedTrip]:
+        if self._mapper is None:
+            self._initialize()
+        return self._mapper
+
+    def _initialize(self) -> None:
+        i = len(self.stops)
+        mapper = dict()
+        mismatches = set()
+        while (i > 0) and (any(mismatches) or not i < self.desired_idx):
+            i -= 1
+
+            for planned_trip in self.stops[i].deliveries:
+                mapper[planned_trip] = PlannedTrip(planned_trip.vehicle, planned_trip.trip)
+
+            mismatches = (mismatches | self.stops[i].deliveries) - self.stops[i].pickups
+        assert not any(mismatches)
+        self._mapper = mapper
+        self._idx = i
+
+    def map_pickup(self, stop: Stop, planned_trip: PlannedTrip):
+        new_planner_trip = self.mapper[planned_trip]
+        new_planner_trip.pickup = stop
+        return new_planner_trip
+
+    def map_delivery(self, stop: Stop, planned_trip: PlannedTrip):
+        new_planned_trip = self.mapper[planned_trip]
+        new_planned_trip.delivery = stop
+        return new_planned_trip
+
+    def clone(self) -> Route:
+        self._initialize()
+
+        cloned_stops = self.stops[:self.idx]
+        for stop in self.stops[self.idx:]:
+            new_stop = Stop(stop.vehicle, stop.position, cloned_stops[-1] if len(cloned_stops) else None)
+
+            pickups = set(self.map_pickup(new_stop, pickup) for pickup in stop.pickups)
+            deliveries = set(self.map_delivery(new_stop, delivery) for delivery in stop.deliveries)
+
+            new_stop.pickups = pickups
+            new_stop.deliveries = deliveries
+
+            cloned_stops.append(new_stop)
+
+        cloned_route = Route(self.vehicle, cloned_stops)
+        return cloned_route
