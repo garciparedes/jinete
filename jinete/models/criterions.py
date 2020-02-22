@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 from abc import ABC, abstractmethod
+from statistics import mean
 from typing import TYPE_CHECKING
 
 from .constants import (
@@ -60,6 +61,25 @@ class EarliestLastDepartureTimeRouteCriterion(RouteCriterion):
             return MAX_FLOAT
 
         return route.last_departure_time
+
+
+class ShortestAveragePlannerTripDurationCriterion(RouteCriterion):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            direction=OptimizationDirection.MINIMIZATION,
+            name='Shortest-Time',
+            *args, **kwargs,
+        )
+
+    def scoring(self, route: Route) -> float:
+        if not route.feasible:
+            return MAX_FLOAT
+
+        if not any(route.planned_trips):
+            return 0
+
+        return mean(planned_trip.duration for planned_trip in route.planned_trips)
 
 
 class ShortestTimeRouteCriterion(RouteCriterion):

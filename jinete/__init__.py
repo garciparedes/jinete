@@ -30,6 +30,7 @@ from .models import (
     HashCodeObjective,
 
     RouteCriterion,
+    ShortestAveragePlannerTripDurationCriterion,
     EarliestLastDepartureTimeRouteCriterion,
     ShortestTimeRouteCriterion,
     LongestTimeRouteCriterion,

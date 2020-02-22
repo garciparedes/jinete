@@ -58,6 +58,10 @@ class InsertionStrategy(object):
         return route
 
     def _improve_ride_times(self, route: Route, idx: int) -> None:
+        if route.stops[1].waiting_time != 0:
+            route.stops[0].starting_time = route.stops[1].waiting_time
+            route.stops[0].flush(), route.stops[1].flush()
+
         if route.feasible:
             return
 

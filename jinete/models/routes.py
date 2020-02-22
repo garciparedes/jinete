@@ -157,10 +157,7 @@ class Route(Model):
 
     @property
     def first_departure_time(self) -> float:
-        value = self.first_stop.departure_time
-        if len(self.stops) > 1:
-            value -= self.stops[1].waiting_time
-        return value
+        return self.first_stop.departure_time
 
     @property
     def last_stop(self) -> Stop:
@@ -326,6 +323,8 @@ class RouteCloner(object):
                 mapper[planned_trip] = PlannedTrip(planned_trip.vehicle, planned_trip.trip)
 
             mismatches = (mismatches | self.stops[idx].deliveries) - self.stops[idx].pickups
+        if idx == 1:
+            idx -= 1
         assert not any(mismatches)
         self._mapper = mapper
         self._idx = idx
@@ -343,7 +342,8 @@ class RouteCloner(object):
     def clone(self) -> Route:
         cloned_stops = self.stops[:self.idx]
         for stop in self.stops[self.idx:]:
-            new_stop = Stop(stop.vehicle, stop.position, cloned_stops[-1] if len(cloned_stops) else None)
+            new_stop = Stop(stop.vehicle, stop.position, cloned_stops[-1] if len(cloned_stops) else None,
+                            starting_time=stop._starting_time)
 
             new_stop.pickups = set(self.map_pickup(new_stop, pickup) for pickup in stop.pickups)
             new_stop.deliveries = set(self.map_delivery(new_stop, delivery) for delivery in stop.deliveries)
