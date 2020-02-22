@@ -157,7 +157,10 @@ class Route(Model):
 
     @property
     def first_departure_time(self) -> float:
-        return self.first_stop.departure_time
+        value = self.first_stop.departure_time
+        if len(self.stops) > 1:
+            value -= self.stops[1].waiting_time
+        return value
 
     @property
     def last_stop(self) -> Stop:

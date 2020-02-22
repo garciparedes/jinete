@@ -49,8 +49,8 @@ class InsertionIterator(ABC):
             from ..strategies import TailInsertionStrategy
             strategy_cls = TailInsertionStrategy
         if criterion_cls is None:
-            from .....models import ShortestTimeRouteCriterion
-            criterion_cls = ShortestTimeRouteCriterion
+            from .....models import EarliestLastDepartureTimeRouteCriterion
+            criterion_cls = EarliestLastDepartureTimeRouteCriterion
 
         pending_trips = set(job.trips)
         if routes is None:

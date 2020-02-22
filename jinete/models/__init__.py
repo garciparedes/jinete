@@ -23,6 +23,7 @@ from .services import (
 )
 from .criterions import (
     RouteCriterion,
+    EarliestLastDepartureTimeRouteCriterion,
     ShortestTimeRouteCriterion,
     LongestTimeRouteCriterion,
     LongestUtilTimeRouteCriterion,

@@ -124,12 +124,6 @@ class Stop(Model):
         assert planned_trip.destination == self.position
         self.deliveries.add(planned_trip)
 
-    def extend_pickups(self, iterable: Iterable[PlannedTrip]) -> None:
-        self.pickups.update(iterable)
-
-    def extend_deliveries(self, iterable: Iterable[PlannedTrip]) -> None:
-        self.deliveries.update(iterable)
-
     @cached_property
     def feasible(self) -> bool:
         if not self.earliest <= self.starting_time + ERROR_BOUND:
@@ -181,9 +175,8 @@ class Stop(Model):
     def starting_time(self) -> float:
         value = self._starting_time
         if value is None:
-            value = max(self.arrival_time, self.earliest)
-        assert value >= max(self.arrival_time, self.earliest) - ERROR_BOUND
-        return value
+            value = self.arrival_time
+        return max((value, self.earliest, self.arrival_time))
 
     @starting_time.setter
     def starting_time(self, value: float) -> None:
@@ -227,16 +220,3 @@ class Stop(Model):
         self.flush()
         if self.previous is not None:
             self.previous.flush_all_previous()
-
-    def merge(self, other: Stop) -> None:
-        if self == other:
-            return
-        assert self.position == other.position
-
-        self.extend_pickups(other.pickups)
-        for planned_trip in other.pickups:
-            planned_trip.pickup = self
-
-        self.extend_deliveries(other.deliveries)
-        for planned_trip in other.deliveries:
-            planned_trip.delivery = self

@@ -66,35 +66,6 @@ class TestStop(unittest.TestCase):
         self.assertEqual(0, len(tuple(stop.planned_trips)))
         self.assertEqual(0, len(tuple(stop.trips)))
 
-    def test_merge_pickup(self):
-        planned_trip = generate_one_planned_trip(True)
-        other = planned_trip.pickup
-        base = jit.Stop(planned_trip.vehicle, other.position, other.previous)
-
-        self.assertNotIn(planned_trip, base.pickups)
-        self.assertNotEqual(planned_trip.pickup, base)
-
-        base.merge(other)
-
-        self.assertIn(planned_trip, base.pickups)
-        self.assertEqual(planned_trip.pickup, base)
-        self.assertEqual(0, len(base.deliveries))
-
-    def test_merge_delivery(self):
-        planned_trip = generate_one_planned_trip(True)
-        other = planned_trip.delivery
-
-        base = jit.Stop(planned_trip.vehicle, other.position, other.previous)
-
-        self.assertNotIn(planned_trip, base.deliveries)
-        self.assertNotEqual(planned_trip.delivery, base)
-
-        base.merge(other)
-
-        self.assertIn(planned_trip, base.deliveries)
-        self.assertEqual(planned_trip.delivery, base)
-        self.assertEqual(0, len(base.pickups))
-
     def test_creation_with_previous(self):
         previous_position = generate_one_position()
         previous_stop = jit.Stop(self.vehicle, previous_position, None)

@@ -46,6 +46,22 @@ class RouteCriterion(ABC):
         return self.direction.nbest(n, routes, key=self.scoring, inplace=inplace)
 
 
+class EarliestLastDepartureTimeRouteCriterion(RouteCriterion):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            direction=OptimizationDirection.MINIMIZATION,
+            name='Shortest-Time',
+            *args, **kwargs,
+        )
+
+    def scoring(self, route: Route) -> float:
+        if not route.feasible:
+            return MAX_FLOAT
+
+        return route.last_departure_time
+
+
 class ShortestTimeRouteCriterion(RouteCriterion):
 
     def __init__(self, *args, **kwargs):
