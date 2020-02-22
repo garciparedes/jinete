@@ -131,10 +131,14 @@ class PlannedTrip(Model):
         if not self.delivery.feasible:
             return False
 
-        if not self.duration <= self.trip.timeout + ERROR_BOUND:
+        if not self.duration <= self.timeout + ERROR_BOUND:
             return False
 
         return True
+
+    @property
+    def timeout(self) -> float:
+        return self.trip.timeout
 
     @property
     def empty(self) -> bool:

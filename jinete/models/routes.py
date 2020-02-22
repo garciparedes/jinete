@@ -80,7 +80,7 @@ class Route(Model):
         return route
 
     def clone(self, idx: int = 0) -> Route:
-        cloner = _RouteCloner(self, idx)
+        cloner = RouteCloner(self, idx)
         return cloner.clone()
 
     @property
@@ -283,7 +283,7 @@ class Route(Model):
         assert all(s1.departure_time <= s2.arrival_time for s1, s2 in zip(self.stops[:-1], self.stops[1:]))
 
 
-class _RouteCloner(object):
+class RouteCloner(object):
 
     def __init__(self, route: Route, idx: int = 0):
         self.route = route

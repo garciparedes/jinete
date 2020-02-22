@@ -45,6 +45,7 @@ from .vehicles import (
 )
 from .routes import (
     Route,
+    RouteCloner
 )
 from .plannings import (
     Planning,

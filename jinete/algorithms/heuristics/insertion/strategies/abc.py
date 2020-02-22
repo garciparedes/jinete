@@ -9,6 +9,7 @@ from .....models import (
     Stop,
     PlannedTrip,
     Trip,
+    RouteCloner,
 )
 
 if TYPE_CHECKING:
@@ -44,8 +45,8 @@ class InsertionStrategy(object):
         return routes
 
     def _compute_one(self, route: Route, trip: Trip, previous_idx: int, following_idx: int, *args, **kwargs) -> Route:
-
-        route = route.clone(previous_idx + 1)
+        cloner = RouteCloner(route, previous_idx + 1)
+        route = cloner.clone()
 
         pickup = self._build_pickup(route, trip, previous_idx)
         delivery = self._build_delivery(route, trip, previous_idx, following_idx, pickup)
