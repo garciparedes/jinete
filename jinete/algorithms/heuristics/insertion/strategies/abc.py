@@ -65,11 +65,11 @@ class InsertionStrategy(object):
         if route.feasible:
             return
 
-        i = idx
+        i = max(idx, 1)
         while i < len(route.stops):
             stop = route.stops[i]
             planned_trip = max(
-                (pt for pt in stop.pickups if pt.duration <= pt.timeout),
+                (pt for pt in stop.pickups if pt.duration > pt.timeout),
                 default=None,
                 key=lambda pt: (pt.delivery_time - pt.timeout)
             )
