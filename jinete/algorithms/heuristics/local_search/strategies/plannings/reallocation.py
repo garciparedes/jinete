@@ -15,12 +15,13 @@ class ReallocationLocalSearchStrategy(LocalSearchStrategy):
         strategy = InsertionStrategy()
         logger.info(f'Starting to improve "Result" with "{self.__class__.__name__}"...')
         overwritten_routes = set()
-        cost = - float('inf')
+        base_cost = self.objective.optimization_function(self.planning)[-1]
+        best_cost = base_cost
         for origin, destination in it.permutations(self.routes, 2):
-            cost = max(cost, sum([
-                self.objective.optimization_function(origin)[-1],
-                self.objective.optimization_function(destination)[-1],
-            ]))
+
+            partial_cost = base_cost
+            partial_cost -= self.objective.optimization_function(origin)[-1]
+            partial_cost -= self.objective.optimization_function(destination)[-1]
 
             for trip in origin.trips:
                 new_origin = origin.clone()
@@ -30,19 +31,20 @@ class ReallocationLocalSearchStrategy(LocalSearchStrategy):
                 if not new_origin.feasible:
                     continue
 
-                partial_cost = self.objective.optimization_function(new_origin)
+                partial_cost_origin = partial_cost + self.objective.optimization_function(new_origin)[-1]
+
                 for i, j in it.combinations(range(len(destination.stops) - 1), 2):
                     destinations = strategy.compute(destination, trip, i, j)
                     if not any(destinations):
                         continue
                     new_destination = destinations[0]
 
-                    new_cost = partial_cost[-1] + self.objective.optimization_function(new_destination)[-1]
-                    if not new_cost > cost:
+                    new_cost = partial_cost_origin + self.objective.optimization_function(new_destination)[-1]
+                    if not new_cost > best_cost:
                         continue
 
-                    logger.info(f'Improved planning with "{self.__class__.__name__}": "{new_cost}" > "{cost}"')
+                    logger.info(f'Improved planning with "{self.__class__.__name__}": "{new_cost}" > "{best_cost}"')
                     overwritten_routes = {new_origin, new_destination}
-                    cost = new_cost
+                    best_cost = new_cost
 
         self._update_routes(overwritten_routes)

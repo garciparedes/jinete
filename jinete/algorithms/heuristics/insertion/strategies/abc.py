@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from operator import attrgetter
 from typing import (
     TYPE_CHECKING,
 )
@@ -65,42 +66,21 @@ class InsertionStrategy(object):
         if route.feasible:
             return
 
-        i = max(idx, 1)
-        while i < len(route.stops):
+        for i in reversed(range(max(idx, 1), len(route.stops))):
             stop = route.stops[i]
-            planned_trip = max(
-                (pt for pt in stop.pickups if pt.duration > pt.timeout),
-                default=None,
-                key=lambda pt: (pt.delivery_time - pt.timeout)
-            )
+            planned_trip = max(stop.pickup_planned_trips, default=None, key=attrgetter('duration'))
             if planned_trip is None:
-                i += 1
                 continue
 
-            value = planned_trip.delivery_time - planned_trip.timeout
-
-            if stop.starting_time >= value:
-                i += 1
-                continue
-
-            stop.starting_time = value
+            stop.starting_time += max(planned_trip.duration - planned_trip.timeout, 0)
 
             for s in route.stops[i:]:
                 s.flush()
 
-            route.flush()
-            if route.feasible:
-                return
-
-            max_idx = route.stops.index(planned_trip.delivery)
-
-            stops = route.stops[i + 1:max_idx - 1]
-            iterable = (min((route.stops.index(s2.pickup) for s2 in s.deliveries), default=9999) for s in stops)
-            i_candidate = min(iterable, default=9999)
-            if i_candidate == 9999 or i_candidate <= i:
-                i += 1
-                continue
-            i = i_candidate
+        route.flush()
+        if route.feasible:
+            # print(f'feasible!')
+            pass
 
     @staticmethod
     def _build_pickup(route: Route, trip: Trip, previous_idx: int) -> Stop:

@@ -95,11 +95,11 @@ class Route(Model):
 
     @property
     def pickups(self) -> Iterator[PlannedTrip]:
-        return it.chain.from_iterable(stop.pickups for stop in self.stops)
+        return it.chain.from_iterable(stop.pickup_planned_trips for stop in self.stops)
 
     @property
     def deliveries(self) -> Iterator[PlannedTrip]:
-        return it.chain.from_iterable(stop.deliveries for stop in self.stops)
+        return it.chain.from_iterable(stop.delivery_planned_trips for stop in self.stops)
 
     @property
     def positions(self) -> Iterator[Position]:
@@ -238,7 +238,7 @@ class Route(Model):
     def insert_stop_at(self, idx: int, stop: Stop) -> Stop:
         following_stop = self.stops[idx] or None
 
-        assert set(stop.pickups).isdisjoint(stop.deliveries)
+        assert set(stop.pickup_planned_trips).isdisjoint(stop.delivery_planned_trips)
 
         if following_stop is not None:
             following_stop.previous = stop
@@ -327,10 +327,10 @@ class RouteCloner(object):
         while (idx > 0) and (any(mismatches) or not idx < self.desired_idx):
             idx -= 1
 
-            for planned_trip in self.stops[idx].deliveries:
+            for planned_trip in self.stops[idx].delivery_planned_trips:
                 mapper[planned_trip] = PlannedTrip(planned_trip.vehicle, planned_trip.trip)
 
-            mismatches = (mismatches | self.stops[idx].deliveries) - self.stops[idx].pickups
+            mismatches = (mismatches | self.stops[idx].delivery_planned_trips) - self.stops[idx].pickup_planned_trips
         if idx == 1:
             idx -= 1
         assert not any(mismatches)
@@ -353,8 +353,8 @@ class RouteCloner(object):
             new_stop = Stop(stop.vehicle, stop.position, cloned_stops[-1] if len(cloned_stops) else None,
                             starting_time=stop._starting_time)
 
-            new_stop.pickups = set(self.map_pickup(new_stop, pickup) for pickup in stop.pickups)
-            new_stop.deliveries = set(self.map_delivery(new_stop, delivery) for delivery in stop.deliveries)
+            new_stop.pickup_planned_trips = set(self.map_pickup(new_stop, pickup) for pickup in stop.pickup_planned_trips)
+            new_stop.delivery_planned_trips = set(self.map_delivery(new_stop, delivery) for delivery in stop.delivery_planned_trips)
 
             cloned_stops.append(new_stop)
 

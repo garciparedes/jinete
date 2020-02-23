@@ -135,16 +135,16 @@ class TestStop(unittest.TestCase):
             vehicle=self.vehicle,
             pickup_stop=stop,
         )
-        self.assertIn(delivery_planned_trip, stop.deliveries)
-        self.assertNotIn(delivery_planned_trip, stop.pickups)
+        self.assertIn(delivery_planned_trip, stop.delivery_planned_trips)
+        self.assertNotIn(delivery_planned_trip, stop.pickup_planned_trips)
 
-        self.assertNotIn(pickup_planned_trip, stop.deliveries)
-        self.assertIn(pickup_planned_trip, stop.pickups)
+        self.assertNotIn(pickup_planned_trip, stop.delivery_planned_trips)
+        self.assertIn(pickup_planned_trip, stop.pickup_planned_trips)
         self.assertIsInstance(stop.identifier, str)
 
         iterable = it.chain(
-            (f'P{planned_trip.trip_identifier}' for planned_trip in stop.pickups),
-            (f'D{planned_trip.trip_identifier}' for planned_trip in stop.deliveries),
+            (f'P{planned_trip.trip_identifier}' for planned_trip in stop.pickup_planned_trips),
+            (f'D{planned_trip.trip_identifier}' for planned_trip in stop.delivery_planned_trips),
         )
         identifier = '|'.join(iterable)
         identifier = f'[{identifier}]'

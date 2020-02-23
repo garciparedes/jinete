@@ -21,8 +21,8 @@ class TwoOPTLocalSearchStrategy(LocalSearchStrategy):
             for i, j in combinations(range(1, len(route.stops) - 1), 2):
                 condition = any(
                     any(
-                        delivery in chain.from_iterable(b.pickups for b in route.stops[i:(j + 1)])
-                        for delivery in a.deliveries
+                        delivery in chain.from_iterable(b.pickup_planned_trips for b in route.stops[i:(j + 1)])
+                        for delivery in a.delivery_planned_trips
                     )
                     for a in route.stops[i:(j + 1)]
                 )

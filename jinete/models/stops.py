@@ -44,16 +44,16 @@ class Stop(Model):
     __slots__ = [
         'vehicle',
         'position',
-        'pickups',
-        'deliveries',
+        'pickup_planned_trips',
+        'delivery_planned_trips',
         'previous',
         '_starting_time',
     ]
     vehicle: Vehicle
     position: Position
     previous: Optional[Stop]
-    pickups: Set[PlannedTrip, ...]
-    deliveries: Set[PlannedTrip, ...]
+    pickup_planned_trips: Set[PlannedTrip, ...]
+    delivery_planned_trips: Set[PlannedTrip, ...]
 
     def __init__(self, vehicle: Vehicle, position: Position, previous: Optional[Stop],
                  pickups: Set[PlannedTrip, ...] = None, deliveries: Set[PlannedTrip, ...] = None,
@@ -67,8 +67,8 @@ class Stop(Model):
         self.vehicle = vehicle
         self.position = position
 
-        self.pickups = pickups
-        self.deliveries = deliveries
+        self.pickup_planned_trips = pickups
+        self.delivery_planned_trips = deliveries
 
         self.previous = previous
         self._starting_time = starting_time
@@ -76,8 +76,8 @@ class Stop(Model):
     @property
     def identifier(self) -> str:
         iterable = it.chain(
-            (f'P{planned_trip.trip_identifier}' for planned_trip in self.pickups),
-            (f'D{planned_trip.trip_identifier}' for planned_trip in self.deliveries),
+            (f'P{planned_trip.trip_identifier}' for planned_trip in self.pickup_planned_trips),
+            (f'D{planned_trip.trip_identifier}' for planned_trip in self.delivery_planned_trips),
         )
         identifier = '|'.join(iterable)
         identifier = f'[{identifier}]'
@@ -85,8 +85,8 @@ class Stop(Model):
 
     @property
     def planned_trips(self) -> Iterator[PlannedTrip]:
-        yield from self.pickups
-        yield from self.deliveries
+        yield from self.pickup_planned_trips
+        yield from self.delivery_planned_trips
 
     @property
     def trips(self):
@@ -95,8 +95,8 @@ class Stop(Model):
     @cached_property
     def capacity(self) -> float:
         result = self.previous_capacity
-        result += sum(trip.capacity for trip in self.pickups)
-        result -= sum(trip.capacity for trip in self.deliveries)
+        result += sum(trip.capacity for trip in self.pickup_planned_trips)
+        result -= sum(trip.capacity for trip in self.delivery_planned_trips)
         assert 0 <= result
         return result
 
@@ -114,15 +114,15 @@ class Stop(Model):
 
     @property
     def all_previous_pickups(self) -> Iterator[PlannedTrip]:
-        return it.chain.from_iterable(stop.pickups for stop in self.all_previous)
+        return it.chain.from_iterable(stop.pickup_planned_trips for stop in self.all_previous)
 
     def append_pickup(self, planned_trip: PlannedTrip) -> None:
         assert planned_trip.origin == self.position
-        self.pickups.add(planned_trip)
+        self.pickup_planned_trips.add(planned_trip)
 
     def append_delivery(self, planned_trip: PlannedTrip) -> None:
         assert planned_trip.destination == self.position
-        self.deliveries.add(planned_trip)
+        self.delivery_planned_trips.add(planned_trip)
 
     @cached_property
     def feasible(self) -> bool:
@@ -186,22 +186,22 @@ class Stop(Model):
     @property
     def earliest(self) -> float:
         return max(it.chain(
-            (pt.trip.origin_earliest for pt in self.pickups),
-            (pt.trip.destination_earliest for pt in self.deliveries),
+            (pt.trip.origin_earliest for pt in self.pickup_planned_trips),
+            (pt.trip.destination_earliest for pt in self.delivery_planned_trips),
         ), default=0.0)
 
     @property
     def latest(self) -> float:
         return min(it.chain(
-            (pt.trip.origin_latest for pt in self.pickups),
-            (pt.trip.destination_latest for pt in self.deliveries),
+            (pt.trip.origin_latest for pt in self.pickup_planned_trips),
+            (pt.trip.destination_latest for pt in self.delivery_planned_trips),
         ), default=MAX_FLOAT)
 
     @property
     def load_time(self) -> float:
         return max(it.chain(
-            (pt.trip.origin_duration for pt in self.pickups),
-            (pt.trip.destination_duration for pt in self.deliveries),
+            (pt.trip.origin_duration for pt in self.pickup_planned_trips),
+            (pt.trip.destination_duration for pt in self.delivery_planned_trips),
         ), default=0.0)
 
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
