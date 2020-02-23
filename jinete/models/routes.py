@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import logging
 from copy import deepcopy
+from functools import reduce
+from operator import and_
 from typing import (
     TYPE_CHECKING,
 )
@@ -103,6 +105,14 @@ class Route(Model):
     def positions(self) -> Iterator[Position]:
         yield from (stop.position for stop in self.stops)
 
+    @property
+    def feasible_stops(self) -> bool:
+        return reduce(and_, (stop.feasible for stop in self.stops), True)
+
+    @property
+    def feasible_planned_trips(self) -> bool:
+        return reduce(and_, (planned_trip.feasible for planned_trip in self.planned_trips), True)
+
     @cached_property
     def feasible(self) -> bool:
         if not self.first_stop.position == self.vehicle.origin_position:
@@ -115,10 +125,8 @@ class Route(Model):
             return False
         if not self.duration <= self.vehicle.timeout + ERROR_BOUND:
             return False
-        for planned_trip in self.planned_trips:
-            planned_trip.flush()
-            if not planned_trip.feasible:
-                return False
+        if not self.feasible_planned_trips:
+            return False
         return True
 
     def flush(self):
