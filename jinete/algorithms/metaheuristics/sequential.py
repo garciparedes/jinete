@@ -38,9 +38,15 @@ class SequentialAlgorithm(Algorithm):
             from ..heuristics import (
                 LocalSearchAlgorithm,
                 ReallocationLocalSearchStrategy,
+                RepositionLocalSearchStrategy,
             )
             algorithms_cls = [
-                (LocalSearchAlgorithm, {**kwargs, 'strategy_cls': ReallocationLocalSearchStrategy}),
+                (LocalSearchAlgorithm, {
+                    **kwargs, 'strategy_cls': ReallocationLocalSearchStrategy, 'ignore_improvement_threshold': True
+                }),
+                (LocalSearchAlgorithm, {
+                    **kwargs, 'strategy_cls': RepositionLocalSearchStrategy, 'ignore_improvement_threshold': True
+                },),
                 (IterativeAlgorithm, kwargs),
             ]
 

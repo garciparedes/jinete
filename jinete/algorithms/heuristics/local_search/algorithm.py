@@ -30,8 +30,8 @@ logger = logging.getLogger(__name__)
 
 class LocalSearchAlgorithm(Algorithm):
 
-    def __init__(self, initial: Result, no_improvement_threshold: int = 1, strategy_cls: LocalSearchStrategy = None,
-                 *args, **kwargs):
+    def __init__(self, initial: Result, no_improvement_threshold: int = 1, ignore_improvement_threshold: bool = False,
+                 strategy_cls: LocalSearchStrategy = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if strategy_cls is None:
             strategy_cls = ReallocationLocalSearchStrategy
@@ -41,6 +41,7 @@ class LocalSearchAlgorithm(Algorithm):
         self.kwargs = kwargs
         self.strategy_cls = strategy_cls
         self.no_improvement_threshold = no_improvement_threshold
+        self.ignore_improvement_threshold = ignore_improvement_threshold
 
     @property
     def initial_planning(self) -> Planning:
@@ -60,7 +61,7 @@ class LocalSearchAlgorithm(Algorithm):
             current = self.strategy_cls(best).improve()
             best = self.objective.best(best, current)
 
-            if best == current:
+            if best == current and not self.ignore_improvement_threshold:
                 no_improvement_count = 0
 
         assert best is not None

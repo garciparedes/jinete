@@ -4,6 +4,7 @@ from .abc import (
 
 from .routes import (
     OneShiftLocalSearchStrategy,
+    RepositionLocalSearchStrategy,
     TwoOPTLocalSearchStrategy,
 )
 from .plannings import (

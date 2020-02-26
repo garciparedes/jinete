@@ -13,6 +13,7 @@ from .heuristics import (
     RankingInsertionIterator,
     LocalSearchStrategy,
     OneShiftLocalSearchStrategy,
+    RepositionLocalSearchStrategy,
     TwoOPTLocalSearchStrategy,
     ReallocationLocalSearchStrategy,
     InsertionStrategy,
