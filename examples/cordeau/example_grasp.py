@@ -18,7 +18,7 @@ DATASETS_PATH = BASE_PATH / 'res' / 'datasets'
 def main():
     logger.info('Starting...')
 
-    file_path = DATASETS_PATH / 'cordeau-laporte' / 'R2a.txt'
+    file_path = DATASETS_PATH / 'cordeau-laporte' / 'a2-16.txt'
 
     solver = jit.Solver(
         loader_kwargs={
