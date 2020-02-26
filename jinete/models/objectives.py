@@ -91,7 +91,7 @@ class Objective(ABC):
     def _stop_optimization_function(self, stop: Stop) -> Tuple[float, ...]:
         return reduce(
             lambda a, b: tuple(map(add, a, b)),
-            (self._planned_trip_optimization_function(planned_trip) for planned_trip in stop.pickups),
+            (self._planned_trip_optimization_function(planned_trip) for planned_trip in stop.pickup_planned_trips),
             tuple(0 for _ in range(self.dimension_count)),
         )
 

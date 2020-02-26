@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import logging
 from copy import deepcopy
+from functools import reduce
+from operator import and_
 from typing import (
     TYPE_CHECKING,
 )
@@ -80,43 +82,8 @@ class Route(Model):
         return route
 
     def clone(self, idx: int = 0) -> Route:
-        i = len(self.stops)
-        mapper = dict()
-        mismatches = set()
-        while (i > 0) and (any(mismatches) or not i < idx):
-            i -= 1
-
-            for planned_trip in self.stops[i].deliveries:
-                mapper[planned_trip] = PlannedTrip(planned_trip.vehicle, planned_trip.trip)
-
-            mismatches = (mismatches | self.stops[i].deliveries) - self.stops[i].pickups
-        assert not any(mismatches)
-        idx = i
-
-        def a(s, pt: PlannedTrip):
-            npt = mapper[pt]
-            npt.pickup = s
-            return npt
-
-        def b(s, pt: PlannedTrip):
-            npt = mapper[pt]
-            npt.delivery = s
-            return npt
-
-        cloned_stops = self.stops[:idx]
-        for stop in self.stops[idx:]:
-            new_stop = Stop(stop.vehicle, stop.position, cloned_stops[-1] if len(cloned_stops) else None)
-
-            pickups = {a(new_stop, pickup) for pickup in stop.pickups}
-            deliveries = {b(new_stop, delivery) for delivery in stop.deliveries}
-
-            new_stop.pickups = pickups
-            new_stop.deliveries = deliveries
-
-            cloned_stops.append(new_stop)
-
-        cloned_route = Route(self.vehicle, cloned_stops)
-        return cloned_route
+        cloner = RouteCloner(self, idx)
+        return cloner.clone()
 
     @property
     def identifier(self):
@@ -128,15 +95,23 @@ class Route(Model):
 
     @property
     def pickups(self) -> Iterator[PlannedTrip]:
-        return it.chain.from_iterable(stop.pickups for stop in self.stops)
+        return it.chain.from_iterable(stop.pickup_planned_trips for stop in self.stops)
 
     @property
     def deliveries(self) -> Iterator[PlannedTrip]:
-        return it.chain.from_iterable(stop.deliveries for stop in self.stops)
+        return it.chain.from_iterable(stop.delivery_planned_trips for stop in self.stops)
 
     @property
     def positions(self) -> Iterator[Position]:
         yield from (stop.position for stop in self.stops)
+
+    @property
+    def feasible_stops(self) -> bool:
+        return reduce(and_, (stop.feasible for stop in self.stops), True)
+
+    @property
+    def feasible_planned_trips(self) -> bool:
+        return reduce(and_, (planned_trip.feasible for planned_trip in self.planned_trips), True)
 
     @cached_property
     def feasible(self) -> bool:
@@ -150,10 +125,8 @@ class Route(Model):
             return False
         if not self.duration <= self.vehicle.timeout + ERROR_BOUND:
             return False
-        for planned_trip in self.planned_trips:
-            planned_trip.flush()
-            if not planned_trip.feasible:
-                return False
+        if not self.feasible_planned_trips:
+            return False
         return True
 
     def flush(self):
@@ -191,23 +164,13 @@ class Route(Model):
         return stop
 
     @property
-    def second_stop(self) -> Stop:
-        stop = self.stops[1]
-        assert stop.previous is self.first_stop
-        return stop
-
-    @property
-    def second_starting_time(self) -> float:
-        return self.second_stop.arrival_time
+    def first_departure_time(self) -> float:
+        return self.first_stop.departure_time
 
     @property
     def last_stop(self) -> Stop:
         stop = self.stops[-1]
         return stop
-
-    @property
-    def last_arrival_time(self) -> float:
-        return self.last_stop.arrival_time
 
     @property
     def last_departure_time(self) -> float:
@@ -236,7 +199,7 @@ class Route(Model):
 
     @property
     def duration(self) -> float:
-        return self.last_departure_time - self.second_starting_time
+        return self.last_departure_time - self.first_departure_time
 
     @property
     def transit_time(self) -> float:
@@ -259,10 +222,13 @@ class Route(Model):
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
         yield from (
             ('vehicle_identifier', self.vehicle_identifier),
-            ('trip_identifiers', tuple(trip.identifier for trip in self.trips))
+            ('stops_identifiers', tuple(stop.identifier for stop in self.stops))
         )
 
     def insert_stop(self, stop: Stop) -> Stop:
+        if stop.previous is None:
+            self.remove_stop_at(0)
+            return self.insert_stop_at(0, stop)
         for idx in range(len(self.stops)):
             if self.stops[idx] != stop.previous:
                 continue
@@ -270,14 +236,9 @@ class Route(Model):
         raise PreviousStopNotInRouteException(stop)
 
     def insert_stop_at(self, idx: int, stop: Stop) -> Stop:
-        previous_stop = self.stops[idx - 1]
         following_stop = self.stops[idx] or None
 
-        if stop == previous_stop:
-            # previous_stop.merge(stop)
-            return stop
-
-        assert set(stop.pickups).isdisjoint(stop.deliveries)
+        assert set(stop.pickup_planned_trips).isdisjoint(stop.delivery_planned_trips)
 
         if following_stop is not None:
             following_stop.previous = stop
@@ -328,3 +289,78 @@ class Route(Model):
         assert old_len - 2 == len(self.stops)
         assert all(s1 == s2.previous for s1, s2 in zip(self.stops[:-1], self.stops[1:]))
         assert all(s1.departure_time <= s2.arrival_time for s1, s2 in zip(self.stops[:-1], self.stops[1:]))
+
+
+class RouteCloner(object):
+
+    def __init__(self, route: Route, idx: int = 0):
+        self.route = route
+        self.desired_idx = idx
+
+        self._idx = None
+        self._mapper = None
+
+    @property
+    def stops(self) -> List[Stop]:
+        return self.route.stops
+
+    @property
+    def vehicle(self) -> Vehicle:
+        return self.route.vehicle
+
+    @property
+    def idx(self) -> int:
+        if self._idx is None:
+            self._initialize()
+        return self._idx
+
+    @property
+    def mapper(self) -> Dict[PlannedTrip, PlannedTrip]:
+        if self._mapper is None:
+            self._initialize()
+        return self._mapper
+
+    def _initialize(self) -> None:
+        idx = len(self.stops)
+        mapper = dict()
+        mismatches = set()
+        while (idx > 0) and (any(mismatches) or not idx < self.desired_idx):
+            idx -= 1
+
+            for planned_trip in self.stops[idx].delivery_planned_trips:
+                mapper[planned_trip] = PlannedTrip(planned_trip.vehicle, planned_trip.trip)
+
+            mismatches = (mismatches | self.stops[idx].delivery_planned_trips) - self.stops[idx].pickup_planned_trips
+        if idx == 1:
+            idx -= 1
+        assert not any(mismatches)
+        self._mapper = mapper
+        self._idx = idx
+
+    def map_pickup(self, stop: Stop, planned_trip: PlannedTrip):
+        new_planner_trip = self.mapper[planned_trip]
+        new_planner_trip.pickup = stop
+        return new_planner_trip
+
+    def map_delivery(self, stop: Stop, planned_trip: PlannedTrip):
+        new_planned_trip = self.mapper[planned_trip]
+        new_planned_trip.delivery = stop
+        return new_planned_trip
+
+    def clone(self) -> Route:
+        cloned_stops = self.stops[:self.idx]
+        for stop in self.stops[self.idx:]:
+            new_stop = Stop(stop.vehicle, stop.position, cloned_stops[-1] if len(cloned_stops) else None,
+                            starting_time=stop._starting_time)
+
+            new_stop.pickup_planned_trips = set(
+                self.map_pickup(new_stop, pickup) for pickup in stop.pickup_planned_trips
+            )
+            new_stop.delivery_planned_trips = set(
+                self.map_delivery(new_stop, delivery) for delivery in stop.delivery_planned_trips
+            )
+
+            cloned_stops.append(new_stop)
+
+        cloned_route = Route(self.vehicle, cloned_stops)
+        return cloned_route

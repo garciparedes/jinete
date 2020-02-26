@@ -30,6 +30,8 @@ from .models import (
     HashCodeObjective,
 
     RouteCriterion,
+    ShortestAveragePlannerTripDurationCriterion,
+    EarliestLastDepartureTimeRouteCriterion,
     ShortestTimeRouteCriterion,
     LongestTimeRouteCriterion,
     LongestUtilTimeRouteCriterion,
@@ -87,6 +89,7 @@ from .algorithms import (
     InsertionStrategy,
     SamplingInsertionStrategy,
     IntensiveInsertionStrategy,
+    TailInsertionStrategy,
 )
 
 from .exceptions import (

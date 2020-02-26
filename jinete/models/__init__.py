@@ -23,6 +23,8 @@ from .services import (
 )
 from .criterions import (
     RouteCriterion,
+    ShortestAveragePlannerTripDurationCriterion,
+    EarliestLastDepartureTimeRouteCriterion,
     ShortestTimeRouteCriterion,
     LongestTimeRouteCriterion,
     LongestUtilTimeRouteCriterion,
@@ -45,6 +47,7 @@ from .vehicles import (
 )
 from .routes import (
     Route,
+    RouteCloner
 )
 from .plannings import (
     Planning,

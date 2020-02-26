@@ -25,7 +25,7 @@ class OneShiftLocalSearchStrategy(LocalSearchStrategy):
                 second = route.stops[j]
                 third = route.stops[k] if k < len(route.stops) else None
 
-                if not set(first.pickups).isdisjoint(second.deliveries):
+                if not set(first.pickup_planned_trips).isdisjoint(second.delivery_planned_trips):
                     continue
                 self.flip(route, first, second, third)
 

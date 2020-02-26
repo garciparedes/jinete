@@ -64,11 +64,11 @@ class PlannedTrip(Model):
 
     @property
     def pickup_time(self) -> float:
-        return self.pickup.service_starting_time
+        return self.pickup.departure_time
 
     @property
     def delivery_time(self) -> float:
-        return self.delivery.service_starting_time
+        return self.delivery.starting_time
 
     @property
     def trip_identifier(self) -> str:
@@ -114,7 +114,7 @@ class PlannedTrip(Model):
 
     @property
     def duration(self) -> float:
-        return self.delivery.service_starting_time - self.pickup.departure_time
+        return self.delivery_time - self.pickup_time
 
     @property
     def capacity(self):
@@ -125,19 +125,20 @@ class PlannedTrip(Model):
         assert self.pickup in self.delivery.all_previous
         assert self.pickup_time <= self.delivery_time
 
-        if not self.trip.origin_earliest - ERROR_BOUND <= self.pickup_time <= self.trip.origin_latest + ERROR_BOUND:
+        if not self.pickup.feasible:
             return False
 
-        if not self.trip.destination_earliest - ERROR_BOUND <= self.delivery_time <= self.trip.destination_latest + ERROR_BOUND:  # noqa
+        if not self.delivery.feasible:
             return False
 
-        if not self.pickup.capacity <= self.vehicle.capacity + ERROR_BOUND:
-            return False
-
-        if not self.duration <= self.trip.timeout + ERROR_BOUND:
+        if not self.duration <= self.timeout + ERROR_BOUND:
             return False
 
         return True
+
+    @property
+    def timeout(self) -> float:
+        return self.trip.timeout
 
     @property
     def empty(self) -> bool:

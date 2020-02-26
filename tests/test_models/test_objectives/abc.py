@@ -66,7 +66,7 @@ class TestObjective(unittest.TestCase, ABC):
         route.append_planned_trip(cls.planned_trip)
 
         cls.stop = route.stops[1]
-        conjecture = jit.InsertionStrategy()
-        cls.route = conjecture.compute_one(route, trips[1])
+        conjecture = jit.TailInsertionStrategy()
+        cls.route = conjecture.compute(route, trips[1])[0]
         cls.planning = jit.Planning({cls.route})
         cls.result = jit.Result(fleet, job, jit.NaiveAlgorithm, cls.planning, 0.0)

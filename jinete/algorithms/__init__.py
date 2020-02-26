@@ -18,6 +18,7 @@ from .heuristics import (
     InsertionStrategy,
     SamplingInsertionStrategy,
     IntensiveInsertionStrategy,
+    TailInsertionStrategy,
 )
 from .metaheuristics import (
     GraspAlgorithm,

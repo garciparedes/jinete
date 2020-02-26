@@ -420,9 +420,8 @@ class ThreeIndexModel(Model):
         for position in positions:
             if position == stops[-1].position:
                 continue
-            pickup = Stop(route, position, stops[-1])
+            pickup = Stop(route.vehicle, position, stops[-1])
             stops.append(pickup)
-        stops.pop(0)
         return stops
 
     def _stop_to_stop_mapper(self, stops: List[Stop]) -> Dict[Position, List[Stop]]:
@@ -432,8 +431,7 @@ class ThreeIndexModel(Model):
         return mapper
 
     def _adjust_waiting_times(self, stops: List[Stop], k: int):
-        service_starting_times = tuple(float(u_k.varValue) for u_k in self.u[k])
+        starting_times = tuple(float(u_k.varValue) for u_k in self.u[k])
         for stop in stops:
             stop.flush()
-            service_starting_time = service_starting_times[self.idx_by_position(stop.position)]
-            stop.waiting_time = max(0, service_starting_time - stop.arrival_time)
+            stop.starting_time = starting_times[self.idx_by_position(stop.position)]

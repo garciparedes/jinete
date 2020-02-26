@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from operator import attrgetter
 from typing import (
     TYPE_CHECKING,
 )
@@ -9,6 +10,7 @@ from .....models import (
     Stop,
     PlannedTrip,
     Trip,
+    RouteCloner,
 )
 
 if TYPE_CHECKING:
@@ -26,36 +28,59 @@ logger = logging.getLogger(__name__)
 
 class InsertionStrategy(object):
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, only_feasible: bool = True, *args, **kwargs):
+        self.only_feasible = only_feasible
 
-    def compute(self, route: Route, trips: Union[Trip, Iterable[Trip]], only_feasible: bool = True,
-                *args, **kwargs) -> List[Route]:
-        if not isinstance(trips, Trip):
-            return sum((self.compute(route, trip, only_feasible=only_feasible, *args, **kwargs) for trip in trips), [])
-        trip = trips
+    def compute(self, route: Route, trips: Union[Trip, Iterable[Trip]], previous_idx: int = None,
+                following_idx: int = None, only_feasible: bool = None, *args, **kwargs) -> List[Route]:
+        assert previous_idx < following_idx
 
-        planned_trip = self.compute_one(route, trip, *args, **kwargs)
-        if only_feasible and not planned_trip.feasible:
-            return []
-        return [planned_trip]
+        if only_feasible is None:
+            only_feasible = self.only_feasible
 
-    def compute_one(self, route: Route, trip: Trip, previous_idx: int = None, following_idx: int = None) -> Route:
-        assert following_idx is None or (previous_idx is not None and following_idx is not None)
+        if isinstance(trips, Trip):
+            trips = [trips]
 
-        if previous_idx is None:
-            previous_idx = max(len(route.stops) - 2, 0)
-        if following_idx is None:
-            following_idx = max(len(route.stops) - 1, 0)
+        routes = (self._compute_one(route, trip, previous_idx, following_idx, *args, **kwargs) for trip in trips)
+        routes = [r for r in routes if not only_feasible or r.feasible]
+        return routes
 
-        route = route.clone(previous_idx + 1)
+    def _compute_one(self, route: Route, trip: Trip, previous_idx: int, following_idx: int, *args, **kwargs) -> Route:
+        cloner = RouteCloner(route, previous_idx + 1)
+        route = cloner.clone()
 
         pickup = self._build_pickup(route, trip, previous_idx)
         delivery = self._build_delivery(route, trip, previous_idx, following_idx, pickup)
 
         planned_trip = PlannedTrip(route.vehicle, trip, pickup, delivery)
         route.append_planned_trip(planned_trip)
+
+        self._improve_ride_times(route, cloner.idx)
         return route
+
+    def _improve_ride_times(self, route: Route, idx: int) -> None:
+        if route.stops[1].waiting_time != 0:
+            route.stops[0].starting_time = route.stops[1].waiting_time
+            route.stops[0].flush(), route.stops[1].flush()
+
+        if route.feasible:
+            return
+
+        for i in reversed(range(max(idx, 1), len(route.stops))):
+            stop = route.stops[i]
+            planned_trip = max(stop.pickup_planned_trips, default=None, key=attrgetter('duration'))
+            if planned_trip is None:
+                continue
+
+            stop.starting_time += max(planned_trip.duration - planned_trip.timeout, 0)
+
+            for s in route.stops[i:]:
+                s.flush()
+
+        route.flush()
+        if route.feasible:
+            # print(f'feasible!')
+            pass
 
     @staticmethod
     def _build_pickup(route: Route, trip: Trip, previous_idx: int) -> Stop:

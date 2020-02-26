@@ -127,7 +127,7 @@ def generate_one_planned_trip(feasible: bool, vehicle: jit.Vehicle = None, previ
         kwargs['timeout'] = float('inf')
         kwargs['capacity'] = vehicle.capacity
     else:
-        previous_stop.waiting_time = jit.MAX_FLOAT
+        previous_stop.starting_time = jit.MAX_FLOAT
 
     if origin_position is None:
         origin_position = generate_one_position()

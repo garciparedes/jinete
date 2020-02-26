@@ -31,8 +31,7 @@ class StatelessInsertionIterator(InsertionIterator):
     def iterator(self) -> Iterator[Route]:
         for route, trip in it.product(self.attractive_routes, self.pending_trips):
             logger.debug(f'Yielding ({route}, {trip})...')
-            planned_trip = self.strategy.compute_one(route, trip)
-            yield planned_trip
+            yield from self.strategy.compute(route, trip)
 
     def __next__(self) -> Route:
         return next(self.iterator)

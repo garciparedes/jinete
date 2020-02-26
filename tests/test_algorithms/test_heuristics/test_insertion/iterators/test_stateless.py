@@ -1,4 +1,5 @@
 import unittest
+from functools import partial
 
 import jinete as jit
 
@@ -16,6 +17,7 @@ class TestStatelessInsertionIterator(unittest.TestCase):
         dispatcher = jit.StatelessInsertionIterator(
             job=job,
             fleet=fleet,
+            strategy_cls=partial(jit.TailInsertionStrategy, only_feasible=False)
         )
         self.assertEqual(job, dispatcher.job)
         self.assertEqual(fleet, dispatcher.fleet)

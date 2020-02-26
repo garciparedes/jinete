@@ -66,35 +66,6 @@ class TestStop(unittest.TestCase):
         self.assertEqual(0, len(tuple(stop.planned_trips)))
         self.assertEqual(0, len(tuple(stop.trips)))
 
-    def test_merge_pickup(self):
-        planned_trip = generate_one_planned_trip(True)
-        other = planned_trip.pickup
-        base = jit.Stop(planned_trip.vehicle, other.position, other.previous)
-
-        self.assertNotIn(planned_trip, base.pickups)
-        self.assertNotEqual(planned_trip.pickup, base)
-
-        base.merge(other)
-
-        self.assertIn(planned_trip, base.pickups)
-        self.assertEqual(planned_trip.pickup, base)
-        self.assertEqual(0, len(base.deliveries))
-
-    def test_merge_delivery(self):
-        planned_trip = generate_one_planned_trip(True)
-        other = planned_trip.delivery
-
-        base = jit.Stop(planned_trip.vehicle, other.position, other.previous)
-
-        self.assertNotIn(planned_trip, base.deliveries)
-        self.assertNotEqual(planned_trip.delivery, base)
-
-        base.merge(other)
-
-        self.assertIn(planned_trip, base.deliveries)
-        self.assertEqual(planned_trip.delivery, base)
-        self.assertEqual(0, len(base.pickups))
-
     def test_creation_with_previous(self):
         previous_position = generate_one_position()
         previous_stop = jit.Stop(self.vehicle, previous_position, None)
@@ -164,19 +135,19 @@ class TestStop(unittest.TestCase):
             vehicle=self.vehicle,
             pickup_stop=stop,
         )
-        self.assertIn(delivery_planned_trip, stop.deliveries)
-        self.assertNotIn(delivery_planned_trip, stop.pickups)
+        self.assertIn(delivery_planned_trip, stop.delivery_planned_trips)
+        self.assertNotIn(delivery_planned_trip, stop.pickup_planned_trips)
 
-        self.assertNotIn(pickup_planned_trip, stop.deliveries)
-        self.assertIn(pickup_planned_trip, stop.pickups)
+        self.assertNotIn(pickup_planned_trip, stop.delivery_planned_trips)
+        self.assertIn(pickup_planned_trip, stop.pickup_planned_trips)
         self.assertIsInstance(stop.identifier, str)
 
-        identifier = ''.join(
-            it.chain(
-                (f'P{planned_trip.trip_identifier}' for planned_trip in stop.pickups),
-                (f'D{planned_trip.trip_identifier}' for planned_trip in stop.deliveries),
-            )
+        iterable = it.chain(
+            (f'P{planned_trip.trip_identifier}' for planned_trip in stop.pickup_planned_trips),
+            (f'D{planned_trip.trip_identifier}' for planned_trip in stop.delivery_planned_trips),
         )
+        identifier = '|'.join(iterable)
+        identifier = f'[{identifier}]'
         self.assertEqual(identifier, stop.identifier)
 
 
