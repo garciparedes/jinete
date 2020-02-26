@@ -353,8 +353,12 @@ class RouteCloner(object):
             new_stop = Stop(stop.vehicle, stop.position, cloned_stops[-1] if len(cloned_stops) else None,
                             starting_time=stop._starting_time)
 
-            new_stop.pickup_planned_trips = set(self.map_pickup(new_stop, pickup) for pickup in stop.pickup_planned_trips)
-            new_stop.delivery_planned_trips = set(self.map_delivery(new_stop, delivery) for delivery in stop.delivery_planned_trips)
+            new_stop.pickup_planned_trips = set(
+                self.map_pickup(new_stop, pickup) for pickup in stop.pickup_planned_trips
+            )
+            new_stop.delivery_planned_trips = set(
+                self.map_delivery(new_stop, delivery) for delivery in stop.delivery_planned_trips
+            )
 
             cloned_stops.append(new_stop)
 

@@ -23,7 +23,6 @@ if TYPE_CHECKING:
         Any,
         Optional,
         Iterator,
-        Iterable,
         List,
         Set,
     )
