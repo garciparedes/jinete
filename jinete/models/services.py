@@ -12,7 +12,6 @@ from .abc import (
 )
 from uuid import (
     uuid4,
-    SafeUUID,
 )
 
 if TYPE_CHECKING:
@@ -43,7 +42,14 @@ class Service(Model):
     duration: float
     identifier: str
 
-    def __init__(self, position: Position, earliest: float = 0.0, latest: float = MAX_FLOAT, duration: float = 0.0, identifier: str = None):
+    def __init__(
+        self,
+        position: Position,
+        earliest: float = 0.0,
+        latest: float = MAX_FLOAT,
+        duration: float = 0.0,
+        identifier: str = None
+    ):
         self.position = position
         self.earliest = earliest
         self.latest = latest
