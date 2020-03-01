@@ -19,14 +19,17 @@ High Performance solving suite for the Pickup and Delivery Problem and its relat
 This library has been inspired (and created) by a Final Degree Project, which you can read at: https://github.com/garciparedes/tfg-pickup-and-delivery
 
 
-## How to install
+## Getting Started
 
+### Prerequisites
+* `python>=3.7`
+
+### Installation
 ```bash
 pip install jinete
 ```
 
-## Getting Started
-
+Here is a simple example about how to run `jinete` to solve a HashCode 2018 Online Qualification instance. 
 ```python
 import jinete as jit
 
@@ -51,16 +54,28 @@ You can find the documentation at: https://jinete.readthedocs.io
 
 ## Development
 
-You can install it simply typing:
+First of all, you need to create a `virtualenv`:
 
 ```bash
-pipenv install --dev
+python -m venv venv
+source venv/bin/activate
 ```
 
-To run the tests perform:
+Then install the library and all its extra dependencies (with the `all` option):
 
 ```bash
-pipenv python -m unittest discover tests
+pip intall -e .[all]
+```
+
+To run code style checks you can simply type:
+```bash
+flake8
+```
+
+To perform the tests with coverage you can need to type:
+
+```bash
+coverage run -m unittest discover tests
 ```
 
 ## Repository Contents
