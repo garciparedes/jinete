@@ -10,6 +10,10 @@ from .constants import (
 from .abc import (
     Model,
 )
+from uuid import (
+    uuid4,
+    SafeUUID,
+)
 
 if TYPE_CHECKING:
     from typing import (
@@ -31,17 +35,22 @@ class Service(Model):
         'earliest',
         'latest',
         'duration',
+        'identifier',
     )
     position: Position
     earliest: float
     latest: float
     duration: float
+    identifier: str
 
-    def __init__(self, position: Position, earliest: float = 0.0, latest: float = MAX_FLOAT, duration: float = 0.0):
+    def __init__(self, position: Position, earliest: float = 0.0, latest: float = MAX_FLOAT, duration: float = 0.0, identifier: str = None):
         self.position = position
         self.earliest = earliest
         self.latest = latest
         self.duration = duration
+        if identifier is None:
+            identifier = str(uuid4())
+        self.identifier = identifier
 
     def __deepcopy__(self, memo: Dict[int, Any]) -> Service:
         return self
@@ -58,6 +67,7 @@ class Service(Model):
             ('earliest', self.earliest),
             ('latest', self.latest),
             ('duration', self.duration),
+            ('identifier', self.identifier),
         )
 
     def distance_to(self, other: Service) -> float:
