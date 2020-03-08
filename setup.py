@@ -32,6 +32,7 @@ extra_dependencies = {
         'sphinx',
         'sphinx-rtd-theme',
         'sphinxcontrib-apidoc',
+        'sphinxcontrib-plantuml',
     ],
     'tests': [
         'coverage',
