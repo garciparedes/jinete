@@ -39,6 +39,7 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.doctest',
     'sphinx_rtd_theme',
+    'sphinxcontrib.plantuml'
 ]
 
 templates_path = ['_templates']
