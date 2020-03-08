@@ -7,12 +7,14 @@ Welcome to jinete's documentation!
 ==================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
 
 
+   readme
    installation
    getting_started
+   directory_hierarchy
    api_reference/api_reference
 
 Indices and tables
