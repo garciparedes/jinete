@@ -1,42 +1,42 @@
 @startuml
-skinparam linetype ortho 
+skinparam linetype ortho
 skinparam nodesep 100
-skinparam ranksep 70
+skinparam ranksep 100
 hide empty methods
 hide empty attributes
 
 entity Vehicle {
-      identifier: str
-        capacity: float
-          timeout: float
+  identifier: str
+  capacity: float
+  timeout: float
 }
 
 entity Route {
-      uuid: UUID
+  uuid: UUID
 }
 
 entity Trip {
-      identifier: str
-        on_time_bonus: float
-          capacity: float
-            timeout: float
+  identifier: str
+  on_time_bonus: float
+  capacity: float
+  timeout: float
 }
 
 entity PlannedTrip {
 }
 
 entity Planning {
-      computation_time: float
+  computation_time: float
 }
 
 entity Stop {
-      starting_time?: float
+  starting_time?: float
 }
 
 entity Service {
-      earliest: float
-        latest: float
-          duration: float
+  earliest: float
+  latest: float
+  duration: float
 }
 
 entity Job {
@@ -46,26 +46,26 @@ entity Fleet {
 }
 
 entity Position {
-      coordinates: Tuple[float, ...]
+  coordinates: Tuple[float, ...]
 }
 
 entity Surface {
-      uuid: UUID
+  uuid: UUID
 }
 
 
 Job o-"*" Trip
 Algorithm --o Planning: optimizes >
 Algorithm o-- Fleet
-Algorithm o-- Job 
+Algorithm o-- Job
 Planning o--"*" Route
-Trip o- PlannedTrip
+Trip o- PlannedTrip: planified >
 Trip o-right-"origin" Service
 Trip o-right-"destination" Service
-Service o--"1" Position
+Service o--"1" Position: located at >
 PlannedTrip "*"-up-"pickup" Stop
 PlannedTrip "*"-up-"delivery" Stop
-Route --"2..*" Stop 
+Route --"2..*" Stop
 Position "1"-o Stop
 Position "*"-up-o Surface
 Vehicle "1"--o Stop
