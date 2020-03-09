@@ -38,9 +38,7 @@ class Algorithm(ABC):
         computation_time = end_time - start_time
 
         result = Result(
-            fleet=self.fleet,
-            job=self.job,
-            algorithm_cls=self.__class__,
+            algorithm=self,
             planning=planning,
             computation_time=computation_time,
         )

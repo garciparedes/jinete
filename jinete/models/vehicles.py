@@ -33,6 +33,7 @@ class Vehicle(Model):
     origin: Service
     destination: Service
     capacity: float
+    timeout: float
 
     def __init__(self, identifier: str, origin: Service, destination: Service = None, capacity: float = 1.0,
                  timeout: float = MAX_FLOAT):

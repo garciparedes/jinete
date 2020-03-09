@@ -29,14 +29,12 @@ class TestResult(unittest.TestCase):
         cls.planning = generate_one_planning()
         cls.fleet = jit.Fleet(set(cls.planning.vehicles))
         cls.job = jit.Job(set(cls.planning.trips), jit.DialARideObjective)
-        cls.algorithm_cls = jit.Algorithm
+        cls.algorithm = jit.NaiveAlgorithm(cls.fleet, cls.job)
         cls.computation_time = 1
 
     def test_construction(self):
         result = jit.Result(
-            fleet=self.fleet,
-            job=self.job,
-            algorithm_cls=self.algorithm_cls,
+            algorithm=self.algorithm,
             planning=self.planning,
             computation_time=self.computation_time
         )
@@ -51,7 +49,7 @@ class TestResult(unittest.TestCase):
         self.assertEqual(self.job.objective.optimization_function(result), result.optimization_value)
         self.assertEqual(self.job.objective.direction, result.direction)
 
-        self.assertEqual(self.algorithm_cls, result.algorithm_cls)
+        self.assertEqual(self.algorithm, result.algorithm)
 
         self.assertEqual(self.planning, result.planning)
         self.assertEqual(self.planning.uuid, result.planning_uuid)
@@ -61,9 +59,7 @@ class TestResult(unittest.TestCase):
 
     def test_as_tuple(self):
         result = jit.Result(
-            fleet=self.fleet,
-            job=self.job,
-            algorithm_cls=self.algorithm_cls,
+            algorithm=self.algorithm,
             planning=self.planning,
             computation_time=self.computation_time
         )
@@ -71,7 +67,7 @@ class TestResult(unittest.TestCase):
         expected = (
             ('fleet_uuid', tuple(self.fleet)),
             ('job', tuple(self.job)),
-            ('algorithm_name', self.algorithm_cls.__name__),
+            ('algorithm_name', type(self.algorithm).__name__),
             ('planning_uuid', self.planning.uuid)
         )
         self.assertEqual(expected, tuple(result))

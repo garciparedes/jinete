@@ -41,7 +41,8 @@ class TestTwoOPTLocalSearchStrategy(unittest.TestCase):
 
         self.job = jit.Job(generate_trips(10), objective_cls=jit.DialARideObjective)
         self.fleet = jit.Fleet(generate_vehicles(10))
-        self.result = jit.Result(self.fleet, self.job, jit.Algorithm, self.planning, computation_time=float(0.0))
+        self.algorithm = jit.NaiveAlgorithm(self.fleet, self.job)
+        self.result = jit.Result(self.algorithm, self.planning, computation_time=float(0.0))
 
     def test_creation(self):
         strategy = jit.TwoOPTLocalSearchStrategy(self.result)
