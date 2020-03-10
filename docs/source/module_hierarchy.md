@@ -1,6 +1,5 @@
-# Directory Hierarchy
+# Module Hierarchy
 
-* [examples](https://github.com/garciparedes/jinete/tree/master/examples/): Basic examples to start using the library.
 * [jinete](https://github.com/garciparedes/jinete/tree/master/jinete/): The source code of the library.
   * [algorithms](https://github.com/garciparedes/jinete/tree/master/jinete/algorithms/): Contains the implementation of solving methods.
     * [exacts](https://github.com/garciparedes/jinete/tree/master/jinete/algorithms/exacts): Exact implementations based on linear programming and MILP solvers.
@@ -19,5 +18,3 @@
   * [storers](https://github.com/garciparedes/jinete/tree/master/jinete/storers/): Entities whose responsibility is to deliver problem solutions.
     * [formatters](https://github.com/garciparedes/jinete/tree/master/jinete/storers/formatters/): Parsing logic for problem solutions.
   * [solvers](https://github.com/garciparedes/jinete/tree/master/jinete/solvers.py): A set of abstractions to ease the launching process on external systems.
-* [setup.py](https://github.com/garciparedes/jinete/tree/master/setup.py): The builder of this library.
-* [tests](https://github.com/garciparedes/jinete/tree/master/tests/): The library tests.

@@ -15,7 +15,7 @@ Welcome to jinete's documentation!
    installation
    getting_started
    data_model
-   directory_hierarchy
+   module_hierarchy
    api_reference/api_reference
 
 Indices and tables
