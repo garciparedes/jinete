@@ -2,4 +2,4 @@
 
 [TODO]
 
-.. uml:: /_static/data_model.uml
+.. uml:: /_static/data_model.puml
