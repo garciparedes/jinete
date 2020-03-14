@@ -1,3 +1,7 @@
+"""
+Set of route generation methods.
+"""
+
 from .algorithm import (
     InsertionAlgorithm,
 )

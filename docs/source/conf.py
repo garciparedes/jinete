@@ -63,7 +63,7 @@ todo_include_todos = True
 ## "apidoc" extension
 apidoc_module_dir = '../../{}'.format(jit.__name__)
 apidoc_output_dir = 'api_reference'
-apidoc_separate_modules = True
+apidoc_separate_modules = False
 autoclass_content = 'both'
 apidoc_toc_file = False
 apidoc_module_first = True

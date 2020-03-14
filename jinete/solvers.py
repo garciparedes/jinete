@@ -1,3 +1,7 @@
+"""
+A set of abstractions to ease the launching process on external systems.
+"""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING

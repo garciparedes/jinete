@@ -1,3 +1,7 @@
+"""
+Parsing logic for problem instances.
+"""
+
 from .exceptions import (
     LoaderFormatterException,
 )

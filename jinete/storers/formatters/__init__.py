@@ -1,3 +1,7 @@
+"""
+Parsing logic for problem solutions.
+"""
+
 from .abc import (
     StorerFormatter,
 )
