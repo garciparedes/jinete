@@ -1,20 +1,3 @@
 # Module Hierarchy
 
-* [jinete](https://github.com/garciparedes/jinete/tree/master/jinete/): The source code of the library.
-  * [algorithms](https://github.com/garciparedes/jinete/tree/master/jinete/algorithms/)
-    * [exacts](https://github.com/garciparedes/jinete/tree/master/jinete/algorithms/exacts)
-    * [heuristics](https://github.com/garciparedes/jinete/tree/master/jinete/algorithms/heuristics)
-      * [insertion](https://github.com/garciparedes/jinete/tree/master/jinete/algorithms/heuristics/insertion)
-        * [strategies](https://github.com/garciparedes/jinete/tree/master/jinete/algorithms/heuristics/insertion/strategies)
-        * [iterators](https://github.com/garciparedes/jinete/tree/master/jinete/algorithms/heuristics/insertion/strategies)
-      * [local_search](https://github.com/garciparedes/jinete/tree/master/jinete/algorithms/heuristics/local_search)
-        * [strategies](https://github.com/garciparedes/jinete/tree/master/jinete/algorithms/heuristics/local_search/strategies)
-    * [metaheuristics](https://github.com/garciparedes/jinete/tree/master/jinete/algorithms/metaheuristics)
-    * [utils](https://github.com/garciparedes/jinete/tree/master/jinete/algorithms/utils)
-  * [dispatchers](https://github.com/garciparedes/jinete/tree/master/jinete/dispatchers/)
-  * [loaders](https://github.com/garciparedes/jinete/tree/master/jinete/loaders/)
-    * [formatters](https://github.com/garciparedes/jinete/tree/master/jinete/loaders/formatters/)
-  * [models](https://github.com/garciparedes/jinete/tree/master/jinete/models/)
-  * [storers](https://github.com/garciparedes/jinete/tree/master/jinete/storers/)
-    * [formatters](https://github.com/garciparedes/jinete/tree/master/jinete/storers/formatters/)
-  * [solvers](https://github.com/garciparedes/jinete/tree/master/jinete/solvers.py)
+[TODO: Include components diagram]

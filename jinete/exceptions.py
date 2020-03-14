@@ -16,6 +16,11 @@ if TYPE_CHECKING:
 class JineteException(Exception):
 
     def __init__(self, message: str):
+        """
+        The base exception on `jinete`.
+
+        :param message: A brief description of the cause.
+        """
         super().__init__(message)
         self.message = message
 

@@ -31,6 +31,7 @@ master_doc = 'index'
 
 extensions = [
     'sphinxcontrib.apidoc',
+    'sphinx.ext.autosummary',
     'sphinx.ext.autodoc',
     'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
@@ -51,7 +52,9 @@ exclude_patterns = []
 
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
-
+html_theme_options = {
+    'navigation_depth': 1,
+ }
 # -- Extension configuration -------------------------------------------------
 
 ## "intersphinx" extension
@@ -63,8 +66,13 @@ todo_include_todos = True
 ## "apidoc" extension
 apidoc_module_dir = '../../{}'.format(jit.__name__)
 apidoc_output_dir = 'api_reference'
-apidoc_separate_modules = False
+apidoc_separate_modules = True
 autoclass_content = 'both'
 apidoc_toc_file = False
 apidoc_module_first = True
-apidoc_extra_args = ['--force', '--implicit-namespaces']
+apidoc_extra_args = [
+    '--force',
+    '--implicit-namespaces',
+    # '-d 3',
+    f'--templatedir=./source/_templates',
+]
