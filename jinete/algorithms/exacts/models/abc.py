@@ -15,7 +15,7 @@ if TYPE_CHECKING:
         List,
         Set,
     )
-    from ....models import (
+    from jinete.models import (
         Fleet,
         Job,
         Route,

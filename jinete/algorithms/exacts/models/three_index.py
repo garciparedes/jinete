@@ -16,7 +16,7 @@ from cached_property import (
 )
 import pulp as lp
 
-from ....models import (
+from jinete.models import (
     Stop,
     Route,
     PlannedTrip,
@@ -34,7 +34,7 @@ if TYPE_CHECKING:
         Optional,
         Dict,
     )
-    from ....models import (
+    from jinete.models import (
         Trip,
         Vehicle,
         Position,

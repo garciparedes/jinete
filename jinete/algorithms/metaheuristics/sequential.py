@@ -11,6 +11,7 @@ from ...models import (
 from ..abc import (
     Algorithm,
 )
+from ...utils import doc_inherit
 
 if TYPE_CHECKING:
     from ...models import (
@@ -29,6 +30,7 @@ logger = logging.getLogger(__name__)
 
 class SequentialAlgorithm(Algorithm):
 
+    @doc_inherit
     def __init__(self, initial: Result, algorithms_cls: Sequence[Tuple[Type[Algorithm], Dict[str, Any]]] = None,
                  seed: int = 56, *args, **kwargs):
         super().__init__(*args, **kwargs)

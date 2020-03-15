@@ -17,6 +17,7 @@ from .sequential import (
 from .iterative import (
     IterativeAlgorithm,
 )
+from ...utils import doc_inherit
 
 if TYPE_CHECKING:
     from typing import (
@@ -29,6 +30,7 @@ logger = logging.getLogger(__name__)
 
 class GraspAlgorithm(Algorithm):
 
+    @doc_inherit
     def __init__(self, no_improvement_threshold: int = 1, first_solution_kwargs: Dict[str, Any] = None,
                  local_search_kwargs: Dict[str, Any] = None,
                  seed: int = 56, *args, **kwargs):

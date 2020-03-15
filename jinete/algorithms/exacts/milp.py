@@ -14,15 +14,18 @@ from ...models import (
 from ..abc import (
     Algorithm,
 )
-from ..utils import (
+from .models import (
     ThreeIndexModel,
+)
+from ...utils import (
+    doc_inherit,
 )
 
 if TYPE_CHECKING:
     from typing import (
         Type
     )
-    from ..utils import (
+    from .models import (
         Model,
     )
 
@@ -34,10 +37,9 @@ class MilpAlgorithm(Algorithm):
     The `jinete`'s interface to solve the given problem, supported by the Mixed-Integer Linear Programming frame.
     """
 
+    @doc_inherit
     def __init__(self, model_cls: Type[Model] = None, *args, **kwargs):
         """
-        The constructor of the class.
-
         :param model_cls: The model class to generate the representation of the problem.
         :param args: Additional positional arguments.
         :param kwargs: Additional named arguments.

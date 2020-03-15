@@ -23,6 +23,7 @@ class Algorithm(ABC):
 
     def __init__(self, fleet: Fleet, job: Job, *args, **kwargs):
         """
+        The constructor of the class.
 
         :param fleet: The `Fleet` of available vehicles to use on the solution.
         :param job: The `Job` composed of the requested `Trip` objects to be satisfied by the solution.
@@ -34,9 +35,20 @@ class Algorithm(ABC):
 
     @property
     def objective(self) -> Objective:
+        """
+        The objective function.
+
+        :return: An ``Objective`` object.
+        """
         return self.job.objective
 
     def optimize(self) -> Result:
+        """
+        Performs an optimization over the ``job`` using the ``fleet`` and generates a ``Result`` object containing the
+        generated results.
+
+        :return: A ``Result`` object.
+        """
         logger.info(f'Optimizing with {self.__class__.__name__}...')
 
         start_time = time()

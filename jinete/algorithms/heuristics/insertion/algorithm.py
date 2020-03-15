@@ -12,6 +12,7 @@ from ...abc import (
 from .iterators import (
     RankingInsertionIterator,
 )
+from ....utils import doc_inherit
 
 if TYPE_CHECKING:
     from typing import (
@@ -29,6 +30,7 @@ logger = logging.getLogger(__name__)
 
 class InsertionAlgorithm(Algorithm):
 
+    @doc_inherit
     def __init__(self, iterator_cls: Type[InsertionIterator] = None, initial: Result = None, **kwargs):
         super().__init__(**kwargs)
         if iterator_cls is None:

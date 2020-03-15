@@ -54,7 +54,7 @@ html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 html_theme_options = {
     'navigation_depth': 1,
- }
+}
 # -- Extension configuration -------------------------------------------------
 
 ## "intersphinx" extension
@@ -67,7 +67,13 @@ todo_include_todos = True
 apidoc_module_dir = '../../{}'.format(jit.__name__)
 apidoc_output_dir = 'api_reference'
 apidoc_separate_modules = True
-autoclass_content = 'both'
+# autoclass_content = 'both'
+autodoc_default_options = {
+    'inherited-members': True,
+    'special-members': '__init__',
+    'undoc-members': True,
+}
+
 apidoc_toc_file = False
 apidoc_module_first = True
 apidoc_extra_args = [
