@@ -34,7 +34,6 @@ extra_dependencies = {
         'sphinxcontrib-apidoc',
         'sphinxcontrib-plantuml',
         'm2r',
-        'sphinx-autodoc-typehints',
     ],
     'tests': [
         'coverage',
