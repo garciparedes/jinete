@@ -49,7 +49,7 @@ result = solver.solve()
 ```
 
 ## Documentation
-You can find the documentation at: https://jinete.readthedocs.io
+You can find the documentation at: https://garciparedes.me/jinete
 
 
 ## Development
