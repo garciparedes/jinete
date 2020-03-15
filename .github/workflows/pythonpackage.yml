@@ -32,11 +32,4 @@ jobs:
         flake8
     - name: Unit testing
       run: |
-        coverage run -m unittest discover tests   
-    - name: Documentation building
-      run: |
-        sphinx-build docs/source docs/build/html
-    - uses: actions/upload-artifact@v1
-      with:
-        name: documentation
-        path: docs/build/html
+        coverage run -m unittest discover tests
