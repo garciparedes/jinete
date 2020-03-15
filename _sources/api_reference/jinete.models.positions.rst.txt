@@ -1,0 +1,7 @@
+positions module
+================
+
+.. automodule:: jinete.models.positions
+   :members:
+   :undoc-members:
+   :show-inheritance:

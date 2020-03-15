@@ -1,0 +1,29 @@
+strategies package
+==================
+
+.. automodule:: jinete.algorithms.heuristics.insertion.strategies
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+.. toctree::
+   :hidden:
+
+
+   jinete.algorithms.heuristics.insertion.strategies.abc
+   jinete.algorithms.heuristics.insertion.strategies.intensive
+   jinete.algorithms.heuristics.insertion.strategies.sampling
+   jinete.algorithms.heuristics.insertion.strategies.tail
+
+.. autosummary::
+
+   jinete.algorithms.heuristics.insertion.strategies.abc
+   jinete.algorithms.heuristics.insertion.strategies.intensive
+   jinete.algorithms.heuristics.insertion.strategies.sampling
+   jinete.algorithms.heuristics.insertion.strategies.tail
+
+
+
+

@@ -1,0 +1,27 @@
+iterators package
+=================
+
+.. automodule:: jinete.algorithms.heuristics.insertion.iterators
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+.. toctree::
+   :hidden:
+
+
+   jinete.algorithms.heuristics.insertion.iterators.abc
+   jinete.algorithms.heuristics.insertion.iterators.ranking
+   jinete.algorithms.heuristics.insertion.iterators.stateless
+
+.. autosummary::
+
+   jinete.algorithms.heuristics.insertion.iterators.abc
+   jinete.algorithms.heuristics.insertion.iterators.ranking
+   jinete.algorithms.heuristics.insertion.iterators.stateless
+
+
+
+

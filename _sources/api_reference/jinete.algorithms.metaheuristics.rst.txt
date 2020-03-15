@@ -1,0 +1,27 @@
+metaheuristics package
+======================
+
+.. automodule:: jinete.algorithms.metaheuristics
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+.. toctree::
+   :hidden:
+
+
+   jinete.algorithms.metaheuristics.grasp
+   jinete.algorithms.metaheuristics.iterative
+   jinete.algorithms.metaheuristics.sequential
+
+.. autosummary::
+
+   jinete.algorithms.metaheuristics.grasp
+   jinete.algorithms.metaheuristics.iterative
+   jinete.algorithms.metaheuristics.sequential
+
+
+
+

@@ -1,0 +1,7 @@
+intensive module
+================
+
+.. automodule:: jinete.algorithms.heuristics.insertion.strategies.intensive
+   :members:
+   :undoc-members:
+   :show-inheritance:

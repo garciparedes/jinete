@@ -1,0 +1,7 @@
+static module
+=============
+
+.. automodule:: jinete.dispatchers.static
+   :members:
+   :undoc-members:
+   :show-inheritance:

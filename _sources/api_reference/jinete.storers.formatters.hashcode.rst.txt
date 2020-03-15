@@ -1,0 +1,7 @@
+hashcode module
+===============
+
+.. automodule:: jinete.storers.formatters.hashcode
+   :members:
+   :undoc-members:
+   :show-inheritance:

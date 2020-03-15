@@ -1,0 +1,7 @@
+prompt module
+=============
+
+.. automodule:: jinete.storers.prompt
+   :members:
+   :undoc-members:
+   :show-inheritance:

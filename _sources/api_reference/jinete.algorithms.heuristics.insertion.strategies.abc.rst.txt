@@ -1,0 +1,7 @@
+abc module
+==========
+
+.. automodule:: jinete.algorithms.heuristics.insertion.strategies.abc
+   :members:
+   :undoc-members:
+   :show-inheritance:

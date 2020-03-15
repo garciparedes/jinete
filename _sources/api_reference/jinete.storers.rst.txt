@@ -1,0 +1,35 @@
+storers package
+===============
+
+.. automodule:: jinete.storers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+.. toctree::
+   :hidden:
+
+
+   jinete.storers.formatters
+   jinete.storers.plots
+   jinete.storers.abc
+   jinete.storers.file
+   jinete.storers.naive
+   jinete.storers.prompt
+   jinete.storers.sets
+
+.. autosummary::
+
+   jinete.storers.formatters
+   jinete.storers.plots
+   jinete.storers.abc
+   jinete.storers.file
+   jinete.storers.naive
+   jinete.storers.prompt
+   jinete.storers.sets
+
+
+
+

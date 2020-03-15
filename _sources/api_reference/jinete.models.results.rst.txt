@@ -1,0 +1,7 @@
+results module
+==============
+
+.. automodule:: jinete.models.results
+   :members:
+   :undoc-members:
+   :show-inheritance:

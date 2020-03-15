@@ -1,0 +1,27 @@
+formatters package
+==================
+
+.. automodule:: jinete.storers.formatters
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+.. toctree::
+   :hidden:
+
+
+   jinete.storers.formatters.abc
+   jinete.storers.formatters.columnar
+   jinete.storers.formatters.hashcode
+
+.. autosummary::
+
+   jinete.storers.formatters.abc
+   jinete.storers.formatters.columnar
+   jinete.storers.formatters.hashcode
+
+
+
+

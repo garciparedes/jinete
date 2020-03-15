@@ -1,0 +1,25 @@
+routes package
+==============
+
+.. automodule:: jinete.algorithms.heuristics.local_search.strategies.routes
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+.. toctree::
+   :hidden:
+
+
+   jinete.algorithms.heuristics.local_search.strategies.routes.one_shift
+   jinete.algorithms.heuristics.local_search.strategies.routes.two_opt
+
+.. autosummary::
+
+   jinete.algorithms.heuristics.local_search.strategies.routes.one_shift
+   jinete.algorithms.heuristics.local_search.strategies.routes.two_opt
+
+
+
+

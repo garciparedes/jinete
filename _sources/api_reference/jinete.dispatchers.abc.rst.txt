@@ -1,0 +1,7 @@
+abc module
+==========
+
+.. automodule:: jinete.dispatchers.abc
+   :members:
+   :undoc-members:
+   :show-inheritance:

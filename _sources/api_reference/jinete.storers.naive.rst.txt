@@ -1,0 +1,7 @@
+naive module
+============
+
+.. automodule:: jinete.storers.naive
+   :members:
+   :undoc-members:
+   :show-inheritance:

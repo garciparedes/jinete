@@ -1,0 +1,25 @@
+heuristics package
+==================
+
+.. automodule:: jinete.algorithms.heuristics
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+.. toctree::
+   :hidden:
+
+
+   jinete.algorithms.heuristics.insertion
+   jinete.algorithms.heuristics.local_search
+
+.. autosummary::
+
+   jinete.algorithms.heuristics.insertion
+   jinete.algorithms.heuristics.local_search
+
+
+
+

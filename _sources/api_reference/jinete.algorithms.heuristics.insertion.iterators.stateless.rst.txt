@@ -1,0 +1,7 @@
+stateless module
+================
+
+.. automodule:: jinete.algorithms.heuristics.insertion.iterators.stateless
+   :members:
+   :undoc-members:
+   :show-inheritance:

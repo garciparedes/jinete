@@ -1,0 +1,7 @@
+plannings module
+================
+
+.. automodule:: jinete.models.plannings
+   :members:
+   :undoc-members:
+   :show-inheritance:

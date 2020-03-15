@@ -1,0 +1,7 @@
+stops module
+============
+
+.. automodule:: jinete.models.stops
+   :members:
+   :undoc-members:
+   :show-inheritance:

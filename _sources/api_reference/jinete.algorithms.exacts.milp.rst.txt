@@ -1,0 +1,7 @@
+milp module
+===========
+
+.. automodule:: jinete.algorithms.exacts.milp
+   :members:
+   :undoc-members:
+   :show-inheritance:

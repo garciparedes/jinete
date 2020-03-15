@@ -1,0 +1,7 @@
+jobs module
+===========
+
+.. automodule:: jinete.models.jobs
+   :members:
+   :undoc-members:
+   :show-inheritance:

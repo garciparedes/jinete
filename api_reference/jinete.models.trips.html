@@ -1,0 +1,369 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>trips module &mdash; jinete 0.0.14 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="vehicles module" href="jinete.models.vehicles.html" />
+    <link rel="prev" title="surfaces module" href="jinete.models.surfaces.html" />
+    <link href="../_static/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> jinete
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../module_hierarchy.html">Module Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../directory_hierarchy.html">Directory Hierarchy</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api_reference.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">jinete</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="api_reference.html">API Reference</a> &raquo;</li>
+        
+          <li><a href="jinete.html">jinete package</a> &raquo;</li>
+        
+          <li><a href="jinete.models.html">models package</a> &raquo;</li>
+        
+      <li>trips module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api_reference/jinete.models.trips.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-jinete.models.trips">
+<span id="trips-module"></span><h1>trips module<a class="headerlink" href="#module-jinete.models.trips" title="Permalink to this headline">¶</a></h1>
+<p>Contains entities to represent trips in the data model.</p>
+<dl class="class">
+<dt id="jinete.models.trips.Trip">
+<em class="property">class </em><code class="sig-prename descclassname">jinete.models.trips.</code><code class="sig-name descname">Trip</code><span class="sig-paren">(</span><em class="sig-param">identifier</em>, <em class="sig-param">origin</em>, <em class="sig-param">destination</em>, <em class="sig-param">capacity=1</em>, <em class="sig-param">on_time_bonus=0.0</em>, <em class="sig-param">timeout=inf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/trips.html#Trip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.trips.Trip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="jinete.models.abc.html#jinete.models.abc.Model" title="jinete.models.abc.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.abc.Model</span></code></a></p>
+<dl class="method">
+<dt id="jinete.models.trips.Trip.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">identifier</em>, <em class="sig-param">origin</em>, <em class="sig-param">destination</em>, <em class="sig-param">capacity=1</em>, <em class="sig-param">on_time_bonus=0.0</em>, <em class="sig-param">timeout=inf</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/trips.html#Trip.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.trips.Trip.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>identifier</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – </p></li>
+<li><p><strong>origin</strong> (<a class="reference internal" href="jinete.models.services.html#jinete.models.services.Service" title="jinete.models.services.Service"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.services.Service</span></code></a>) – </p></li>
+<li><p><strong>destination</strong> (<a class="reference internal" href="jinete.models.services.html#jinete.models.services.Service" title="jinete.models.services.Service"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.services.Service</span></code></a>) – </p></li>
+<li><p><strong>capacity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>) – </p></li>
+<li><p><strong>on_time_bonus</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>) – </p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jinete.models.trips.Trip.capacity">
+<code class="sig-name descname">capacity</code><a class="headerlink" href="#jinete.models.trips.Trip.capacity" title="Permalink to this definition">¶</a></dt>
+<dd><p>The requested capacity of the trip.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jinete.models.trips.Trip.destination">
+<code class="sig-name descname">destination</code><a class="headerlink" href="#jinete.models.trips.Trip.destination" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.trips.Trip.destination_duration">
+<em class="property">property </em><code class="sig-name descname">destination_duration</code><a class="headerlink" href="#jinete.models.trips.Trip.destination_duration" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jinete.models.trips.Trip.destination_earliest">
+<code class="sig-name descname">destination_earliest</code><a class="headerlink" href="#jinete.models.trips.Trip.destination_earliest" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="jinete.models.trips.Trip.destination_latest">
+<code class="sig-name descname">destination_latest</code><a class="headerlink" href="#jinete.models.trips.Trip.destination_latest" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.trips.Trip.destination_position">
+<em class="property">property </em><code class="sig-name descname">destination_position</code><a class="headerlink" href="#jinete.models.trips.Trip.destination_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>The position for the delivery service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="jinete.models.positions.html#jinete.models.positions.Position" title="jinete.models.positions.Position">Position</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jinete.models.trips.Trip.distance">
+<code class="sig-name descname">distance</code><a class="headerlink" href="#jinete.models.trips.Trip.distance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.trips.Trip.duration">
+<code class="sig-name descname">duration</code><span class="sig-paren">(</span><em class="sig-param">now</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/trips.html#Trip.duration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.trips.Trip.duration" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.trips.Trip.empty">
+<em class="property">property </em><code class="sig-name descname">empty</code><a class="headerlink" href="#jinete.models.trips.Trip.empty" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jinete.models.trips.Trip.identifier">
+<code class="sig-name descname">identifier</code><a class="headerlink" href="#jinete.models.trips.Trip.identifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>The unique identifier of the trip.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jinete.models.trips.Trip.on_time_bonus">
+<code class="sig-name descname">on_time_bonus</code><a class="headerlink" href="#jinete.models.trips.Trip.on_time_bonus" title="Permalink to this definition">¶</a></dt>
+<dd><p>The applied bonus if the trip starts at its earliest time (need to be set up through the cost function).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jinete.models.trips.Trip.origin">
+<code class="sig-name descname">origin</code><a class="headerlink" href="#jinete.models.trips.Trip.origin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.trips.Trip.origin_duration">
+<em class="property">property </em><code class="sig-name descname">origin_duration</code><a class="headerlink" href="#jinete.models.trips.Trip.origin_duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>The requested duration to perform the origin service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.trips.Trip.origin_earliest">
+<em class="property">property </em><code class="sig-name descname">origin_earliest</code><a class="headerlink" href="#jinete.models.trips.Trip.origin_earliest" title="Permalink to this definition">¶</a></dt>
+<dd><p>The earliest time to start the pickup service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.trips.Trip.origin_latest">
+<em class="property">property </em><code class="sig-name descname">origin_latest</code><a class="headerlink" href="#jinete.models.trips.Trip.origin_latest" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.trips.Trip.origin_position">
+<em class="property">property </em><code class="sig-name descname">origin_position</code><a class="headerlink" href="#jinete.models.trips.Trip.origin_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>The position for the pickup service.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="jinete.models.positions.html#jinete.models.positions.Position" title="jinete.models.positions.Position">Position</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jinete.models.trips.Trip.timeout">
+<code class="sig-name descname">timeout</code><a class="headerlink" href="#jinete.models.trips.Trip.timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>The max trip duration, from the pickup latest time to the delivery earliest time.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="jinete.models.vehicles.html" class="btn btn-neutral float-right" title="vehicles module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="jinete.models.surfaces.html" class="btn btn-neutral float-left" title="surfaces module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio García Prado
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

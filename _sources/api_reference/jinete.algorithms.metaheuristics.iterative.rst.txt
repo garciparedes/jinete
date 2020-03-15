@@ -1,0 +1,7 @@
+iterative module
+================
+
+.. automodule:: jinete.algorithms.metaheuristics.iterative
+   :members:
+   :undoc-members:
+   :show-inheritance:

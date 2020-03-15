@@ -1,0 +1,7 @@
+graph module
+============
+
+.. automodule:: jinete.storers.plots.graph
+   :members:
+   :undoc-members:
+   :show-inheritance:

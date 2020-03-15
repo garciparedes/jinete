@@ -1,0 +1,7 @@
+sampling module
+===============
+
+.. automodule:: jinete.algorithms.heuristics.insertion.strategies.sampling
+   :members:
+   :undoc-members:
+   :show-inheritance:

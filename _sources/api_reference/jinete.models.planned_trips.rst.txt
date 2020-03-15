@@ -1,0 +1,7 @@
+planned\_trips module
+=====================
+
+.. automodule:: jinete.models.planned_trips
+   :members:
+   :undoc-members:
+   :show-inheritance:

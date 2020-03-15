@@ -1,0 +1,7 @@
+abc module
+==========
+
+.. automodule:: jinete.storers.formatters.abc
+   :members:
+   :undoc-members:
+   :show-inheritance:

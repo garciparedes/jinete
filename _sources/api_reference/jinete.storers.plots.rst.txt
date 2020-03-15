@@ -1,0 +1,23 @@
+plots package
+=============
+
+.. automodule:: jinete.storers.plots
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+.. toctree::
+   :hidden:
+
+
+   jinete.storers.plots.graph
+
+.. autosummary::
+
+   jinete.storers.plots.graph
+
+
+
+

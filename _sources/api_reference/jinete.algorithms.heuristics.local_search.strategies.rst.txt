@@ -1,0 +1,27 @@
+strategies package
+==================
+
+.. automodule:: jinete.algorithms.heuristics.local_search.strategies
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+.. toctree::
+   :hidden:
+
+
+   jinete.algorithms.heuristics.local_search.strategies.plannings
+   jinete.algorithms.heuristics.local_search.strategies.routes
+   jinete.algorithms.heuristics.local_search.strategies.abc
+
+.. autosummary::
+
+   jinete.algorithms.heuristics.local_search.strategies.plannings
+   jinete.algorithms.heuristics.local_search.strategies.routes
+   jinete.algorithms.heuristics.local_search.strategies.abc
+
+
+
+

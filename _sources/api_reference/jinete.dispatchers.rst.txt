@@ -1,0 +1,25 @@
+dispatchers package
+===================
+
+.. automodule:: jinete.dispatchers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+.. toctree::
+   :hidden:
+
+
+   jinete.dispatchers.abc
+   jinete.dispatchers.static
+
+.. autosummary::
+
+   jinete.dispatchers.abc
+   jinete.dispatchers.static
+
+
+
+

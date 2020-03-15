@@ -1,0 +1,7 @@
+three\_index module
+===================
+
+.. automodule:: jinete.algorithms.exacts.models.three_index
+   :members:
+   :undoc-members:
+   :show-inheritance:

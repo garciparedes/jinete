@@ -1,0 +1,7 @@
+criterions module
+=================
+
+.. automodule:: jinete.models.criterions
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,7 @@
+trips module
+============
+
+.. automodule:: jinete.models.trips
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,7 @@
+sets module
+===========
+
+.. automodule:: jinete.storers.sets
+   :members:
+   :undoc-members:
+   :show-inheritance:

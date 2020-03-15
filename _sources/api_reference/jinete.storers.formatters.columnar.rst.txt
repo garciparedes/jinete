@@ -1,0 +1,7 @@
+columnar module
+===============
+
+.. automodule:: jinete.storers.formatters.columnar
+   :members:
+   :undoc-members:
+   :show-inheritance:

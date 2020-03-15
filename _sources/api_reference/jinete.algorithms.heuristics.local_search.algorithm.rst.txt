@@ -1,0 +1,7 @@
+algorithm module
+================
+
+.. automodule:: jinete.algorithms.heuristics.local_search.algorithm
+   :members:
+   :undoc-members:
+   :show-inheritance:

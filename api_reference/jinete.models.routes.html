@@ -1,0 +1,626 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>routes module &mdash; jinete 0.0.14 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="services module" href="jinete.models.services.html" />
+    <link rel="prev" title="results module" href="jinete.models.results.html" />
+    <link href="../_static/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> jinete
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../module_hierarchy.html">Module Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../directory_hierarchy.html">Directory Hierarchy</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api_reference.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">jinete</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="api_reference.html">API Reference</a> &raquo;</li>
+        
+          <li><a href="jinete.html">jinete package</a> &raquo;</li>
+        
+          <li><a href="jinete.models.html">models package</a> &raquo;</li>
+        
+      <li>routes module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api_reference/jinete.models.routes.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-jinete.models.routes">
+<span id="routes-module"></span><h1>routes module<a class="headerlink" href="#module-jinete.models.routes" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="jinete.models.routes.Route">
+<em class="property">class </em><code class="sig-prename descclassname">jinete.models.routes.</code><code class="sig-name descname">Route</code><span class="sig-paren">(</span><em class="sig-param">vehicle</em>, <em class="sig-param">stops=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/routes.html#Route"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.routes.Route" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="jinete.models.abc.html#jinete.models.abc.Model" title="jinete.models.abc.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.abc.Model</span></code></a></p>
+<dl class="method">
+<dt id="jinete.models.routes.Route.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">vehicle</em>, <em class="sig-param">stops=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/routes.html#Route.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.routes.Route.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>The constructor of the class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.append_planned_trip">
+<code class="sig-name descname">append_planned_trip</code><span class="sig-paren">(</span><em class="sig-param">planned_trip</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/routes.html#Route.append_planned_trip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.routes.Route.append_planned_trip" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.clone">
+<code class="sig-name descname">clone</code><span class="sig-paren">(</span><em class="sig-param">idx=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/routes.html#Route.clone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.routes.Route.clone" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#jinete.models.routes.Route" title="jinete.models.routes.Route"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.routes.Route</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.current_arrival_time">
+<em class="property">property </em><code class="sig-name descname">current_arrival_time</code><a class="headerlink" href="#jinete.models.routes.Route.current_arrival_time" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.current_departure_time">
+<em class="property">property </em><code class="sig-name descname">current_departure_time</code><a class="headerlink" href="#jinete.models.routes.Route.current_departure_time" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.current_position">
+<em class="property">property </em><code class="sig-name descname">current_position</code><a class="headerlink" href="#jinete.models.routes.Route.current_position" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="jinete.models.positions.html#jinete.models.positions.Position" title="jinete.models.positions.Position">Position</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.current_stop">
+<em class="property">property </em><code class="sig-name descname">current_stop</code><a class="headerlink" href="#jinete.models.routes.Route.current_stop" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="jinete.models.stops.html#jinete.models.stops.Stop" title="jinete.models.stops.Stop"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.stops.Stop</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.deliveries">
+<em class="property">property </em><code class="sig-name descname">deliveries</code><a class="headerlink" href="#jinete.models.routes.Route.deliveries" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Iterator[<a class="reference internal" href="jinete.models.planned_trips.html#jinete.models.planned_trips.PlannedTrip" title="jinete.models.planned_trips.PlannedTrip">PlannedTrip</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.distance">
+<em class="property">property </em><code class="sig-name descname">distance</code><a class="headerlink" href="#jinete.models.routes.Route.distance" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.duration">
+<em class="property">property </em><code class="sig-name descname">duration</code><a class="headerlink" href="#jinete.models.routes.Route.duration" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jinete.models.routes.Route.feasible">
+<code class="sig-name descname">feasible</code><a class="headerlink" href="#jinete.models.routes.Route.feasible" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.feasible_planned_trips">
+<em class="property">property </em><code class="sig-name descname">feasible_planned_trips</code><a class="headerlink" href="#jinete.models.routes.Route.feasible_planned_trips" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.feasible_stops">
+<em class="property">property </em><code class="sig-name descname">feasible_stops</code><a class="headerlink" href="#jinete.models.routes.Route.feasible_stops" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.first_departure_time">
+<em class="property">property </em><code class="sig-name descname">first_departure_time</code><a class="headerlink" href="#jinete.models.routes.Route.first_departure_time" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.first_stop">
+<em class="property">property </em><code class="sig-name descname">first_stop</code><a class="headerlink" href="#jinete.models.routes.Route.first_stop" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="jinete.models.stops.html#jinete.models.stops.Stop" title="jinete.models.stops.Stop"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.stops.Stop</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.flush">
+<code class="sig-name descname">flush</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/routes.html#Route.flush"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.routes.Route.flush" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.identifier">
+<em class="property">property </em><code class="sig-name descname">identifier</code><a class="headerlink" href="#jinete.models.routes.Route.identifier" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.insert_stop">
+<code class="sig-name descname">insert_stop</code><span class="sig-paren">(</span><em class="sig-param">stop</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/routes.html#Route.insert_stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.routes.Route.insert_stop" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="jinete.models.stops.html#jinete.models.stops.Stop" title="jinete.models.stops.Stop"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.stops.Stop</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.insert_stop_at">
+<code class="sig-name descname">insert_stop_at</code><span class="sig-paren">(</span><em class="sig-param">idx</em>, <em class="sig-param">stop</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/routes.html#Route.insert_stop_at"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.routes.Route.insert_stop_at" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="jinete.models.stops.html#jinete.models.stops.Stop" title="jinete.models.stops.Stop"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.stops.Stop</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.last_departure_time">
+<em class="property">property </em><code class="sig-name descname">last_departure_time</code><a class="headerlink" href="#jinete.models.routes.Route.last_departure_time" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.last_position">
+<em class="property">property </em><code class="sig-name descname">last_position</code><a class="headerlink" href="#jinete.models.routes.Route.last_position" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="jinete.models.positions.html#jinete.models.positions.Position" title="jinete.models.positions.Position">Position</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.last_stop">
+<em class="property">property </em><code class="sig-name descname">last_stop</code><a class="headerlink" href="#jinete.models.routes.Route.last_stop" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="jinete.models.stops.html#jinete.models.stops.Stop" title="jinete.models.stops.Stop"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.stops.Stop</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.loaded">
+<em class="property">property </em><code class="sig-name descname">loaded</code><a class="headerlink" href="#jinete.models.routes.Route.loaded" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.loaded_planned_trips">
+<em class="property">property </em><code class="sig-name descname">loaded_planned_trips</code><a class="headerlink" href="#jinete.models.routes.Route.loaded_planned_trips" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Iterator[<a class="reference internal" href="jinete.models.planned_trips.html#jinete.models.planned_trips.PlannedTrip" title="jinete.models.planned_trips.PlannedTrip">PlannedTrip</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.loaded_trips">
+<em class="property">property </em><code class="sig-name descname">loaded_trips</code><a class="headerlink" href="#jinete.models.routes.Route.loaded_trips" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Iterator[<a class="reference internal" href="jinete.models.trips.html#jinete.models.trips.Trip" title="jinete.models.trips.Trip">Trip</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.loaded_trips_count">
+<em class="property">property </em><code class="sig-name descname">loaded_trips_count</code><a class="headerlink" href="#jinete.models.routes.Route.loaded_trips_count" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.pickups">
+<em class="property">property </em><code class="sig-name descname">pickups</code><a class="headerlink" href="#jinete.models.routes.Route.pickups" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Iterator[<a class="reference internal" href="jinete.models.planned_trips.html#jinete.models.planned_trips.PlannedTrip" title="jinete.models.planned_trips.PlannedTrip">PlannedTrip</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.planned_trips">
+<em class="property">property </em><code class="sig-name descname">planned_trips</code><a class="headerlink" href="#jinete.models.routes.Route.planned_trips" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Iterator[<a class="reference internal" href="jinete.models.planned_trips.html#jinete.models.planned_trips.PlannedTrip" title="jinete.models.planned_trips.PlannedTrip">PlannedTrip</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.positions">
+<em class="property">property </em><code class="sig-name descname">positions</code><a class="headerlink" href="#jinete.models.routes.Route.positions" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Iterator[<a class="reference internal" href="jinete.models.positions.html#jinete.models.positions.Position" title="jinete.models.positions.Position">Position</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.remove_stop_at">
+<code class="sig-name descname">remove_stop_at</code><span class="sig-paren">(</span><em class="sig-param">idx</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/routes.html#Route.remove_stop_at"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.routes.Route.remove_stop_at" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="jinete.models.stops.html#jinete.models.stops.Stop" title="jinete.models.stops.Stop"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.stops.Stop</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.remove_trip">
+<code class="sig-name descname">remove_trip</code><span class="sig-paren">(</span><em class="sig-param">trip</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/routes.html#Route.remove_trip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.routes.Route.remove_trip" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)">None</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jinete.models.routes.Route.stops">
+<code class="sig-name descname">stops</code><a class="headerlink" href="#jinete.models.routes.Route.stops" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.transit_time">
+<em class="property">property </em><code class="sig-name descname">transit_time</code><a class="headerlink" href="#jinete.models.routes.Route.transit_time" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.trips">
+<em class="property">property </em><code class="sig-name descname">trips</code><a class="headerlink" href="#jinete.models.routes.Route.trips" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Iterator[<a class="reference internal" href="jinete.models.trips.html#jinete.models.trips.Trip" title="jinete.models.trips.Trip">Trip</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="jinete.models.routes.Route.vehicle">
+<code class="sig-name descname">vehicle</code><a class="headerlink" href="#jinete.models.routes.Route.vehicle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.vehicle_identifier">
+<em class="property">property </em><code class="sig-name descname">vehicle_identifier</code><a class="headerlink" href="#jinete.models.routes.Route.vehicle_identifier" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.Route.waiting_time">
+<em class="property">property </em><code class="sig-name descname">waiting_time</code><a class="headerlink" href="#jinete.models.routes.Route.waiting_time" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jinete.models.routes.RouteCloner">
+<em class="property">class </em><code class="sig-prename descclassname">jinete.models.routes.</code><code class="sig-name descname">RouteCloner</code><span class="sig-paren">(</span><em class="sig-param">route</em>, <em class="sig-param">idx=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/routes.html#RouteCloner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.routes.RouteCloner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="jinete.models.routes.RouteCloner.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">route</em>, <em class="sig-param">idx=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/routes.html#RouteCloner.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.routes.RouteCloner.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.RouteCloner.clone">
+<code class="sig-name descname">clone</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/routes.html#RouteCloner.clone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.routes.RouteCloner.clone" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#jinete.models.routes.Route" title="jinete.models.routes.Route"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.routes.Route</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.RouteCloner.idx">
+<em class="property">property </em><code class="sig-name descname">idx</code><a class="headerlink" href="#jinete.models.routes.RouteCloner.idx" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.RouteCloner.map_delivery">
+<code class="sig-name descname">map_delivery</code><span class="sig-paren">(</span><em class="sig-param">stop</em>, <em class="sig-param">planned_trip</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/routes.html#RouteCloner.map_delivery"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.routes.RouteCloner.map_delivery" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.RouteCloner.map_pickup">
+<code class="sig-name descname">map_pickup</code><span class="sig-paren">(</span><em class="sig-param">stop</em>, <em class="sig-param">planned_trip</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/routes.html#RouteCloner.map_pickup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.routes.RouteCloner.map_pickup" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.RouteCloner.mapper">
+<em class="property">property </em><code class="sig-name descname">mapper</code><a class="headerlink" href="#jinete.models.routes.RouteCloner.mapper" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dict[<a class="reference internal" href="jinete.models.planned_trips.html#jinete.models.planned_trips.PlannedTrip" title="jinete.models.planned_trips.PlannedTrip">PlannedTrip</a>, <a class="reference internal" href="jinete.models.planned_trips.html#jinete.models.planned_trips.PlannedTrip" title="jinete.models.planned_trips.PlannedTrip">PlannedTrip</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.RouteCloner.stops">
+<em class="property">property </em><code class="sig-name descname">stops</code><a class="headerlink" href="#jinete.models.routes.RouteCloner.stops" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="jinete.models.stops.html#jinete.models.stops.Stop" title="jinete.models.stops.Stop">Stop</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.routes.RouteCloner.vehicle">
+<em class="property">property </em><code class="sig-name descname">vehicle</code><a class="headerlink" href="#jinete.models.routes.RouteCloner.vehicle" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="jinete.models.vehicles.html#jinete.models.vehicles.Vehicle" title="jinete.models.vehicles.Vehicle">Vehicle</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="jinete.models.services.html" class="btn btn-neutral float-right" title="services module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="jinete.models.results.html" class="btn btn-neutral float-left" title="results module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio García Prado
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

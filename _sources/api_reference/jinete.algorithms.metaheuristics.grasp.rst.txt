@@ -1,0 +1,7 @@
+grasp module
+============
+
+.. automodule:: jinete.algorithms.metaheuristics.grasp
+   :members:
+   :undoc-members:
+   :show-inheritance:

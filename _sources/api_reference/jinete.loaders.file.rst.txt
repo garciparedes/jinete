@@ -1,0 +1,7 @@
+file module
+===========
+
+.. automodule:: jinete.loaders.file
+   :members:
+   :undoc-members:
+   :show-inheritance:

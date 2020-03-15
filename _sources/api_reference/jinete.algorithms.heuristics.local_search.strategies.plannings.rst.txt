@@ -1,0 +1,23 @@
+plannings package
+=================
+
+.. automodule:: jinete.algorithms.heuristics.local_search.strategies.plannings
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+.. toctree::
+   :hidden:
+
+
+   jinete.algorithms.heuristics.local_search.strategies.plannings.reallocation
+
+.. autosummary::
+
+   jinete.algorithms.heuristics.local_search.strategies.plannings.reallocation
+
+
+
+

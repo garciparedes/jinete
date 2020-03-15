@@ -1,0 +1,7 @@
+algorithm module
+================
+
+.. automodule:: jinete.algorithms.heuristics.insertion.algorithm
+   :members:
+   :undoc-members:
+   :show-inheritance:

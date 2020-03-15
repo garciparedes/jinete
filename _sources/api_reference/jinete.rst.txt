@@ -1,0 +1,37 @@
+jinete package
+==============
+
+.. automodule:: jinete
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+.. toctree::
+   :hidden:
+
+
+   jinete.algorithms
+   jinete.dispatchers
+   jinete.loaders
+   jinete.models
+   jinete.storers
+   jinete.utils
+   jinete.exceptions
+   jinete.solvers
+
+.. autosummary::
+
+   jinete.algorithms
+   jinete.dispatchers
+   jinete.loaders
+   jinete.models
+   jinete.storers
+   jinete.utils
+   jinete.exceptions
+   jinete.solvers
+
+
+
+

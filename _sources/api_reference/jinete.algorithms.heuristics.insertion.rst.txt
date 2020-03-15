@@ -1,0 +1,27 @@
+insertion package
+=================
+
+.. automodule:: jinete.algorithms.heuristics.insertion
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+.. toctree::
+   :hidden:
+
+
+   jinete.algorithms.heuristics.insertion.iterators
+   jinete.algorithms.heuristics.insertion.strategies
+   jinete.algorithms.heuristics.insertion.algorithm
+
+.. autosummary::
+
+   jinete.algorithms.heuristics.insertion.iterators
+   jinete.algorithms.heuristics.insertion.strategies
+   jinete.algorithms.heuristics.insertion.algorithm
+
+
+
+

@@ -1,0 +1,25 @@
+local\_search package
+=====================
+
+.. automodule:: jinete.algorithms.heuristics.local_search
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+.. toctree::
+   :hidden:
+
+
+   jinete.algorithms.heuristics.local_search.strategies
+   jinete.algorithms.heuristics.local_search.algorithm
+
+.. autosummary::
+
+   jinete.algorithms.heuristics.local_search.strategies
+   jinete.algorithms.heuristics.local_search.algorithm
+
+
+
+

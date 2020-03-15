@@ -1,0 +1,7 @@
+one\_shift module
+=================
+
+.. automodule:: jinete.algorithms.heuristics.local_search.strategies.routes.one_shift
+   :members:
+   :undoc-members:
+   :show-inheritance:

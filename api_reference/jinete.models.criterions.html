@@ -1,0 +1,581 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>criterions module &mdash; jinete 0.0.14 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="jobs module" href="jinete.models.jobs.html" />
+    <link rel="prev" title="constants module" href="jinete.models.constants.html" />
+    <link href="../_static/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> jinete
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../module_hierarchy.html">Module Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../directory_hierarchy.html">Directory Hierarchy</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api_reference.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">jinete</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="api_reference.html">API Reference</a> &raquo;</li>
+        
+          <li><a href="jinete.html">jinete package</a> &raquo;</li>
+        
+          <li><a href="jinete.models.html">models package</a> &raquo;</li>
+        
+      <li>criterions module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api_reference/jinete.models.criterions.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-jinete.models.criterions">
+<span id="criterions-module"></span><h1>criterions module<a class="headerlink" href="#module-jinete.models.criterions" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="jinete.models.criterions.EarliestLastDepartureTimeRouteCriterion">
+<em class="property">class </em><code class="sig-prename descclassname">jinete.models.criterions.</code><code class="sig-name descname">EarliestLastDepartureTimeRouteCriterion</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/criterions.html#EarliestLastDepartureTimeRouteCriterion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.criterions.EarliestLastDepartureTimeRouteCriterion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jinete.models.criterions.RouteCriterion" title="jinete.models.criterions.RouteCriterion"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.criterions.RouteCriterion</span></code></a></p>
+<dl class="method">
+<dt id="jinete.models.criterions.EarliestLastDepartureTimeRouteCriterion.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/criterions.html#EarliestLastDepartureTimeRouteCriterion.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.criterions.EarliestLastDepartureTimeRouteCriterion.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.EarliestLastDepartureTimeRouteCriterion.best">
+<code class="sig-name descname">best</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#jinete.models.criterions.EarliestLastDepartureTimeRouteCriterion.best" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.EarliestLastDepartureTimeRouteCriterion.nbest">
+<code class="sig-name descname">nbest</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">routes</em>, <em class="sig-param">inplace=False</em><span class="sig-paren">)</span><a class="headerlink" href="#jinete.models.criterions.EarliestLastDepartureTimeRouteCriterion.nbest" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.EarliestLastDepartureTimeRouteCriterion.scoring">
+<code class="sig-name descname">scoring</code><span class="sig-paren">(</span><em class="sig-param">route</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/criterions.html#EarliestLastDepartureTimeRouteCriterion.scoring"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.criterions.EarliestLastDepartureTimeRouteCriterion.scoring" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.EarliestLastDepartureTimeRouteCriterion.sorted">
+<code class="sig-name descname">sorted</code><span class="sig-paren">(</span><em class="sig-param">routes</em>, <em class="sig-param">inplace=False</em><span class="sig-paren">)</span><a class="headerlink" href="#jinete.models.criterions.EarliestLastDepartureTimeRouteCriterion.sorted" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jinete.models.criterions.HashCodeRouteCriterion">
+<em class="property">class </em><code class="sig-prename descclassname">jinete.models.criterions.</code><code class="sig-name descname">HashCodeRouteCriterion</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/criterions.html#HashCodeRouteCriterion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.criterions.HashCodeRouteCriterion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jinete.models.criterions.RouteCriterion" title="jinete.models.criterions.RouteCriterion"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.criterions.RouteCriterion</span></code></a></p>
+<dl class="method">
+<dt id="jinete.models.criterions.HashCodeRouteCriterion.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/criterions.html#HashCodeRouteCriterion.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.criterions.HashCodeRouteCriterion.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.HashCodeRouteCriterion.best">
+<code class="sig-name descname">best</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#jinete.models.criterions.HashCodeRouteCriterion.best" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.HashCodeRouteCriterion.nbest">
+<code class="sig-name descname">nbest</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">routes</em>, <em class="sig-param">inplace=False</em><span class="sig-paren">)</span><a class="headerlink" href="#jinete.models.criterions.HashCodeRouteCriterion.nbest" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.HashCodeRouteCriterion.scoring">
+<code class="sig-name descname">scoring</code><span class="sig-paren">(</span><em class="sig-param">route</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/criterions.html#HashCodeRouteCriterion.scoring"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.criterions.HashCodeRouteCriterion.scoring" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.HashCodeRouteCriterion.sorted">
+<code class="sig-name descname">sorted</code><span class="sig-paren">(</span><em class="sig-param">routes</em>, <em class="sig-param">inplace=False</em><span class="sig-paren">)</span><a class="headerlink" href="#jinete.models.criterions.HashCodeRouteCriterion.sorted" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jinete.models.criterions.LongestTimeRouteCriterion">
+<em class="property">class </em><code class="sig-prename descclassname">jinete.models.criterions.</code><code class="sig-name descname">LongestTimeRouteCriterion</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/criterions.html#LongestTimeRouteCriterion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.criterions.LongestTimeRouteCriterion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jinete.models.criterions.RouteCriterion" title="jinete.models.criterions.RouteCriterion"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.criterions.RouteCriterion</span></code></a></p>
+<dl class="method">
+<dt id="jinete.models.criterions.LongestTimeRouteCriterion.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/criterions.html#LongestTimeRouteCriterion.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.criterions.LongestTimeRouteCriterion.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.LongestTimeRouteCriterion.best">
+<code class="sig-name descname">best</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#jinete.models.criterions.LongestTimeRouteCriterion.best" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.LongestTimeRouteCriterion.nbest">
+<code class="sig-name descname">nbest</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">routes</em>, <em class="sig-param">inplace=False</em><span class="sig-paren">)</span><a class="headerlink" href="#jinete.models.criterions.LongestTimeRouteCriterion.nbest" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.LongestTimeRouteCriterion.scoring">
+<code class="sig-name descname">scoring</code><span class="sig-paren">(</span><em class="sig-param">route</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/criterions.html#LongestTimeRouteCriterion.scoring"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.criterions.LongestTimeRouteCriterion.scoring" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.LongestTimeRouteCriterion.sorted">
+<code class="sig-name descname">sorted</code><span class="sig-paren">(</span><em class="sig-param">routes</em>, <em class="sig-param">inplace=False</em><span class="sig-paren">)</span><a class="headerlink" href="#jinete.models.criterions.LongestTimeRouteCriterion.sorted" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jinete.models.criterions.LongestUtilTimeRouteCriterion">
+<em class="property">class </em><code class="sig-prename descclassname">jinete.models.criterions.</code><code class="sig-name descname">LongestUtilTimeRouteCriterion</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/criterions.html#LongestUtilTimeRouteCriterion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.criterions.LongestUtilTimeRouteCriterion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jinete.models.criterions.RouteCriterion" title="jinete.models.criterions.RouteCriterion"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.criterions.RouteCriterion</span></code></a></p>
+<dl class="method">
+<dt id="jinete.models.criterions.LongestUtilTimeRouteCriterion.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/criterions.html#LongestUtilTimeRouteCriterion.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.criterions.LongestUtilTimeRouteCriterion.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.LongestUtilTimeRouteCriterion.best">
+<code class="sig-name descname">best</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#jinete.models.criterions.LongestUtilTimeRouteCriterion.best" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.LongestUtilTimeRouteCriterion.nbest">
+<code class="sig-name descname">nbest</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">routes</em>, <em class="sig-param">inplace=False</em><span class="sig-paren">)</span><a class="headerlink" href="#jinete.models.criterions.LongestUtilTimeRouteCriterion.nbest" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.LongestUtilTimeRouteCriterion.scoring">
+<code class="sig-name descname">scoring</code><span class="sig-paren">(</span><em class="sig-param">route</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/criterions.html#LongestUtilTimeRouteCriterion.scoring"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.criterions.LongestUtilTimeRouteCriterion.scoring" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.LongestUtilTimeRouteCriterion.sorted">
+<code class="sig-name descname">sorted</code><span class="sig-paren">(</span><em class="sig-param">routes</em>, <em class="sig-param">inplace=False</em><span class="sig-paren">)</span><a class="headerlink" href="#jinete.models.criterions.LongestUtilTimeRouteCriterion.sorted" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jinete.models.criterions.RouteCriterion">
+<em class="property">class </em><code class="sig-prename descclassname">jinete.models.criterions.</code><code class="sig-name descname">RouteCriterion</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">direction</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/criterions.html#RouteCriterion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.criterions.RouteCriterion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
+<dl class="method">
+<dt id="jinete.models.criterions.RouteCriterion.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">direction</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/criterions.html#RouteCriterion.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.criterions.RouteCriterion.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.RouteCriterion.best">
+<code class="sig-name descname">best</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/criterions.html#RouteCriterion.best"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.criterions.RouteCriterion.best" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.RouteCriterion.nbest">
+<code class="sig-name descname">nbest</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">routes</em>, <em class="sig-param">inplace=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/criterions.html#RouteCriterion.nbest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.criterions.RouteCriterion.nbest" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.RouteCriterion.scoring">
+<em class="property">abstract </em><code class="sig-name descname">scoring</code><span class="sig-paren">(</span><em class="sig-param">route</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/criterions.html#RouteCriterion.scoring"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.criterions.RouteCriterion.scoring" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.RouteCriterion.sorted">
+<code class="sig-name descname">sorted</code><span class="sig-paren">(</span><em class="sig-param">routes</em>, <em class="sig-param">inplace=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/criterions.html#RouteCriterion.sorted"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.criterions.RouteCriterion.sorted" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jinete.models.criterions.ShortestAveragePlannerTripDurationCriterion">
+<em class="property">class </em><code class="sig-prename descclassname">jinete.models.criterions.</code><code class="sig-name descname">ShortestAveragePlannerTripDurationCriterion</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/criterions.html#ShortestAveragePlannerTripDurationCriterion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.criterions.ShortestAveragePlannerTripDurationCriterion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jinete.models.criterions.RouteCriterion" title="jinete.models.criterions.RouteCriterion"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.criterions.RouteCriterion</span></code></a></p>
+<dl class="method">
+<dt id="jinete.models.criterions.ShortestAveragePlannerTripDurationCriterion.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/criterions.html#ShortestAveragePlannerTripDurationCriterion.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.criterions.ShortestAveragePlannerTripDurationCriterion.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.ShortestAveragePlannerTripDurationCriterion.best">
+<code class="sig-name descname">best</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#jinete.models.criterions.ShortestAveragePlannerTripDurationCriterion.best" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.ShortestAveragePlannerTripDurationCriterion.nbest">
+<code class="sig-name descname">nbest</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">routes</em>, <em class="sig-param">inplace=False</em><span class="sig-paren">)</span><a class="headerlink" href="#jinete.models.criterions.ShortestAveragePlannerTripDurationCriterion.nbest" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.ShortestAveragePlannerTripDurationCriterion.scoring">
+<code class="sig-name descname">scoring</code><span class="sig-paren">(</span><em class="sig-param">route</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/criterions.html#ShortestAveragePlannerTripDurationCriterion.scoring"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.criterions.ShortestAveragePlannerTripDurationCriterion.scoring" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.ShortestAveragePlannerTripDurationCriterion.sorted">
+<code class="sig-name descname">sorted</code><span class="sig-paren">(</span><em class="sig-param">routes</em>, <em class="sig-param">inplace=False</em><span class="sig-paren">)</span><a class="headerlink" href="#jinete.models.criterions.ShortestAveragePlannerTripDurationCriterion.sorted" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="jinete.models.criterions.ShortestTimeRouteCriterion">
+<em class="property">class </em><code class="sig-prename descclassname">jinete.models.criterions.</code><code class="sig-name descname">ShortestTimeRouteCriterion</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/criterions.html#ShortestTimeRouteCriterion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.criterions.ShortestTimeRouteCriterion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#jinete.models.criterions.RouteCriterion" title="jinete.models.criterions.RouteCriterion"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.criterions.RouteCriterion</span></code></a></p>
+<dl class="method">
+<dt id="jinete.models.criterions.ShortestTimeRouteCriterion.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/criterions.html#ShortestTimeRouteCriterion.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.criterions.ShortestTimeRouteCriterion.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.ShortestTimeRouteCriterion.best">
+<code class="sig-name descname">best</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#jinete.models.criterions.ShortestTimeRouteCriterion.best" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.ShortestTimeRouteCriterion.nbest">
+<code class="sig-name descname">nbest</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">routes</em>, <em class="sig-param">inplace=False</em><span class="sig-paren">)</span><a class="headerlink" href="#jinete.models.criterions.ShortestTimeRouteCriterion.nbest" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.ShortestTimeRouteCriterion.scoring">
+<code class="sig-name descname">scoring</code><span class="sig-paren">(</span><em class="sig-param">route</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/models/criterions.html#ShortestTimeRouteCriterion.scoring"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.models.criterions.ShortestTimeRouteCriterion.scoring" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="jinete.models.criterions.ShortestTimeRouteCriterion.sorted">
+<code class="sig-name descname">sorted</code><span class="sig-paren">(</span><em class="sig-param">routes</em>, <em class="sig-param">inplace=False</em><span class="sig-paren">)</span><a class="headerlink" href="#jinete.models.criterions.ShortestTimeRouteCriterion.sorted" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="jinete.models.jobs.html" class="btn btn-neutral float-right" title="jobs module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="jinete.models.constants.html" class="btn btn-neutral float-left" title="constants module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio García Prado
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

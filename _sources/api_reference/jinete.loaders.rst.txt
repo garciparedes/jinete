@@ -1,0 +1,29 @@
+loaders package
+===============
+
+.. automodule:: jinete.loaders
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+.. toctree::
+   :hidden:
+
+
+   jinete.loaders.formatters
+   jinete.loaders.abc
+   jinete.loaders.exceptions
+   jinete.loaders.file
+
+.. autosummary::
+
+   jinete.loaders.formatters
+   jinete.loaders.abc
+   jinete.loaders.exceptions
+   jinete.loaders.file
+
+
+
+

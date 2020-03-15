@@ -1,0 +1,7 @@
+routes module
+=============
+
+.. automodule:: jinete.models.routes
+   :members:
+   :undoc-members:
+   :show-inheritance:

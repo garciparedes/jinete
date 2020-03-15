@@ -1,0 +1,51 @@
+models package
+==============
+
+.. automodule:: jinete.models
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+.. toctree::
+   :hidden:
+
+
+   jinete.models.abc
+   jinete.models.constants
+   jinete.models.criterions
+   jinete.models.jobs
+   jinete.models.objectives
+   jinete.models.planned_trips
+   jinete.models.plannings
+   jinete.models.positions
+   jinete.models.results
+   jinete.models.routes
+   jinete.models.services
+   jinete.models.stops
+   jinete.models.surfaces
+   jinete.models.trips
+   jinete.models.vehicles
+
+.. autosummary::
+
+   jinete.models.abc
+   jinete.models.constants
+   jinete.models.criterions
+   jinete.models.jobs
+   jinete.models.objectives
+   jinete.models.planned_trips
+   jinete.models.plannings
+   jinete.models.positions
+   jinete.models.results
+   jinete.models.routes
+   jinete.models.services
+   jinete.models.stops
+   jinete.models.surfaces
+   jinete.models.trips
+   jinete.models.vehicles
+
+
+
+

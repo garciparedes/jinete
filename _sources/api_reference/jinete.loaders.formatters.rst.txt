@@ -1,0 +1,29 @@
+formatters package
+==================
+
+.. automodule:: jinete.loaders.formatters
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+.. toctree::
+   :hidden:
+
+
+   jinete.loaders.formatters.abc
+   jinete.loaders.formatters.cordeau_laporte
+   jinete.loaders.formatters.exceptions
+   jinete.loaders.formatters.hashcode
+
+.. autosummary::
+
+   jinete.loaders.formatters.abc
+   jinete.loaders.formatters.cordeau_laporte
+   jinete.loaders.formatters.exceptions
+   jinete.loaders.formatters.hashcode
+
+
+
+

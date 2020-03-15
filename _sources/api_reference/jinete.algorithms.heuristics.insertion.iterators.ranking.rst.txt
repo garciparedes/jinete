@@ -1,0 +1,7 @@
+ranking module
+==============
+
+.. automodule:: jinete.algorithms.heuristics.insertion.iterators.ranking
+   :members:
+   :undoc-members:
+   :show-inheritance:

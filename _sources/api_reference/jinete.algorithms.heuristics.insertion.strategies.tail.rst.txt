@@ -1,0 +1,7 @@
+tail module
+===========
+
+.. automodule:: jinete.algorithms.heuristics.insertion.strategies.tail
+   :members:
+   :undoc-members:
+   :show-inheritance:

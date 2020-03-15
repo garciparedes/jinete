@@ -1,0 +1,633 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>jinete.algorithms.exacts.models.three_index &mdash; jinete 0.0.14 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+        <script src="../../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link href="../../../../../_static/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> jinete
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../readme.html">Readme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../data_model.html">Data Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../module_hierarchy.html">Module Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../directory_hierarchy.html">Directory Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../api_reference/api_reference.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">jinete</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>jinete.algorithms.exacts.models.three_index</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for jinete.algorithms.exacts.models.three_index</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">defaultdict</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">product</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">TYPE_CHECKING</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">cached_property</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">cached_property</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">import</span> <span class="nn">pulp</span> <span class="k">as</span> <span class="nn">lp</span>
+
+<span class="kn">from</span> <span class="nn">jinete.models</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Stop</span><span class="p">,</span>
+    <span class="n">Route</span><span class="p">,</span>
+    <span class="n">PlannedTrip</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.abc</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Model</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
+        <span class="n">List</span><span class="p">,</span>
+        <span class="n">Set</span><span class="p">,</span>
+        <span class="n">Tuple</span><span class="p">,</span>
+        <span class="n">Iterable</span><span class="p">,</span>
+        <span class="n">Optional</span><span class="p">,</span>
+        <span class="n">Dict</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">jinete.models</span> <span class="kn">import</span> <span class="p">(</span>
+        <span class="n">Trip</span><span class="p">,</span>
+        <span class="n">Vehicle</span><span class="p">,</span>
+        <span class="n">Position</span><span class="p">,</span>
+    <span class="p">)</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">BIG</span> <span class="o">=</span> <span class="mi">10000</span>
+
+
+<div class="viewcode-block" id="ThreeIndexModel"><a class="viewcode-back" href="../../../../../api_reference/jinete.algorithms.exacts.models.three_index.html#jinete.algorithms.exacts.models.three_index.ThreeIndexModel">[docs]</a><span class="k">class</span> <span class="nc">ThreeIndexModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ThreeIndexModel.__init__"><a class="viewcode-back" href="../../../../../api_reference/jinete.algorithms.exacts.models.three_index.html#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solver</span><span class="p">:</span> <span class="n">lp</span><span class="o">.</span><span class="n">LpSolver</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="n">solver</span></div>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">problem</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">lp</span><span class="o">.</span><span class="n">LpProblem</span><span class="p">:</span>
+        <span class="n">problem</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">LpProblem</span><span class="p">(</span><span class="s2">&quot;3-idx_dial-a-ride&quot;</span><span class="p">,</span> <span class="n">lp</span><span class="o">.</span><span class="n">LpMinimize</span><span class="p">)</span>
+        <span class="n">problem</span><span class="o">.</span><span class="n">objective</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">objective</span>
+        <span class="n">problem</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">constraints</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">problem</span>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">objective</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">lp</span><span class="o">.</span><span class="n">LpConstraintVar</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">lp</span><span class="o">.</span><span class="n">lpSum</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">costs</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">routes_indexer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions_indexer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions_indexer</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">lp</span><span class="o">.</span><span class="n">LpConstraint</span><span class="p">]:</span>
+        <span class="n">constraints</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">lp</span><span class="o">.</span><span class="n">LpConstraint</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">uniqueness_constraints</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connectivity_constraints</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">time_constraints</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">feasibility_constraints</span><span class="p">,</span>
+        <span class="p">],</span> <span class="p">[])</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Built &quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">constraints</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot; constraints.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">constraints</span>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">x</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">lp</span><span class="o">.</span><span class="n">LpVariable</span><span class="p">]]]:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes_indexer</span><span class="p">:</span>
+            <span class="n">x_k</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions_indexer</span><span class="p">:</span>
+                <span class="n">x_ki</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions_indexer</span><span class="p">:</span>
+                    <span class="n">x_kij</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">LpVariable</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;x_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">cat</span><span class="o">=</span><span class="n">lp</span><span class="o">.</span><span class="n">LpBinary</span><span class="p">)</span>
+                    <span class="n">x_ki</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_kij</span><span class="p">)</span>
+                <span class="n">x_k</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_ki</span><span class="p">)</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_k</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">u</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">lp</span><span class="o">.</span><span class="n">LpVariable</span><span class="p">]]:</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes_indexer</span><span class="p">:</span>
+            <span class="n">u_k</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions_indexer</span><span class="p">:</span>
+                <span class="n">u_ki</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">LpVariable</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;u_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">lowBound</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+                <span class="n">u_k</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u_ki</span><span class="p">)</span>
+            <span class="n">u</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u_k</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">u</span>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">w</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">lp</span><span class="o">.</span><span class="n">LpVariable</span><span class="p">]]:</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes_indexer</span><span class="p">:</span>
+            <span class="n">w_k</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions_indexer</span><span class="p">:</span>
+                <span class="n">w_ki</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">LpVariable</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;w_</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">lowBound</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+                <span class="n">w_k</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w_ki</span><span class="p">)</span>
+            <span class="n">w</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w_k</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">w</span>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Vehicle</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fleet</span><span class="o">.</span><span class="n">vehicles</span><span class="p">)</span>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">trips</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Trip</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">trips</span><span class="p">)</span>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">positions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Position</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+        <span class="n">origins</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">trip</span><span class="o">.</span><span class="n">origin_position</span> <span class="k">for</span> <span class="n">trip</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trips</span><span class="p">)</span>
+        <span class="n">destinations</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">trip</span><span class="o">.</span><span class="n">destination_position</span> <span class="k">for</span> <span class="n">trip</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trips</span><span class="p">)</span>
+        <span class="n">positions</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">origin_position</span><span class="p">,)</span> <span class="o">+</span>
+                <span class="n">origins</span> <span class="o">+</span>
+                <span class="n">destinations</span> <span class="o">+</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">destination_position</span><span class="p">,)</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">positions</span>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">costs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">costs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">origin</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">:</span>
+            <span class="n">origin_costs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">destination</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">origin</span> <span class="o">==</span> <span class="n">destination</span><span class="p">:</span>
+                    <span class="n">cost</span> <span class="o">=</span> <span class="n">BIG</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">cost</span> <span class="o">=</span> <span class="n">origin</span><span class="o">.</span><span class="n">distance_to</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
+                <span class="n">origin_costs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span>
+            <span class="n">costs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">origin_costs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">costs</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">pickups_indexer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">nodes_indexer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">routes_indexer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">positions_indexer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">n</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trips</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ThreeIndexModel.trip_by_position_idx"><a class="viewcode-back" href="../../../../../api_reference/jinete.algorithms.exacts.models.three_index.html#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.trip_by_position_idx">[docs]</a>    <span class="k">def</span> <span class="nf">trip_by_position_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Trip</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trips</span><span class="p">[(</span><span class="n">idx</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="ThreeIndexModel.idx_by_position"><a class="viewcode-back" href="../../../../../api_reference/jinete.algorithms.exacts.models.three_index.html#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.idx_by_position">[docs]</a>    <span class="k">def</span> <span class="nf">idx_by_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="n">Position</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">position</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ThreeIndexModel.time_window_by_position_idx"><a class="viewcode-back" href="../../../../../api_reference/jinete.algorithms.exacts.models.three_index.html#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.time_window_by_position_idx">[docs]</a>    <span class="k">def</span> <span class="nf">time_window_by_position_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="n">position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+        <span class="n">trip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trip_by_position_idx</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">trip</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">earliest</span><span class="p">,</span> <span class="n">latest</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1440</span>
+        <span class="k">elif</span> <span class="n">position</span> <span class="o">==</span> <span class="n">trip</span><span class="o">.</span><span class="n">origin_position</span><span class="p">:</span>
+            <span class="n">earliest</span><span class="p">,</span> <span class="n">latest</span> <span class="o">=</span> <span class="n">trip</span><span class="o">.</span><span class="n">origin_earliest</span><span class="p">,</span> <span class="n">trip</span><span class="o">.</span><span class="n">origin_latest</span>
+        <span class="k">elif</span> <span class="n">position</span> <span class="o">==</span> <span class="n">trip</span><span class="o">.</span><span class="n">destination_position</span><span class="p">:</span>
+            <span class="n">earliest</span><span class="p">,</span> <span class="n">latest</span> <span class="o">=</span> <span class="n">trip</span><span class="o">.</span><span class="n">destination_earliest</span><span class="p">,</span> <span class="n">trip</span><span class="o">.</span><span class="n">destination_latest</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;There was a problem related with earliest, latest indices.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">earliest</span><span class="p">,</span> <span class="n">latest</span></div>
+
+<div class="viewcode-block" id="ThreeIndexModel.capacity_by_position_idx"><a class="viewcode-back" href="../../../../../api_reference/jinete.algorithms.exacts.models.three_index.html#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.capacity_by_position_idx">[docs]</a>    <span class="k">def</span> <span class="nf">capacity_by_position_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">trip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trip_by_position_idx</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">trip</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+
+        <span class="n">capacity</span> <span class="o">=</span> <span class="n">trip</span><span class="o">.</span><span class="n">capacity</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">idx</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">capacity</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="k">return</span> <span class="n">capacity</span></div>
+
+<div class="viewcode-block" id="ThreeIndexModel.load_time_by_position_idx"><a class="viewcode-back" href="../../../../../api_reference/jinete.algorithms.exacts.models.three_index.html#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.load_time_by_position_idx">[docs]</a>    <span class="k">def</span> <span class="nf">load_time_by_position_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">trip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trip_by_position_idx</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">trip</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="n">trip</span><span class="o">.</span><span class="n">origin_duration</span></div>
+
+<div class="viewcode-block" id="ThreeIndexModel.timeout_by_position_idx"><a class="viewcode-back" href="../../../../../api_reference/jinete.algorithms.exacts.models.three_index.html#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.timeout_by_position_idx">[docs]</a>    <span class="k">def</span> <span class="nf">timeout_by_position_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="n">trip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trip_by_position_idx</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">trip</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="n">trip</span><span class="o">.</span><span class="n">timeout</span></div>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">uniqueness_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">lp</span><span class="o">.</span><span class="n">LpConstraint</span><span class="p">]:</span>
+        <span class="n">constraints</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pickups_indexer</span><span class="p">:</span>
+            <span class="n">lhs</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">lpSum</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positions_indexer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes_indexer</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lhs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes_indexer</span><span class="p">:</span>
+                <span class="n">lhs</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">lp</span><span class="o">.</span><span class="n">lpSum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions_indexer</span><span class="p">)</span> <span class="o">-</span>
+                        <span class="n">lp</span><span class="o">.</span><span class="n">lpSum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">+</span> <span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions_indexer</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lhs</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">constraints</span>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">connectivity_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">lp</span><span class="o">.</span><span class="n">LpConstraint</span><span class="p">]:</span>
+        <span class="n">constraints</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes_indexer</span><span class="p">:</span>
+            <span class="n">lhs</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">lpSum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions_indexer</span><span class="p">)</span>
+            <span class="n">constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lhs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes_indexer</span><span class="p">:</span>
+                <span class="n">lhs</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">lp</span><span class="o">.</span><span class="n">lpSum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions_indexer</span><span class="p">)</span> <span class="o">-</span>
+                        <span class="n">lp</span><span class="o">.</span><span class="n">lpSum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions_indexer</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lhs</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+
+            <span class="n">lhs</span> <span class="o">=</span> <span class="n">lp</span><span class="o">.</span><span class="n">lpSum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions_indexer</span><span class="p">)</span>
+            <span class="n">constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lhs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">constraints</span>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">time_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">lp</span><span class="o">.</span><span class="n">LpConstraint</span><span class="p">]:</span>
+        <span class="n">constraints</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes_indexer</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positions_indexer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions_indexer</span><span class="p">):</span>
+                <span class="n">load_time_i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_time_by_position_idx</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">travel_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">time_to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+
+                <span class="n">earliest_i</span><span class="p">,</span> <span class="n">latest_i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_window_by_position_idx</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">earliest_j</span><span class="p">,</span> <span class="n">latest_j</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_window_by_position_idx</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+
+                <span class="n">cons</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">latest_i</span> <span class="o">+</span> <span class="n">load_time_i</span> <span class="o">+</span> <span class="n">travel_time</span> <span class="o">-</span> <span class="n">earliest_j</span><span class="p">)</span>
+
+                <span class="n">constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">load_time_i</span> <span class="o">+</span> <span class="n">travel_time</span> <span class="o">-</span> <span class="n">cons</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]),</span>
+                <span class="p">)</span>
+
+                <span class="n">capacity_i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">capacity_by_position_idx</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">capacity_j</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">capacity_by_position_idx</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+
+                <span class="n">cons</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">capacity</span> <span class="o">+</span> <span class="nb">min</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">capacity_i</span><span class="p">)</span>
+
+                <span class="n">constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">capacity_j</span> <span class="o">-</span> <span class="n">cons</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]),</span>
+                <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">constraints</span>
+
+    <span class="nd">@cached_property</span>
+    <span class="k">def</span> <span class="nf">feasibility_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">lp</span><span class="o">.</span><span class="n">LpConstraint</span><span class="p">]:</span>
+        <span class="n">constraints</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes_indexer</span><span class="p">:</span>
+            <span class="n">constraint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">timeout</span>
+            <span class="n">constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">constraint</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions_indexer</span><span class="p">:</span>
+                <span class="n">earliest</span><span class="p">,</span> <span class="n">latest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_window_by_position_idx</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+                <span class="n">constraints</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
+                    <span class="n">earliest</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">],</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">latest</span><span class="p">,</span>
+                <span class="p">])</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pickups_indexer</span><span class="p">:</span>
+                <span class="n">load_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_time_by_position_idx</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">timeout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeout_by_position_idx</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">travel_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">time_to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">])</span>
+
+                <span class="n">constraints</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
+                    <span class="n">travel_time</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">load_time</span><span class="p">),</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">load_time</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">timeout</span><span class="p">,</span>
+                <span class="p">])</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions_indexer</span><span class="p">:</span>
+                <span class="n">capacity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">capacity_by_position_idx</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+                <span class="n">constraints</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
+                    <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">capacity</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">],</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">capacity</span> <span class="o">+</span> <span class="nb">min</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">capacity</span><span class="p">),</span>
+                <span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">constraints</span>
+
+<div class="viewcode-block" id="ThreeIndexModel.solve"><a class="viewcode-back" href="../../../../../api_reference/jinete.algorithms.exacts.models.three_index.html#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.solve">[docs]</a>    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="n">Route</span><span class="p">]:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Starting to solve...&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">problem</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Obtained &quot;</span><span class="si">{</span><span class="n">lp</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">objective</span><span class="p">)</span><span class="si">}</span><span class="s1">&quot; reaching &quot;</span><span class="si">{</span><span class="n">lp</span><span class="o">.</span><span class="n">LpStatus</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">problem</span><span class="o">.</span><span class="n">status</span><span class="p">]</span><span class="si">}</span><span class="s1">&quot;.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solution_to_routes</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ThreeIndexModel.print_solution"><a class="viewcode-back" href="../../../../../api_reference/jinete.algorithms.exacts.models.three_index.html#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.print_solution">[docs]</a>    <span class="k">def</span> <span class="nf">print_solution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;X:&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes_indexer</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Vehicle </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">-th.&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;   </span><span class="si">{</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">num</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">num</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions_indexer</span><span class="p">))</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions_indexer</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s1">02d</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions_indexer</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">varValue</span><span class="p">)</span><span class="si">:</span><span class="s1">2d</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">()</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;U:&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes_indexer</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Vehicle </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">-th.&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions_indexer</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">varValue</span><span class="si">:</span><span class="s1">4.01f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">()</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;W:&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes_indexer</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Vehicle </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">-th.&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions_indexer</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">varValue</span><span class="si">:</span><span class="s1">4.01f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ThreeIndexModel.validate"><a class="viewcode-back" href="../../../../../api_reference/jinete.algorithms.exacts.models.three_index.html#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes_indexer</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions_indexer</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Obtained &quot;u[</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">][</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">]=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">varValue</span><span class="si">}</span><span class="s1">&quot;.&#39;</span><span class="p">)</span>
+                <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">varValue</span> <span class="o">&gt;=</span> <span class="mf">0.0</span>
+
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Obtained &quot;w[</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">][</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">]=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">varValue</span><span class="si">}</span><span class="s1">&quot;.&#39;</span><span class="p">)</span>
+                <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">varValue</span> <span class="o">&gt;=</span> <span class="mf">0.0</span>
+
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions_indexer</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Obtained &quot;x[</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1">][</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">][</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s1">]=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">varValue</span><span class="si">}</span><span class="s1">&quot;.&#39;</span><span class="p">)</span>
+                    <span class="k">assert</span> <span class="nb">min</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">varValue</span><span class="p">),</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">varValue</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">&lt;=</span> <span class="mf">0.05</span></div>
+
+    <span class="k">def</span> <span class="nf">_solution_to_routes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Casting solution to a set of routes...&#39;</span><span class="p">)</span>
+        <span class="n">routes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes_indexer</span><span class="p">:</span>
+            <span class="n">vehicle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vehicles</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+            <span class="n">route</span> <span class="o">=</span> <span class="n">Route</span><span class="p">(</span><span class="n">vehicle</span><span class="p">)</span>
+
+            <span class="n">positions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_solution_to_positions</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+            <span class="n">stops</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_positions_to_stops</span><span class="p">(</span><span class="n">route</span><span class="p">,</span> <span class="n">positions</span><span class="p">)</span>
+            <span class="n">trips</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_positions_to_trips</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_build_planned_trips</span><span class="p">(</span><span class="n">vehicle</span><span class="p">,</span> <span class="n">trips</span><span class="p">,</span> <span class="n">stops</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_adjust_waiting_times</span><span class="p">(</span><span class="n">stops</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">stop</span> <span class="ow">in</span> <span class="n">stops</span><span class="p">:</span>
+                <span class="n">route</span><span class="o">.</span><span class="n">insert_stop</span><span class="p">(</span><span class="n">stop</span><span class="p">)</span>
+
+            <span class="n">routes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">route</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">routes</span>
+
+    <span class="k">def</span> <span class="nf">_positions_to_trips</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">positions</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Trip</span><span class="p">]:</span>
+        <span class="n">trips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Trip</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">position</span> <span class="ow">in</span> <span class="n">positions</span><span class="p">:</span>
+            <span class="n">trip</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">trip</span> <span class="k">for</span> <span class="n">trip</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trips</span> <span class="k">if</span> <span class="n">trip</span><span class="o">.</span><span class="n">origin_position</span> <span class="o">==</span> <span class="n">position</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">trip</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">trip</span> <span class="ow">in</span> <span class="n">trips</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">trips</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">trip</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">trips</span>
+
+    <span class="k">def</span> <span class="nf">_build_planned_trips</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vehicle</span><span class="p">:</span> <span class="n">Vehicle</span><span class="p">,</span> <span class="n">trips</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Trip</span><span class="p">],</span> <span class="n">stops</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Stop</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">PlannedTrip</span><span class="p">]:</span>
+        <span class="n">stop_mapper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stop_to_stop_mapper</span><span class="p">(</span><span class="n">stops</span><span class="p">)</span>
+
+        <span class="n">planned_trips</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">trip</span> <span class="ow">in</span> <span class="n">trips</span><span class="p">:</span>
+            <span class="n">pickup</span> <span class="o">=</span> <span class="n">stop_mapper</span><span class="p">[</span><span class="n">trip</span><span class="o">.</span><span class="n">origin_position</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">delivery</span> <span class="o">=</span> <span class="n">stop_mapper</span><span class="p">[</span><span class="n">trip</span><span class="o">.</span><span class="n">destination_position</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">planned_trip</span> <span class="o">=</span> <span class="n">PlannedTrip</span><span class="p">(</span><span class="n">vehicle</span><span class="p">,</span> <span class="n">trip</span><span class="p">,</span> <span class="n">pickup</span><span class="p">,</span> <span class="n">delivery</span><span class="p">)</span>
+            <span class="n">planned_trips</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">planned_trip</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">planned_trips</span>
+
+    <span class="k">def</span> <span class="nf">_solution_to_positions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Position</span><span class="p">]:</span>
+        <span class="n">ordered_trip_indexes</span> <span class="o">=</span> <span class="p">[</span><span class="n">idx</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="n">k</span><span class="p">])),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">varValue</span><span class="p">)]</span>
+
+        <span class="n">positions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="n">ordered_trip_indexes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">positions_indexer</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">varValue</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">positions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">positions</span>
+
+    <span class="k">def</span> <span class="nf">_positions_to_stops</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">route</span><span class="p">,</span> <span class="n">positions</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Stop</span><span class="p">]:</span>
+        <span class="n">stops</span> <span class="o">=</span> <span class="p">[</span><span class="n">route</span><span class="o">.</span><span class="n">first_stop</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">position</span> <span class="ow">in</span> <span class="n">positions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">position</span> <span class="o">==</span> <span class="n">stops</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">position</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">pickup</span> <span class="o">=</span> <span class="n">Stop</span><span class="p">(</span><span class="n">route</span><span class="o">.</span><span class="n">vehicle</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">stops</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">stops</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pickup</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">stops</span>
+
+    <span class="k">def</span> <span class="nf">_stop_to_stop_mapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stops</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Stop</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Position</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Stop</span><span class="p">]]:</span>
+        <span class="n">mapper</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Position</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Stop</span><span class="p">]]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">stop</span> <span class="ow">in</span> <span class="n">stops</span><span class="p">:</span>
+            <span class="n">mapper</span><span class="p">[</span><span class="n">stop</span><span class="o">.</span><span class="n">position</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stop</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mapper</span>
+
+    <span class="k">def</span> <span class="nf">_adjust_waiting_times</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stops</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Stop</span><span class="p">],</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">starting_times</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">u_k</span><span class="o">.</span><span class="n">varValue</span><span class="p">)</span> <span class="k">for</span> <span class="n">u_k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">stop</span> <span class="ow">in</span> <span class="n">stops</span><span class="p">:</span>
+            <span class="n">stop</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+            <span class="n">stop</span><span class="o">.</span><span class="n">starting_time</span> <span class="o">=</span> <span class="n">starting_times</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">idx_by_position</span><span class="p">(</span><span class="n">stop</span><span class="o">.</span><span class="n">position</span><span class="p">)]</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Sergio García Prado
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+sequential module
+=================
+
+.. automodule:: jinete.algorithms.metaheuristics.sequential
+   :members:
+   :undoc-members:
+   :show-inheritance:

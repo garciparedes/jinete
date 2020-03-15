@@ -1,0 +1,7 @@
+exceptions module
+=================
+
+.. automodule:: jinete.loaders.formatters.exceptions
+   :members:
+   :undoc-members:
+   :show-inheritance:

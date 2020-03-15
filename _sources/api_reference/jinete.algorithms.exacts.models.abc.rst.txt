@@ -1,0 +1,7 @@
+abc module
+==========
+
+.. automodule:: jinete.algorithms.exacts.models.abc
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,7 @@
+naive module
+============
+
+.. automodule:: jinete.algorithms.naive
+   :members:
+   :undoc-members:
+   :show-inheritance:

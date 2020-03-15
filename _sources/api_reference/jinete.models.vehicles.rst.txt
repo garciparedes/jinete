@@ -1,0 +1,7 @@
+vehicles module
+===============
+
+.. automodule:: jinete.models.vehicles
+   :members:
+   :undoc-members:
+   :show-inheritance:

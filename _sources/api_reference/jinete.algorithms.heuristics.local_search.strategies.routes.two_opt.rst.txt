@@ -1,0 +1,7 @@
+two\_opt module
+===============
+
+.. automodule:: jinete.algorithms.heuristics.local_search.strategies.routes.two_opt
+   :members:
+   :undoc-members:
+   :show-inheritance:

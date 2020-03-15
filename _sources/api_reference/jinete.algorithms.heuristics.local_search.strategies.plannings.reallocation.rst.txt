@@ -1,0 +1,7 @@
+reallocation module
+===================
+
+.. automodule:: jinete.algorithms.heuristics.local_search.strategies.plannings.reallocation
+   :members:
+   :undoc-members:
+   :show-inheritance:

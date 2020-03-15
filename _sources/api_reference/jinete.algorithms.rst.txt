@@ -1,0 +1,31 @@
+algorithms package
+==================
+
+.. automodule:: jinete.algorithms
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+.. toctree::
+   :hidden:
+
+
+   jinete.algorithms.exacts
+   jinete.algorithms.heuristics
+   jinete.algorithms.metaheuristics
+   jinete.algorithms.abc
+   jinete.algorithms.naive
+
+.. autosummary::
+
+   jinete.algorithms.exacts
+   jinete.algorithms.heuristics
+   jinete.algorithms.metaheuristics
+   jinete.algorithms.abc
+   jinete.algorithms.naive
+
+
+
+

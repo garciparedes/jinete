@@ -1,0 +1,23 @@
+utils package
+=============
+
+.. automodule:: jinete.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+.. toctree::
+   :hidden:
+
+
+   jinete.utils.collections
+
+.. autosummary::
+
+   jinete.utils.collections
+
+
+
+

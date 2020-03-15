@@ -1,0 +1,7 @@
+cordeau\_laporte module
+=======================
+
+.. automodule:: jinete.loaders.formatters.cordeau_laporte
+   :members:
+   :undoc-members:
+   :show-inheritance:

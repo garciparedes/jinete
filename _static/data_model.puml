@@ -1,0 +1,80 @@
+@startuml
+skinparam linetype ortho
+skinparam nodesep 100
+skinparam ranksep 100
+hide empty methods
+hide empty attributes
+
+entity Vehicle {
+  identifier: str
+  capacity: float
+  timeout: float
+}
+
+entity Route {
+  uuid: UUID
+}
+
+entity Trip {
+  identifier: str
+  on_time_bonus: float
+  capacity: float
+  timeout: float
+}
+
+entity PlannedTrip {
+}
+
+entity Planning {
+  computation_time: float
+}
+
+entity Stop {
+  starting_time?: float
+}
+
+entity Service {
+  earliest: float
+  latest: float
+  duration: float
+}
+
+entity Job {
+}
+
+entity Fleet {
+}
+
+entity Position {
+  coordinates: Tuple[float, ...]
+}
+
+entity Surface {
+  uuid: UUID
+}
+
+
+Job o-"*" Trip
+Algorithm --o Planning: optimizes >
+Algorithm o-- Fleet
+Algorithm o-- Job
+Planning o--"*" Route
+Trip o- PlannedTrip: planified >
+Trip o-right-"origin" Service
+Trip o-right-"destination" Service
+Service o--"1" Position: located at >
+PlannedTrip "*"-up-"pickup" Stop
+PlannedTrip "*"-up-"delivery" Stop
+Route --"2..*" Stop
+Position "1"-o Stop
+Position "*"-up-o Surface
+Vehicle "1"--o Stop
+Vehicle "1"--o PlannedTrip
+Vehicle "1"-down-o Route
+Stop "previous"-- Stop
+Fleet o--"*" Vehicle
+Vehicle o-left-"origin" Service
+Vehicle o-left-"destination" Service
+
+
+@enduml

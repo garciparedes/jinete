@@ -1,0 +1,7 @@
+objectives module
+=================
+
+.. automodule:: jinete.models.objectives
+   :members:
+   :undoc-members:
+   :show-inheritance:

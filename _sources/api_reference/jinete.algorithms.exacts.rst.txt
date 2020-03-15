@@ -1,0 +1,25 @@
+exacts package
+==============
+
+.. automodule:: jinete.algorithms.exacts
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+.. toctree::
+   :hidden:
+
+
+   jinete.algorithms.exacts.models
+   jinete.algorithms.exacts.milp
+
+.. autosummary::
+
+   jinete.algorithms.exacts.models
+   jinete.algorithms.exacts.milp
+
+
+
+
