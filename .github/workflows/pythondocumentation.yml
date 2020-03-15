@@ -27,7 +27,13 @@ jobs:
     - name: Documentation building
       run: |
         sphinx-build docs/source docs/build/html
-    - uses: actions/upload-artifact@v1
+    - name: Documentation artifacting
+      uses: actions/upload-artifact@v1
       with:
         name: documentation
         path: docs/build/html
+    - name: Documentation deploying
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: docs/build/html
