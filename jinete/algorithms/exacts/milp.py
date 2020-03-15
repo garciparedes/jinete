@@ -17,9 +17,6 @@ from ..abc import (
 from .models import (
     ThreeIndexModel,
 )
-from ...utils import (
-    doc_inherit,
-)
 
 if TYPE_CHECKING:
     from typing import (
@@ -37,7 +34,6 @@ class MilpAlgorithm(Algorithm):
     The `jinete`'s interface to solve the given problem, supported by the Mixed-Integer Linear Programming frame.
     """
 
-    @doc_inherit
     def __init__(self, model_cls: Type[Model] = None, *args, **kwargs):
         """
         :param model_cls: The model class to generate the representation of the problem.

@@ -12,7 +12,6 @@ from ...abc import (
 from .strategies import (
     ReallocationLocalSearchStrategy,
 )
-from ....utils import doc_inherit
 
 if TYPE_CHECKING:
     from typing import (
@@ -31,7 +30,6 @@ logger = logging.getLogger(__name__)
 
 class LocalSearchAlgorithm(Algorithm):
 
-    @doc_inherit
     def __init__(self, initial: Result, no_improvement_threshold: int = 1, strategy_cls: LocalSearchStrategy = None,
                  *args, **kwargs):
         super().__init__(*args, **kwargs)

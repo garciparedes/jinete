@@ -14,7 +14,6 @@ from ..abc import (
 from ..heuristics import (
     InsertionAlgorithm,
 )
-from ...utils import doc_inherit
 
 if TYPE_CHECKING:
     from typing import (
@@ -30,7 +29,6 @@ logger = logging.getLogger(__name__)
 
 class IterativeAlgorithm(Algorithm):
 
-    @doc_inherit
     def __init__(self, episodes: int = 3, algorithm_cls: Type[Algorithm] = None, seed: int = 56, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if algorithm_cls is None:

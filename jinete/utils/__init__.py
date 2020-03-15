@@ -5,6 +5,3 @@ A set of supporting classes, functions, etc. to support the `jinete`'s implement
 from .collections import (
     remove_duplicates,
 )
-from .doc_inherit import (
-    doc_inherit,
-)
