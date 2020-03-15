@@ -79,7 +79,7 @@ apidoc_module_first = True
 apidoc_extra_args = [
     '--force',
     '--implicit-namespaces',
-    '--templatedir=docs/source/_templates',
+    '--templatedir=./_templates/',
 ]
 
 ## "autodoc typehints" extension
