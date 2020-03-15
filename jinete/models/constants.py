@@ -1,3 +1,6 @@
+"""
+Set of constant values used around the library (mostly for internal use) to support its algorithm implementations.
+"""
 from __future__ import annotations
 
 import heapq
