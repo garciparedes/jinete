@@ -73,6 +73,5 @@ apidoc_module_first = True
 apidoc_extra_args = [
     '--force',
     '--implicit-namespaces',
-    # '-d 3',
-    f'--templatedir=./source/_templates',
+    '--templatedir=./source/_templates',
 ]
