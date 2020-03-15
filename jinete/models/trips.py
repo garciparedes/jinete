@@ -71,7 +71,7 @@ class Trip(Model):
 
     on_time_bonus: float
     """
-    The applied bonus if the trip starts at its earliest time (need to be set up through the cost function). 
+    The applied bonus if the trip starts at its earliest time (need to be set up through the cost function).
     """
 
     origin_duration: float
