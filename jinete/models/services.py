@@ -42,28 +42,23 @@ class Service(Model):
     position: Position
     """
     The position of the service.
-    
-    :rtype: Position
     """
 
     earliest: float
     """
     The earliest time to start the service.
 
-    :rtype: float
     """
     latest: float
     """
     The latest time to start the service.
 
-    :rtype: float
     """
 
     duration: float
     """
     The duration to perform the service. Commonly known as the ``load_time`` in another contexts.
 
-    :rtype: float
     """
 
     def __init__(self, position: Position, earliest: float = 0.0, latest: float = MAX_FLOAT, duration: float = 0.0):
@@ -71,13 +66,9 @@ class Service(Model):
         The constructor of the class.
 
         :param position: The geometric position in which the service should be performed.
-        :type position: Position
         :param earliest: The earliest time to be able to perform the service.
-        :type earliest: float
         :param latest: The latest time to be able to perform the service.
-        :type latest: float
         :param duration: The requested time to perform the service.
-        :type duration: float
         """
         self.position = position
         self.earliest = earliest
@@ -106,9 +97,7 @@ class Service(Model):
         Computes the distance from ``self`` to ``other``.
 
         :param other: Service to compute the distance from ``self``.
-        :type other: Service
         :return: distance between ``self`` and ``other``.
-        :rtype: float
         """
         return self.position.distance_to(other.position)
 
@@ -117,8 +106,6 @@ class Service(Model):
         Computes the time from ``self`` to ``other``.
 
         :param other: Service to compute the time from ``self``.
-        :type other: Service
         :return: time between ``self`` and ``other``.
-        :rtype: float
         """
         return self.position.time_to(other.position, *args, **kwargs)

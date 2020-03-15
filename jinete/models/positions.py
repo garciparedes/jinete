@@ -42,7 +42,6 @@ class Position(Model, ABC):
         Constructor of the class.
 
         :param surface: The surface to which the position belongs.
-        :type surface: Surface
         """
         self.surface = surface
 
@@ -51,9 +50,7 @@ class Position(Model, ABC):
         Computes the distance from ``self`` to ``other``.
 
         :param other: Position to compute the distance from ``self``.
-        :type other: Position
         :return: distance between ``self`` and ``other``.
-        :rtype: float
         """
         return self.surface.distance(self, other)
 
@@ -64,7 +61,6 @@ class Position(Model, ABC):
         The coordinated representation of ``self``.
 
         :return: The coordinated representation of ``self``.
-        :rtype: Tuple[Any]
         """
 
         pass
@@ -74,11 +70,8 @@ class Position(Model, ABC):
         Computes the time from ``self`` to ``other``.
 
         :param other: Position to compute the time from ``self``.
-        :type other: Position
         :param now: The time at starting time (to model starting time dependent duration).
-        :type now: float
         :return: time between ``self`` and ``other``.
-        :rtype: float
         """
         return self.surface.time(self, other, now=now)
 
@@ -98,9 +91,6 @@ class GeometricPosition(Position):
     coordinates: Tuple[float, ...]
     """
     The coordinated representation of ``self``.
-
-    :return: The coordinated representation of ``self``.
-    :rtype: Tuple[float]
     """
 
     def __init__(self, coordinates: Sequence[float], *args, **kwargs):

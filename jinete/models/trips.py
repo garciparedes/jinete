@@ -46,50 +46,42 @@ class Trip(Model):
     )
     identifier: str
     """
-    
-    :rtype: str
+    The unique identifier of the trip.
     """
 
     origin_position: Position
     """
-
-    :rtype: Position
+    The position for the pickup service.
     """
 
     destination_position: Position
     """
-
-    :rtype: Position
+    The position for the delivery service.
     """
 
     origin_earliest: float
     """
-
-    :rtype: float
+    The earliest time to start the pickup service.
     """
 
     timeout: float
     """
-
-    :rtype: float
+    The max trip duration, from the pickup latest time to the delivery earliest time.
     """
 
     on_time_bonus: float
     """
-
-    :rtype: float
+    The applied bonus if the trip starts at its earliest time (need to be set up through the cost function). 
     """
 
     origin_duration: float
     """
-
-    :rtype: float
+    The requested duration to perform the origin service.
     """
 
     capacity: float
     """
-
-    :rtype: float
+    The requested capacity of the trip.
     """
 
     def __init__(self, identifier: str, origin: Service, destination: Service, capacity: float = 1,
@@ -97,17 +89,11 @@ class Trip(Model):
         """
 
         :param identifier:
-        :type identifier: str
         :param origin:
-        :type origin: Service
         :param destination:
-        :type destination: Service
         :param capacity:
-        :type capacity: float
         :param on_time_bonus:
-        :type on_time_bonus: float
         :param timeout:
-        :type timeout: float
         """
         self.identifier = identifier
         self.origin = origin

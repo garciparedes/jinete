@@ -42,7 +42,7 @@ extensions = [
     'sphinx_rtd_theme',
     'sphinxcontrib.plantuml',
     'm2r',
-    # 'sphinx_autodoc_typehints'
+    'sphinx_autodoc_typehints'
 ]
 
 templates_path = ['_templates']
@@ -68,7 +68,6 @@ todo_include_todos = True
 apidoc_module_dir = '../../{}'.format(jit.__name__)
 apidoc_output_dir = 'api_reference'
 apidoc_separate_modules = True
-# autoclass_content = 'both'
 autodoc_default_options = {
     'inherited-members': True,
     'special-members': '__init__',
@@ -82,3 +81,8 @@ apidoc_extra_args = [
     '--implicit-namespaces',
     '--templatedir=./source/_templates',
 ]
+
+## "autodoc typehints" extension
+
+set_type_checking_flag = True
+always_document_param_types = True
