@@ -42,6 +42,7 @@ extensions = [
     'sphinx_rtd_theme',
     'sphinxcontrib.plantuml',
     'm2r',
+    # 'sphinx_autodoc_typehints'
 ]
 
 templates_path = ['_templates']

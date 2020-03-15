@@ -30,6 +30,13 @@ class Job(Model):
     _objective: Optional[Objective]
 
     def __init__(self, trips: Set[Trip], objective_cls: Type[Objective], *args, **kwargs):
+        """
+
+        :param trips:
+        :param objective_cls:
+        :param args:
+        :param kwargs:
+        """
         if objective_cls is None:
             objective_cls = DialARideObjective
 

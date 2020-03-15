@@ -1,3 +1,7 @@
+"""
+Contains entities to represent trips in the data model.
+"""
+
 from __future__ import annotations
 
 import logging
@@ -41,16 +45,70 @@ class Trip(Model):
         'timeout',
     )
     identifier: str
+    """
+    
+    :rtype: str
+    """
+
     origin_position: Position
+    """
+
+    :rtype: Position
+    """
+
     destination_position: Position
+    """
+
+    :rtype: Position
+    """
+
     origin_earliest: float
+    """
+
+    :rtype: float
+    """
+
     timeout: float
+    """
+
+    :rtype: float
+    """
+
     on_time_bonus: float
+    """
+
+    :rtype: float
+    """
+
     origin_duration: float
+    """
+
+    :rtype: float
+    """
+
     capacity: float
+    """
+
+    :rtype: float
+    """
 
     def __init__(self, identifier: str, origin: Service, destination: Service, capacity: float = 1,
                  on_time_bonus: float = 0.0, timeout: float = MAX_FLOAT):
+        """
+
+        :param identifier:
+        :type identifier: str
+        :param origin:
+        :type origin: Service
+        :param destination:
+        :type destination: Service
+        :param capacity:
+        :type capacity: float
+        :param on_time_bonus:
+        :type on_time_bonus: float
+        :param timeout:
+        :type timeout: float
+        """
         self.identifier = identifier
         self.origin = origin
         self.destination = destination
