@@ -85,4 +85,4 @@ apidoc_extra_args = [
 ## "autodoc typehints" extension
 
 set_type_checking_flag = True
-always_document_param_types = True
+typehints_fully_qualified = True
