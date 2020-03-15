@@ -1,3 +1,7 @@
+"""
+This module defines the hierarchy of exceptions raised and used by `jinete`'s module.
+"""
+
 from __future__ import annotations
 
 import logging

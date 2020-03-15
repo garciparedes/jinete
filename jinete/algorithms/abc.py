@@ -22,6 +22,13 @@ logger = logging.getLogger(__name__)
 class Algorithm(ABC):
 
     def __init__(self, fleet: Fleet, job: Job, *args, **kwargs):
+        """
+
+        :param fleet: The `Fleet` of available vehicles to use on the solution.
+        :param job: The `Job` composed of the requested `Trip` objects to be satisfied by the solution.
+        :param args: Additional positional arguments.
+        :param kwargs: Additional named arguments.
+        """
         self.fleet = fleet
         self.job = job
 
