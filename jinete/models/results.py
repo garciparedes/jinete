@@ -14,7 +14,6 @@ if TYPE_CHECKING:
         Generator,
         Tuple,
         Any,
-        Type,
         Callable,
     )
     from uuid import (
