@@ -8,6 +8,7 @@ install:
 script:
   - 'flake8'
   - 'coverage run -m unittest discover tests'
+  - 'sphinx-build docs/source docs/build/html'
 after_success:
   - 'codecov'
 
