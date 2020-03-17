@@ -103,56 +103,56 @@ class Solver(object):
         base = self._base_loader_cls
         tuned_kwargs = self._loader_kwargs
 
-        class TunedLoader(base):
+        class _TunedLoader(base):
             def __init__(self, *args, **kwargs):
                 super().__init__(
                     *args, **kwargs,
                     **tuned_kwargs,
                 )
 
-        return TunedLoader
+        return _TunedLoader
 
     @property
     def _algorithm_cls(self) -> Type[Algorithm]:
         base = self._base_algorithm_cls
         tuned_kwargs = self._algorithm_kwargs
 
-        class TunedAlgorithm(base):
+        class _TunedAlgorithm(base):
             def __init__(self, *args, **kwargs):
                 super().__init__(
                     *args, **kwargs,
                     **tuned_kwargs,
                 )
 
-        return TunedAlgorithm
+        return _TunedAlgorithm
 
     @property
     def _storer_cls(self) -> Type[Storer]:
         base = self._base_storer_cls
         tuned_kwargs = self._storer_kwargs
 
-        class TunedStorer(base):
+        class _TunedStorer(base):
             def __init__(self, *args, **kwargs):
                 super().__init__(
                     *args, **kwargs,
                     **tuned_kwargs,
                 )
 
-        return TunedStorer
+        return _TunedStorer
 
     @property
     def _dispatcher_cls(self) -> Type[Dispatcher]:
         base = self._base_dispatcher_cls
         tuned_kwargs = self._dispatcher_kwargs
 
-        class TunedDispatcher(base):
+        class _TunedDispatcher(base):
             def __init__(self, *args, **kwargs):
                 super().__init__(
                     *args, **kwargs,
                     **tuned_kwargs,
                 )
 
-        return TunedDispatcher
+        return _TunedDispatcher
 
     @property
     def _dispatcher(self) -> Dispatcher:

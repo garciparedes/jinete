@@ -233,7 +233,7 @@ class Route(Model):
             if self.stops[idx] != stop.previous:
                 continue
             return self.insert_stop_at(idx + 1, stop)
-        raise PreviousStopNotInRouteException(stop)
+        raise PreviousStopNotInRouteException(self, stop)
 
     def insert_stop_at(self, idx: int, stop: Stop) -> Stop:
         following_stop = self.stops[idx] or None

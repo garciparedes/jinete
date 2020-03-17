@@ -1,5 +1,5 @@
 """
-This module defines the hierarchy of exceptions raised and used by `jinete`'s module.
+Defines the hierarchy of exceptions raised and used by `jinete`'s module.
 """
 
 from __future__ import annotations
@@ -18,28 +18,48 @@ if TYPE_CHECKING:
 
 
 class JineteException(Exception):
+    """
+    The base exception on `jinete`'s package.
+    """
 
     def __init__(self, message: str):
         """
-        The base exception on `jinete`.
+        The constructor of the class.
 
         :param message: A brief description of the cause.
         """
+
         super().__init__(message)
         self.message = message
 
 
 class PreviousStopNotInRouteException(JineteException):
+    """
+    Represents an exception raised while the previous stop is not present in the target route.
+    """
 
-    def __init__(self, stop: Stop):
+    def __init__(self, route: Route, stop: Stop):
+        """
+        :param route: The route without the previous stop.
+        :param stop: The stop that contains the non present previous stop.
+        """
+
+        self.route = route
         self.stop = stop
-        message = f'Stop "{stop}" has no previous "{stop.previous}" on the belonging route "{stop.route}".'
+        message = f'Stop "{stop}" has no previous "{stop.previous}" on the belonging route "{route}".'
         super().__init__(message=message)
 
 
 class NonFeasiblePlannedTripException(JineteException):
+    """
+    Represents an exception raised while providing a non feasible route.
+    """
 
     def __init__(self, planned_trip: PlannedTrip):
+        """
+        :param planned_trip: The non feasible planned trip.
+        """
+
         assert planned_trip.feasible is False
 
         self.planned_trip = planned_trip
@@ -48,8 +68,15 @@ class NonFeasiblePlannedTripException(JineteException):
 
 
 class NonFeasibleRouteException(JineteException):
+    """
+    Represents an exception raised while providing a non feasible route.
+    """
 
     def __init__(self, route: Route):
+        """
+        :param route: The non feasible route.
+        """
+
         assert route.feasible is False
 
         self.route = route
