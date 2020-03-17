@@ -44,16 +44,39 @@ if TYPE_CHECKING:
 
 
 class Solver(object):
+    """
+    This class acts as the main library's interface of use, allowing to configure all the needed classes and entities
+    to generate solutions for a problem instance and providing the requested solutions.
+    """
 
-    def __init__(self,
-                 algorithm: Union[str, Type[Algorithm]] = InsertionAlgorithm,
-                 algorithm_kwargs: Dict[str, Any] = None,
-                 loader: Union[str, Type[Loader]] = FileLoader,
-                 loader_kwargs: Dict[str, Any] = None,
-                 storer: Union[str, Type[Storer]] = PromptStorer,
-                 storer_kwargs: Dict[str, Any] = None,
-                 dispatcher: Union[str, Type[Dispatcher]] = StaticDispatcher,
-                 dispatcher_kwargs: Dict[str, Any] = None):
+    def __init__(
+        self,
+        algorithm: Union[str, Type[Algorithm]] = InsertionAlgorithm,
+        algorithm_kwargs: Dict[str, Any] = None,
+        loader: Union[str, Type[Loader]] = FileLoader,
+        loader_kwargs: Dict[str, Any] = None,
+        storer: Union[str, Type[Storer]] = PromptStorer,
+        storer_kwargs: Dict[str, Any] = None,
+        dispatcher: Union[str, Type[Dispatcher]] = StaticDispatcher,
+        dispatcher_kwargs: Dict[str, Any] = None
+    ):
+        """
+        Constructor of the class.
+
+        :param algorithm: The solving method to solve the problem instance.
+        :param algorithm_kwargs: A dict-like object containing the named parameters for the ``algorithm``'s class
+            constructor.
+        :param loader: The class that stores the optimized solution in a proper way.
+        :param loader_kwargs: A dict-like object containing the named parameters for the ``loaders``'s class
+            constructor.
+        :param storer: The class that stores the optimized solution in a proper way.
+        :param storer_kwargs: A dict-like object containing the named parameters for the ``storer``'s class
+            constructor.
+        :param dispatcher: The class that orchestrates the optimization process, linking the loaded instance to the
+            algorithm, and the obtained solution to the storer.
+        :param dispatcher_kwargs: A dict-like object containing the named parameters for the ``dispatcher``'s class
+            constructor.
+        """
         if algorithm_kwargs is None:
             algorithm_kwargs = dict()
         if loader_kwargs is None:
@@ -140,4 +163,9 @@ class Solver(object):
         )
 
     def solve(self) -> Result:
+        """
+        Computes an optimization.
+
+        :return: The execution's result, containing a optimized solution for the given problem's instance.
+        """
         return self._dispatcher.run()
