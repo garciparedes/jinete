@@ -39,7 +39,7 @@ class TestFileLoader(unittest.TestCase):
             file_path=self.file_path,
         )
         self.assertEqual(loader.file_path, self.file_path)
-        self.assertEqual(loader.data, self.data)
+        self.assertEqual(loader._data, self.data)
         self.assertIsInstance(loader.fleet, jit.Fleet)
         self.assertIsInstance(loader.job, jit.Job)
         self.assertIsInstance(loader.surface, jit.GeometricSurface)

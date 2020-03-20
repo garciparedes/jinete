@@ -1,3 +1,5 @@
+"""Abstract module which defines the high level scheduling during the process of optimization."""
+
 from __future__ import annotations
 
 from abc import (
@@ -24,11 +26,21 @@ if TYPE_CHECKING:
     from ..storers import (
         Storer,
     )
+    from ..models import (
+        Result,
+    )
 
 
 class Dispatcher(ABC):
+    """Dispatch the problem instances."""
 
     def __init__(self, loader_cls: Type[Loader], algorithm_cls: Type[Algorithm], storer_cls: Type[Storer] = None):
+        """Construct a new instance.
+
+        :param loader_cls: Loads problem instances.
+        :param algorithm_cls: Generates the solution for the problem instance.
+        :param storer_cls: Stores problem instances.
+        """
         if storer_cls is None:
             storer_cls = NaiveStorer
         self.loader_cls = loader_cls
@@ -36,5 +48,9 @@ class Dispatcher(ABC):
         self.storer_cls = storer_cls
 
     @abstractmethod
-    def run(self):
+    def run(self) -> Result:
+        """Start the execution of the dispatcher.
+
+        :return: A result object containing the generated solution.
+        """
         pass
