@@ -1,6 +1,4 @@
-"""
-Parsing logic for problem instances.
-"""
+"""Loading module from external problem instances to ``jinete``'s class hierarchy."""
 
 from .exceptions import (
     LoaderFormatterException,
