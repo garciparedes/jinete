@@ -4,8 +4,7 @@
 <img align="right" width="15%" src="https://raw.githubusercontent.com/garciparedes/jinete/master/res/images/jinete.svg?sanitize=true" alt="jinete">
 
 [![PyPI](https://img.shields.io/pypi/v/jinete.svg)](https://pypi.org/project/jinete)
-[![Read the Docs](https://img.shields.io/readthedocs/jinete.svg)](https://jinete.readthedocs.io/)
-![Documentation](https://img.shields.io/website?down_color=red&down_message=broken&label=docs&up_color=success&up_message=passing&url=https%3A%2F%2Fgarciparedes.me%2Fjinete%2F)
+[![Documentation](https://img.shields.io/website?down_color=red&down_message=broken&label=docs&up_color=success&up_message=passing&url=https%3A%2F%2Fgarciparedes.me%2Fjinete%2F)](https://garciparedes.me/jinete)
 [![Travis (.org) branch](https://img.shields.io/travis/garciparedes/jinete/master.svg)](https://travis-ci.org/garciparedes/jinete/branches)
 [![Codecov](https://img.shields.io/codecov/c/github/garciparedes/jinete.svg)](https://codecov.io/gh/garciparedes/jinete)
 [![GitHub](https://img.shields.io/github/license/garciparedes/jinete.svg)](https://github.com/garciparedes/jinete/blob/master/LICENSE)
