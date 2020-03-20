@@ -1,6 +1,4 @@
-"""
-Entities whose responsibility is to provide problem instances.
-"""
+"""Entities whose responsibility is to provide problem instances."""
 
 from .exceptions import (
     LoaderException,

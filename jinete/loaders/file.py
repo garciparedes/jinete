@@ -1,3 +1,5 @@
+"""Defines the loader's implementation to load problem instances from files."""
+
 from __future__ import annotations
 
 import logging
@@ -6,29 +8,33 @@ from pathlib import (
 )
 from typing import TYPE_CHECKING
 
-from ..models import (
-    Job,
-    Surface,
-    Fleet,
+from cached_property import (
+    cached_property,
 )
 from .abc import (
     Loader,
 )
 
 if TYPE_CHECKING:
-    from typing import (
-        Optional,
+    from ..models import (
+        Job,
+        Surface,
+        Fleet,
     )
 
 logger = logging.getLogger(__name__)
 
 
 class FileLoader(Loader):
-    _fleet: Optional[Fleet]
-    _job: Optional[Job]
-    _surface: Optional[Surface]
+    """Load a problem instance from a file and build the needed class hierarchy to generate solutions."""
 
     def __init__(self, file_path: Path, *args, **kwargs):
+        """Construct a new instance.
+
+        :param file_path: The path to load the problem instance.
+        :param args: Additional positional arguments.
+        :param kwargs: Additional named arguments.
+        """
         super().__init__(*args, **kwargs)
 
         if not isinstance(file_path, Path):
@@ -41,25 +47,31 @@ class FileLoader(Loader):
         self._surface = None
 
     @property
-    def data(self):
+    def _data(self):
         with self.file_path.open() as file:
             data = list(list(float(v) for v in line.split()) for line in file.readlines())
         return data
 
-    @property
+    @cached_property
     def fleet(self) -> Fleet:
-        if self._fleet is None:
-            self._fleet = self.formatter.fleet(surface=self.surface)
-        return self._fleet
+        """Retrieve the fleet object for the current on load instance.
 
-    @property
+        :return: A surface instance from the loaded instance.
+        """
+        return self._formatter.fleet(surface=self.surface)
+
+    @cached_property
     def job(self) -> Job:
-        if self._job is None:
-            self._job = self.formatter.job(surface=self.surface)
-        return self._job
+        """Retrieve the job object for the current on load instance.
 
-    @property
+        :return: A surface instance from the loaded instance.
+        """
+        return self._formatter.job(surface=self.surface)
+
+    @cached_property
     def surface(self) -> Surface:
-        if self._surface is None:
-            self._surface = self.formatter.surface()
-        return self._surface
+        """Retrieve the surface object for the current on load instance.
+
+        :return: A surface instance from the loaded instance.
+        """
+        return self._formatter.surface()

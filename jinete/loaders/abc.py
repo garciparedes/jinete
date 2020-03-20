@@ -1,11 +1,17 @@
+"""Defines the loader's abstract interface to load problem instances from external sources."""
+
 from __future__ import annotations
+
 from abc import (
     ABC,
     abstractmethod,
 )
+from cached_property import (
+    cached_property,
+)
 from typing import (
     TYPE_CHECKING,
-    Any)
+)
 from ..models import (
     Fleet,
     Job,
@@ -18,7 +24,7 @@ from .formatters import (
 if TYPE_CHECKING:
     from typing import (
         Type,
-        Optional,
+        Any,
     )
     from .formatters import (
         LoaderFormatter,
@@ -26,37 +32,49 @@ if TYPE_CHECKING:
 
 
 class Loader(ABC):
-    formatter_cls: Type[LoaderFormatter]
-    _formatter: Optional[LoaderFormatter]
+    """Load a problem instance from external sources and build the needed class hierarchy to generate solutions."""
 
     def __init__(self, formatter_cls: Type[LoaderFormatter] = None):
+        """Construct a new instance.
+
+        :param formatter_cls: The formatter from raw data to the problem instance's class hierarchy.
+        """
         if formatter_cls is None:
             formatter_cls = CordeauLaporteLoaderFormatter
-        self.formatter_cls = formatter_cls
-        self._formatter = None
-
-    @property
-    def formatter(self) -> LoaderFormatter:
-        if self._formatter is None:
-            self._formatter = self.formatter_cls(self.data)
-        return self._formatter
+        self._formatter_cls = formatter_cls
 
     @property
     @abstractmethod
-    def data(self) -> Any:
+    def _data(self) -> Any:
         pass
+
+    @cached_property
+    def _formatter(self) -> LoaderFormatter:
+        return self._formatter_cls(self._data)
 
     @property
     @abstractmethod
     def fleet(self) -> Fleet:
+        """Retrieve the fleet object for the current on load instance.
+
+        :return: A surface instance from the loaded instance.
+        """
         pass
 
     @property
     @abstractmethod
     def job(self) -> Job:
+        """Retrieve the job object for the current on load instance.
+
+        :return: A surface instance from the loaded instance.
+        """
         pass
 
     @property
     @abstractmethod
     def surface(self) -> Surface:
+        """Retrieve the surface object for the current on load instance.
+
+        :return: A surface instance from the loaded instance.
+        """
         pass
