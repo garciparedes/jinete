@@ -1,3 +1,5 @@
+"""Graph plotting storers module, in which a set of plotting storers whose resulting artifact is a graph."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -22,10 +24,11 @@ if TYPE_CHECKING:
 
 
 class GraphPlotStorer(Storer):
+    """Generate a directed graph representation of the solution."""
 
     def _generate_nodes(self, edges: Dict[Tuple[Position, Position], Dict[str, Any]]) -> Dict[Position, Dict[str, Any]]:
         nodes: Dict[Position, Dict[str, Any]] = dict()
-        for trip in self.trips:
+        for trip in self._trips:
             nodes[trip.origin_position] = {
                 'label': f'+{trip.identifier}',
             }
@@ -45,7 +48,7 @@ class GraphPlotStorer(Storer):
 
     def _generate_edges(self) -> Dict[Tuple[Position, Position], Dict[str, Any]]:
         edges = dict()
-        for route, color in zip(self.routes, sns.husl_palette(len(self.routes))):
+        for route, color in zip(self._routes, sns.husl_palette(len(self._routes))):
             for first, second in zip(route.stops[:-1], route.stops[1:]):
                 edges[(first.position, second.position)] = {
                     'color': color,
@@ -87,5 +90,6 @@ class GraphPlotStorer(Storer):
         plt.show()
 
     def store(self) -> None:
+        """Perform a storage process."""
         graph = self._generate_graph()
         self._show_graph(graph)

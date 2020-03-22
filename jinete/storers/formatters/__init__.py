@@ -1,6 +1,4 @@
-"""
-Parsing logic for problem solutions.
-"""
+"""The set of definitions whose aim is to format the resulting artifacts."""
 
 from .abc import (
     StorerFormatter,

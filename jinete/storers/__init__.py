@@ -1,6 +1,4 @@
-"""
-Entities whose responsibility is to deliver problem solutions.
-"""
+"""Entities whose responsibility is to deliver problem solutions."""
 
 from .formatters import (
     StorerFormatter,
