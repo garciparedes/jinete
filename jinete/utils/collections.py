@@ -1,6 +1,4 @@
-"""
-A set of utilities related with collections.
-"""
+"""A set of utilities related with collections."""
 
 from __future__ import annotations
 
@@ -17,8 +15,7 @@ if TYPE_CHECKING:
 
 
 def remove_duplicates(seq: List[E]) -> List[E]:
-    """
-    Removes the ducplicated elements of a list, preserving its original order.
+    """Remove the duplicated elements of a list, preserving its original order.
 
     :param seq: The original list.
     :return: A list with elements ordered as a in the initial one, but removing the duplicated elements.
