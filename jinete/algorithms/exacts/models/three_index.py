@@ -115,11 +115,11 @@ class ThreeIndexModel(Model):
 
     @cached_property
     def _vehicles(self) -> Tuple[Vehicle, ...]:
-        return tuple(self.fleet._vehicles)
+        return tuple(self.fleet.vehicles)
 
     @cached_property
     def _trips(self) -> Tuple[Trip, ...]:
-        return tuple(self.job._trips)
+        return tuple(self.job.trips)
 
     @cached_property
     def _positions(self) -> Tuple[Position, ...]:
