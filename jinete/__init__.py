@@ -1,6 +1,4 @@
-"""
-High Performance solving suite for the Pickup and Delivery Problem and its related extensions.
-"""
+"""High Performance solving suite for the Pickup and Delivery Problem and its related extensions."""
 
 from ._version import (
     __version__,

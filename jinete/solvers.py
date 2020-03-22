@@ -1,6 +1,4 @@
-"""
-A set of abstractions to ease the launching process on external systems.
-"""
+"""A set of implementations to ease the launching process on external systems."""
 
 from __future__ import annotations
 
@@ -44,9 +42,10 @@ if TYPE_CHECKING:
 
 
 class Solver(object):
-    """
-    This class acts as the main library's interface of use, allowing to configure all the needed classes and entities
-    to generate solutions for a problem instance and providing the requested solutions.
+    """Solve a problem instance in an easy way.
+
+    This class acts as the main library's interface of use, allowing to configure all the needed classes and
+    entities to generate solutions for a problem instance and providing the requested solution.
     """
 
     def __init__(
@@ -60,8 +59,7 @@ class Solver(object):
         dispatcher: Union[str, Type[Dispatcher]] = StaticDispatcher,
         dispatcher_kwargs: Dict[str, Any] = None
     ):
-        """
-        Constructor of the class.
+        """Construct a new instance.
 
         :param algorithm: The solving method to solve the problem instance.
         :param algorithm_kwargs: A dict-like object containing the named parameters for the ``algorithm``'s class
@@ -163,8 +161,7 @@ class Solver(object):
         )
 
     def solve(self) -> Result:
-        """
-        Computes an optimization.
+        """Compute an optimization.
 
         :return: The execution's result, containing a optimized solution for the given problem's instance.
         """
