@@ -30,17 +30,17 @@ class Model(ABC):
 
     @property
     @abstractmethod
-    def problem(self) -> lp.LpProblem:
+    def _problem(self) -> lp.LpProblem:
         pass
 
     @property
     @abstractmethod
-    def objective(self) -> lp.LpConstraintVar:
+    def _objective(self) -> lp.LpConstraintVar:
         pass
 
     @property
     @abstractmethod
-    def constraints(self) -> List[lp.LpConstraint]:
+    def _constraints(self) -> List[lp.LpConstraint]:
         pass
 
     @abstractmethod
