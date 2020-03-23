@@ -1,4 +1,4 @@
-# Data Model
+# Data LinearModel
 
 [TODO]
 

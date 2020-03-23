@@ -1,6 +1,4 @@
-"""
-Decision logic about how to improve costs.
-"""
+"""Decision logic about how to improve costs."""
 
 from .abc import (
     LocalSearchStrategy,

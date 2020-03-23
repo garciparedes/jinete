@@ -1,6 +1,4 @@
-"""
-Set of solving methods with reasonable space and time complexity.
-"""
+"""Set of solving methods with reasonable space and time complexity."""
 
 from .insertion import (
     InsertionAlgorithm,

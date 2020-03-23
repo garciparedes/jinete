@@ -1,6 +1,4 @@
-"""
-Contains the implementation of solving methods.
-"""
+"""Contains the implementation of solving methods."""
 
 from .abc import (
     Algorithm,

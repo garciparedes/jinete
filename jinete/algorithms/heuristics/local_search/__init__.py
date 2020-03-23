@@ -1,6 +1,4 @@
-"""
-Set of route costs improvement methods.
-"""
+"""Set of route costs improvement methods."""
 
 from .algorithm import (
     LocalSearchAlgorithm,
