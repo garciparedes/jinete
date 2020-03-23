@@ -22,7 +22,7 @@ if TYPE_CHECKING:
     )
 
 
-class Model(ABC):
+class LinearModel(ABC):
 
     def __init__(self, fleet: Fleet, job: Job, *args, **kwargs):
         self.fleet = fleet

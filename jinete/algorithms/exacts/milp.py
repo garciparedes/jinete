@@ -15,7 +15,7 @@ from ..abc import (
     Algorithm,
 )
 from .models import (
-    ThreeIndexModel,
+    ThreeIndexLinearModel,
 )
 
 if TYPE_CHECKING:
@@ -23,7 +23,7 @@ if TYPE_CHECKING:
         Type
     )
     from .models import (
-        Model,
+        LinearModel,
     )
 
 logger = logging.getLogger(__name__)
@@ -34,7 +34,7 @@ class MilpAlgorithm(Algorithm):
     The `jinete`'s interface to solve the given problem, supported by the Mixed-Integer Linear Programming frame.
     """
 
-    def __init__(self, model_cls: Type[Model] = None, *args, **kwargs):
+    def __init__(self, model_cls: Type[LinearModel] = None, *args, **kwargs):
         """
         :param model_cls: The model class to generate the representation of the problem.
         :param args: Additional positional arguments.
@@ -43,14 +43,14 @@ class MilpAlgorithm(Algorithm):
         super().__init__(*args, **kwargs)
 
         if model_cls is None:
-            model_cls = ThreeIndexModel
+            model_cls = ThreeIndexLinearModel
 
         self.model_cls = model_cls
 
         self.args = args
         self.kwargs = kwargs
 
-    def _build_model(self) -> Model:
+    def _build_model(self) -> LinearModel:
         return self.model_cls(*self.args, **self.kwargs)
 
     def _optimize(self) -> Planning:

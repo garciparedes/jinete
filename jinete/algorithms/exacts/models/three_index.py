@@ -22,7 +22,7 @@ from jinete.models import (
     PlannedTrip,
 )
 from .abc import (
-    Model,
+    LinearModel,
 )
 
 if TYPE_CHECKING:
@@ -45,7 +45,7 @@ logger = logging.getLogger(__name__)
 BIG = 10000
 
 
-class ThreeIndexModel(Model):
+class ThreeIndexLinearModel(LinearModel):
 
     def __init__(self, solver: lp.LpSolver = None, *args, **kwargs):
         super().__init__(*args, **kwargs)

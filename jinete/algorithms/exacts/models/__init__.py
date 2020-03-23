@@ -1,6 +1,6 @@
 from .abc import (
-    Model,
+    LinearModel,
 )
 from .three_index import (
-    ThreeIndexModel,
+    ThreeIndexLinearModel,
 )
