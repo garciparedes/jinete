@@ -50,16 +50,11 @@ class MilpAlgorithm(Algorithm):
         self.args = args
         self.kwargs = kwargs
 
-    def build_model(self) -> Model:
-        """
-        Generates the `Model` object for the given instance problem.
-
-        :return: `Model` object for the given instance problem.
-        """
+    def _build_model(self) -> Model:
         return self.model_cls(*self.args, **self.kwargs)
 
     def _optimize(self) -> Planning:
-        model = self.build_model()
+        model = self._build_model()
 
         routes = model.solve()
 

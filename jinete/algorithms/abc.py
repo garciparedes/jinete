@@ -34,12 +34,7 @@ class Algorithm(ABC):
         self.job = job
 
     @property
-    def objective(self) -> Objective:
-        """
-        The objective function.
-
-        :return: An ``Objective`` object.
-        """
+    def _objective(self) -> Objective:
         return self.job.objective
 
     def optimize(self) -> Result:

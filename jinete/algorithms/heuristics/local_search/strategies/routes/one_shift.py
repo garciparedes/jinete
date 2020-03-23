@@ -15,8 +15,8 @@ class OneShiftLocalSearchStrategy(LocalSearchStrategy):
 
     def _improve(self) -> None:
         logger.info(f'Starting to improve "Result" with "{self.__class__.__name__}"...')
-        for route in self.routes:
-            cost = self.objective.optimization_function(route)
+        for route in self._routes:
+            cost = self._objective.optimization_function(route)
 
             for i in range(1, len(route.stops) - 1):
                 j = i + 1
@@ -27,16 +27,16 @@ class OneShiftLocalSearchStrategy(LocalSearchStrategy):
 
                 if not set(first.pickup_planned_trips).isdisjoint(second.delivery_planned_trips):
                     continue
-                self.flip(route, first, second, third)
+                self._flip(route, first, second, third)
 
-                if not route.feasible or cost == self.objective.best(cost, route):
-                    self.flip(route, second, first, third)
+                if not route.feasible or cost == self._objective.best(cost, route):
+                    self._flip(route, second, first, third)
                     continue
 
-                cost = self.objective.optimization_function(route)
+                cost = self._objective.optimization_function(route)
                 logger.info(f'Flipped "{i}"-th and "{j}"-th stops from "{route}".')
 
-    def flip(self, route: Route, previous: Stop, other: Stop, following: Stop = None) -> None:
+    def _flip(self, route: Route, previous: Stop, other: Stop, following: Stop = None) -> None:
         assert following is None or following.previous == other
         assert other.previous == previous
 

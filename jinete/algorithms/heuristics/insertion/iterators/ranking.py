@@ -30,45 +30,45 @@ class RankingInsertionIterator(InsertionIterator):
         super().__init__(*args, **kwargs)
 
         if neighborhood_max_size is None:
-            neighborhood_max_size = len(self.trips)
+            neighborhood_max_size = len(self._trips)
 
-        self.neighborhood_max_size = min(neighborhood_max_size, len(self.trips))
+        self.neighborhood_max_size = min(neighborhood_max_size, len(self._trips))
 
         self.randomized_size = randomized_size
         self.random = Random(seed)
 
         self.ranking = dict()
-        self.initialize_ranking()
+        self._initialize_ranking()
 
-    def initialize_ranking(self) -> None:
+    def _initialize_ranking(self) -> None:
         logger.info("Initializing ranking...")
-        for route in self.attractive_routes:
-            self.ranking[route.vehicle] = self.create_sub_ranking(route)
+        for route in self._attractive_routes:
+            self.ranking[route.vehicle] = self._create_sub_ranking(route)
             logger.info(f"Added sub ranking! Currently {len(self.ranking)}.")
 
-    def mark_planned_trip_as_done(self, planned_trip: PlannedTrip) -> None:
-        super().mark_planned_trip_as_done(planned_trip)
-        self.update_ranking(planned_trip)
+    def _mark_planned_trip_as_done(self, planned_trip: PlannedTrip) -> None:
+        super()._mark_planned_trip_as_done(planned_trip)
+        self._update_ranking(planned_trip)
 
-    def update_ranking(self, planned_trip: PlannedTrip) -> None:
+    def _update_ranking(self, planned_trip: PlannedTrip) -> None:
         logger.debug(f'Updating all rankings due to planned trip with "{planned_trip.trip_identifier}" trip...')
-        for route in self.attractive_routes:
+        for route in self._attractive_routes:
             self._update_vehicle_ranking(planned_trip, route.vehicle)
 
     def _update_vehicle_ranking(self, planned_trip: PlannedTrip, vehicle: Vehicle):
         logger.debug(f'Updating ranking for vehicle with "{vehicle.identifier}" identifier...')
         if vehicle is planned_trip.vehicle or vehicle not in self.ranking:
-            self.ranking[vehicle] = self.create_sub_ranking(self.routes_container[vehicle])
+            self.ranking[vehicle] = self._create_sub_ranking(self.routes_container[vehicle])
         else:
             self.ranking[vehicle] = [route for route in self.ranking[vehicle] if planned_trip.trip not in route.trips]
 
-    def create_sub_ranking(self, route: Route) -> List[Route]:
+    def _create_sub_ranking(self, route: Route) -> List[Route]:
         logger.debug(f'Creating sub_ranking for vehicle "{route.vehicle_identifier}"...')
         pending_trips = it.islice(self.pending_trips, self.neighborhood_max_size)
 
-        raw_sub_ranking = self.strategy.compute(route, pending_trips)
+        raw_sub_ranking = self._strategy.compute(route, pending_trips)
 
-        self.criterion.sorted(raw_sub_ranking, inplace=True)
+        self._criterion.sorted(raw_sub_ranking, inplace=True)
 
         return raw_sub_ranking
 
@@ -82,7 +82,7 @@ class RankingInsertionIterator(InsertionIterator):
                 continue
 
             for current in sub_ranking:
-                if any(candidates) and self.criterion.best(candidates[-1], current) == candidates[-1]:
+                if any(candidates) and self._criterion.best(candidates[-1], current) == candidates[-1]:
                     break
 
                 if self.randomized_size <= len(candidates):
@@ -90,7 +90,7 @@ class RankingInsertionIterator(InsertionIterator):
 
                 candidates.append(current)
 
-            self.criterion.sorted(candidates, inplace=True)
+            self._criterion.sorted(candidates, inplace=True)
 
         if not any(candidates):
             raise StopIteration

@@ -43,12 +43,12 @@ class LocalSearchAlgorithm(Algorithm):
         self.no_improvement_threshold = no_improvement_threshold
 
     @property
-    def initial_planning(self) -> Planning:
+    def _initial_planning(self) -> Planning:
         return self.initial.planning
 
     @property
-    def initial_routes(self) -> Set[Route]:
-        return self.initial_planning.routes
+    def _initial_routes(self) -> Set[Route]:
+        return self._initial_planning.routes
 
     def _optimize(self) -> Planning:
         best = self.initial
@@ -58,7 +58,7 @@ class LocalSearchAlgorithm(Algorithm):
             no_improvement_count += 1
 
             current = self.strategy_cls(best).improve()
-            best = self.objective.best(best, current)
+            best = self._objective.best(best, current)
 
             if best == current:
                 no_improvement_count = 0

@@ -47,9 +47,9 @@ class TestReallocationLocalSearchStrategy(unittest.TestCase):
     def test_creation(self):
         strategy = jit.ReallocationLocalSearchStrategy(self.result)
 
-        self.assertNotEqual(self.planning, strategy.planning)
-        self.assertEqual(1, len(strategy.routes))
-        self.assertEqual(tuple(self.route.positions), tuple(next(iter(strategy.routes)).positions))
+        self.assertNotEqual(self.planning, strategy._planning)
+        self.assertEqual(1, len(strategy._routes))
+        self.assertEqual(tuple(self.route.positions), tuple(next(iter(strategy._routes)).positions))
 
     def test_improve(self):
         strategy = jit.ReallocationLocalSearchStrategy(self.result)

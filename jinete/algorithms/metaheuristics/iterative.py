@@ -40,7 +40,7 @@ class IterativeAlgorithm(Algorithm):
         self.args = args
         self.kwargs = kwargs
 
-    def build_algorithm(self, *args, **kwargs) -> Algorithm:
+    def _build_algorithm(self, *args, **kwargs) -> Algorithm:
         args = (*self.args, *args)
         kwargs.update(self.kwargs)
 
@@ -50,8 +50,8 @@ class IterativeAlgorithm(Algorithm):
         best: Optional[Result] = None
         for i in range(self.episodes):
             seed = self.random.randint(0, MAX_INT)
-            current = self.build_algorithm(seed=seed).optimize()
-            best = self.objective.best(best, current)
+            current = self._build_algorithm(seed=seed).optimize()
+            best = self._objective.best(best, current)
 
         assert best is not None
         return best.planning
