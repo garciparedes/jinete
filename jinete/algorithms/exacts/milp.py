@@ -1,6 +1,4 @@
-"""
-A set of solving algorithms based on the formulation off Mixed-Integer Linear Programming models.
-"""
+"""Set of algorithms based on the formulation off Mixed-Integer Linear Programming models."""
 
 from __future__ import annotations
 
@@ -30,12 +28,11 @@ logger = logging.getLogger(__name__)
 
 
 class MilpAlgorithm(Algorithm):
-    """
-    The `jinete`'s interface to solve the given problem, supported by the Mixed-Integer Linear Programming frame.
-    """
+    """The `jinete`'s interface to solve the given problem, supported by the Mixed-Integer Linear Programming frame."""
 
     def __init__(self, model_cls: Type[LinearModel] = None, *args, **kwargs):
-        """
+        """Construct a new instance.
+
         :param model_cls: The model class to generate the representation of the problem.
         :param args: Additional positional arguments.
         :param kwargs: Additional named arguments.

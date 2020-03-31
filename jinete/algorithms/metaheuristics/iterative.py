@@ -1,3 +1,5 @@
+"""Iterative algorithm class definitions."""
+
 from __future__ import annotations
 
 import logging
@@ -28,8 +30,21 @@ logger = logging.getLogger(__name__)
 
 
 class IterativeAlgorithm(Algorithm):
+    """Iterative algorithm implementation.
+
+    This class implements an iterative procedure to optimize a planning. It works applying a parametrized algorithm
+    for a defined number of episodes. It's mostly used as a component of more complicated metaheuristics.
+    """
 
     def __init__(self, episodes: int = 3, algorithm_cls: Type[Algorithm] = None, seed: int = 56, *args, **kwargs):
+        """Construct a new instance.
+
+        :param episodes: The number of episodes to repeat the algorithm.
+        :param algorithms_cls: The sequence of algorithm classes to be applied.
+        :param seed: A seed to manage randomness.
+        :param args: Additional positional arguments.
+        :param kwargs: Additional named arguments.
+        """
         super().__init__(*args, **kwargs)
         if algorithm_cls is None:
             algorithm_cls = InsertionAlgorithm

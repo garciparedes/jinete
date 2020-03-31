@@ -1,3 +1,5 @@
+"""GRASP-based algorithm class definitions."""
+
 from __future__ import annotations
 
 import logging
@@ -28,10 +30,25 @@ logger = logging.getLogger(__name__)
 
 
 class GraspAlgorithm(Algorithm):
+    """GRASP algorithm implementation.
+
+    This implementation is based on the Greedy Randomized Adaptive Search Procedure meta-heuristic. For more information
+    about how it works, you can visit the following link:
+    https://en.wikipedia.org/wiki/Greedy_randomized_adaptive_search_procedure
+    """
 
     def __init__(self, no_improvement_threshold: int = 1, first_solution_kwargs: Dict[str, Any] = None,
                  local_search_kwargs: Dict[str, Any] = None,
                  seed: int = 56, *args, **kwargs):
+        """Construct a new instance.
+
+        :param no_improvement_threshold: Manages the number of allowed iterations without any improvement.
+        :param first_solution_kwargs: Named arguments for the first solution algorithm.
+        :param local_search_kwargs: Named arguments for the local search algorithm.
+        :param seed: A seed to manage randomness.
+        :param args: Additional positional arguments.
+        :param kwargs: Additional named arguments.
+        """
         super().__init__(*args, **kwargs)
 
         if first_solution_kwargs is None:

@@ -1,3 +1,5 @@
+"""Three index linear model class definitions."""
+
 from __future__ import annotations
 
 import logging
@@ -46,8 +48,18 @@ BIG = 10000
 
 
 class ThreeIndexLinearModel(LinearModel):
+    """Three index model class implementation.
+
+    This implementation is based on the Cordeau-Laporte paper about the dial-a-ride problem.
+    """
 
     def __init__(self, solver: lp.LpSolver = None, *args, **kwargs):
+        """Construct a new object instance.
+
+        :param solver: The solver to be used during the optimization.
+        :param args: Additional positional arguments.
+        :param kwargs: Additional named arguments.
+        """
         super().__init__(*args, **kwargs)
         self.solver = solver
 
@@ -317,6 +329,10 @@ class ThreeIndexLinearModel(LinearModel):
         return constraints
 
     def solve(self) -> Set[Route]:
+        """Perform a optimization based on the linear model.
+
+        :return A set of optimized routes.
+        """
         logger.info('Starting to solve...')
         self._problem.solve(self.solver)
 
