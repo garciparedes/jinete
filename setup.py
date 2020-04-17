@@ -29,7 +29,7 @@ dependencies = [
 
 extra_dependencies = {
     'docs': [
-        'sphinx',
+        'sphinx<3.0.0',
         'sphinx-rtd-theme',
         'sphinxcontrib-apidoc',
         'sphinxcontrib-plantuml',
