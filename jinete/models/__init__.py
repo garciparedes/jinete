@@ -1,6 +1,4 @@
-from .abc import (
-    Model,
-)
+from .abc import Model
 from .positions import (
     Position,
     GeometricPosition,
@@ -9,18 +7,10 @@ from .surfaces import (
     Surface,
     GeometricSurface,
 )
-from .trips import (
-    Trip,
-)
-from .planned_trips import (
-    PlannedTrip,
-)
-from .stops import (
-    Stop,
-)
-from .services import (
-    Service,
-)
+from .trips import Trip
+from .planned_trips import PlannedTrip
+from .stops import Stop
+from .services import Service
 from .criterions import (
     RouteCriterion,
     ShortestAveragePlannerTripDurationCriterion,
@@ -38,23 +28,14 @@ from .constants import (
     MAX_FLOAT,
     MIN_FLOAT,
 )
-from .jobs import (
-    Job
-)
+from .jobs import Job
 from .vehicles import (
     Vehicle,
     Fleet,
 )
-from .routes import (
-    Route,
-    RouteCloner
-)
-from .plannings import (
-    Planning,
-)
-from .results import (
-    Result,
-)
+from .routes import Route, RouteCloner
+from .plannings import Planning
+from .results import Result
 from .objectives import (
     Objective,
     DialARideObjective,

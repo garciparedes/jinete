@@ -3,9 +3,7 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from .abc import (
-    Storer,
-)
+from .abc import Storer
 
 if TYPE_CHECKING:
     from typing import (
@@ -17,7 +15,6 @@ logger = logging.getLogger(__name__)
 
 
 class StorerSet(Storer):
-
     def __init__(self, storer_cls_set: Set[Type[Storer]], *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.storer_cls_set = storer_cls_set

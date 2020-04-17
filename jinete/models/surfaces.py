@@ -4,27 +4,15 @@ from abc import (
     ABC,
     abstractmethod,
 )
-from collections import (
-    defaultdict,
-)
+from collections import defaultdict
 
-from typing import (
-    TYPE_CHECKING,
-)
+from typing import TYPE_CHECKING
 
-from uuid import (
-    uuid4,
-)
+from uuid import uuid4
 
-from .abc import (
-    Model,
-)
-from .constants import (
-    DistanceMetric,
-)
-from .positions import (
-    GeometricPosition,
-)
+from .abc import Model
+from .constants import DistanceMetric
+from .positions import GeometricPosition
 
 if TYPE_CHECKING:
     from typing import (
@@ -34,12 +22,8 @@ if TYPE_CHECKING:
         Generator,
         Tuple,
     )
-    from uuid import (
-        UUID,
-    )
-    from .positions import (
-        Position,
-    )
+    from uuid import UUID
+    from .positions import Position
 
 logger = logging.getLogger(__name__)
 
@@ -75,9 +59,7 @@ class Surface(Model, ABC):
         pass
 
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
-        yield from (
-            ('position_coordinates', tuple(position.coordinates for position in self.positions)),
-        )
+        yield from (("position_coordinates", tuple(position.coordinates for position in self.positions)),)
 
 
 class GeometricSurface(Surface):

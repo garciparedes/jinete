@@ -1,21 +1,13 @@
 from __future__ import annotations
 
 import logging
-from typing import (
-    TYPE_CHECKING,
-)
+from typing import TYPE_CHECKING
 
 from cached_property import cached_property
 
-from .abc import (
-    Model,
-)
-from .services import (
-    Service,
-)
-from .constants import (
-    MAX_FLOAT,
-)
+from .abc import Model
+from .services import Service
+from .constants import MAX_FLOAT
 
 if TYPE_CHECKING:
     from typing import (
@@ -24,21 +16,19 @@ if TYPE_CHECKING:
         Generator,
         Tuple,
     )
-    from .positions import (
-        Position,
-    )
+    from .positions import Position
 
 logger = logging.getLogger(__name__)
 
 
 class Trip(Model):
     __slots__ = (
-        'identifier',
-        'origin',
-        'destination',
-        'on_time_bonus',
-        'capacity',
-        'timeout',
+        "identifier",
+        "origin",
+        "destination",
+        "on_time_bonus",
+        "capacity",
+        "timeout",
     )
     identifier: str
     origin_position: Position
@@ -49,8 +39,15 @@ class Trip(Model):
     origin_duration: float
     capacity: float
 
-    def __init__(self, identifier: str, origin: Service, destination: Service, capacity: float = 1,
-                 on_time_bonus: float = 0.0, timeout: float = MAX_FLOAT):
+    def __init__(
+        self,
+        identifier: str,
+        origin: Service,
+        destination: Service,
+        capacity: float = 1,
+        on_time_bonus: float = 0.0,
+        timeout: float = MAX_FLOAT,
+    ):
         self.identifier = identifier
         self.origin = origin
         self.destination = destination
@@ -64,10 +61,7 @@ class Trip(Model):
 
     @property
     def origin_earliest(self) -> float:
-        return max(
-            self.destination.earliest - self.destination.duration - self.timeout,
-            self.origin.earliest,
-        )
+        return max(self.destination.earliest - self.destination.duration - self.timeout, self.origin.earliest,)
 
     @property
     def origin_latest(self) -> float:
@@ -93,10 +87,7 @@ class Trip(Model):
 
     @cached_property
     def destination_latest(self) -> float:
-        return min(
-            self.origin.latest + self.origin.duration + self.timeout,
-            self.destination.latest,
-        )
+        return min(self.origin.latest + self.origin.duration + self.timeout, self.destination.latest,)
 
     @property
     def destination_duration(self) -> float:
@@ -118,10 +109,10 @@ class Trip(Model):
 
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
         yield from (
-            ('identifier', self.identifier),
-            ('origin', tuple(self.origin)),
-            ('destination', tuple(self.destination)),
-            ('on_time_bonus', self.on_time_bonus),
-            ('capacity', self.capacity),
-            ('timeout', self.timeout),
+            ("identifier", self.identifier),
+            ("origin", tuple(self.origin)),
+            ("destination", tuple(self.destination)),
+            ("on_time_bonus", self.on_time_bonus),
+            ("capacity", self.capacity),
+            ("timeout", self.timeout),
         )

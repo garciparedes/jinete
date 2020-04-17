@@ -1,17 +1,15 @@
 import logging
 
 import itertools as it
-from ..abc import (
-    LocalSearchStrategy,
-)
+from ..abc import LocalSearchStrategy
 
 logger = logging.getLogger(__name__)
 
 
 class ReallocationLocalSearchStrategy(LocalSearchStrategy):
-
     def _improve(self) -> None:
         from ....insertion import InsertionStrategy  # FIXME Should this import come from "insertion" module?
+
         strategy = InsertionStrategy()
         logger.info(f'Starting to improve "Result" with "{self.__class__.__name__}"...')
         overwritten_routes = set()

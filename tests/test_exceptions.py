@@ -8,9 +8,8 @@ from tests.utils import (
 
 
 class TestJineteException(unittest.TestCase):
-
     def test_creation(self):
-        message = 'This is a test exception'
+        message = "This is a test exception"
         exc = jit.JineteException(message)
 
         self.assertIsInstance(exc, jit.JineteException)
@@ -18,7 +17,6 @@ class TestJineteException(unittest.TestCase):
 
 
 class TestNonFeasiblePlannedTripException(unittest.TestCase):
-
     def test_creation(self):
         planned_trip = generate_one_planned_trip(False)
         exc = jit.NonFeasiblePlannedTripException(planned_trip)
@@ -29,7 +27,6 @@ class TestNonFeasiblePlannedTripException(unittest.TestCase):
 
 
 class TestNonFeasibleRouteException(unittest.TestCase):
-
     def test_creation(self):
         route = generate_one_route(False)
         exc = jit.NonFeasibleRouteException(route)
@@ -39,5 +36,5 @@ class TestNonFeasibleRouteException(unittest.TestCase):
         self.assertEqual(exc.message, f'Route "{route}" is not feasible.')
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

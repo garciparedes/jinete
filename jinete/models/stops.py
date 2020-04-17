@@ -1,16 +1,12 @@
 from __future__ import annotations
 
 import logging
-from typing import (
-    TYPE_CHECKING,
-)
+from typing import TYPE_CHECKING
 import itertools as it
 
 from cached_property import cached_property
 
-from .abc import (
-    Model,
-)
+from .abc import Model
 from .constants import (
     MAX_FLOAT,
     ERROR_BOUND,
@@ -26,27 +22,21 @@ if TYPE_CHECKING:
         List,
         Set,
     )
-    from .positions import (
-        Position,
-    )
-    from .planned_trips import (
-        PlannedTrip
-    )
-    from .vehicles import (
-        Vehicle,
-    )
+    from .positions import Position
+    from .planned_trips import PlannedTrip
+    from .vehicles import Vehicle
 
 logger = logging.getLogger(__name__)
 
 
 class Stop(Model):
     __slots__ = [
-        'vehicle',
-        'position',
-        'pickup_planned_trips',
-        'delivery_planned_trips',
-        'previous',
-        '_starting_time',
+        "vehicle",
+        "position",
+        "pickup_planned_trips",
+        "delivery_planned_trips",
+        "previous",
+        "_starting_time",
     ]
     vehicle: Vehicle
     position: Position
@@ -54,9 +44,15 @@ class Stop(Model):
     pickup_planned_trips: Set[PlannedTrip, ...]
     delivery_planned_trips: Set[PlannedTrip, ...]
 
-    def __init__(self, vehicle: Vehicle, position: Position, previous: Optional[Stop],
-                 pickups: Set[PlannedTrip, ...] = None, deliveries: Set[PlannedTrip, ...] = None,
-                 starting_time: float = None):
+    def __init__(
+        self,
+        vehicle: Vehicle,
+        position: Position,
+        previous: Optional[Stop],
+        pickups: Set[PlannedTrip, ...] = None,
+        deliveries: Set[PlannedTrip, ...] = None,
+        starting_time: float = None,
+    ):
 
         if pickups is None:
             pickups = set()
@@ -75,11 +71,11 @@ class Stop(Model):
     @property
     def identifier(self) -> str:
         iterable = it.chain(
-            (f'P{planned_trip.trip_identifier}' for planned_trip in self.pickup_planned_trips),
-            (f'D{planned_trip.trip_identifier}' for planned_trip in self.delivery_planned_trips),
+            (f"P{planned_trip.trip_identifier}" for planned_trip in self.pickup_planned_trips),
+            (f"D{planned_trip.trip_identifier}" for planned_trip in self.delivery_planned_trips),
         )
-        identifier = '|'.join(iterable)
-        identifier = f'[{identifier}]'
+        identifier = "|".join(iterable)
+        identifier = f"[{identifier}]"
         return identifier
 
     @property
@@ -184,33 +180,46 @@ class Stop(Model):
 
     @property
     def earliest(self) -> float:
-        return max(it.chain(
-            (pt.trip.origin_earliest for pt in self.pickup_planned_trips),
-            (pt.trip.destination_earliest for pt in self.delivery_planned_trips),
-        ), default=0.0)
+        return max(
+            it.chain(
+                (pt.trip.origin_earliest for pt in self.pickup_planned_trips),
+                (pt.trip.destination_earliest for pt in self.delivery_planned_trips),
+            ),
+            default=0.0,
+        )
 
     @property
     def latest(self) -> float:
-        return min(it.chain(
-            (pt.trip.origin_latest for pt in self.pickup_planned_trips),
-            (pt.trip.destination_latest for pt in self.delivery_planned_trips),
-        ), default=MAX_FLOAT)
+        return min(
+            it.chain(
+                (pt.trip.origin_latest for pt in self.pickup_planned_trips),
+                (pt.trip.destination_latest for pt in self.delivery_planned_trips),
+            ),
+            default=MAX_FLOAT,
+        )
 
     @property
     def load_time(self) -> float:
-        return max(it.chain(
-            (pt.trip.origin_duration for pt in self.pickup_planned_trips),
-            (pt.trip.destination_duration for pt in self.delivery_planned_trips),
-        ), default=0.0)
+        return max(
+            it.chain(
+                (pt.trip.origin_duration for pt in self.pickup_planned_trips),
+                (pt.trip.destination_duration for pt in self.delivery_planned_trips),
+            ),
+            default=0.0,
+        )
 
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
         yield from (
-            ('position', self.position),
-            ('identifier', self.identifier),
+            ("position", self.position),
+            ("identifier", self.identifier),
         )
 
     def flush(self) -> None:
-        for key in ('arrival_time', 'departure_time', 'capacity',):
+        for key in (
+            "arrival_time",
+            "departure_time",
+            "capacity",
+        ):
             self.__dict__.pop(key, None)
         for planned_trip in self.planned_trips:
             planned_trip.flush()

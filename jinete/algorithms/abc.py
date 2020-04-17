@@ -20,7 +20,6 @@ logger = logging.getLogger(__name__)
 
 
 class Algorithm(ABC):
-
     def __init__(self, fleet: Fleet, job: Job, *args, **kwargs):
         self.fleet = fleet
         self.job = job
@@ -30,7 +29,7 @@ class Algorithm(ABC):
         return self.job.objective
 
     def optimize(self) -> Result:
-        logger.info(f'Optimizing with {self.__class__.__name__}...')
+        logger.info(f"Optimizing with {self.__class__.__name__}...")
 
         start_time = time()
         planning = self._optimize()
@@ -44,8 +43,10 @@ class Algorithm(ABC):
             planning=planning,
             computation_time=computation_time,
         )
-        logger.info(f'Optimized with {self.__class__.__name__} obtaining {"" if result.feasible else "non "}'
-                    f'feasible results!')
+        logger.info(
+            f'Optimized with {self.__class__.__name__} obtaining {"" if result.feasible else "non "}'
+            f"feasible results!"
+        )
         return result
 
     @abstractmethod

@@ -13,20 +13,15 @@ from ...models import (
     DialARideObjective,
     Service,
 )
-from .abc import (
-    LoaderFormatter,
-)
+from .abc import LoaderFormatter
 
 if TYPE_CHECKING:
-    from ...models import (
-        Surface,
-    )
+    from ...models import Surface
 
 logger = logging.getLogger(__name__)
 
 
 class CordeauLaporteLoaderFormatter(LoaderFormatter):
-
     def fleet(self, surface: Surface, *args, **kwargs) -> Fleet:
         row = self.data[0]
         m = int(row[0])
@@ -41,16 +36,11 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
 
         vehicles = set()
         for idx in range(m):
-            vehicle = Vehicle(
-                str(idx),
-                origin,
-                capacity=capacity,
-                timeout=timeout,
-            )
+            vehicle = Vehicle(str(idx), origin, capacity=capacity, timeout=timeout,)
 
             vehicles.add(vehicle)
         fleet = Fleet(vehicles)
-        logger.info(f'Created {fleet}!')
+        logger.info(f"Created {fleet}!")
         return fleet
 
     def job(self, surface: Surface, *args, **kwargs) -> Job:
@@ -83,23 +73,17 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
             duration=destination_row[3],
         )
 
-        identifier = f'{idx + 1:.0f}'
+        identifier = f"{idx + 1:.0f}"
 
         assert origin_row[4] == -destination_row[4]
         capacity = origin_row[4]
 
         timeout = self.data[0][4]
 
-        trip = Trip(
-            identifier=identifier,
-            origin=origin,
-            destination=destination,
-            capacity=capacity,
-            timeout=timeout,
-        )
+        trip = Trip(identifier=identifier, origin=origin, destination=destination, capacity=capacity, timeout=timeout,)
         return trip
 
     def surface(self, *args, **kwargs) -> Surface:
         surface = GeometricSurface(DistanceMetric.EUCLIDEAN)
-        logger.info(f'Created surface!')
+        logger.info(f"Created surface!")
         return surface

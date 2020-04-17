@@ -1,3 +1,1 @@
-from .milp import (
-    MilpAlgorithm,
-)
+from .milp import MilpAlgorithm

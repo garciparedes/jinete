@@ -10,7 +10,6 @@ from tests.utils import (
 
 
 class TestJob(unittest.TestCase):
-
     def test_construction(self):
         trips = generate_trips(3)
         objective_cls = jit.HashCodeObjective
@@ -26,5 +25,5 @@ class TestJob(unittest.TestCase):
         self.assertEqual(job, copied_job)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

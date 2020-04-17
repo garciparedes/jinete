@@ -1,6 +1,4 @@
-from .algorithm import (
-    LocalSearchAlgorithm,
-)
+from .algorithm import LocalSearchAlgorithm
 
 from .strategies import (
     LocalSearchStrategy,

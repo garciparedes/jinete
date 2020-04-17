@@ -57,5 +57,5 @@ class TestTwoOPTLocalSearchStrategy(unittest.TestCase):
         # TODO: Improve test validations.
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

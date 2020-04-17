@@ -1,12 +1,4 @@
-from .abc import (
-    InsertionStrategy,
-)
-from .intensive import (
-    IntensiveInsertionStrategy,
-)
-from .sampling import (
-    SamplingInsertionStrategy,
-)
-from .tail import (
-    TailInsertionStrategy,
-)
+from .abc import InsertionStrategy
+from .intensive import IntensiveInsertionStrategy
+from .sampling import SamplingInsertionStrategy
+from .tail import TailInsertionStrategy

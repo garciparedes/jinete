@@ -2,22 +2,14 @@ import unittest
 
 import jinete as jit
 
-from tests.utils import (
-    generate_one_position,
-)
+from tests.utils import generate_one_position
 
 
 class TestTrips(unittest.TestCase):
-
     def test_trip(self):
         identifier = str()
-        origin = jit.Service(
-            position=generate_one_position(),
-            earliest=0.0,
-        )
-        destination = jit.Service(
-            position=generate_one_position()
-        )
+        origin = jit.Service(position=generate_one_position(), earliest=0.0,)
+        destination = jit.Service(position=generate_one_position())
 
         distance = origin.distance_to(destination)
         duration = origin.time_to(destination)
@@ -36,13 +28,8 @@ class TestTrips(unittest.TestCase):
     def test_trip_with_capacity(self):
         identifier = str()
         capacity = 3
-        origin = jit.Service(
-            position=generate_one_position(),
-            earliest=0.0,
-        )
-        destination = jit.Service(
-            position=generate_one_position()
-        )
+        origin = jit.Service(position=generate_one_position(), earliest=0.0,)
+        destination = jit.Service(position=generate_one_position())
 
         distance = origin.distance_to(destination)
         duration = origin.time_to(destination)
@@ -60,14 +47,8 @@ class TestTrips(unittest.TestCase):
 
     def test_trip_with_timeout(self):
         identifier = str()
-        origin = jit.Service(
-            position=generate_one_position(),
-            earliest=0.0,
-            latest=3600,
-        )
-        destination = jit.Service(
-            position=generate_one_position()
-        )
+        origin = jit.Service(position=generate_one_position(), earliest=0.0, latest=3600,)
+        destination = jit.Service(position=generate_one_position())
         distance = origin.distance_to(destination)
         duration = origin.time_to(destination)
 
@@ -84,14 +65,8 @@ class TestTrips(unittest.TestCase):
 
     def test_trip_with_load_time(self):
         identifier = str()
-        origin = jit.Service(
-            position=generate_one_position(),
-            earliest=0.0,
-            duration=1800,
-        )
-        destination = jit.Service(
-            position=generate_one_position()
-        )
+        origin = jit.Service(position=generate_one_position(), earliest=0.0, duration=1800,)
+        destination = jit.Service(position=generate_one_position())
         distance = origin.distance_to(destination)
         duration = origin.time_to(destination)
 
@@ -108,18 +83,8 @@ class TestTrips(unittest.TestCase):
 
     def test_as_tuple(self):
         identifier = str(0)
-        origin = jit.Service(
-            position=generate_one_position(),
-            earliest=100,
-            latest=200,
-            duration=2,
-        )
-        destination = jit.Service(
-            position=generate_one_position(),
-            earliest=1000,
-            latest=2000,
-            duration=20,
-        )
+        origin = jit.Service(position=generate_one_position(), earliest=100, latest=200, duration=2,)
+        destination = jit.Service(position=generate_one_position(), earliest=1000, latest=2000, duration=20,)
         capacity = 44
         on_time_bonus = 3
         timeout = 100
@@ -133,16 +98,16 @@ class TestTrips(unittest.TestCase):
         )
 
         expected = (
-            ('identifier', identifier),
-            ('origin', tuple(origin)),
-            ('destination', tuple(destination)),
-            ('on_time_bonus', on_time_bonus),
-            ('capacity', capacity),
-            ('timeout', trip.timeout),
+            ("identifier", identifier),
+            ("origin", tuple(origin)),
+            ("destination", tuple(destination)),
+            ("on_time_bonus", on_time_bonus),
+            ("capacity", capacity),
+            ("timeout", trip.timeout),
         )
 
         self.assertEqual(expected, tuple(trip))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -3,35 +3,30 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from ....models import (
-    Planning,
-)
-from ...abc import (
-    Algorithm,
-)
-from .strategies import (
-    ReallocationLocalSearchStrategy,
-)
+from ....models import Planning
+from ...abc import Algorithm
+from .strategies import ReallocationLocalSearchStrategy
 
 if TYPE_CHECKING:
-    from typing import (
-        Set,
-    )
+    from typing import Set
     from ....models import (
         Result,
         Route,
     )
-    from .strategies import (
-        LocalSearchStrategy,
-    )
+    from .strategies import LocalSearchStrategy
 
 logger = logging.getLogger(__name__)
 
 
 class LocalSearchAlgorithm(Algorithm):
-
-    def __init__(self, initial: Result, no_improvement_threshold: int = 1, strategy_cls: LocalSearchStrategy = None,
-                 *args, **kwargs):
+    def __init__(
+        self,
+        initial: Result,
+        no_improvement_threshold: int = 1,
+        strategy_cls: LocalSearchStrategy = None,
+        *args,
+        **kwargs
+    ):
         super().__init__(*args, **kwargs)
         if strategy_cls is None:
             strategy_cls = ReallocationLocalSearchStrategy

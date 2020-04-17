@@ -2,21 +2,13 @@ import unittest
 
 import jinete as jit
 
-from tests.utils import (
-    generate_one_position,
-)
+from tests.utils import generate_one_position
 
 
 class TestVehicles(unittest.TestCase):
-
     def test_construction(self):
         identifier = str(0)
-        service = jit.Service(
-            position=generate_one_position(),
-            earliest=1800,
-            latest=3600,
-            duration=60,
-        )
+        service = jit.Service(position=generate_one_position(), earliest=1800, latest=3600, duration=60,)
         vehicle = jit.Vehicle(identifier, service)
 
         self.assertEqual(identifier, vehicle.identifier)
@@ -36,12 +28,7 @@ class TestVehicles(unittest.TestCase):
 
     def test_construction_with_capacity(self):
         capacity = 3
-        service = jit.Service(
-            position=generate_one_position(),
-            earliest=1800,
-            latest=3600,
-            duration=60,
-        )
+        service = jit.Service(position=generate_one_position(), earliest=1800, latest=3600, duration=60,)
         identifier = str(0)
         vehicle = jit.Vehicle(identifier, service, capacity=capacity)
 
@@ -62,18 +49,8 @@ class TestVehicles(unittest.TestCase):
 
     def test_vehicle_with_final(self):
         identifier = str(0)
-        origin = jit.Service(
-            position=generate_one_position(),
-            earliest=100,
-            latest=200,
-            duration=2,
-        )
-        destination = jit.Service(
-            position=generate_one_position(),
-            earliest=1000,
-            latest=2000,
-            duration=20,
-        )
+        origin = jit.Service(position=generate_one_position(), earliest=100, latest=200, duration=2,)
+        destination = jit.Service(position=generate_one_position(), earliest=1000, latest=2000, duration=20,)
         vehicle = jit.Vehicle(identifier, origin, destination)
 
         self.assertEqual(identifier, vehicle.identifier)
@@ -93,31 +70,21 @@ class TestVehicles(unittest.TestCase):
 
     def test_as_tuple(self):
         identifier = str(0)
-        origin = jit.Service(
-            position=generate_one_position(),
-            earliest=100,
-            latest=200,
-            duration=2,
-        )
-        destination = jit.Service(
-            position=generate_one_position(),
-            earliest=1000,
-            latest=2000,
-            duration=20,
-        )
+        origin = jit.Service(position=generate_one_position(), earliest=100, latest=200, duration=2,)
+        destination = jit.Service(position=generate_one_position(), earliest=1000, latest=2000, duration=20,)
         capacity = 44
         vehicle = jit.Vehicle(identifier, origin, destination, capacity)
 
         expected = (
-            ('identifier', identifier),
-            ('origin', tuple(origin)),
-            ('destination', tuple(destination)),
-            ('capacity', capacity),
-            ('timeout', vehicle.timeout),
+            ("identifier", identifier),
+            ("origin", tuple(origin)),
+            ("destination", tuple(destination)),
+            ("capacity", capacity),
+            ("timeout", vehicle.timeout),
         )
 
         self.assertEqual(expected, tuple(vehicle))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

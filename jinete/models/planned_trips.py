@@ -1,25 +1,13 @@
 from __future__ import annotations
 
 import logging
-from typing import (
-    TYPE_CHECKING,
-)
+from typing import TYPE_CHECKING
 
-from cached_property import (
-    cached_property,
-)
-from .constants import (
-    ERROR_BOUND,
-)
-from .abc import (
-    Model,
-)
-from .trips import (
-    Trip,
-)
-from .stops import (
-    Stop,
-)
+from cached_property import cached_property
+from .constants import ERROR_BOUND
+from .abc import Model
+from .trips import Trip
+from .stops import Stop
 
 if TYPE_CHECKING:
     from typing import (
@@ -27,22 +15,18 @@ if TYPE_CHECKING:
         Generator,
         Tuple,
     )
-    from .positions import (
-        Position,
-    )
-    from .vehicles import (
-        Vehicle,
-    )
+    from .positions import Position
+    from .vehicles import Vehicle
 
 logger = logging.getLogger(__name__)
 
 
 class PlannedTrip(Model):
     __slots__ = [
-        'vehicle',
-        'trip',
-        'pickup',
-        'delivery',
+        "vehicle",
+        "trip",
+        "pickup",
+        "delivery",
     ]
 
     vehicle: Vehicle
@@ -146,12 +130,12 @@ class PlannedTrip(Model):
 
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
         yield from (
-            ('trip_identifier', self.trip_identifier),
-            ('pickup', self.pickup),
-            ('delivery', self.delivery),
-            ('feasible', self.feasible),
+            ("trip_identifier", self.trip_identifier),
+            ("pickup", self.pickup),
+            ("delivery", self.delivery),
+            ("feasible", self.feasible),
         )
 
     def flush(self) -> None:
-        for key in ('feasible',):
+        for key in ("feasible",):
             self.__dict__.pop(key, None)

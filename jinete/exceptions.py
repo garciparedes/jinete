@@ -14,14 +14,12 @@ if TYPE_CHECKING:
 
 
 class JineteException(Exception):
-
     def __init__(self, message: str):
         super().__init__(message)
         self.message = message
 
 
 class PreviousStopNotInRouteException(JineteException):
-
     def __init__(self, stop: Stop):
         self.stop = stop
         message = f'Stop "{stop}" has no previous "{stop.previous}" on the belonging route "{stop.route}".'
@@ -29,7 +27,6 @@ class PreviousStopNotInRouteException(JineteException):
 
 
 class NonFeasiblePlannedTripException(JineteException):
-
     def __init__(self, planned_trip: PlannedTrip):
         assert planned_trip.feasible is False
 
@@ -39,7 +36,6 @@ class NonFeasiblePlannedTripException(JineteException):
 
 
 class NonFeasibleRouteException(JineteException):
-
     def __init__(self, route: Route):
         assert route.feasible is False
 

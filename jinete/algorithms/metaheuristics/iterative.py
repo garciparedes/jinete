@@ -8,27 +8,20 @@ from ...models import (
     Planning,
     MAX_INT,
 )
-from ..abc import (
-    Algorithm,
-)
-from ..heuristics import (
-    InsertionAlgorithm,
-)
+from ..abc import Algorithm
+from ..heuristics import InsertionAlgorithm
 
 if TYPE_CHECKING:
     from typing import (
         Type,
         Optional,
     )
-    from ...models import (
-        Result,
-    )
+    from ...models import Result
 
 logger = logging.getLogger(__name__)
 
 
 class IterativeAlgorithm(Algorithm):
-
     def __init__(self, episodes: int = 3, algorithm_cls: Type[Algorithm] = None, seed: int = 56, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if algorithm_cls is None:

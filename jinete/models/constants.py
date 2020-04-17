@@ -19,7 +19,7 @@ if TYPE_CHECKING:
         Union,
     )
 
-    T = TypeVar('T')
+    T = TypeVar("T")
     Number = Union[int, float]
 
 logger = logging.getLogger(__name__)
@@ -27,8 +27,8 @@ logger = logging.getLogger(__name__)
 MAX_INT = maxsize
 MIN_INT = -maxsize
 
-MAX_FLOAT = float('inf')
-MIN_FLOAT = float('-inf')
+MAX_FLOAT = float("inf")
+MIN_FLOAT = float("-inf")
 
 ERROR_BOUND = 10e-4
 
@@ -42,7 +42,7 @@ class OptimizationDirection(Enum):
         return self.value(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.name.capitalize()}'
+        return f"{self.name.capitalize()}"
 
     @property
     def _reverse(self):
@@ -66,7 +66,6 @@ class OptimizationDirection(Enum):
 
 @unique
 class DistanceMetric(Enum):
-
     @staticmethod
     def _euclidean_distance(a: Iterable[Number], b: Iterable[Number]) -> float:
         return sqrt(sum(pow(a_i - b_i, 2) for a_i, b_i in zip(a, b)))
@@ -82,4 +81,4 @@ class DistanceMetric(Enum):
         return self.value(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.name.capitalize()}'
+        return f"{self.name.capitalize()}"

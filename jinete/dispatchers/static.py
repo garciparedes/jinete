@@ -2,13 +2,10 @@ from __future__ import annotations
 
 from .abc import Dispatcher
 
-from ..models import (
-    Result,
-)
+from ..models import Result
 
 
 class StaticDispatcher(Dispatcher):
-
     def run(self) -> Result:
         loader = self.loader_cls()
 

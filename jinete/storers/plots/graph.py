@@ -6,9 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import networkx as nx
 
-from ..abc import (
-    Storer,
-)
+from ..abc import Storer
 
 if TYPE_CHECKING:
     from typing import (
@@ -16,30 +14,27 @@ if TYPE_CHECKING:
         Any,
         Tuple,
     )
-    from ...models import (
-        Position,
-    )
+    from ...models import Position
 
 
 class GraphPlotStorer(Storer):
-
     def _generate_nodes(self, edges: Dict[Tuple[Position, Position], Dict[str, Any]]) -> Dict[Position, Dict[str, Any]]:
         nodes: Dict[Position, Dict[str, Any]] = dict()
         for trip in self.trips:
             nodes[trip.origin_position] = {
-                'label': f'+{trip.identifier}',
+                "label": f"+{trip.identifier}",
             }
             nodes[trip.destination_position] = {
-                'label': f'-{trip.identifier}',
+                "label": f"-{trip.identifier}",
             }
         for position_pair in edges.keys():
             if position_pair[0] not in nodes:
                 nodes[position_pair[0]] = {
-                    'label': '',
+                    "label": "",
                 }
             if position_pair[1] not in nodes:
                 nodes[position_pair[1]] = {
-                    'label': '',
+                    "label": "",
                 }
         return nodes
 
@@ -48,8 +43,8 @@ class GraphPlotStorer(Storer):
         for route, color in zip(self.routes, sns.husl_palette(len(self.routes))):
             for first, second in zip(route.stops[:-1], route.stops[1:]):
                 edges[(first.position, second.position)] = {
-                    'color': color,
-                    'label': '',
+                    "color": color,
+                    "label": "",
                 }
         return edges
 
@@ -71,17 +66,18 @@ class GraphPlotStorer(Storer):
     @staticmethod
     def _show_graph(graph: nx.Graph) -> None:
         import matplotlib as mpl
-        mpl.rcParams['figure.dpi'] = 300
+
+        mpl.rcParams["figure.dpi"] = 300
 
         pos = {node: node.coordinates for node in graph.nodes.keys()}
 
-        node_labels = {node: metadata['label'] for node, metadata in graph.nodes.items()}
+        node_labels = {node: metadata["label"] for node, metadata in graph.nodes.items()}
 
-        edge_color = [metadata['color'] for metadata in graph.edges.values()]
-        edge_labels = {edge: metadata['label'] for edge, metadata in graph.edges.items()}
+        edge_color = [metadata["color"] for metadata in graph.edges.values()]
+        edge_labels = {edge: metadata["label"] for edge, metadata in graph.edges.items()}
 
         nx.draw(graph, pos=pos, edge_color=edge_color, node_size=100)
-        nx.draw_networkx_labels(graph, pos, labels=node_labels, font_size=5, font_color='white')
+        nx.draw_networkx_labels(graph, pos, labels=node_labels, font_size=5, font_color="white")
         nx.draw_networkx_edge_labels(graph, pos, edge_labels=edge_labels)
 
         plt.show()

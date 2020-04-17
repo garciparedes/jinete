@@ -1,6 +1,4 @@
-from .algorithm import (
-    InsertionAlgorithm,
-)
+from .algorithm import InsertionAlgorithm
 from .iterators import (
     InsertionIterator,
     StatelessInsertionIterator,

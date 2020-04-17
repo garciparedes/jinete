@@ -2,9 +2,7 @@ import unittest
 
 import jinete as jit
 
-from tests.utils import (
-    generate_one_loader,
-)
+from tests.utils import generate_one_loader
 
 
 class TestMilpAlgorithm(unittest.TestCase):
@@ -24,18 +22,12 @@ class TestMilpAlgorithm(unittest.TestCase):
         return self.loader.fleet
 
     def test_creation(self):
-        algorithm = jit.MilpAlgorithm(
-            job=self.job,
-            fleet=self.fleet,
-        )
+        algorithm = jit.MilpAlgorithm(job=self.job, fleet=self.fleet,)
         self.assertEqual(algorithm.job, self.job)
         self.assertEqual(algorithm.fleet, self.fleet)
 
     def test_optimize(self):
-        algorithm = jit.MilpAlgorithm(
-            job=self.job,
-            fleet=self.fleet,
-        )
+        algorithm = jit.MilpAlgorithm(job=self.job, fleet=self.fleet,)
         result = algorithm.optimize()
 
         # TODO: Properly validate  behaviour of the provided "Result" object.
@@ -47,5 +39,5 @@ class TestMilpAlgorithm(unittest.TestCase):
         self.assertAlmostEqual(-85.4, result.optimization_value[1], delta=0.1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
