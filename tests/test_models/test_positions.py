@@ -9,19 +9,24 @@ from tests.utils import (
 
 
 class TestGeometricPosition(unittest.TestCase):
-
     def setUp(self) -> None:
         self.surface = generate_one_surface()
 
     def test_construction(self):
-        coordinates = (3, 4,)
+        coordinates = (
+            3,
+            4,
+        )
         position = jit.GeometricPosition(coordinates, self.surface)
         self.assertEqual(coordinates[0], position[0])
         self.assertEqual(coordinates[1], position[1])
         self.assertEqual(hash(coordinates), hash(position))
 
     def test_equality(self):
-        coordinates = (1.1, 2.2,)
+        coordinates = (
+            1.1,
+            2.2,
+        )
 
         a = jit.GeometricPosition(coordinates, self.surface)
         b = jit.GeometricPosition(coordinates, self.surface)
@@ -40,22 +45,26 @@ class TestGeometricPosition(unittest.TestCase):
         self.assertEqual(position, copied_position)
 
     def test_as_tuple(self):
-        coordinates = (3, 4,)
+        coordinates = (
+            3,
+            4,
+        )
         position = jit.GeometricPosition(coordinates, self.surface)
 
-        expected = (
-            ('coordinates', coordinates),
-        )
+        expected = (("coordinates", coordinates),)
         self.assertEqual(expected, tuple(position))
 
     def test_as_str(self):
-        coordinates = (3, 4,)
+        coordinates = (
+            3,
+            4,
+        )
         position = jit.GeometricPosition(coordinates, self.surface)
 
-        expected = '(' + ",".join(f"{x:07.3f}" for x in coordinates) + ')'
+        expected = "(" + ",".join(f"{x:07.3f}" for x in coordinates) + ")"
 
         self.assertEqual(expected, str(position))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -3,26 +3,20 @@ from abc import (
     ABC,
     abstractmethod,
 )
-from typing import (
-    TYPE_CHECKING,
-    Any)
+from typing import TYPE_CHECKING, Any
 from ..models import (
     Fleet,
     Job,
     Surface,
 )
-from .formatters import (
-    CordeauLaporteLoaderFormatter,
-)
+from .formatters import CordeauLaporteLoaderFormatter
 
 if TYPE_CHECKING:
     from typing import (
         Type,
         Optional,
     )
-    from .formatters import (
-        LoaderFormatter,
-    )
+    from .formatters import LoaderFormatter
 
 
 class Loader(ABC):

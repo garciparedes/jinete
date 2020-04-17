@@ -1,8 +1,6 @@
 import logging
 
-from ..abc import (
-    LocalSearchStrategy,
-)
+from ..abc import LocalSearchStrategy
 from ......models import (
     Stop,
     Route,
@@ -12,7 +10,6 @@ logger = logging.getLogger(__name__)
 
 
 class OneShiftLocalSearchStrategy(LocalSearchStrategy):
-
     def _improve(self) -> None:
         logger.info(f'Starting to improve "Result" with "{self.__class__.__name__}"...')
         for route in self.routes:

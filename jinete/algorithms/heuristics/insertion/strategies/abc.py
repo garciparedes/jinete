@@ -2,9 +2,7 @@ from __future__ import annotations
 
 import logging
 from operator import attrgetter
-from typing import (
-    TYPE_CHECKING,
-)
+from typing import TYPE_CHECKING
 
 from .....models import (
     Stop,
@@ -19,20 +17,25 @@ if TYPE_CHECKING:
         List,
         Union,
     )
-    from .....models import (
-        Route,
-    )
+    from .....models import Route
 
 logger = logging.getLogger(__name__)
 
 
 class InsertionStrategy(object):
-
     def __init__(self, only_feasible: bool = True, *args, **kwargs):
         self.only_feasible = only_feasible
 
-    def compute(self, route: Route, trips: Union[Trip, Iterable[Trip]], previous_idx: int = None,
-                following_idx: int = None, only_feasible: bool = None, *args, **kwargs) -> List[Route]:
+    def compute(
+        self,
+        route: Route,
+        trips: Union[Trip, Iterable[Trip]],
+        previous_idx: int = None,
+        following_idx: int = None,
+        only_feasible: bool = None,
+        *args,
+        **kwargs
+    ) -> List[Route]:
         assert previous_idx < following_idx
 
         if only_feasible is None:
@@ -68,7 +71,7 @@ class InsertionStrategy(object):
 
         for i in reversed(range(max(idx, 1), len(route.stops))):
             stop = route.stops[i]
-            planned_trip = max(stop.pickup_planned_trips, default=None, key=attrgetter('duration'))
+            planned_trip = max(stop.pickup_planned_trips, default=None, key=attrgetter("duration"))
             if planned_trip is None:
                 continue
 

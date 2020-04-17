@@ -3,30 +3,19 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from ...models import (
-    Planning,
-)
+from ...models import Planning
 
-from ..abc import (
-    Algorithm,
-)
-from ..utils import (
-    ThreeIndexModel,
-)
+from ..abc import Algorithm
+from ..utils import ThreeIndexModel
 
 if TYPE_CHECKING:
-    from typing import (
-        Type
-    )
-    from ..utils import (
-        Model,
-    )
+    from typing import Type
+    from ..utils import Model
 
 logger = logging.getLogger(__name__)
 
 
 class MilpAlgorithm(Algorithm):
-
     def __init__(self, model_cls: Type[Model] = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

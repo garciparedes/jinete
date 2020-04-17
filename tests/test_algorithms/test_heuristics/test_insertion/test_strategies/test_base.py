@@ -9,7 +9,6 @@ from tests.utils import (
 
 
 class TestInsertionStrategy(unittest.TestCase):
-
     def test_compute(self):
         strategy = jit.InsertionStrategy()
         route = generate_one_route()
@@ -26,5 +25,5 @@ class TestInsertionStrategy(unittest.TestCase):
         # TODO: Improve assertions
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

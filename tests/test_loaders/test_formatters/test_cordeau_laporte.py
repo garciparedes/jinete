@@ -6,9 +6,7 @@ from typing import TYPE_CHECKING
 import jinete as jit
 
 if TYPE_CHECKING:
-    from typing import (
-        Tuple,
-    )
+    from typing import Tuple
 
 
 class TestCordeauLaporteLoaderFormatter(unittest.TestCase):
@@ -65,7 +63,7 @@ class TestCordeauLaporteLoaderFormatter(unittest.TestCase):
         self.assertIsInstance(job, jit.Job)
         self.assertEqual(n, len(job.trips))
 
-        for idx, trip in enumerate(sorted(job.trips, key=attrgetter('identifier'))):
+        for idx, trip in enumerate(sorted(job.trips, key=attrgetter("identifier"))):
             origin_row = self.data[2 + idx]
             destination_row = self.data[2 + idx + n]
 
@@ -83,13 +81,12 @@ class TestCordeauLaporteLoaderFormatter(unittest.TestCase):
             self.assertEqual(0.0, trip.on_time_bonus)
 
             self.assertEqual(
-                max(destination_earliest - destination_duration - timeout, origin_earliest),
-                trip.origin_earliest,
+                max(destination_earliest - destination_duration - timeout, origin_earliest), trip.origin_earliest,
             )
             self.assertEqual(
                 min(
                     destination_latest - destination_duration - origin_position.time_to(destination_position),
-                    origin_latest
+                    origin_latest,
                 ),
                 trip.origin_latest,
             )
@@ -97,13 +94,12 @@ class TestCordeauLaporteLoaderFormatter(unittest.TestCase):
             self.assertEqual(
                 max(
                     origin_earliest + origin_duration + origin_position.time_to(destination_position),
-                    destination_earliest
+                    destination_earliest,
                 ),
                 trip.destination_earliest,
             )
             self.assertEqual(
-                min(origin_latest + origin_duration + timeout, destination_latest),
-                trip.destination_latest,
+                min(origin_latest + origin_duration + timeout, destination_latest), trip.destination_latest,
             )
 
             self.assertIsInstance(trip.origin_position, jit.GeometricPosition)
@@ -112,5 +108,5 @@ class TestCordeauLaporteLoaderFormatter(unittest.TestCase):
             self.assertEqual(destination_position, trip.destination_position)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

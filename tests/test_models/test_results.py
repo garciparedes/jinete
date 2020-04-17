@@ -1,20 +1,14 @@
 from __future__ import annotations
 
 import unittest
-from typing import (
-    TYPE_CHECKING,
-)
+from typing import TYPE_CHECKING
 
 import jinete as jit
 
-from tests.utils import (
-    generate_one_planning,
-)
+from tests.utils import generate_one_planning
 
 if TYPE_CHECKING:
-    from typing import (
-        Type,
-    )
+    from typing import Type
 
 
 class TestResult(unittest.TestCase):
@@ -38,7 +32,7 @@ class TestResult(unittest.TestCase):
             job=self.job,
             algorithm_cls=self.algorithm_cls,
             planning=self.planning,
-            computation_time=self.computation_time
+            computation_time=self.computation_time,
         )
 
         self.assertIsInstance(result, jit.Result)
@@ -65,17 +59,17 @@ class TestResult(unittest.TestCase):
             job=self.job,
             algorithm_cls=self.algorithm_cls,
             planning=self.planning,
-            computation_time=self.computation_time
+            computation_time=self.computation_time,
         )
 
         expected = (
-            ('fleet_uuid', tuple(self.fleet)),
-            ('job', tuple(self.job)),
-            ('algorithm_name', self.algorithm_cls.__name__),
-            ('planning_uuid', self.planning.uuid)
+            ("fleet_uuid", tuple(self.fleet)),
+            ("job", tuple(self.job)),
+            ("algorithm_name", self.algorithm_cls.__name__),
+            ("planning_uuid", self.planning.uuid),
         )
         self.assertEqual(expected, tuple(result))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

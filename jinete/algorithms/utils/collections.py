@@ -1,6 +1,6 @@
 from typing import List, TypeVar, Set
 
-E = TypeVar('E')
+E = TypeVar("E")
 
 
 def remove_duplicates(seq: List[E]) -> List[E]:

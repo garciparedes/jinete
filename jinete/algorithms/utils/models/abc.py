@@ -4,9 +4,7 @@ from abc import (
     ABC,
     abstractmethod,
 )
-from typing import (
-    TYPE_CHECKING,
-)
+from typing import TYPE_CHECKING
 
 import pulp as lp
 
@@ -23,7 +21,6 @@ if TYPE_CHECKING:
 
 
 class Model(ABC):
-
     def __init__(self, fleet: Fleet, job: Job, *args, **kwargs):
         self.fleet = fleet
         self.job = job

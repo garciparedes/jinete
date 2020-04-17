@@ -1,3 +1,1 @@
-from .graph import (
-    GraphPlotStorer,
-)
+from .graph import GraphPlotStorer

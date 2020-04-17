@@ -1,7 +1,3 @@
-from .abc import (
-    Dispatcher
-)
+from .abc import Dispatcher
 
-from .static import (
-    StaticDispatcher,
-)
+from .static import StaticDispatcher

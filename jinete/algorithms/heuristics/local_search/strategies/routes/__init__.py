@@ -1,6 +1,2 @@
-from .one_shift import (
-    OneShiftLocalSearchStrategy,
-)
-from .two_opt import (
-    TwoOPTLocalSearchStrategy,
-)
+from .one_shift import OneShiftLocalSearchStrategy
+from .two_opt import TwoOPTLocalSearchStrategy

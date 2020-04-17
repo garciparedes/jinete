@@ -8,15 +8,9 @@ from ...models import (
     Planning,
     MAX_INT,
 )
-from ..abc import (
-    Algorithm,
-)
-from .sequential import (
-    SequentialAlgorithm,
-)
-from .iterative import (
-    IterativeAlgorithm,
-)
+from ..abc import Algorithm
+from .sequential import SequentialAlgorithm
+from .iterative import IterativeAlgorithm
 
 if TYPE_CHECKING:
     from typing import (
@@ -28,10 +22,15 @@ logger = logging.getLogger(__name__)
 
 
 class GraspAlgorithm(Algorithm):
-
-    def __init__(self, no_improvement_threshold: int = 1, first_solution_kwargs: Dict[str, Any] = None,
-                 local_search_kwargs: Dict[str, Any] = None,
-                 seed: int = 56, *args, **kwargs):
+    def __init__(
+        self,
+        no_improvement_threshold: int = 1,
+        first_solution_kwargs: Dict[str, Any] = None,
+        local_search_kwargs: Dict[str, Any] = None,
+        seed: int = 56,
+        *args,
+        **kwargs
+    ):
         super().__init__(*args, **kwargs)
 
         if first_solution_kwargs is None:
@@ -46,22 +45,22 @@ class GraspAlgorithm(Algorithm):
 
     def build_first_solution_algorithm(self, **kwargs) -> Algorithm:
         kwargs.update(self.first_solution_kwargs.copy())
-        if 'fleet' not in kwargs:
-            kwargs['fleet'] = self.fleet
-        if 'job' not in kwargs:
-            kwargs['job'] = self.job
-        if 'seed' not in kwargs:
-            kwargs['seed'] = self.random.randint(0, MAX_INT)
+        if "fleet" not in kwargs:
+            kwargs["fleet"] = self.fleet
+        if "job" not in kwargs:
+            kwargs["job"] = self.job
+        if "seed" not in kwargs:
+            kwargs["seed"] = self.random.randint(0, MAX_INT)
         return IterativeAlgorithm(**kwargs)
 
     def build_local_search_algorithm(self, **kwargs) -> Algorithm:
         kwargs.update(self.local_search_kwargs.copy())
-        if 'fleet' not in kwargs:
-            kwargs['fleet'] = self.fleet
-        if 'job' not in kwargs:
-            kwargs['job'] = self.job
-        if 'seed' not in kwargs:
-            kwargs['seed'] = self.random.randint(0, MAX_INT)
+        if "fleet" not in kwargs:
+            kwargs["fleet"] = self.fleet
+        if "job" not in kwargs:
+            kwargs["job"] = self.job
+        if "seed" not in kwargs:
+            kwargs["seed"] = self.random.randint(0, MAX_INT)
         return SequentialAlgorithm(**kwargs)
 
     def _optimize(self) -> Planning:

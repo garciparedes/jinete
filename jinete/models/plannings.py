@@ -5,12 +5,8 @@ from copy import deepcopy
 from functools import reduce
 from operator import and_
 from typing import TYPE_CHECKING
-from uuid import (
-    uuid4,
-)
-from .abc import (
-    Model,
-)
+from uuid import uuid4
+from .abc import Model
 
 if TYPE_CHECKING:
     from typing import (
@@ -21,21 +17,11 @@ if TYPE_CHECKING:
         Generator,
         Tuple,
     )
-    from .routes import (
-        Route,
-    )
-    from .trips import (
-        Trip,
-    )
-    from .planned_trips import (
-        PlannedTrip,
-    )
-    from .vehicles import (
-        Vehicle,
-    )
-    from uuid import (
-        UUID,
-    )
+    from .routes import Route
+    from .trips import Trip
+    from .planned_trips import PlannedTrip
+    from .vehicles import Vehicle
+    from uuid import UUID
 
 logger = logging.getLogger(__name__)
 
@@ -76,10 +62,7 @@ class Planning(Model):
         return reduce(and_, (route.feasible for route in self.routes))
 
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
-        yield from (
-            ('uuid', self.uuid),
-            ('route_identifiers', tuple(route.identifier for route in self.routes))
-        )
+        yield from (("uuid", self.uuid), ("route_identifiers", tuple(route.identifier for route in self.routes)))
 
     def __deepcopy__(self, memo: Dict[int, Any]) -> Planning:
         planning = Planning()

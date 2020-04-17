@@ -18,18 +18,12 @@ class TestGraspAlgorithm(unittest.TestCase):
         cls.fleet = jit.Fleet(generate_vehicles(10))
 
     def test_creation(self):
-        algorithm = jit.GraspAlgorithm(
-            job=self.job,
-            fleet=self.fleet,
-        )
+        algorithm = jit.GraspAlgorithm(job=self.job, fleet=self.fleet,)
         self.assertEqual(algorithm.job, self.job)
         self.assertEqual(algorithm.fleet, self.fleet)
 
     def test_optimize(self):
-        algorithm = jit.GraspAlgorithm(
-            job=self.job,
-            fleet=self.fleet,
-        )
+        algorithm = jit.GraspAlgorithm(job=self.job, fleet=self.fleet,)
         result = algorithm.optimize()
 
         # TODO: Properly validate  behaviour of the provided "Result" object.
@@ -37,5 +31,5 @@ class TestGraspAlgorithm(unittest.TestCase):
         self.assertIsInstance(result, jit.Result)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

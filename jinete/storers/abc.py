@@ -14,18 +14,16 @@ if TYPE_CHECKING:
         Route,
         Trip,
     )
-    from .formatters import (
-        StorerFormatter,
-    )
+    from .formatters import StorerFormatter
 
 logger = logging.getLogger(__name__)
 
 
 class Storer(ABC):
-
     def __init__(self, result: Result, formatter_cls: Type[StorerFormatter] = None):
         if formatter_cls is None:
             from .formatters import ColumnarStorerFormatter
+
             formatter_cls = ColumnarStorerFormatter
         self.result = result
         self.formatter_cls = formatter_cls

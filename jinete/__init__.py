@@ -17,18 +17,13 @@ from .models import (
     Route,
     Planning,
     PlannedTrip,
-
     Stop,
-
     Result,
-
     OptimizationDirection,
-
     Objective,
     DialARideObjective,
     TaxiSharingObjective,
     HashCodeObjective,
-
     RouteCriterion,
     ShortestAveragePlannerTripDurationCriterion,
     EarliestLastDepartureTimeRouteCriterion,
@@ -36,7 +31,6 @@ from .models import (
     LongestTimeRouteCriterion,
     LongestUtilTimeRouteCriterion,
     HashCodeRouteCriterion,
-
     MAX_INT,
     MIN_INT,
     MAX_FLOAT,
@@ -98,6 +92,4 @@ from .exceptions import (
     NonFeasibleRouteException,
     PreviousStopNotInRouteException,
 )
-from .solvers import (
-    Solver,
-)
+from .solvers import Solver

@@ -1,11 +1,7 @@
-from .abc import (
-    LocalSearchStrategy,
-)
+from .abc import LocalSearchStrategy
 
 from .routes import (
     OneShiftLocalSearchStrategy,
     TwoOPTLocalSearchStrategy,
 )
-from .plannings import (
-    ReallocationLocalSearchStrategy,
-)
+from .plannings import ReallocationLocalSearchStrategy

@@ -71,5 +71,5 @@ class TestOneShiftLocalSearchStrategy(unittest.TestCase):
             self.assertEqual(second.previous, first)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

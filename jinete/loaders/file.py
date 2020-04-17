@@ -1,9 +1,7 @@
 from __future__ import annotations
 
 import logging
-from pathlib import (
-    Path,
-)
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from ..models import (
@@ -11,14 +9,10 @@ from ..models import (
     Surface,
     Fleet,
 )
-from .abc import (
-    Loader,
-)
+from .abc import Loader
 
 if TYPE_CHECKING:
-    from typing import (
-        Optional,
-    )
+    from typing import Optional
 
 logger = logging.getLogger(__name__)
 

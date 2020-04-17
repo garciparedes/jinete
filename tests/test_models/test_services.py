@@ -2,13 +2,10 @@ import unittest
 from copy import deepcopy
 
 import jinete as jit
-from tests.utils import (
-    generate_one_position,
-)
+from tests.utils import generate_one_position
 
 
 class TestServices(unittest.TestCase):
-
     def test_construction(self):
         position = generate_one_position()
         service = jit.Service(position)
@@ -81,10 +78,10 @@ class TestServices(unittest.TestCase):
         service = jit.Service(position, earliest, latest, duration)
 
         raw = (
-            ('position', position),
-            ('earliest', earliest),
-            ('latest', latest),
-            ('duration', duration),
+            ("position", position),
+            ("earliest", earliest),
+            ("latest", latest),
+            ("duration", duration),
         )
         self.assertEqual(raw, tuple(service))
 
@@ -97,10 +94,10 @@ class TestServices(unittest.TestCase):
         service = jit.Service(position, earliest, latest, duration)
 
         raw = {
-            'position': position,
-            'earliest': earliest,
-            'latest': latest,
-            'duration': duration,
+            "position": position,
+            "earliest": earliest,
+            "latest": latest,
+            "duration": duration,
         }
         self.assertEqual(raw, dict(service))
 
@@ -110,5 +107,5 @@ class TestServices(unittest.TestCase):
         self.assertEqual(position, copied_position)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -2,18 +2,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from .loaders import (
-    FileLoader,
-)
-from .algorithms import (
-    InsertionAlgorithm,
-)
-from .storers import (
-    PromptStorer,
-)
-from .dispatchers import (
-    StaticDispatcher,
-)
+from .loaders import FileLoader
+from .algorithms import InsertionAlgorithm
+from .storers import PromptStorer
+from .dispatchers import StaticDispatcher
 
 if TYPE_CHECKING:
     from typing import (
@@ -22,34 +14,25 @@ if TYPE_CHECKING:
         Dict,
         Any,
     )
-    from .loaders import (
-        Loader,
-    )
-    from .algorithms import (
-        Algorithm,
-    )
-    from .models import (
-        Result,
-    )
-    from .storers import (
-        Storer,
-    )
-    from .dispatchers import (
-        Dispatcher,
-    )
+    from .loaders import Loader
+    from .algorithms import Algorithm
+    from .models import Result
+    from .storers import Storer
+    from .dispatchers import Dispatcher
 
 
 class Solver(object):
-
-    def __init__(self,
-                 algorithm: Union[str, Type[Algorithm]] = InsertionAlgorithm,
-                 algorithm_kwargs: Dict[str, Any] = None,
-                 loader: Union[str, Type[Loader]] = FileLoader,
-                 loader_kwargs: Dict[str, Any] = None,
-                 storer: Union[str, Type[Storer]] = PromptStorer,
-                 storer_kwargs: Dict[str, Any] = None,
-                 dispatcher: Union[str, Type[Dispatcher]] = StaticDispatcher,
-                 dispatcher_kwargs: Dict[str, Any] = None):
+    def __init__(
+        self,
+        algorithm: Union[str, Type[Algorithm]] = InsertionAlgorithm,
+        algorithm_kwargs: Dict[str, Any] = None,
+        loader: Union[str, Type[Loader]] = FileLoader,
+        loader_kwargs: Dict[str, Any] = None,
+        storer: Union[str, Type[Storer]] = PromptStorer,
+        storer_kwargs: Dict[str, Any] = None,
+        dispatcher: Union[str, Type[Dispatcher]] = StaticDispatcher,
+        dispatcher_kwargs: Dict[str, Any] = None,
+    ):
         if algorithm_kwargs is None:
             algorithm_kwargs = dict()
         if loader_kwargs is None:
@@ -79,8 +62,7 @@ class Solver(object):
         class TunedLoader(base):
             def __init__(self, *args, **kwargs):
                 super().__init__(
-                    *args, **kwargs,
-                    **tuned_kwargs,
+                    *args, **kwargs, **tuned_kwargs,
                 )
 
         return TunedLoader
@@ -93,8 +75,7 @@ class Solver(object):
         class TunedAlgorithm(base):
             def __init__(self, *args, **kwargs):
                 super().__init__(
-                    *args, **kwargs,
-                    **tuned_kwargs,
+                    *args, **kwargs, **tuned_kwargs,
                 )
 
         return TunedAlgorithm
@@ -107,8 +88,7 @@ class Solver(object):
         class TunedStorer(base):
             def __init__(self, *args, **kwargs):
                 super().__init__(
-                    *args, **kwargs,
-                    **tuned_kwargs,
+                    *args, **kwargs, **tuned_kwargs,
                 )
 
         return TunedStorer
@@ -121,19 +101,14 @@ class Solver(object):
         class TunedDispatcher(base):
             def __init__(self, *args, **kwargs):
                 super().__init__(
-                    *args, **kwargs,
-                    **tuned_kwargs,
+                    *args, **kwargs, **tuned_kwargs,
                 )
 
         return TunedDispatcher
 
     @property
     def _dispatcher(self) -> Dispatcher:
-        return self._dispatcher_cls(
-            self._loader_cls,
-            self._algorithm_cls,
-            self._storer_cls,
-        )
+        return self._dispatcher_cls(self._loader_cls, self._algorithm_cls, self._storer_cls,)
 
     def solve(self) -> Result:
         return self._dispatcher.run()
