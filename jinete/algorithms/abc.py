@@ -56,11 +56,7 @@ class Algorithm(ABC):
         end_time = time()
         computation_time = end_time - start_time
 
-        result = Result(
-            algorithm=self,
-            planning=planning,
-            computation_time=computation_time,
-        )
+        result = Result(algorithm=self, planning=planning, computation_time=computation_time,)
         logger.info(
             f'Optimized with {self.__class__.__name__} obtaining {"" if result.feasible else "non "}'
             f"feasible results!"

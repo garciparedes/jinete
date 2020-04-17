@@ -6,12 +6,8 @@ from abc import (
     ABC,
     abstractmethod,
 )
-from cached_property import (
-    cached_property,
-)
-from typing import (
-    TYPE_CHECKING,
-)
+from cached_property import cached_property
+from typing import TYPE_CHECKING
 from ..models import (
     Fleet,
     Job,

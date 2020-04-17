@@ -30,9 +30,7 @@ if TYPE_CHECKING:
 
 
 class Result(Model):
-    def __init__(
-        self, algorithm: Algorithm, planning: Planning, computation_time: float
-    ):
+    def __init__(self, algorithm: Algorithm, planning: Planning, computation_time: float):
         self.algorithm = algorithm
         self.planning = planning
         self.computation_time = computation_time
