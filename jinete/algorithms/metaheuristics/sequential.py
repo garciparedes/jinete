@@ -32,8 +32,14 @@ class SequentialAlgorithm(Algorithm):
     component of more complicated metaheuristics.
     """
 
-    def __init__(self, initial: Result, algorithms_cls: Sequence[Tuple[Type[Algorithm], Dict[str, Any]]] = None,
-                 seed: int = 56, *args, **kwargs):
+    def __init__(
+        self,
+        initial: Result,
+        algorithms_cls: Sequence[Tuple[Type[Algorithm], Dict[str, Any]]] = None,
+        seed: int = 56,
+        *args,
+        **kwargs
+    ):
         """Construct a new instance.
 
         :param initial: The initial result from to start the optimization process.

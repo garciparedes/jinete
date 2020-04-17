@@ -39,7 +39,7 @@ class Solver(object):
         storer: Union[str, Type[Storer]] = PromptStorer,
         storer_kwargs: Dict[str, Any] = None,
         dispatcher: Union[str, Type[Dispatcher]] = StaticDispatcher,
-        dispatcher_kwargs: Dict[str, Any] = None
+        dispatcher_kwargs: Dict[str, Any] = None,
     ):
         """Construct a new instance.
 

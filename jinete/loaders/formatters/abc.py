@@ -6,9 +6,7 @@ from typing import TYPE_CHECKING
 from abc import ABC, abstractmethod
 
 if TYPE_CHECKING:
-    from typing import (
-        Any,
-    )
+    from typing import Any
     from ...models import (
         Fleet,
         Job,

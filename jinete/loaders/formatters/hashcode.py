@@ -68,14 +68,8 @@ class HashCodeLoaderFormatter(LoaderFormatter):
         earliest: float,
         latest: float,
     ) -> Trip:
-        origin = Service(
-            position=surface.get_or_create_position([x1, y1]),
-            earliest=earliest,
-            latest=latest,
-        )
-        destination = Service(
-            position=surface.get_or_create_position([x2, y2]),
-        )
+        origin = Service(position=surface.get_or_create_position([x1, y1]), earliest=earliest, latest=latest,)
+        destination = Service(position=surface.get_or_create_position([x2, y2]),)
         trip = Trip(identifier, on_time_bonus=bonus, origin=origin, destination=destination)
         logger.debug(f"Created trip!")
         return trip

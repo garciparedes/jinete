@@ -7,20 +7,12 @@ from typing import TYPE_CHECKING
 
 from ...models import Planning
 
-from ..abc import (
-    Algorithm,
-)
-from .models import (
-    ThreeIndexLinearModel,
-)
+from ..abc import Algorithm
+from .models import ThreeIndexLinearModel
 
 if TYPE_CHECKING:
-    from typing import (
-        Type
-    )
-    from .models import (
-        LinearModel,
-    )
+    from typing import Type
+    from .models import LinearModel
 
 logger = logging.getLogger(__name__)
 

@@ -6,12 +6,8 @@ import logging
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from cached_property import (
-    cached_property,
-)
-from .abc import (
-    Loader,
-)
+from cached_property import cached_property
+from .abc import Loader
 
 if TYPE_CHECKING:
     from ..models import (

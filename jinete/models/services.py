@@ -25,6 +25,7 @@ class Service(Model):
     """
     Represents the requested action to visit a specific position, having some time restrictions and costs.
     """
+
     __slots__ = (
         "position",
         "earliest",

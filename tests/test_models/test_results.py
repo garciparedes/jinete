@@ -27,11 +27,7 @@ class TestResult(unittest.TestCase):
         cls.computation_time = 1
 
     def test_construction(self):
-        result = jit.Result(
-            algorithm=self.algorithm,
-            planning=self.planning,
-            computation_time=self.computation_time,
-        )
+        result = jit.Result(algorithm=self.algorithm, planning=self.planning, computation_time=self.computation_time,)
 
         self.assertIsInstance(result, jit.Result)
         self.assertEqual(self.fleet, result.fleet)
@@ -52,11 +48,7 @@ class TestResult(unittest.TestCase):
         self.assertEqual(self.computation_time, result.computation_time)
 
     def test_as_tuple(self):
-        result = jit.Result(
-            algorithm=self.algorithm,
-            planning=self.planning,
-            computation_time=self.computation_time,
-        )
+        result = jit.Result(algorithm=self.algorithm, planning=self.planning, computation_time=self.computation_time,)
 
         expected = (
             ("fleet_uuid", tuple(self.fleet)),

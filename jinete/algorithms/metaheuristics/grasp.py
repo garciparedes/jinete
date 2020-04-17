@@ -31,9 +31,15 @@ class GraspAlgorithm(Algorithm):
     https://en.wikipedia.org/wiki/Greedy_randomized_adaptive_search_procedure
     """
 
-    def __init__(self, no_improvement_threshold: int = 1, first_solution_kwargs: Dict[str, Any] = None,
-                 local_search_kwargs: Dict[str, Any] = None,
-                 seed: int = 56, *args, **kwargs):
+    def __init__(
+        self,
+        no_improvement_threshold: int = 1,
+        first_solution_kwargs: Dict[str, Any] = None,
+        local_search_kwargs: Dict[str, Any] = None,
+        seed: int = 56,
+        *args,
+        **kwargs
+    ):
         """Construct a new instance.
 
         :param no_improvement_threshold: Manages the number of allowed iterations without any improvement.

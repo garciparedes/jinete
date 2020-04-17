@@ -3,19 +3,11 @@
 from __future__ import annotations
 
 import logging
-from collections import (
-    defaultdict,
-)
-from itertools import (
-    product,
-)
-from typing import (
-    TYPE_CHECKING,
-)
+from collections import defaultdict
+from itertools import product
+from typing import TYPE_CHECKING
 
-from cached_property import (
-    cached_property,
-)
+from cached_property import cached_property
 import pulp as lp
 
 from jinete.models import (
@@ -23,9 +15,7 @@ from jinete.models import (
     Route,
     PlannedTrip,
 )
-from .abc import (
-    LinearModel,
-)
+from .abc import LinearModel
 
 if TYPE_CHECKING:
     from typing import (
@@ -79,12 +69,15 @@ class ThreeIndexLinearModel(LinearModel):
 
     @cached_property
     def _constraints(self) -> List[lp.LpConstraint]:
-        constraints: List[lp.LpConstraint] = sum([
-            self._uniqueness_constraints,
-            self._connectivity_constraints,
-            self._time_constraints,
-            self._feasibility_constraints,
-        ], [])
+        constraints: List[lp.LpConstraint] = sum(
+            [
+                self._uniqueness_constraints,
+                self._connectivity_constraints,
+                self._time_constraints,
+                self._feasibility_constraints,
+            ],
+            [],
+        )
 
         logger.info(f'Built "{len(constraints)}" constraints.')
         return constraints
@@ -97,7 +90,7 @@ class ThreeIndexLinearModel(LinearModel):
             for i in self._positions_indexer:
                 x_ki = list()
                 for j in self._positions_indexer:
-                    x_kij = lp.LpVariable(f'x_{k}_{i}_{j}', cat=lp.LpBinary)
+                    x_kij = lp.LpVariable(f"x_{k}_{i}_{j}", cat=lp.LpBinary)
                     x_ki.append(x_kij)
                 x_k.append(x_ki)
             x.append(x_k)
@@ -109,7 +102,7 @@ class ThreeIndexLinearModel(LinearModel):
         for k in self._routes_indexer:
             u_k = list()
             for i in self._positions_indexer:
-                u_ki = lp.LpVariable(f'u_{k}_{i}', lowBound=0.0)
+                u_ki = lp.LpVariable(f"u_{k}_{i}", lowBound=0.0)
                 u_k.append(u_ki)
             u.append(u_k)
         return u
@@ -120,7 +113,7 @@ class ThreeIndexLinearModel(LinearModel):
         for k in self._routes_indexer:
             w_k = list()
             for i in self._positions_indexer:
-                w_ki = lp.LpVariable(f'w_{k}_{i}', lowBound=0.0)
+                w_ki = lp.LpVariable(f"w_{k}_{i}", lowBound=0.0)
                 w_k.append(w_ki)
             w.append(w_k)
         return w
@@ -138,10 +131,7 @@ class ThreeIndexLinearModel(LinearModel):
         origins = tuple(trip.origin_position for trip in self._trips)
         destinations = tuple(trip.destination_position for trip in self._trips)
         positions = (
-            (self._vehicles[0].origin_position,) +
-            origins +
-            destinations +
-            (self._vehicles[0].destination_position,)
+            (self._vehicles[0].origin_position,) + origins + destinations + (self._vehicles[0].destination_position,)
         )
 
         return positions
@@ -198,7 +188,7 @@ class ThreeIndexLinearModel(LinearModel):
         elif position == trip.destination_position:
             earliest, latest = trip.destination_earliest, trip.destination_latest
         else:
-            raise Exception(f'There was a problem related with earliest, latest indices.')
+            raise Exception(f"There was a problem related with earliest, latest indices.")
         return earliest, latest
 
     def _capacity_by_position_idx(self, idx: int) -> float:
@@ -229,16 +219,12 @@ class ThreeIndexLinearModel(LinearModel):
         constraints = list()
 
         for i in self._pickups_indexer:
-            lhs = lp.lpSum(
-                self._x[k][i][j]
-                for j, k in product(self._positions_indexer, self._routes_indexer)
-            )
+            lhs = lp.lpSum(self._x[k][i][j] for j, k in product(self._positions_indexer, self._routes_indexer))
             constraints.append(lhs == 1)
 
             for k in self._routes_indexer:
-                lhs = (
-                    lp.lpSum(self._x[k][i][j] for j in self._positions_indexer) -
-                    lp.lpSum(self._x[k][self._n + i][j] for j in self._positions_indexer)
+                lhs = lp.lpSum(self._x[k][i][j] for j in self._positions_indexer) - lp.lpSum(
+                    self._x[k][self._n + i][j] for j in self._positions_indexer
                 )
                 constraints.append(lhs == 0)
 
@@ -253,9 +239,8 @@ class ThreeIndexLinearModel(LinearModel):
             constraints.append(lhs == 1)
 
             for i in self._nodes_indexer:
-                lhs = (
-                    lp.lpSum(self._x[k][j][i] for j in self._positions_indexer) -
-                    lp.lpSum(self._x[k][i][j] for j in self._positions_indexer)
+                lhs = lp.lpSum(self._x[k][j][i] for j in self._positions_indexer) - lp.lpSum(
+                    self._x[k][i][j] for j in self._positions_indexer
                 )
                 constraints.append(lhs == 0)
 
@@ -287,9 +272,7 @@ class ThreeIndexLinearModel(LinearModel):
 
                 cons = self._vehicles[k].capacity + min(0.0, capacity_i)
 
-                constraints.append(
-                    self._w[k][j] >= self._w[k][i] + capacity_j - cons * (1 - self._x[k][i][j]),
-                )
+                constraints.append(self._w[k][j] >= self._w[k][i] + capacity_j - cons * (1 - self._x[k][i][j]),)
 
         return constraints
 
@@ -303,28 +286,31 @@ class ThreeIndexLinearModel(LinearModel):
             for i in self._positions_indexer:
                 earliest, latest = self._time_window_by_position_idx(i)
 
-                constraints.extend([
-                    earliest <= self._u[k][i],
-                    self._u[k][i] <= latest,
-                ])
+                constraints.extend(
+                    [earliest <= self._u[k][i], self._u[k][i] <= latest,]
+                )
 
             for i in self._pickups_indexer:
                 load_time = self._load_time_by_position_idx(i)
                 timeout = self._timeout_by_position_idx(i)
                 travel_time = self._positions[i].time_to(self._positions[i + self._n])
 
-                constraints.extend([
-                    travel_time <= self._u[k][i + self._n] - (self._u[k][i] + load_time),
-                    self._u[k][i + self._n] - (self._u[k][i] + load_time) <= timeout,
-                ])
+                constraints.extend(
+                    [
+                        travel_time <= self._u[k][i + self._n] - (self._u[k][i] + load_time),
+                        self._u[k][i + self._n] - (self._u[k][i] + load_time) <= timeout,
+                    ]
+                )
 
             for i in self._positions_indexer:
                 capacity = self._capacity_by_position_idx(i)
 
-                constraints.extend([
-                    max(0.0, capacity) <= self._w[k][i],
-                    self._w[k][i] <= self._vehicles[k].capacity + min(0.0, capacity),
-                ])
+                constraints.extend(
+                    [
+                        max(0.0, capacity) <= self._w[k][i],
+                        self._w[k][i] <= self._vehicles[k].capacity + min(0.0, capacity),
+                    ]
+                )
 
         return constraints
 
@@ -333,7 +319,7 @@ class ThreeIndexLinearModel(LinearModel):
 
         :return A set of optimized routes.
         """
-        logger.info('Starting to solve...')
+        logger.info("Starting to solve...")
         self._problem.solve(self.solver)
 
         self._validate()
@@ -341,29 +327,29 @@ class ThreeIndexLinearModel(LinearModel):
         return self._solution_to_routes()
 
     def _print_solution(self):
-        print('X:')
+        print("X:")
         for k in self._routes_indexer:
-            print(f'Vehicle {k}-th.')
+            print(f"Vehicle {k}-th.")
             print(f'   {" ".join(map(lambda num: f"{num:02d}", self._positions_indexer))}')
             for i in self._positions_indexer:
-                print(f'{i:02d}', end=' ')
+                print(f"{i:02d}", end=" ")
                 for j in self._positions_indexer:
-                    print(f'{int(self._x[k][i][j].varValue):2d}', end=' ')
+                    print(f"{int(self._x[k][i][j].varValue):2d}", end=" ")
                 print()
             print()
 
-        print('U:')
+        print("U:")
         for k in self._routes_indexer:
-            print(f'Vehicle {k}-th.')
+            print(f"Vehicle {k}-th.")
             for i in self._positions_indexer:
-                print(f'{self._u[k][i].varValue:4.01f}', end=' ')
+                print(f"{self._u[k][i].varValue:4.01f}", end=" ")
             print()
 
-        print('W:')
+        print("W:")
         for k in self._routes_indexer:
-            print(f'Vehicle {k}-th.')
+            print(f"Vehicle {k}-th.")
             for i in self._positions_indexer:
-                print(f'{self._w[k][i].varValue:4.01f}', end=' ')
+                print(f"{self._w[k][i].varValue:4.01f}", end=" ")
             print()
 
     def _validate(self):
@@ -380,7 +366,7 @@ class ThreeIndexLinearModel(LinearModel):
                     assert min(abs(self._x[k][i][j].varValue), abs(self._x[k][i][j].varValue - 1)) <= 0.05
 
     def _solution_to_routes(self):
-        logger.info(f'Casting solution to a set of routes...')
+        logger.info(f"Casting solution to a set of routes...")
         routes = set()
         for k in self._routes_indexer:
             vehicle = self._vehicles[k]
