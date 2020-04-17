@@ -2,15 +2,9 @@ from __future__ import annotations
 
 import logging
 from random import Random
-from typing import (
-    TYPE_CHECKING,
-)
-from .....models import (
-    Trip,
-)
-from .abc import (
-    InsertionStrategy,
-)
+from typing import TYPE_CHECKING
+from .....models import Trip
+from .abc import InsertionStrategy
 
 if TYPE_CHECKING:
     from typing import (
@@ -18,9 +12,7 @@ if TYPE_CHECKING:
         List,
         Union,
     )
-    from .....models import (
-        Route,
-    )
+    from .....models import Route
 
 logger = logging.getLogger(__name__)
 
@@ -30,8 +22,9 @@ class SamplingInsertionStrategy(InsertionStrategy):
         super().__init__(*args, **kwargs)
         self.random = Random(seed)
 
-    def compute(self, route: Route, trips: Union[Trip, Iterable[Trip]], count: int = 25,
-                *args, **kwargs) -> List[Route]:
+    def compute(
+        self, route: Route, trips: Union[Trip, Iterable[Trip]], count: int = 25, *args, **kwargs
+    ) -> List[Route]:
         if not isinstance(trips, Trip):
             trips = tuple(trips)
 

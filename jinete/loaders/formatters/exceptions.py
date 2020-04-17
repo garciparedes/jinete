@@ -2,9 +2,7 @@
 
 import logging
 
-from ..exceptions import (
-    LoaderException,
-)
+from ..exceptions import LoaderException
 
 logger = logging.getLogger(__name__)
 

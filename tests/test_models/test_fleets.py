@@ -2,13 +2,10 @@ import unittest
 
 import jinete as jit
 
-from tests.utils import (
-    generate_vehicles,
-)
+from tests.utils import generate_vehicles
 
 
 class TestFleet(unittest.TestCase):
-
     def test_construction(self):
         vehicles = generate_vehicles(3)
         fleet = jit.Fleet(vehicles)
@@ -20,11 +17,9 @@ class TestFleet(unittest.TestCase):
         vehicles = generate_vehicles(3)
         fleet = jit.Fleet(vehicles)
 
-        expected = (
-            ('vehicle_identifiers', tuple(vehicle.identifier for vehicle in vehicles)),
-        )
+        expected = (("vehicle_identifiers", tuple(vehicle.identifier for vehicle in vehicles)),)
         self.assertEqual(expected, tuple(fleet))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -20,6 +20,6 @@ class FileStorer(Storer):
 
     def store(self) -> None:
         """Perform a storage process."""
-        with self.file_path.open('w') as file:
+        with self.file_path.open("w") as file:
             text = self._formatted
             file.write(text)

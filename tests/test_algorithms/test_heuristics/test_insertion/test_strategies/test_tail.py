@@ -9,7 +9,6 @@ from tests.utils import (
 
 
 class TestTailInsertionStrategy(unittest.TestCase):
-
     def test_compute(self):
         strategy = jit.TailInsertionStrategy()
         route = generate_one_route()
@@ -26,5 +25,5 @@ class TestTailInsertionStrategy(unittest.TestCase):
         # TODO: Improve assertions
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

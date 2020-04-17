@@ -9,13 +9,9 @@ from abc import (
     ABC,
     abstractmethod,
 )
-from typing import (
-    TYPE_CHECKING,
-)
+from typing import TYPE_CHECKING
 
-from .abc import (
-    Model,
-)
+from .abc import Model
 
 if TYPE_CHECKING:
     from typing import (
@@ -25,9 +21,7 @@ if TYPE_CHECKING:
         Dict,
         Any,
     )
-    from .surfaces import (
-        Surface,
-    )
+    from .surfaces import Surface
 
 logger = logging.getLogger(__name__)
 
@@ -84,9 +78,7 @@ class GeometricPosition(Position):
     Represents a geometric point on the ``Surface`` to which belongs.
     """
 
-    __slots__ = (
-        'coordinates',
-    )
+    __slots__ = ("coordinates",)
 
     coordinates: Tuple[float, ...]
     """
@@ -112,13 +104,11 @@ class GeometricPosition(Position):
         return self.coordinates != other.coordinates
 
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
-        yield from (
-            ('coordinates', self.coordinates),
-        )
+        yield from (("coordinates", self.coordinates),)
 
     def __str__(self):
         c = ",".join(f"{x:07.3f}" for x in self.coordinates)
-        return f'({c})'
+        return f"({c})"
 
     def __getitem__(self, item):
         return self.coordinates[item]

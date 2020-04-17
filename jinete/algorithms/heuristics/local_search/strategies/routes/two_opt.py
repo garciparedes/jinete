@@ -1,15 +1,12 @@
 import logging
 from itertools import combinations, chain
 
-from ..abc import (
-    LocalSearchStrategy,
-)
+from ..abc import LocalSearchStrategy
 
 logger = logging.getLogger(__name__)
 
 
 class TwoOPTLocalSearchStrategy(LocalSearchStrategy):
-
     def _improve(self) -> None:
         logger.info(f'Starting to improve "Result" with "{self.__class__.__name__}"...')
 
@@ -18,13 +15,14 @@ class TwoOPTLocalSearchStrategy(LocalSearchStrategy):
             logger.info(f'Improving route performed with vehicle identified by "{route.vehicle_identifier}"...')
             cost = self._objective.optimization_function(route)
 
-            for i, j in combinations(range(1, len(route.stops) - 1), 2):
+            for i, k in combinations(range(1, len(route.stops) - 1), 2):
+                j = k + 1
                 condition = any(
                     any(
-                        delivery in chain.from_iterable(b.pickup_planned_trips for b in route.stops[i:(j + 1)])
+                        delivery in chain.from_iterable(b.pickup_planned_trips for b in route.stops[i:j])
                         for delivery in a.delivery_planned_trips
                     )
-                    for a in route.stops[i:(j + 1)]
+                    for a in route.stops[i:j]
                 )
                 if condition:
                     continue
@@ -33,11 +31,12 @@ class TwoOPTLocalSearchStrategy(LocalSearchStrategy):
 
                 old_stops = [new_route.remove_stop_at(i) for _ in range(i, len(new_route.stops) - 1)]
 
-                for stop in reversed(old_stops[:(j + 1) - i]):
+                threshold = (j + 1) - i
+                for stop in reversed(old_stops[:threshold]):
                     stop.previous = new_route.current_stop
                     new_route.insert_stop(stop)
 
-                for stop in old_stops[(j + 1) - i:]:
+                for stop in old_stops[threshold:]:
                     stop.previous = new_route.current_stop
                     new_route.insert_stop(stop)
 

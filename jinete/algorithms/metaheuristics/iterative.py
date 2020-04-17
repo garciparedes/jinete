@@ -10,21 +10,15 @@ from ...models import (
     Planning,
     MAX_INT,
 )
-from ..abc import (
-    Algorithm,
-)
-from ..heuristics import (
-    InsertionAlgorithm,
-)
+from ..abc import Algorithm
+from ..heuristics import InsertionAlgorithm
 
 if TYPE_CHECKING:
     from typing import (
         Type,
         Optional,
     )
-    from ...models import (
-        Result,
-    )
+    from ...models import Result
 
 logger = logging.getLogger(__name__)
 

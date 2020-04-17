@@ -3,13 +3,10 @@ import unittest
 from uuid import UUID
 
 import jinete as jit
-from tests.utils import (
-    generate_positions,
-)
+from tests.utils import generate_positions
 
 
 class TestSurfaces(unittest.TestCase):
-
     def test_geometric_surface(self):
         surface = jit.GeometricSurface(jit.DistanceMetric.EUCLIDEAN)
         positions = generate_positions(100, surface=surface)
@@ -27,5 +24,5 @@ class TestSurfaces(unittest.TestCase):
         self.assertAlmostEqual(dist, real_dist)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

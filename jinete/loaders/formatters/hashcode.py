@@ -13,9 +13,7 @@ from ...models import (
     HashCodeObjective,
     Service,
 )
-from .abc import (
-    LoaderFormatter,
-)
+from .abc import LoaderFormatter
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +35,7 @@ class HashCodeLoaderFormatter(LoaderFormatter):
         origin = Service(surface.get_or_create_position([0, 0]), latest=latest)
         vehicles = set(Vehicle(str(idx), origin, capacity=capacity) for idx in range(n))
         fleet = Fleet(vehicles)
-        logger.info(f'Created {fleet}!')
+        logger.info(f"Created {fleet}!")
         return fleet
 
     def job(self, surface: Surface, *args, **kwargs) -> Job:
@@ -52,7 +50,7 @@ class HashCodeLoaderFormatter(LoaderFormatter):
         rows = self.data[1:]
         trips = set(self._build_trip(surface, str(i), bonus, *row) for i, row in enumerate(rows))
 
-        kwargs['objective_cls'] = HashCodeObjective
+        kwargs["objective_cls"] = HashCodeObjective
         job = Job(trips, *args, **kwargs)
 
         logger.info(f'Created "{job}"!')
@@ -79,7 +77,7 @@ class HashCodeLoaderFormatter(LoaderFormatter):
             position=surface.get_or_create_position([x2, y2]),
         )
         trip = Trip(identifier, on_time_bonus=bonus, origin=origin, destination=destination)
-        logger.debug(f'Created trip!')
+        logger.debug(f"Created trip!")
         return trip
 
     def surface(self, *args, **kwargs) -> Surface:
@@ -90,5 +88,5 @@ class HashCodeLoaderFormatter(LoaderFormatter):
         :return: A surface instance from the loaded instance.
         """
         surface = GeometricSurface(DistanceMetric.MANHATTAN)
-        logger.info(f'Created surface!')
+        logger.info(f"Created surface!")
         return surface

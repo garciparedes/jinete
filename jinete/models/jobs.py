@@ -2,9 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from .abc import (
-    Model,
-)
+from .abc import Model
 from .objectives import (
     Objective,
     DialARideObjective,
@@ -19,9 +17,7 @@ if TYPE_CHECKING:
         Type,
         Optional,
     )
-    from .trips import (
-        Trip,
-    )
+    from .trips import Trip
 
 
 class Job(Model):
@@ -58,6 +54,6 @@ class Job(Model):
 
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
         yield from (
-            ('trip_identifiers', tuple(trip.identifier for trip in self.trips)),
-            ('objective', self.objective),
+            ("trip_identifiers", tuple(trip.identifier for trip in self.trips)),
+            ("objective", self.objective),
         )

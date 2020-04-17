@@ -6,29 +6,14 @@ from abc import (
     ABC,
     abstractmethod,
 )
-from typing import (
-    TYPE_CHECKING,
-)
-from ..storers import (
-    NaiveStorer,
-)
+from typing import TYPE_CHECKING
+from ..storers import NaiveStorer
 
 if TYPE_CHECKING:
-    from typing import (
-        Type,
-    )
-    from ..loaders import (
-        Loader,
-    )
-    from ..algorithms import (
-        Algorithm,
-    )
-    from ..storers import (
-        Storer,
-    )
-    from ..models import (
-        Result,
-    )
+    from typing import Type
+    from ..loaders import Loader
+    from ..algorithms import Algorithm
+    from ..storers import Storer
 
 
 class Dispatcher(ABC):

@@ -17,18 +17,14 @@ from ..models import (
     Job,
     Surface,
 )
-from .formatters import (
-    CordeauLaporteLoaderFormatter,
-)
+from .formatters import CordeauLaporteLoaderFormatter
 
 if TYPE_CHECKING:
     from typing import (
         Type,
         Any,
     )
-    from .formatters import (
-        LoaderFormatter,
-    )
+    from .formatters import LoaderFormatter
 
 
 class Loader(ABC):

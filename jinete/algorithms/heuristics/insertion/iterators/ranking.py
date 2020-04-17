@@ -5,20 +5,14 @@ import itertools as it
 from random import Random
 from typing import TYPE_CHECKING
 
-from .abc import (
-    InsertionIterator,
-)
+from .abc import InsertionIterator
 
 if TYPE_CHECKING:
     from typing import (
         Dict,
         List,
     )
-    from .....models import (
-        PlannedTrip,
-        Route,
-        Vehicle
-    )
+    from .....models import PlannedTrip, Route, Vehicle
 
 logger = logging.getLogger(__name__)
 

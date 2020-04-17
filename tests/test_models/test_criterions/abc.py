@@ -7,9 +7,7 @@ from typing import TYPE_CHECKING
 import jinete as jit
 
 if TYPE_CHECKING:
-    from typing import (
-        List,
-    )
+    from typing import List
 
 
 class TestRouteCriterion(unittest.TestCase, ABC):
@@ -19,10 +17,7 @@ class TestRouteCriterion(unittest.TestCase, ABC):
     def setUpClass(cls) -> None:
         surface = jit.GeometricSurface(jit.DistanceMetric.MANHATTAN)
         origin = jit.Service(surface.get_or_create_position([0, 0]))
-        vehicle = jit.Vehicle(
-            identifier='TEST',
-            origin=origin,
-        )
+        vehicle = jit.Vehicle(identifier="TEST", origin=origin,)
 
         cls.routes = [
             cls._build_route_1(vehicle, surface),
@@ -35,26 +30,15 @@ class TestRouteCriterion(unittest.TestCase, ABC):
         route = jit.Route(vehicle)
 
         trip = jit.Trip(
-            identifier='TEST_1',
-            origin=jit.Service(
-                position=surface.get_or_create_position([0, 0]),
-                earliest=0.0,
-                latest=10.0,
-            ),
-            destination=jit.Service(
-                position=surface.get_or_create_position([1, 1]),
-            ),
+            identifier="TEST_1",
+            origin=jit.Service(position=surface.get_or_create_position([0, 0]), earliest=0.0, latest=10.0,),
+            destination=jit.Service(position=surface.get_or_create_position([1, 1]),),
         )
 
         pickup_stop = jit.Stop(vehicle, surface.get_or_create_position([0, 0]), route.current_stop)
         delivery_stop = jit.Stop(vehicle, surface.get_or_create_position([1, 1]), pickup_stop)
 
-        planned_trip = jit.PlannedTrip(
-            vehicle=vehicle,
-            trip=trip,
-            pickup=pickup_stop,
-            delivery=delivery_stop,
-        )
+        planned_trip = jit.PlannedTrip(vehicle=vehicle, trip=trip, pickup=pickup_stop, delivery=delivery_stop,)
         route.append_planned_trip(planned_trip)
         return route
 
@@ -63,26 +47,15 @@ class TestRouteCriterion(unittest.TestCase, ABC):
         route = jit.Route(vehicle)
 
         trip = jit.Trip(
-            identifier='TEST_2',
-            origin=jit.Service(
-                position=surface.get_or_create_position([0, 0]),
-                earliest=1.0,
-                latest=20.0,
-            ),
-            destination=jit.Service(
-                position=surface.get_or_create_position([10, 10]),
-            ),
+            identifier="TEST_2",
+            origin=jit.Service(position=surface.get_or_create_position([0, 0]), earliest=1.0, latest=20.0,),
+            destination=jit.Service(position=surface.get_or_create_position([10, 10]),),
         )
 
         pickup_stop = jit.Stop(vehicle, surface.get_or_create_position([0, 0]), route.current_stop)
         delivery_stop = jit.Stop(vehicle, surface.get_or_create_position([10, 10]), pickup_stop)
 
-        planned_trip = jit.PlannedTrip(
-            vehicle=vehicle,
-            trip=trip,
-            pickup=pickup_stop,
-            delivery=delivery_stop,
-        )
+        planned_trip = jit.PlannedTrip(vehicle=vehicle, trip=trip, pickup=pickup_stop, delivery=delivery_stop,)
         route.append_planned_trip(planned_trip)
         return route
 
@@ -91,26 +64,15 @@ class TestRouteCriterion(unittest.TestCase, ABC):
         route = jit.Route(vehicle)
 
         trip = jit.Trip(
-            identifier='TEST_3',
-            origin=jit.Service(
-                position=surface.get_or_create_position([0, 0]),
-                earliest=1.0,
-                latest=20.0,
-            ),
-            destination=jit.Service(
-                position=surface.get_or_create_position([10, 10]),
-            ),
-            timeout=1.0
+            identifier="TEST_3",
+            origin=jit.Service(position=surface.get_or_create_position([0, 0]), earliest=1.0, latest=20.0,),
+            destination=jit.Service(position=surface.get_or_create_position([10, 10]),),
+            timeout=1.0,
         )
 
         pickup_stop = jit.Stop(vehicle, surface.get_or_create_position([0, 0]), route.current_stop)
         delivery_stop = jit.Stop(vehicle, surface.get_or_create_position([10, 10]), pickup_stop)
 
-        planned_trip = jit.PlannedTrip(
-            vehicle=vehicle,
-            trip=trip,
-            pickup=pickup_stop,
-            delivery=delivery_stop,
-        )
+        planned_trip = jit.PlannedTrip(vehicle=vehicle, trip=trip, pickup=pickup_stop, delivery=delivery_stop,)
         route.append_planned_trip(planned_trip)
         return route

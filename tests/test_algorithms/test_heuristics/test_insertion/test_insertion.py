@@ -18,20 +18,13 @@ class TestInsertionAlgorithm(unittest.TestCase):
         cls.fleet = jit.Fleet(generate_vehicles(10))
 
     def test_creation(self):
-        algorithm = jit.InsertionAlgorithm(
-            iterator_cls=jit.InsertionIterator,
-            job=self.job,
-            fleet=self.fleet,
-        )
+        algorithm = jit.InsertionAlgorithm(iterator_cls=jit.InsertionIterator, job=self.job, fleet=self.fleet,)
         self.assertEqual(algorithm.iterator_cls, jit.InsertionIterator)
         self.assertEqual(algorithm.job, self.job)
         self.assertEqual(algorithm.fleet, self.fleet)
 
     def test_optimize(self):
-        algorithm = jit.InsertionAlgorithm(
-            job=self.job,
-            fleet=self.fleet,
-        )
+        algorithm = jit.InsertionAlgorithm(job=self.job, fleet=self.fleet,)
         result = algorithm.optimize()
 
         # TODO: Properly validate  behaviour of the provided "Result" object.
@@ -39,5 +32,5 @@ class TestInsertionAlgorithm(unittest.TestCase):
         self.assertIsInstance(result, jit.Result)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -5,9 +5,7 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from ...models import (
-    Planning,
-)
+from ...models import Planning
 
 from ..abc import (
     Algorithm,

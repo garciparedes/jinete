@@ -4,18 +4,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from .loaders import (
-    FileLoader,
-)
-from .algorithms import (
-    InsertionAlgorithm,
-)
-from .storers import (
-    PromptStorer,
-)
-from .dispatchers import (
-    StaticDispatcher,
-)
+from .loaders import FileLoader
+from .algorithms import InsertionAlgorithm
+from .storers import PromptStorer
+from .dispatchers import StaticDispatcher
 
 if TYPE_CHECKING:
     from typing import (
@@ -24,21 +16,11 @@ if TYPE_CHECKING:
         Dict,
         Any,
     )
-    from .loaders import (
-        Loader,
-    )
-    from .algorithms import (
-        Algorithm,
-    )
-    from .models import (
-        Result,
-    )
-    from .storers import (
-        Storer,
-    )
-    from .dispatchers import (
-        Dispatcher,
-    )
+    from .loaders import Loader
+    from .algorithms import Algorithm
+    from .models import Result
+    from .storers import Storer
+    from .dispatchers import Dispatcher
 
 
 class Solver(object):
@@ -104,8 +86,7 @@ class Solver(object):
         class _TunedLoader(base):
             def __init__(self, *args, **kwargs):
                 super().__init__(
-                    *args, **kwargs,
-                    **tuned_kwargs,
+                    *args, **kwargs, **tuned_kwargs,
                 )
 
         return _TunedLoader
@@ -118,8 +99,7 @@ class Solver(object):
         class _TunedAlgorithm(base):
             def __init__(self, *args, **kwargs):
                 super().__init__(
-                    *args, **kwargs,
-                    **tuned_kwargs,
+                    *args, **kwargs, **tuned_kwargs,
                 )
 
         return _TunedAlgorithm
@@ -132,8 +112,7 @@ class Solver(object):
         class _TunedStorer(base):
             def __init__(self, *args, **kwargs):
                 super().__init__(
-                    *args, **kwargs,
-                    **tuned_kwargs,
+                    *args, **kwargs, **tuned_kwargs,
                 )
 
         return _TunedStorer
@@ -146,19 +125,14 @@ class Solver(object):
         class _TunedDispatcher(base):
             def __init__(self, *args, **kwargs):
                 super().__init__(
-                    *args, **kwargs,
-                    **tuned_kwargs,
+                    *args, **kwargs, **tuned_kwargs,
                 )
 
         return _TunedDispatcher
 
     @property
     def _dispatcher(self) -> Dispatcher:
-        return self._dispatcher_cls(
-            self._loader_cls,
-            self._algorithm_cls,
-            self._storer_cls,
-        )
+        return self._dispatcher_cls(self._loader_cls, self._algorithm_cls, self._storer_cls,)
 
     def solve(self) -> Result:
         """Compute an optimization.

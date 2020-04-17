@@ -2,9 +2,7 @@
 
 import logging
 
-from ..exceptions import (
-    JineteException,
-)
+from ..exceptions import JineteException
 
 logger = logging.getLogger(__name__)
 

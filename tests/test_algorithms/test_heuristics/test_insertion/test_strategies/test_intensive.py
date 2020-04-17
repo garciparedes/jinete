@@ -9,7 +9,6 @@ from tests.utils import (
 
 
 class TestIntensiveStrategy(unittest.TestCase):
-
     def test_compute(self):
         strategy = jit.IntensiveInsertionStrategy()
         route = generate_one_route(planned_trips_min=10)
@@ -20,5 +19,5 @@ class TestIntensiveStrategy(unittest.TestCase):
         # TODO: Improve assertions
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

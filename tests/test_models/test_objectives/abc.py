@@ -21,34 +21,19 @@ class TestObjective(unittest.TestCase, ABC):
     def setUpClass(cls) -> None:
         surface = jit.GeometricSurface(jit.DistanceMetric.MANHATTAN)
         origin = jit.Service(surface.get_or_create_position([0, 0]))
-        vehicle = jit.Vehicle(
-            identifier='TEST',
-            origin=origin,
-        )
+        vehicle = jit.Vehicle(identifier="TEST", origin=origin,)
         fleet = jit.Fleet({vehicle})
 
         trips = [
             jit.Trip(
-                identifier='TEST_1',
-                origin=jit.Service(
-                    position=surface.get_or_create_position([0, 0]),
-                    earliest=0.0,
-                    latest=10.0,
-                ),
-                destination=jit.Service(
-                    position=surface.get_or_create_position([1, 1]),
-                ),
+                identifier="TEST_1",
+                origin=jit.Service(position=surface.get_or_create_position([0, 0]), earliest=0.0, latest=10.0,),
+                destination=jit.Service(position=surface.get_or_create_position([1, 1]),),
             ),
             jit.Trip(
-                identifier='TEST_2',
-                origin=jit.Service(
-                    position=surface.get_or_create_position([1, 1]),
-                    earliest=0.0,
-                    latest=20.0,
-                ),
-                destination=jit.Service(
-                    position=surface.get_or_create_position([10, 10]),
-                ),
+                identifier="TEST_2",
+                origin=jit.Service(position=surface.get_or_create_position([1, 1]), earliest=0.0, latest=20.0,),
+                destination=jit.Service(position=surface.get_or_create_position([10, 10]),),
             ),
         ]
         job = jit.Job(set(trips), jit.DialARideObjective)
@@ -57,12 +42,7 @@ class TestObjective(unittest.TestCase, ABC):
         pickup_stop = jit.Stop(vehicle, surface.get_or_create_position([0, 0]), route.current_stop)
         delivery_stop = jit.Stop(vehicle, surface.get_or_create_position([1, 1]), pickup_stop)
 
-        cls.planned_trip = jit.PlannedTrip(
-            vehicle=vehicle,
-            trip=trips[0],
-            pickup=pickup_stop,
-            delivery=delivery_stop,
-        )
+        cls.planned_trip = jit.PlannedTrip(vehicle=vehicle, trip=trips[0], pickup=pickup_stop, delivery=delivery_stop,)
         route.append_planned_trip(cls.planned_trip)
 
         cls.stop = route.stops[1]

@@ -10,15 +10,9 @@ from ...models import (
     Planning,
     MAX_INT,
 )
-from ..abc import (
-    Algorithm,
-)
-from .sequential import (
-    SequentialAlgorithm,
-)
-from .iterative import (
-    IterativeAlgorithm,
-)
+from ..abc import Algorithm
+from .sequential import SequentialAlgorithm
+from .iterative import IterativeAlgorithm
 
 if TYPE_CHECKING:
     from typing import (
@@ -63,22 +57,22 @@ class GraspAlgorithm(Algorithm):
 
     def _build_first_solution_algorithm(self, **kwargs) -> Algorithm:
         kwargs.update(self.first_solution_kwargs.copy())
-        if 'fleet' not in kwargs:
-            kwargs['fleet'] = self.fleet
-        if 'job' not in kwargs:
-            kwargs['job'] = self.job
-        if 'seed' not in kwargs:
-            kwargs['seed'] = self.random.randint(0, MAX_INT)
+        if "fleet" not in kwargs:
+            kwargs["fleet"] = self.fleet
+        if "job" not in kwargs:
+            kwargs["job"] = self.job
+        if "seed" not in kwargs:
+            kwargs["seed"] = self.random.randint(0, MAX_INT)
         return IterativeAlgorithm(**kwargs)
 
     def _build_local_search_algorithm(self, **kwargs) -> Algorithm:
         kwargs.update(self.local_search_kwargs.copy())
-        if 'fleet' not in kwargs:
-            kwargs['fleet'] = self.fleet
-        if 'job' not in kwargs:
-            kwargs['job'] = self.job
-        if 'seed' not in kwargs:
-            kwargs['seed'] = self.random.randint(0, MAX_INT)
+        if "fleet" not in kwargs:
+            kwargs["fleet"] = self.fleet
+        if "job" not in kwargs:
+            kwargs["job"] = self.job
+        if "seed" not in kwargs:
+            kwargs["seed"] = self.random.randint(0, MAX_INT)
         return SequentialAlgorithm(**kwargs)
 
     def _optimize(self) -> Planning:

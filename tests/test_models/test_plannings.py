@@ -9,15 +9,10 @@ from uuid import UUID
 
 import jinete as jit
 
-from tests.utils import (
-    generate_routes,
-)
+from tests.utils import generate_routes
 
 if TYPE_CHECKING:
-    from typing import (
-        Set,
-        List
-    )
+    from typing import Set, List
 
 
 class TestPlanning(unittest.TestCase):
@@ -60,8 +55,8 @@ class TestPlanning(unittest.TestCase):
     def test_as_tuple(self):
         planning = jit.Planning(self.routes)
         expected = (
-            ('uuid', planning.uuid),
-            ('route_identifiers', tuple(route.identifier for route in self.routes)),
+            ("uuid", planning.uuid),
+            ("route_identifiers", tuple(route.identifier for route in self.routes)),
         )
         self.assertEqual(expected, tuple(planning))
 
@@ -78,5 +73,5 @@ class TestPlanning(unittest.TestCase):
             assert any(set(route.trips).isdisjoint(copied_route.trips) for copied_route in copied_planning.routes)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

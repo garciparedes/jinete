@@ -5,28 +5,14 @@ from abc import ABC
 from functools import reduce
 from operator import add
 
-from typing import (
-    TYPE_CHECKING,
-)
-from .constants import (
-    OptimizationDirection,
-)
+from typing import TYPE_CHECKING
+from .constants import OptimizationDirection
 
-from .routes import (
-    Route,
-)
-from .plannings import (
-    Planning,
-)
-from .planned_trips import (
-    PlannedTrip,
-)
-from .results import (
-    Result,
-)
-from .stops import (
-    Stop,
-)
+from .routes import Route
+from .plannings import Planning
+from .planned_trips import PlannedTrip
+from .results import Result
+from .stops import Stop
 
 if TYPE_CHECKING:
     from typing import (
@@ -35,7 +21,7 @@ if TYPE_CHECKING:
         Tuple,
     )
 
-    Optimizable = TypeVar('Optimizable', Result, Planning, Route, Stop, PlannedTrip, Tuple[float, ...])
+    Optimizable = TypeVar("Optimizable", Result, Planning, Route, Stop, PlannedTrip, Tuple[float, ...])
 
 logger = logging.getLogger(__name__)
 
@@ -49,11 +35,7 @@ class Objective(ABC):
         self.dimension_count = dimension_count
 
     def best(self, *args: Optional[Optimizable]) -> Optimizable:
-        return self.direction(
-            (arg for arg in args if arg is not None),
-            key=self.optimization_function,
-            default=None,
-        )
+        return self.direction((arg for arg in args if arg is not None), key=self.optimization_function, default=None,)
 
     def optimization_function(self, value: Optimizable) -> Tuple[float, ...]:
         if isinstance(value, Result):
@@ -100,11 +82,9 @@ class Objective(ABC):
 
 
 class DialARideObjective(Objective):
-
     def __init__(self):
         super().__init__(
-            name='Dial-a-Ride',
-            dimension_count=2,
+            name="Dial-a-Ride", dimension_count=2,
         )
 
     def _route_optimization_function(self, route: Route) -> Tuple[float, ...]:
@@ -120,31 +100,28 @@ class DialARideObjective(Objective):
 
 
 class TaxiSharingObjective(Objective):
-
     def __init__(self):
         super().__init__(
-            name='Taxi-Sharing',
-            dimension_count=1,
+            name="Taxi-Sharing", dimension_count=1,
         )
 
     def _planned_trip_optimization_function(self, planned_trip: PlannedTrip) -> Tuple[float, ...]:
         if planned_trip.capacity == 0:
-            return 0.0,
-        return planned_trip.duration,
+            return (0.0,)
+        return (planned_trip.duration,)
 
 
 class HashCodeObjective(Objective):
     def __init__(self):
         super().__init__(
-            name='HashCode-2018',
-            dimension_count=1,
+            name="HashCode-2018", dimension_count=1,
         )
 
     def _planned_trip_optimization_function(self, planned_trip: PlannedTrip) -> Tuple[float, ...]:
         if planned_trip.capacity == 0:
-            return 0.0,
+            return (0.0,)
         trip = planned_trip.trip
         scoring = trip.distance
         if trip.origin_earliest == planned_trip.pickup_time:
             scoring += trip.on_time_bonus
-        return scoring,
+        return (scoring,)

@@ -12,37 +12,25 @@ coloredlogs.install(level=level)
 logger = logging.getLogger(__name__)
 
 BASE_PATH = Path(__file__).parents[2]
-DATASETS_PATH = BASE_PATH / 'res' / 'datasets'
+DATASETS_PATH = BASE_PATH / "res" / "datasets"
 
 
 def main():
-    logger.info('Starting...')
+    logger.info("Starting...")
 
-    file_path = DATASETS_PATH / 'cordeau-laporte' / 'a2-16.txt'
+    file_path = DATASETS_PATH / "cordeau-laporte" / "a2-16.txt"
 
     solver = jit.Solver(
-        loader_kwargs={
-            'file_path': file_path,
-        },
+        loader_kwargs={"file_path": file_path},
         algorithm=jit.GraspAlgorithm,
-        algorithm_kwargs={
-            'first_solution_kwargs': {
-                'episodes': 1,
-                'strategy_cls': jit.IntensiveInsertionStrategy,
-            }
-        },
+        algorithm_kwargs={"first_solution_kwargs": {"episodes": 1, "strategy_cls": jit.IntensiveInsertionStrategy}},
         storer=jit.StorerSet,
-        storer_kwargs={
-            'storer_cls_set': {
-                jit.PromptStorer,
-                jit.GraphPlotStorer,
-            },
-        }
+        storer_kwargs={"storer_cls_set": {jit.PromptStorer, jit.GraphPlotStorer}},
     )
     result = solver.solve()  # noqa
 
-    logger.info('Finished...')
+    logger.info("Finished...")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

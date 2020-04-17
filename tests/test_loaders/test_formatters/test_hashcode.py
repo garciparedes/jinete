@@ -7,9 +7,7 @@ from typing import TYPE_CHECKING
 import jinete as jit
 
 if TYPE_CHECKING:
-    from typing import (
-        Tuple,
-    )
+    from typing import Tuple
 
 
 class TestHashCodeLoaderFormatter(unittest.TestCase):
@@ -29,5 +27,5 @@ class TestHashCodeLoaderFormatter(unittest.TestCase):
         self.assertEqual(formatter.data, self.data)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

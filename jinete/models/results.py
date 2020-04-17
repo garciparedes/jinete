@@ -1,12 +1,8 @@
 from __future__ import annotations
 
-from typing import (
-    TYPE_CHECKING,
-)
+from typing import TYPE_CHECKING
 
-from .abc import (
-    Model,
-)
+from .abc import Model
 
 if TYPE_CHECKING:
     from typing import (
@@ -16,38 +12,27 @@ if TYPE_CHECKING:
         Any,
         Callable,
     )
-    from uuid import (
-        UUID,
-    )
-    from .trips import (
-        Trip,
-    )
-    from .routes import (
-        Route,
-    )
-    from .jobs import (
-        Job,
-    )
+    from uuid import UUID
+    from .trips import Trip
+    from .routes import Route
+    from .jobs import Job
     from .vehicles import (
         Fleet,
         Vehicle,
     )
-    from .plannings import (
-        Planning,
-    )
+    from .plannings import Planning
     from .objectives import (
         Objective,
         OptimizationDirection,
         Optimizable,
     )
-    from ..algorithms import (
-        Algorithm,
-    )
+    from ..algorithms import Algorithm
 
 
 class Result(Model):
-
-    def __init__(self, algorithm: Algorithm, planning: Planning, computation_time: float):
+    def __init__(
+        self, algorithm: Algorithm, planning: Planning, computation_time: float
+    ):
         self.algorithm = algorithm
         self.planning = planning
         self.computation_time = computation_time
@@ -109,8 +94,8 @@ class Result(Model):
 
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
         yield from (
-            ('fleet_uuid', tuple(self.fleet)),
-            ('job', tuple(self.job)),
-            ('algorithm_name', type(self.algorithm).__name__),
-            ('planning_uuid', self.planning_uuid)
+            ("fleet_uuid", tuple(self.fleet)),
+            ("job", tuple(self.job)),
+            ("algorithm_name", type(self.algorithm).__name__),
+            ("planning_uuid", self.planning_uuid),
         )

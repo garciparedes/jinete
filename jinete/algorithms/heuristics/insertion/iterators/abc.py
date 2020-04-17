@@ -6,15 +6,9 @@ from abc import (
     abstractmethod,
 )
 from copy import deepcopy
-from typing import (
-    TYPE_CHECKING,
-)
-from cached_property import (
-    cached_property,
-)
-from .....models import (
-    Route,
-)
+from typing import TYPE_CHECKING
+from cached_property import cached_property
+from .....models import Route
 
 if TYPE_CHECKING:
     from typing import (
@@ -30,9 +24,7 @@ if TYPE_CHECKING:
         Job,
         RouteCriterion,
     )
-    from ..strategies import (
-        InsertionStrategy,
-    )
+    from ..strategies import InsertionStrategy
 
 logger = logging.getLogger(__name__)
 
@@ -43,13 +35,23 @@ class InsertionIterator(ABC):
     criterion_cls: Type[RouteCriterion]
     routes_container: Dict[Vehicle, Route]
 
-    def __init__(self, fleet: Fleet, job: Job, strategy_cls: Type[InsertionStrategy] = None,
-                 criterion_cls: Type[RouteCriterion] = None, routes: Set[Route] = None, *args, **kwargs):
+    def __init__(
+        self,
+        fleet: Fleet,
+        job: Job,
+        strategy_cls: Type[InsertionStrategy] = None,
+        criterion_cls: Type[RouteCriterion] = None,
+        routes: Set[Route] = None,
+        *args,
+        **kwargs,
+    ):
         if strategy_cls is None:
             from ..strategies import TailInsertionStrategy
+
             strategy_cls = TailInsertionStrategy
         if criterion_cls is None:
             from .....models import EarliestLastDepartureTimeRouteCriterion
+
             criterion_cls = EarliestLastDepartureTimeRouteCriterion
 
         pending_trips = set(job.trips)
@@ -62,10 +64,7 @@ class InsertionIterator(ABC):
 
         self.fleet = fleet
         self.job = job
-        self.routes_container = {
-            route.vehicle: route
-            for route in routes
-        }
+        self.routes_container = {route.vehicle: route for route in routes}
         self.__attractive_routes = None
         self.pending_trips = pending_trips
 
@@ -124,8 +123,10 @@ class InsertionIterator(ABC):
         pass
 
     def _mark_planned_trip_as_done(self, planned_trip: PlannedTrip) -> None:
-        logger.info(f'Marking trip with "{planned_trip.trip_identifier}" identifier as done '
-                    f'over vehicle with "{planned_trip.vehicle_identifier}" identifier...')
+        logger.info(
+            f'Marking trip with "{planned_trip.trip_identifier}" identifier as done '
+            f'over vehicle with "{planned_trip.vehicle_identifier}" identifier...'
+        )
         self._mark_trip_as_done(planned_trip.trip)
 
     def _mark_trip_as_done(self, trip: Trip) -> None:

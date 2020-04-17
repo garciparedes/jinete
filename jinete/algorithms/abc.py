@@ -49,7 +49,7 @@ class Algorithm(ABC):
 
         :return: A ``Result`` object.
         """
-        logger.info(f'Optimizing with {self.__class__.__name__}...')
+        logger.info(f"Optimizing with {self.__class__.__name__}...")
 
         start_time = time()
         planning = self._optimize()
@@ -61,8 +61,10 @@ class Algorithm(ABC):
             planning=planning,
             computation_time=computation_time,
         )
-        logger.info(f'Optimized with {self.__class__.__name__} obtaining {"" if result.feasible else "non "}'
-                    f'feasible results!')
+        logger.info(
+            f'Optimized with {self.__class__.__name__} obtaining {"" if result.feasible else "non "}'
+            f"feasible results!"
+        )
         return result
 
     @abstractmethod

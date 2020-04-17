@@ -2,7 +2,6 @@
 
 from .insertion import (
     InsertionAlgorithm,
-
     InsertionIterator,
     StatelessInsertionIterator,
     BestStatelessInsertionIterator,

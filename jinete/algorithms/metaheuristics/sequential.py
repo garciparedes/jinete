@@ -10,14 +10,10 @@ from ...models import (
     Planning,
     MAX_INT,
 )
-from ..abc import (
-    Algorithm,
-)
+from ..abc import Algorithm
 
 if TYPE_CHECKING:
-    from ...models import (
-        Result,
-    )
+    from ...models import Result
     from typing import (
         Dict,
         Any,
@@ -54,8 +50,9 @@ class SequentialAlgorithm(Algorithm):
                 LocalSearchAlgorithm,
                 ReallocationLocalSearchStrategy,
             )
+
             algorithms_cls = [
-                (LocalSearchAlgorithm, {**kwargs, 'strategy_cls': ReallocationLocalSearchStrategy}),
+                (LocalSearchAlgorithm, {**kwargs, "strategy_cls": ReallocationLocalSearchStrategy}),
                 (IterativeAlgorithm, kwargs),
             ]
 
@@ -67,12 +64,12 @@ class SequentialAlgorithm(Algorithm):
     def _build_algorithm(self, cls, **kwargs) -> Algorithm:
         assert issubclass(cls, Algorithm)
         kwargs = kwargs.copy()
-        if 'fleet' not in kwargs:
-            kwargs['fleet'] = self.fleet
-        if 'job' not in kwargs:
-            kwargs['job'] = self.job
-        if 'seed' not in kwargs:
-            kwargs['seed'] = self.random.randint(0, MAX_INT)
+        if "fleet" not in kwargs:
+            kwargs["fleet"] = self.fleet
+        if "job" not in kwargs:
+            kwargs["job"] = self.job
+        if "seed" not in kwargs:
+            kwargs["seed"] = self.random.randint(0, MAX_INT)
         return cls(**kwargs)
 
     def _optimize(self) -> Planning:

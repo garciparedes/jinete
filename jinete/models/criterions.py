@@ -17,9 +17,7 @@ if TYPE_CHECKING:
         List,
         Iterable,
     )
-    from .routes import (
-        Route,
-    )
+    from .routes import Route
 
 logger = logging.getLogger(__name__)
 
@@ -34,11 +32,7 @@ class RouteCriterion(ABC):
         pass
 
     def best(self, *args: Optional[Route]) -> Route:
-        return self.direction(
-            (arg for arg in args if arg is not None),
-            key=self.scoring,
-            default=None,
-        )
+        return self.direction((arg for arg in args if arg is not None), key=self.scoring, default=None,)
 
     def sorted(self, routes: Iterable[Route], inplace: bool = False) -> List[Route]:
         return self.direction.sorted(routes, key=self.scoring, inplace=inplace)
@@ -48,12 +42,9 @@ class RouteCriterion(ABC):
 
 
 class EarliestLastDepartureTimeRouteCriterion(RouteCriterion):
-
     def __init__(self, *args, **kwargs):
         super().__init__(
-            direction=OptimizationDirection.MINIMIZATION,
-            name='Shortest-Time',
-            *args, **kwargs,
+            direction=OptimizationDirection.MINIMIZATION, name="Shortest-Time", *args, **kwargs,
         )
 
     def scoring(self, route: Route) -> float:
@@ -64,12 +55,9 @@ class EarliestLastDepartureTimeRouteCriterion(RouteCriterion):
 
 
 class ShortestAveragePlannerTripDurationCriterion(RouteCriterion):
-
     def __init__(self, *args, **kwargs):
         super().__init__(
-            direction=OptimizationDirection.MINIMIZATION,
-            name='Shortest-Time',
-            *args, **kwargs,
+            direction=OptimizationDirection.MINIMIZATION, name="Shortest-Time", *args, **kwargs,
         )
 
     def scoring(self, route: Route) -> float:
@@ -83,12 +71,9 @@ class ShortestAveragePlannerTripDurationCriterion(RouteCriterion):
 
 
 class ShortestTimeRouteCriterion(RouteCriterion):
-
     def __init__(self, *args, **kwargs):
         super().__init__(
-            direction=OptimizationDirection.MINIMIZATION,
-            name='Shortest-Time',
-            *args, **kwargs,
+            direction=OptimizationDirection.MINIMIZATION, name="Shortest-Time", *args, **kwargs,
         )
 
     def scoring(self, route: Route) -> float:
@@ -99,12 +84,9 @@ class ShortestTimeRouteCriterion(RouteCriterion):
 
 
 class LongestTimeRouteCriterion(RouteCriterion):
-
     def __init__(self, *args, **kwargs):
         super().__init__(
-            direction=OptimizationDirection.MAXIMIZATION,
-            name='Longest-Time',
-            *args, **kwargs,
+            direction=OptimizationDirection.MAXIMIZATION, name="Longest-Time", *args, **kwargs,
         )
 
     def scoring(self, route: Route) -> float:
@@ -115,12 +97,9 @@ class LongestTimeRouteCriterion(RouteCriterion):
 
 
 class LongestUtilTimeRouteCriterion(RouteCriterion):
-
     def __init__(self, *args, **kwargs):
         super().__init__(
-            direction=OptimizationDirection.MAXIMIZATION,
-            name='Longest-Util-Time',
-            *args, **kwargs,
+            direction=OptimizationDirection.MAXIMIZATION, name="Longest-Util-Time", *args, **kwargs,
         )
 
     def scoring(self, route: Route) -> float:
@@ -134,12 +113,9 @@ class LongestUtilTimeRouteCriterion(RouteCriterion):
 
 
 class HashCodeRouteCriterion(RouteCriterion):
-
     def __init__(self, *args, **kwargs):
         super().__init__(
-            direction=OptimizationDirection.MAXIMIZATION,
-            name='Longest-Time',
-            *args, **kwargs,
+            direction=OptimizationDirection.MAXIMIZATION, name="Longest-Time", *args, **kwargs,
         )
 
     def scoring(self, route: Route) -> float:

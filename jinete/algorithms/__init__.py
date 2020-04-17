@@ -1,11 +1,7 @@
 """Contains the implementation of solving methods."""
 
-from .abc import (
-    Algorithm,
-)
-from .naive import (
-    NaiveAlgorithm,
-)
+from .abc import Algorithm
+from .naive import NaiveAlgorithm
 from .heuristics import (
     InsertionAlgorithm,
     LocalSearchAlgorithm,
@@ -27,6 +23,4 @@ from .metaheuristics import (
     IterativeAlgorithm,
     SequentialAlgorithm,
 )
-from .exacts import (
-    MilpAlgorithm,
-)
+from .exacts import MilpAlgorithm

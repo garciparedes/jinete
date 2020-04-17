@@ -5,15 +5,9 @@ Contains entities to represent services in the data model.
 from __future__ import annotations
 
 import logging
-from typing import (
-    TYPE_CHECKING,
-)
-from .constants import (
-    MAX_FLOAT,
-)
-from .abc import (
-    Model,
-)
+from typing import TYPE_CHECKING
+from .constants import MAX_FLOAT
+from .abc import Model
 
 if TYPE_CHECKING:
     from typing import (
@@ -22,9 +16,7 @@ if TYPE_CHECKING:
         Generator,
         Tuple,
     )
-    from .positions import (
-        Position,
-    )
+    from .positions import Position
 
 logger = logging.getLogger(__name__)
 
@@ -34,10 +26,10 @@ class Service(Model):
     Represents the requested action to visit a specific position, having some time restrictions and costs.
     """
     __slots__ = (
-        'position',
-        'earliest',
-        'latest',
-        'duration',
+        "position",
+        "earliest",
+        "latest",
+        "duration",
     )
     position: Position
     """
@@ -86,10 +78,10 @@ class Service(Model):
 
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
         yield from (
-            ('position', self.position),
-            ('earliest', self.earliest),
-            ('latest', self.latest),
-            ('duration', self.duration),
+            ("position", self.position),
+            ("earliest", self.earliest),
+            ("latest", self.latest),
+            ("duration", self.duration),
         )
 
     def distance_to(self, other: Service) -> float:

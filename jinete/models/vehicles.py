@@ -3,15 +3,9 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from .constants import (
-    MAX_FLOAT,
-)
-from .abc import (
-    Model,
-)
-from .services import (
-    Service,
-)
+from .constants import MAX_FLOAT
+from .abc import Model
+from .services import Service
 
 if TYPE_CHECKING:
     from typing import (
@@ -21,9 +15,7 @@ if TYPE_CHECKING:
         Generator,
         Tuple,
     )
-    from .positions import (
-        Position,
-    )
+    from .positions import Position
 
 logger = logging.getLogger(__name__)
 
@@ -35,8 +27,14 @@ class Vehicle(Model):
     capacity: float
     timeout: float
 
-    def __init__(self, identifier: str, origin: Service, destination: Service = None, capacity: float = 1.0,
-                 timeout: float = MAX_FLOAT):
+    def __init__(
+        self,
+        identifier: str,
+        origin: Service,
+        destination: Service = None,
+        capacity: float = 1.0,
+        timeout: float = MAX_FLOAT,
+    ):
         self.identifier = identifier
 
         self.origin = origin
@@ -84,11 +82,11 @@ class Vehicle(Model):
 
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
         yield from (
-            ('identifier', self.identifier),
-            ('origin', tuple(self.origin)),
-            ('destination', tuple(self.destination)),
-            ('capacity', self.capacity),
-            ('timeout', self.timeout),
+            ("identifier", self.identifier),
+            ("origin", tuple(self.origin)),
+            ("destination", tuple(self.destination)),
+            ("capacity", self.capacity),
+            ("timeout", self.timeout),
         )
 
     def __deepcopy__(self, memo: Dict[int, Any]) -> Vehicle:
@@ -102,9 +100,7 @@ class Fleet(Model):
         self.vehicles = vehicles
 
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
-        yield from (
-            ('vehicle_identifiers', tuple(vehicle.identifier for vehicle in self.vehicles)),
-        )
+        yield from (("vehicle_identifiers", tuple(vehicle.identifier for vehicle in self.vehicles)),)
 
     def __deepcopy__(self, memo: Dict[int, Any]) -> Fleet:
         return self

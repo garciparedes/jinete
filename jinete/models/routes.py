@@ -4,27 +4,15 @@ import logging
 from copy import deepcopy
 from functools import reduce
 from operator import and_
-from typing import (
-    TYPE_CHECKING,
-)
+from typing import TYPE_CHECKING
 from cached_property import cached_property
 import itertools as it
 
-from ..exceptions import (
-    PreviousStopNotInRouteException,
-)
-from .constants import (
-    ERROR_BOUND,
-)
-from .abc import (
-    Model,
-)
-from .planned_trips import (
-    PlannedTrip,
-)
-from .stops import (
-    Stop,
-)
+from ..exceptions import PreviousStopNotInRouteException
+from .constants import ERROR_BOUND
+from .abc import Model
+from .planned_trips import PlannedTrip
+from .stops import Stop
 
 if TYPE_CHECKING:
     from typing import (
@@ -36,23 +24,17 @@ if TYPE_CHECKING:
         Generator,
         Tuple,
     )
-    from .vehicles import (
-        Vehicle,
-    )
-    from .trips import (
-        Trip,
-    )
-    from .positions import (
-        Position,
-    )
+    from .vehicles import Vehicle
+    from .trips import Trip
+    from .positions import Position
 
 logger = logging.getLogger(__name__)
 
 
 class Route(Model):
     __slots__ = (
-        'vehicle',
-        'stops',
+        "vehicle",
+        "stops",
     )
 
     vehicle: Vehicle
@@ -66,7 +48,8 @@ class Route(Model):
             first = Stop(self.vehicle, self.vehicle.origin_position, None)
             last = Stop(self.vehicle, self.vehicle.destination_position, first)
             self.stops = [
-                first, last,
+                first,
+                last,
             ]
         else:
             self.stops = list(stops)
@@ -87,7 +70,7 @@ class Route(Model):
 
     @property
     def identifier(self):
-        return '|'.join(stop.identifier for stop in self.stops)
+        return "|".join(stop.identifier for stop in self.stops)
 
     @property
     def planned_trips(self) -> Iterator[PlannedTrip]:
@@ -130,7 +113,7 @@ class Route(Model):
         return True
 
     def flush(self):
-        self.__dict__.pop('feasible', None)
+        self.__dict__.pop("feasible", None)
 
         for stop in self.stops:
             stop.flush()
@@ -221,8 +204,8 @@ class Route(Model):
 
     def __iter__(self) -> Generator[Tuple[str, Any], None, None]:
         yield from (
-            ('vehicle_identifier', self.vehicle_identifier),
-            ('stops_identifiers', tuple(stop.identifier for stop in self.stops))
+            ("vehicle_identifier", self.vehicle_identifier),
+            ("stops_identifiers", tuple(stop.identifier for stop in self.stops)),
         )
 
     def insert_stop(self, stop: Stop) -> Stop:
@@ -292,7 +275,6 @@ class Route(Model):
 
 
 class RouteCloner(object):
-
     def __init__(self, route: Route, idx: int = 0):
         self.route = route
         self.desired_idx = idx
@@ -348,10 +330,15 @@ class RouteCloner(object):
         return new_planned_trip
 
     def clone(self) -> Route:
-        cloned_stops = self.stops[:self.idx]
-        for stop in self.stops[self.idx:]:
-            new_stop = Stop(stop.vehicle, stop.position, cloned_stops[-1] if len(cloned_stops) else None,
-                            starting_time=stop._starting_time)
+        threshold = self.idx
+        cloned_stops = self.stops[:threshold]
+        for stop in self.stops[threshold:]:
+            new_stop = Stop(
+                stop.vehicle,
+                stop.position,
+                cloned_stops[-1] if len(cloned_stops) else None,
+                starting_time=stop._starting_time,
+            )
 
             new_stop.pickup_planned_trips = set(
                 self.map_pickup(new_stop, pickup) for pickup in stop.pickup_planned_trips

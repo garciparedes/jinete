@@ -5,18 +5,12 @@ from random import Random
 from typing import TYPE_CHECKING
 import itertools as it
 
-from cached_property import (
-    cached_property,
-)
+from cached_property import cached_property
 
-from .abc import (
-    InsertionIterator,
-)
+from .abc import InsertionIterator
 
 if TYPE_CHECKING:
-    from typing import (
-        Iterator,
-    )
+    from typing import Iterator
     from .....models import (
         Route,
         Trip,
@@ -26,11 +20,10 @@ logger = logging.getLogger(__name__)
 
 
 class StatelessInsertionIterator(InsertionIterator):
-
     @cached_property
     def iterator(self) -> Iterator[Route]:
         for route, trip in it.product(self._attractive_routes, self.pending_trips):
-            logger.debug(f'Yielding ({route}, {trip})...')
+            logger.debug(f"Yielding ({route}, {trip})...")
             yield from self._strategy.compute(route, trip)
 
     def __next__(self) -> Route:
@@ -41,12 +34,11 @@ class StatelessInsertionIterator(InsertionIterator):
         self.flush()
 
     def flush(self):
-        for key in ('iterator',):
+        for key in ("iterator",):
             self.__dict__.pop(key, None)
 
 
 class BestStatelessInsertionIterator(StatelessInsertionIterator):
-
     def __init__(self, randomized_size: int = 1, seed: int = 56, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.randomized_size = randomized_size

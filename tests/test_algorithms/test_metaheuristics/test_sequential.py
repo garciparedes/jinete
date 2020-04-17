@@ -19,20 +19,12 @@ class TestSequentialAlgorithm(unittest.TestCase):
         cls.initial = jit.InsertionAlgorithm(job=cls.job, fleet=cls.fleet).optimize()
 
     def test_creation(self):
-        algorithm = jit.SequentialAlgorithm(
-            job=self.job,
-            fleet=self.fleet,
-            initial=self.initial,
-        )
+        algorithm = jit.SequentialAlgorithm(job=self.job, fleet=self.fleet, initial=self.initial,)
         self.assertEqual(algorithm.job, self.job)
         self.assertEqual(algorithm.fleet, self.fleet)
 
     def test_optimize(self):
-        algorithm = jit.SequentialAlgorithm(
-            job=self.job,
-            fleet=self.fleet,
-            initial=self.initial,
-        )
+        algorithm = jit.SequentialAlgorithm(job=self.job, fleet=self.fleet, initial=self.initial,)
         result = algorithm.optimize()
 
         # TODO: Properly validate  behaviour of the provided "Result" object.
@@ -40,5 +32,5 @@ class TestSequentialAlgorithm(unittest.TestCase):
         self.assertIsInstance(result, jit.Result)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
