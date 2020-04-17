@@ -287,7 +287,7 @@ class ThreeIndexLinearModel(LinearModel):
                 earliest, latest = self._time_window_by_position_idx(i)
 
                 constraints.extend(
-                    [earliest <= self._u[k][i], self._u[k][i] <= latest,]
+                    [earliest <= self._u[k][i], self._u[k][i] <= latest]
                 )
 
             for i in self._pickups_indexer:
