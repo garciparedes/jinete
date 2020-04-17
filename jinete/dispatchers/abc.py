@@ -12,6 +12,7 @@ from ..storers import NaiveStorer
 if TYPE_CHECKING:
     from typing import Type
     from ..loaders import Loader
+    from ..models import Result
     from ..algorithms import Algorithm
     from ..storers import Storer
 
