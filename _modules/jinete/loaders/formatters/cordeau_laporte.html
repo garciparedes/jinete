@@ -153,22 +153,28 @@
   <h1>Source code for jinete.loaders.formatters.cordeau_laporte</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Formatting modules from raw objects containing Cordeau-Laporte problem instances to ``jinete```s class hierarchy.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">annotations</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">TYPE_CHECKING</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">...models</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">GeometricSurface</span><span class="p">,</span>
+    <span class="n">DialARideObjective</span><span class="p">,</span>
     <span class="n">DistanceMetric</span><span class="p">,</span>
     <span class="n">Fleet</span><span class="p">,</span>
-    <span class="n">Vehicle</span><span class="p">,</span>
+    <span class="n">GeometricSurface</span><span class="p">,</span>
     <span class="n">Job</span><span class="p">,</span>
-    <span class="n">Trip</span><span class="p">,</span>
-    <span class="n">DialARideObjective</span><span class="p">,</span>
     <span class="n">Service</span><span class="p">,</span>
+    <span class="n">Trip</span><span class="p">,</span>
+    <span class="n">Vehicle</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.abc</span> <span class="kn">import</span> <span class="n">LoaderFormatter</span>
+<span class="kn">from</span> <span class="nn">.abc</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">LoaderFormatter</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">...models</span> <span class="kn">import</span> <span class="n">Surface</span>
