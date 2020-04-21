@@ -1,14 +1,23 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import logging
-from abc import ABC, abstractmethod
-from statistics import mean
-from typing import TYPE_CHECKING
+from abc import (
+    ABC,
+    abstractmethod,
+)
+from statistics import (
+    mean,
+)
+from typing import (
+    TYPE_CHECKING,
+)
 
 from .constants import (
-    OptimizationDirection,
-    MIN_FLOAT,
     MAX_FLOAT,
+    MIN_FLOAT,
+    OptimizationDirection,
 )
 
 if TYPE_CHECKING:

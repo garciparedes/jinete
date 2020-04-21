@@ -1,8 +1,12 @@
 """The set of definitions to format the artifact to be stored following the HashCode style."""
 
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
-from .abc import StorerFormatter
+from .abc import (
+    StorerFormatter,
+)
 
 
 class HashCodeStorerFormatter(StorerFormatter):

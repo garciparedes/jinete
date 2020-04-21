@@ -1,12 +1,27 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import logging
-from copy import deepcopy
-from functools import reduce
-from operator import and_
-from typing import TYPE_CHECKING
-from uuid import uuid4
-from .abc import Model
+from copy import (
+    deepcopy,
+)
+from functools import (
+    reduce,
+)
+from operator import (
+    and_,
+)
+from typing import (
+    TYPE_CHECKING,
+)
+from uuid import (
+    uuid4,
+)
+
+from .abc import (
+    Model,
+)
 
 if TYPE_CHECKING:
     from typing import (

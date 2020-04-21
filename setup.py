@@ -1,9 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from setuptools import setup, find_packages
-from distutils.util import convert_path
 import itertools as it
+from distutils.util import (
+    convert_path,
+)
+
+from setuptools import (
+    find_packages,
+    setup,
+)
 
 module_name = "jinete"
 

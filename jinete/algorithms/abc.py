@@ -1,11 +1,20 @@
 """Abstract algorithm definitions."""
 
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import logging
-from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
-from time import time
+from abc import (
+    ABC,
+    abstractmethod,
+)
+from time import (
+    time,
+)
+from typing import (
+    TYPE_CHECKING,
+)
 
 from ..models import (
     Planning,

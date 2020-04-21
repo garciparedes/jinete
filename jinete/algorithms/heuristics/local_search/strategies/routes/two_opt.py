@@ -1,7 +1,12 @@
 import logging
-from itertools import combinations, chain
+from itertools import (
+    chain,
+    combinations,
+)
 
-from ..abc import LocalSearchStrategy
+from ..abc import (
+    LocalSearchStrategy,
+)
 
 logger = logging.getLogger(__name__)
 

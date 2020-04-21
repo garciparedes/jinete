@@ -1,19 +1,29 @@
 """Defines the loader's abstract interface to load problem instances from external sources."""
 
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 from abc import (
     ABC,
     abstractmethod,
 )
-from cached_property import cached_property
-from typing import TYPE_CHECKING
+from typing import (
+    TYPE_CHECKING,
+)
+
+from cached_property import (
+    cached_property,
+)
+
 from ..models import (
     Fleet,
     Job,
     Surface,
 )
-from .formatters import CordeauLaporteLoaderFormatter
+from .formatters import (
+    CordeauLaporteLoaderFormatter,
+)
 
 if TYPE_CHECKING:
     from typing import (

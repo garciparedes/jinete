@@ -2,16 +2,28 @@
 Contains entities to represent trips in the data model.
 """
 
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import logging
-from typing import TYPE_CHECKING
+from typing import (
+    TYPE_CHECKING,
+)
 
-from cached_property import cached_property
+from cached_property import (
+    cached_property,
+)
 
-from .abc import Model
-from .services import Service
-from .constants import MAX_FLOAT
+from .abc import (
+    Model,
+)
+from .constants import (
+    MAX_FLOAT,
+)
+from .services import (
+    Service,
+)
 
 if TYPE_CHECKING:
     from typing import (

@@ -1,6 +1,8 @@
 """The set of definitions to not to store results."""
 
-from .abc import Storer
+from .abc import (
+    Storer,
+)
 
 
 class NaiveStorer(Storer):

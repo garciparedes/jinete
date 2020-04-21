@@ -1,13 +1,25 @@
 """A set of implementations to ease the launching process on external systems."""
 
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
-from typing import TYPE_CHECKING
+from typing import (
+    TYPE_CHECKING,
+)
 
-from .loaders import FileLoader
-from .algorithms import InsertionAlgorithm
-from .storers import PromptStorer
-from .dispatchers import StaticDispatcher
+from .algorithms import (
+    InsertionAlgorithm,
+)
+from .dispatchers import (
+    StaticDispatcher,
+)
+from .loaders import (
+    FileLoader,
+)
+from .storers import (
+    PromptStorer,
+)
 
 if TYPE_CHECKING:
     from typing import (

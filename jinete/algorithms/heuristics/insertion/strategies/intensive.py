@@ -1,11 +1,19 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
-import logging
-from typing import TYPE_CHECKING
 import itertools as it
+import logging
+from typing import (
+    TYPE_CHECKING,
+)
 
-from .....models import Trip
-from .abc import InsertionStrategy
+from .....models import (
+    Trip,
+)
+from .abc import (
+    InsertionStrategy,
+)
 
 if TYPE_CHECKING:
     from typing import (

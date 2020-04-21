@@ -1,14 +1,20 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import logging
-from operator import attrgetter
-from typing import TYPE_CHECKING
+from operator import (
+    attrgetter,
+)
+from typing import (
+    TYPE_CHECKING,
+)
 
 from .....models import (
-    Stop,
     PlannedTrip,
-    Trip,
     RouteCloner,
+    Stop,
+    Trip,
 )
 
 if TYPE_CHECKING:
