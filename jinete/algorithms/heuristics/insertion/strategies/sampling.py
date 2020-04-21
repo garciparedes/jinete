@@ -1,21 +1,11 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import logging
-from random import (
-    Random,
-)
-from typing import (
-    TYPE_CHECKING,
-)
+from random import Random
+from typing import TYPE_CHECKING
 
-from .....models import (
-    Trip,
-)
-from .abc import (
-    InsertionStrategy,
-)
+from .....models import Trip
+from .abc import InsertionStrategy
 
 if TYPE_CHECKING:
     from typing import (

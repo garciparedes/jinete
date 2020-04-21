@@ -1,24 +1,14 @@
 """Defines the loader's implementation to load problem instances from files."""
 
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import logging
-from pathlib import (
-    Path,
-)
-from typing import (
-    TYPE_CHECKING,
-)
+from pathlib import Path
+from typing import TYPE_CHECKING
 
-from cached_property import (
-    cached_property,
-)
+from cached_property import cached_property
 
-from .abc import (
-    Loader,
-)
+from .abc import Loader
 
 if TYPE_CHECKING:
     from ..models import (

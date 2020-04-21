@@ -2,9 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import itertools as it
-from distutils.util import (
-    convert_path,
-)
+from distutils.util import convert_path
 
 from setuptools import (
     find_packages,

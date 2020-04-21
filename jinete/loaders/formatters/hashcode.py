@@ -13,9 +13,7 @@ from ...models import (
     Trip,
     Vehicle,
 )
-from .abc import (
-    LoaderFormatter,
-)
+from .abc import LoaderFormatter
 
 logger = logging.getLogger(__name__)
 

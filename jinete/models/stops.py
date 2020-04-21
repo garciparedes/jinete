@@ -1,20 +1,12 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import itertools as it
 import logging
-from typing import (
-    TYPE_CHECKING,
-)
+from typing import TYPE_CHECKING
 
-from cached_property import (
-    cached_property,
-)
+from cached_property import cached_property
 
-from .abc import (
-    Model,
-)
+from .abc import Model
 from .constants import (
     ERROR_BOUND,
     MAX_FLOAT,

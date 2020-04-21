@@ -1,14 +1,8 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
-from typing import (
-    TYPE_CHECKING,
-)
+from typing import TYPE_CHECKING
 
-from .abc import (
-    Model,
-)
+from .abc import Model
 from .objectives import (
     DialARideObjective,
     Objective,

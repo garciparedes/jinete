@@ -12,9 +12,7 @@
 #
 
 import sys
-from datetime import (
-    date,
-)
+from datetime import date
 
 sys.path.append("..")  # isort:skip
 

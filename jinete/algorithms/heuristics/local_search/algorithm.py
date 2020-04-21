@@ -1,21 +1,11 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import logging
-from typing import (
-    TYPE_CHECKING,
-)
+from typing import TYPE_CHECKING
 
-from ....models import (
-    Planning,
-)
-from ...abc import (
-    Algorithm,
-)
-from .strategies import (
-    ReallocationLocalSearchStrategy,
-)
+from ....models import Planning
+from ...abc import Algorithm
+from .strategies import ReallocationLocalSearchStrategy
 
 if TYPE_CHECKING:
     from typing import Set

@@ -1,41 +1,19 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import itertools as it
 import logging
-from copy import (
-    deepcopy,
-)
-from functools import (
-    reduce,
-)
-from operator import (
-    and_,
-)
-from typing import (
-    TYPE_CHECKING,
-)
+from copy import deepcopy
+from functools import reduce
+from operator import and_
+from typing import TYPE_CHECKING
 
-from cached_property import (
-    cached_property,
-)
+from cached_property import cached_property
 
-from ..exceptions import (
-    PreviousStopNotInRouteException,
-)
-from .abc import (
-    Model,
-)
-from .constants import (
-    ERROR_BOUND,
-)
-from .planned_trips import (
-    PlannedTrip,
-)
-from .stops import (
-    Stop,
-)
+from ..exceptions import PreviousStopNotInRouteException
+from .abc import Model
+from .constants import ERROR_BOUND
+from .planned_trips import PlannedTrip
+from .stops import Stop
 
 if TYPE_CHECKING:
     from typing import (

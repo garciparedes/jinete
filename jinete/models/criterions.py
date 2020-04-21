@@ -1,18 +1,12 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import logging
 from abc import (
     ABC,
     abstractmethod,
 )
-from statistics import (
-    mean,
-)
-from typing import (
-    TYPE_CHECKING,
-)
+from statistics import mean
+from typing import TYPE_CHECKING
 
 from .constants import (
     MAX_FLOAT,

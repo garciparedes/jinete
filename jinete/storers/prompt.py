@@ -1,8 +1,6 @@
 """The set of definitions to store results as a prompt message."""
 
-from .abc import (
-    Storer,
-)
+from .abc import Storer
 
 
 class PromptStorer(Storer):

@@ -2,9 +2,7 @@
 The set of classes which models problem instances, solutions, etc.
 """
 
-from .abc import (
-    Model,
-)
+from .abc import Model
 from .constants import (
     MAX_FLOAT,
     MAX_INT,
@@ -22,45 +20,31 @@ from .criterions import (
     ShortestAveragePlannerTripDurationCriterion,
     ShortestTimeRouteCriterion,
 )
-from .jobs import (
-    Job,
-)
+from .jobs import Job
 from .objectives import (
     DialARideObjective,
     HashCodeObjective,
     Objective,
     TaxiSharingObjective,
 )
-from .planned_trips import (
-    PlannedTrip,
-)
-from .plannings import (
-    Planning,
-)
+from .planned_trips import PlannedTrip
+from .plannings import Planning
 from .positions import (
     GeometricPosition,
     Position,
 )
-from .results import (
-    Result,
-)
+from .results import Result
 from .routes import (
     Route,
     RouteCloner,
 )
-from .services import (
-    Service,
-)
-from .stops import (
-    Stop,
-)
+from .services import Service
+from .stops import Stop
 from .surfaces import (
     GeometricSurface,
     Surface,
 )
-from .trips import (
-    Trip,
-)
+from .trips import Trip
 from .vehicles import (
     Fleet,
     Vehicle,

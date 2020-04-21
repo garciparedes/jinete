@@ -4,9 +4,7 @@ from ......models import (
     Route,
     Stop,
 )
-from ..abc import (
-    LocalSearchStrategy,
-)
+from ..abc import LocalSearchStrategy
 
 logger = logging.getLogger(__name__)
 

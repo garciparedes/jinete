@@ -1,9 +1,7 @@
 """
 Set of constant values used around the library (mostly for internal use) to support its algorithm implementations.
 """
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import heapq
 import logging
@@ -11,15 +9,9 @@ from enum import (
     Enum,
     unique,
 )
-from math import (
-    sqrt,
-)
-from sys import (
-    maxsize,
-)
-from typing import (
-    TYPE_CHECKING,
-)
+from math import sqrt
+from sys import maxsize
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from typing import (

@@ -1,13 +1,9 @@
 """Defines the hierarchy of exceptions raised and used by `jinete`'s module."""
 
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import logging
-from typing import (
-    TYPE_CHECKING,
-)
+from typing import TYPE_CHECKING
 
 logger = logging.getLogger(__name__)
 

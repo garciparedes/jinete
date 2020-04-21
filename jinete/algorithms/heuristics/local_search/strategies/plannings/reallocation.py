@@ -1,9 +1,7 @@
 import itertools as it
 import logging
 
-from ..abc import (
-    LocalSearchStrategy,
-)
+from ..abc import LocalSearchStrategy
 
 logger = logging.getLogger(__name__)
 

@@ -1,19 +1,11 @@
 """Naive algorithm definitions."""
 
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
-from typing import (
-    TYPE_CHECKING,
-)
+from typing import TYPE_CHECKING
 
-from ..models import (
-    Planning,
-)
-from .abc import (
-    Algorithm,
-)
+from ..models import Planning
+from .abc import Algorithm
 
 if TYPE_CHECKING:
     from typing import Set

@@ -1,39 +1,17 @@
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import logging
-from abc import (
-    ABC,
-)
-from functools import (
-    reduce,
-)
-from operator import (
-    add,
-)
-from typing import (
-    TYPE_CHECKING,
-)
+from abc import ABC
+from functools import reduce
+from operator import add
+from typing import TYPE_CHECKING
 
-from .constants import (
-    OptimizationDirection,
-)
-from .planned_trips import (
-    PlannedTrip,
-)
-from .plannings import (
-    Planning,
-)
-from .results import (
-    Result,
-)
-from .routes import (
-    Route,
-)
-from .stops import (
-    Stop,
-)
+from .constants import OptimizationDirection
+from .planned_trips import PlannedTrip
+from .plannings import Planning
+from .results import Result
+from .routes import Route
+from .stops import Stop
 
 if TYPE_CHECKING:
     from typing import (
