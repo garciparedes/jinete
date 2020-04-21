@@ -1,9 +1,13 @@
 """Formatting modules from raw objects containing Cordeau-Laporte problem instances to ``jinete```s class hierarchy."""
 
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import logging
-from typing import TYPE_CHECKING
+from typing import (
+    TYPE_CHECKING,
+)
 
 from ...models import (
     DialARideObjective,
@@ -15,7 +19,9 @@ from ...models import (
     Trip,
     Vehicle,
 )
-from .abc import LoaderFormatter
+from .abc import (
+    LoaderFormatter,
+)
 
 if TYPE_CHECKING:
     from ...models import Surface

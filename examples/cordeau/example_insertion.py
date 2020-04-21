@@ -1,8 +1,9 @@
 import logging
-from pathlib import Path
+from pathlib import (
+    Path,
+)
 
 import coloredlogs
-
 import jinete as jit
 
 level = logging.INFO

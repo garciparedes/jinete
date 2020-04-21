@@ -2,16 +2,22 @@
 Contains entities to represent positions in the data model.
 """
 
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import logging
 from abc import (
     ABC,
     abstractmethod,
 )
-from typing import TYPE_CHECKING
+from typing import (
+    TYPE_CHECKING,
+)
 
-from .abc import Model
+from .abc import (
+    Model,
+)
 
 if TYPE_CHECKING:
     from typing import (

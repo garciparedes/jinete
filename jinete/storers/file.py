@@ -1,8 +1,12 @@
 """The set of definitions to store results in filesystems."""
 
-from pathlib import Path
+from pathlib import (
+    Path,
+)
 
-from .abc import Storer
+from .abc import (
+    Storer,
+)
 
 
 class FileStorer(Storer):

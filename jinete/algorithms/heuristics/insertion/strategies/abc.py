@@ -1,8 +1,14 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import logging
-from operator import attrgetter
-from typing import TYPE_CHECKING
+from operator import (
+    attrgetter,
+)
+from typing import (
+    TYPE_CHECKING,
+)
 
 from .....models import (
     PlannedTrip,

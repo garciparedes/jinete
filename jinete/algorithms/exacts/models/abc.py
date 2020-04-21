@@ -1,12 +1,16 @@
 """Abstract class definitions."""
 
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 from abc import (
     ABC,
     abstractmethod,
 )
-from typing import TYPE_CHECKING
+from typing import (
+    TYPE_CHECKING,
+)
 
 import pulp as lp
 

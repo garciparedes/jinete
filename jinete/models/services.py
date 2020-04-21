@@ -2,13 +2,21 @@
 Contains entities to represent services in the data model.
 """
 
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import logging
-from typing import TYPE_CHECKING
+from typing import (
+    TYPE_CHECKING,
+)
 
-from .abc import Model
-from .constants import MAX_FLOAT
+from .abc import (
+    Model,
+)
+from .constants import (
+    MAX_FLOAT,
+)
 
 if TYPE_CHECKING:
     from typing import (

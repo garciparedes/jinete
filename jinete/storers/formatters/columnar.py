@@ -1,7 +1,9 @@
 """The set of definitions to format the artifact to be stored following a columnar style."""
 
 import itertools as it
-from typing import List
+from typing import (
+    List,
+)
 
 from ...models import (
     PlannedTrip,
@@ -9,7 +11,9 @@ from ...models import (
     Stop,
     Vehicle,
 )
-from .abc import StorerFormatter
+from .abc import (
+    StorerFormatter,
+)
 
 
 class ColumnarStorerFormatter(StorerFormatter):

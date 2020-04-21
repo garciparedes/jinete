@@ -78,7 +78,9 @@ from .models import (
     Trip,
     Vehicle,
 )
-from .solvers import Solver
+from .solvers import (
+    Solver,
+)
 from .storers import (
     ColumnarStorerFormatter,
     FileStorer,

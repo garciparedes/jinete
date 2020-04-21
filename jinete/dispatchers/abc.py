@@ -1,14 +1,20 @@
 """Abstract module which defines the high level scheduling during the process of optimization."""
 
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 from abc import (
     ABC,
     abstractmethod,
 )
-from typing import TYPE_CHECKING
+from typing import (
+    TYPE_CHECKING,
+)
 
-from ..storers import NaiveStorer
+from ..storers import (
+    NaiveStorer,
+)
 
 if TYPE_CHECKING:
     from typing import Type

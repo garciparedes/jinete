@@ -1,11 +1,21 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import logging
-from typing import TYPE_CHECKING
+from typing import (
+    TYPE_CHECKING,
+)
 
-from .abc import Model
-from .constants import MAX_FLOAT
-from .services import Service
+from .abc import (
+    Model,
+)
+from .constants import (
+    MAX_FLOAT,
+)
+from .services import (
+    Service,
+)
 
 if TYPE_CHECKING:
     from typing import (

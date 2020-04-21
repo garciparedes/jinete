@@ -1,16 +1,26 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import logging
 from abc import (
     ABC,
     abstractmethod,
 )
-from copy import deepcopy
-from typing import TYPE_CHECKING
+from copy import (
+    deepcopy,
+)
+from typing import (
+    TYPE_CHECKING,
+)
 
-from cached_property import cached_property
+from cached_property import (
+    cached_property,
+)
 
-from .....models import Route
+from .....models import (
+    Route,
+)
 
 if TYPE_CHECKING:
     from typing import (

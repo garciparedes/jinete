@@ -1,17 +1,31 @@
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import logging
 from abc import (
     ABC,
     abstractmethod,
 )
-from collections import defaultdict
-from typing import TYPE_CHECKING
-from uuid import uuid4
+from collections import (
+    defaultdict,
+)
+from typing import (
+    TYPE_CHECKING,
+)
+from uuid import (
+    uuid4,
+)
 
-from .abc import Model
-from .constants import DistanceMetric
-from .positions import GeometricPosition
+from .abc import (
+    Model,
+)
+from .constants import (
+    DistanceMetric,
+)
+from .positions import (
+    GeometricPosition,
+)
 
 if TYPE_CHECKING:
     from typing import (

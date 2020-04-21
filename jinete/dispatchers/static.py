@@ -1,9 +1,15 @@
 """High level static scheduling during the process of optimization (feeding with new trips, updating state, etc.)."""
 
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
-from ..models import Result
-from .abc import Dispatcher
+from ..models import (
+    Result,
+)
+from .abc import (
+    Dispatcher,
+)
 
 
 class StaticDispatcher(Dispatcher):
