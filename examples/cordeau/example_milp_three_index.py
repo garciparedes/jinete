@@ -4,9 +4,8 @@ from pathlib import (
 )
 
 import coloredlogs
-import pulp as lp
-
 import jinete as jit
+import pulp as lp
 
 level = logging.INFO
 logging.basicConfig(level=level)

@@ -4,7 +4,6 @@ from pathlib import (
 )
 
 import coloredlogs
-
 import jinete as jit
 
 level = logging.INFO

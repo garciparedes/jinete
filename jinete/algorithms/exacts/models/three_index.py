@@ -19,7 +19,6 @@ import pulp as lp
 from cached_property import (
     cached_property,
 )
-
 from jinete.models import (
     PlannedTrip,
     Route,
