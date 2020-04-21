@@ -85,8 +85,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../readme.html">Readme</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../data_model.html">Data Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_hierarchy.html">Module Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data_model.html">Data LinearModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../directory_hierarchy.html">Directory Hierarchy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api_reference/api_reference.html">API Reference</a></li>
 </ul>
@@ -152,26 +151,16 @@
            <div itemprop="articleBody">
             
   <h1>Source code for jinete.solvers</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">A set of abstractions to ease the launching process on external systems.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;A set of implementations to ease the launching process on external systems.&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
 
-<span class="kn">from</span> <span class="nn">.loaders</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">FileLoader</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.algorithms</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">InsertionAlgorithm</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.storers</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">PromptStorer</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.dispatchers</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">StaticDispatcher</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.loaders</span> <span class="kn">import</span> <span class="n">FileLoader</span>
+<span class="kn">from</span> <span class="nn">.algorithms</span> <span class="kn">import</span> <span class="n">InsertionAlgorithm</span>
+<span class="kn">from</span> <span class="nn">.storers</span> <span class="kn">import</span> <span class="n">PromptStorer</span>
+<span class="kn">from</span> <span class="nn">.dispatchers</span> <span class="kn">import</span> <span class="n">StaticDispatcher</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
@@ -180,34 +169,47 @@
         <span class="n">Dict</span><span class="p">,</span>
         <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="kn">from</span> <span class="nn">.loaders</span> <span class="kn">import</span> <span class="p">(</span>
-        <span class="n">Loader</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="kn">from</span> <span class="nn">.algorithms</span> <span class="kn">import</span> <span class="p">(</span>
-        <span class="n">Algorithm</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="p">(</span>
-        <span class="n">Result</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="kn">from</span> <span class="nn">.storers</span> <span class="kn">import</span> <span class="p">(</span>
-        <span class="n">Storer</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="kn">from</span> <span class="nn">.dispatchers</span> <span class="kn">import</span> <span class="p">(</span>
-        <span class="n">Dispatcher</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">.loaders</span> <span class="kn">import</span> <span class="n">Loader</span>
+    <span class="kn">from</span> <span class="nn">.algorithms</span> <span class="kn">import</span> <span class="n">Algorithm</span>
+    <span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Result</span>
+    <span class="kn">from</span> <span class="nn">.storers</span> <span class="kn">import</span> <span class="n">Storer</span>
+    <span class="kn">from</span> <span class="nn">.dispatchers</span> <span class="kn">import</span> <span class="n">Dispatcher</span>
 
 
 <div class="viewcode-block" id="Solver"><a class="viewcode-back" href="../../api_reference/jinete.solvers.html#jinete.solvers.Solver">[docs]</a><span class="k">class</span> <span class="nc">Solver</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Solve a problem instance in an easy way.</span>
 
-<div class="viewcode-block" id="Solver.__init__"><a class="viewcode-back" href="../../api_reference/jinete.solvers.html#jinete.solvers.Solver.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
-                 <span class="n">algorithm</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Type</span><span class="p">[</span><span class="n">Algorithm</span><span class="p">]]</span> <span class="o">=</span> <span class="n">InsertionAlgorithm</span><span class="p">,</span>
-                 <span class="n">algorithm_kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">loader</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Type</span><span class="p">[</span><span class="n">Loader</span><span class="p">]]</span> <span class="o">=</span> <span class="n">FileLoader</span><span class="p">,</span>
-                 <span class="n">loader_kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">storer</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Type</span><span class="p">[</span><span class="n">Storer</span><span class="p">]]</span> <span class="o">=</span> <span class="n">PromptStorer</span><span class="p">,</span>
-                 <span class="n">storer_kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">dispatcher</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Type</span><span class="p">[</span><span class="n">Dispatcher</span><span class="p">]]</span> <span class="o">=</span> <span class="n">StaticDispatcher</span><span class="p">,</span>
-                 <span class="n">dispatcher_kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="sd">    This class acts as the main library&#39;s interface of use, allowing to configure all the needed classes and</span>
+<span class="sd">    entities to generate solutions for a problem instance and providing the requested solution.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Solver.__init__"><a class="viewcode-back" href="../../api_reference/jinete.solvers.html#jinete.solvers.Solver.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">algorithm</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Type</span><span class="p">[</span><span class="n">Algorithm</span><span class="p">]]</span> <span class="o">=</span> <span class="n">InsertionAlgorithm</span><span class="p">,</span>
+        <span class="n">algorithm_kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">loader</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Type</span><span class="p">[</span><span class="n">Loader</span><span class="p">]]</span> <span class="o">=</span> <span class="n">FileLoader</span><span class="p">,</span>
+        <span class="n">loader_kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">storer</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Type</span><span class="p">[</span><span class="n">Storer</span><span class="p">]]</span> <span class="o">=</span> <span class="n">PromptStorer</span><span class="p">,</span>
+        <span class="n">storer_kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">dispatcher</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Type</span><span class="p">[</span><span class="n">Dispatcher</span><span class="p">]]</span> <span class="o">=</span> <span class="n">StaticDispatcher</span><span class="p">,</span>
+        <span class="n">dispatcher_kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Construct a new instance.</span>
+
+<span class="sd">        :param algorithm: The solving method to solve the problem instance.</span>
+<span class="sd">        :param algorithm_kwargs: A dict-like object containing the named parameters for the ``algorithm``&#39;s class</span>
+<span class="sd">            constructor.</span>
+<span class="sd">        :param loader: The class that stores the optimized solution in a proper way.</span>
+<span class="sd">        :param loader_kwargs: A dict-like object containing the named parameters for the ``loaders``&#39;s class</span>
+<span class="sd">            constructor.</span>
+<span class="sd">        :param storer: The class that stores the optimized solution in a proper way.</span>
+<span class="sd">        :param storer_kwargs: A dict-like object containing the named parameters for the ``storer``&#39;s class</span>
+<span class="sd">            constructor.</span>
+<span class="sd">        :param dispatcher: The class that orchestrates the optimization process, linking the loaded instance to the</span>
+<span class="sd">            algorithm, and the obtained solution to the storer.</span>
+<span class="sd">        :param dispatcher_kwargs: A dict-like object containing the named parameters for the ``dispatcher``&#39;s class</span>
+<span class="sd">            constructor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">algorithm_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">algorithm_kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">loader_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -234,66 +236,62 @@
         <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_loader_cls</span>
         <span class="n">tuned_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loader_kwargs</span>
 
-        <span class="k">class</span> <span class="nc">TunedLoader</span><span class="p">(</span><span class="n">base</span><span class="p">):</span>
+        <span class="k">class</span> <span class="nc">_TunedLoader</span><span class="p">(</span><span class="n">base</span><span class="p">):</span>
             <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
                 <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-                    <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-                    <span class="o">**</span><span class="n">tuned_kwargs</span><span class="p">,</span>
+                    <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">tuned_kwargs</span><span class="p">,</span>
                 <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">TunedLoader</span>
+        <span class="k">return</span> <span class="n">_TunedLoader</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">_algorithm_cls</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">[</span><span class="n">Algorithm</span><span class="p">]:</span>
         <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_algorithm_cls</span>
         <span class="n">tuned_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_algorithm_kwargs</span>
 
-        <span class="k">class</span> <span class="nc">TunedAlgorithm</span><span class="p">(</span><span class="n">base</span><span class="p">):</span>
+        <span class="k">class</span> <span class="nc">_TunedAlgorithm</span><span class="p">(</span><span class="n">base</span><span class="p">):</span>
             <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
                 <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-                    <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-                    <span class="o">**</span><span class="n">tuned_kwargs</span><span class="p">,</span>
+                    <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">tuned_kwargs</span><span class="p">,</span>
                 <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">TunedAlgorithm</span>
+        <span class="k">return</span> <span class="n">_TunedAlgorithm</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">_storer_cls</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">[</span><span class="n">Storer</span><span class="p">]:</span>
         <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_storer_cls</span>
         <span class="n">tuned_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storer_kwargs</span>
 
-        <span class="k">class</span> <span class="nc">TunedStorer</span><span class="p">(</span><span class="n">base</span><span class="p">):</span>
+        <span class="k">class</span> <span class="nc">_TunedStorer</span><span class="p">(</span><span class="n">base</span><span class="p">):</span>
             <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
                 <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-                    <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-                    <span class="o">**</span><span class="n">tuned_kwargs</span><span class="p">,</span>
+                    <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">tuned_kwargs</span><span class="p">,</span>
                 <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">TunedStorer</span>
+        <span class="k">return</span> <span class="n">_TunedStorer</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">_dispatcher_cls</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">[</span><span class="n">Dispatcher</span><span class="p">]:</span>
         <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base_dispatcher_cls</span>
         <span class="n">tuned_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dispatcher_kwargs</span>
 
-        <span class="k">class</span> <span class="nc">TunedDispatcher</span><span class="p">(</span><span class="n">base</span><span class="p">):</span>
+        <span class="k">class</span> <span class="nc">_TunedDispatcher</span><span class="p">(</span><span class="n">base</span><span class="p">):</span>
             <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
                 <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-                    <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
-                    <span class="o">**</span><span class="n">tuned_kwargs</span><span class="p">,</span>
+                    <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">tuned_kwargs</span><span class="p">,</span>
                 <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">TunedDispatcher</span>
+        <span class="k">return</span> <span class="n">_TunedDispatcher</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">_dispatcher</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dispatcher</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dispatcher_cls</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_loader_cls</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_algorithm_cls</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_storer_cls</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dispatcher_cls</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_loader_cls</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_algorithm_cls</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_storer_cls</span><span class="p">,)</span>
 
 <div class="viewcode-block" id="Solver.solve"><a class="viewcode-back" href="../../api_reference/jinete.solvers.html#jinete.solvers.Solver.solve">[docs]</a>    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Result</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Compute an optimization.</span>
+
+<span class="sd">        :return: The execution&#39;s result, containing a optimized solution for the given problem&#39;s instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dispatcher</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></div></div>
 </pre></div>
 

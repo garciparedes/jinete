@@ -85,8 +85,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../readme.html">Readme</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../../data_model.html">Data Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../../module_hierarchy.html">Module Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../data_model.html">Data LinearModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../directory_hierarchy.html">Directory Hierarchy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../api_reference/api_reference.html">API Reference</a></li>
 </ul>
@@ -160,15 +159,9 @@
     <span class="n">abstractmethod</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">TYPE_CHECKING</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">cached_property</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">cached_property</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.....models</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">Route</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+<span class="kn">from</span> <span class="nn">cached_property</span> <span class="kn">import</span> <span class="n">cached_property</span>
+<span class="kn">from</span> <span class="nn">.....models</span> <span class="kn">import</span> <span class="n">Route</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
@@ -184,9 +177,7 @@
         <span class="n">Job</span><span class="p">,</span>
         <span class="n">RouteCriterion</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="kn">from</span> <span class="nn">..strategies</span> <span class="kn">import</span> <span class="p">(</span>
-        <span class="n">InsertionStrategy</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">..strategies</span> <span class="kn">import</span> <span class="n">InsertionStrategy</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -197,13 +188,23 @@
     <span class="n">criterion_cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">RouteCriterion</span><span class="p">]</span>
     <span class="n">routes_container</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Vehicle</span><span class="p">,</span> <span class="n">Route</span><span class="p">]</span>
 
-<div class="viewcode-block" id="InsertionIterator.__init__"><a class="viewcode-back" href="../../../../../../api_reference/jinete.algorithms.heuristics.insertion.iterators.abc.html#jinete.algorithms.heuristics.insertion.iterators.abc.InsertionIterator.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fleet</span><span class="p">:</span> <span class="n">Fleet</span><span class="p">,</span> <span class="n">job</span><span class="p">:</span> <span class="n">Job</span><span class="p">,</span> <span class="n">strategy_cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">InsertionStrategy</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">criterion_cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">RouteCriterion</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">routes</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Route</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="InsertionIterator.__init__"><a class="viewcode-back" href="../../../../../../api_reference/jinete.algorithms.heuristics.insertion.iterators.abc.html#jinete.algorithms.heuristics.insertion.iterators.abc.InsertionIterator.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">fleet</span><span class="p">:</span> <span class="n">Fleet</span><span class="p">,</span>
+        <span class="n">job</span><span class="p">:</span> <span class="n">Job</span><span class="p">,</span>
+        <span class="n">strategy_cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">InsertionStrategy</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">criterion_cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">RouteCriterion</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">routes</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Route</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="k">if</span> <span class="n">strategy_cls</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="kn">from</span> <span class="nn">..strategies</span> <span class="kn">import</span> <span class="n">TailInsertionStrategy</span>
+
             <span class="n">strategy_cls</span> <span class="o">=</span> <span class="n">TailInsertionStrategy</span>
         <span class="k">if</span> <span class="n">criterion_cls</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="kn">from</span> <span class="nn">.....models</span> <span class="kn">import</span> <span class="n">EarliestLastDepartureTimeRouteCriterion</span>
+
             <span class="n">criterion_cls</span> <span class="o">=</span> <span class="n">EarliestLastDepartureTimeRouteCriterion</span>
 
         <span class="n">pending_trips</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">trips</span><span class="p">)</span>
@@ -216,11 +217,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">fleet</span> <span class="o">=</span> <span class="n">fleet</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">job</span> <span class="o">=</span> <span class="n">job</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">routes_container</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">route</span><span class="o">.</span><span class="n">vehicle</span><span class="p">:</span> <span class="n">route</span>
-            <span class="k">for</span> <span class="n">route</span> <span class="ow">in</span> <span class="n">routes</span>
-        <span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_attractive_routes</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">routes_container</span> <span class="o">=</span> <span class="p">{</span><span class="n">route</span><span class="o">.</span><span class="n">vehicle</span><span class="p">:</span> <span class="n">route</span> <span class="k">for</span> <span class="n">route</span> <span class="ow">in</span> <span class="n">routes</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__attractive_routes</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pending_trips</span> <span class="o">=</span> <span class="n">pending_trips</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">strategy_cls</span> <span class="o">=</span> <span class="n">strategy_cls</span>
@@ -230,21 +228,21 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span></div>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">routes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="n">Route</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_routes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="n">Route</span><span class="p">]:</span>
         <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">routes_container</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">attractive_routes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="n">Route</span><span class="p">]:</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attractive_routes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_attractive_routes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">route</span> <span class="k">for</span> <span class="n">route</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes</span> <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">route</span><span class="o">.</span><span class="n">planned_trips</span><span class="p">))</span>
+    <span class="k">def</span> <span class="nf">_attractive_routes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="n">Route</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__attractive_routes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__attractive_routes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">route</span> <span class="k">for</span> <span class="n">route</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_routes</span> <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">route</span><span class="o">.</span><span class="n">planned_trips</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="nb">any</span><span class="p">(</span><span class="n">route</span><span class="o">.</span><span class="n">planned_trips</span><span class="p">)</span> <span class="k">for</span> <span class="n">route</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attractive_routes</span><span class="p">):</span>
-            <span class="n">empty_route</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">route</span> <span class="k">for</span> <span class="n">route</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">route</span><span class="o">.</span><span class="n">planned_trips</span><span class="p">)),</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="nb">any</span><span class="p">(</span><span class="n">route</span><span class="o">.</span><span class="n">planned_trips</span><span class="p">)</span> <span class="k">for</span> <span class="n">route</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__attractive_routes</span><span class="p">):</span>
+            <span class="n">empty_route</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">route</span> <span class="k">for</span> <span class="n">route</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_routes</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">route</span><span class="o">.</span><span class="n">planned_trips</span><span class="p">)),</span> <span class="kc">None</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">empty_route</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_attractive_routes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">empty_route</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attractive_routes</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__attractive_routes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">empty_route</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__attractive_routes</span>
 
-<div class="viewcode-block" id="InsertionIterator.set_route"><a class="viewcode-back" href="../../../../../../api_reference/jinete.algorithms.heuristics.insertion.iterators.abc.html#jinete.algorithms.heuristics.insertion.iterators.abc.InsertionIterator.set_route">[docs]</a>    <span class="k">def</span> <span class="nf">set_route</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">route</span><span class="p">:</span> <span class="n">Route</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_set_route</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">route</span><span class="p">:</span> <span class="n">Route</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">vehicle</span> <span class="o">=</span> <span class="n">route</span><span class="o">.</span><span class="n">vehicle</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Updating route for vehicle with &quot;</span><span class="si">{</span><span class="n">vehicle</span><span class="o">.</span><span class="n">identifier</span><span class="si">}</span><span class="s1">&quot; identifier...&#39;</span><span class="p">)</span>
         <span class="n">old_trips</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">routes_container</span><span class="p">[</span><span class="n">vehicle</span><span class="p">]</span><span class="o">.</span><span class="n">trips</span><span class="p">)</span>
@@ -252,22 +250,22 @@
         <span class="k">for</span> <span class="n">planned_trip</span> <span class="ow">in</span> <span class="n">route</span><span class="o">.</span><span class="n">planned_trips</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">planned_trip</span><span class="o">.</span><span class="n">trip</span> <span class="ow">in</span> <span class="n">old_trips</span><span class="p">:</span>
                 <span class="k">continue</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">mark_planned_trip_as_done</span><span class="p">(</span><span class="n">planned_trip</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mark_planned_trip_as_done</span><span class="p">(</span><span class="n">planned_trip</span><span class="p">)</span>
 
     <span class="nd">@cached_property</span>
-    <span class="k">def</span> <span class="nf">strategy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InsertionStrategy</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_strategy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InsertionStrategy</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">strategy_cls</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="nd">@cached_property</span>
-    <span class="k">def</span> <span class="nf">criterion</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RouteCriterion</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_criterion</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RouteCriterion</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion_cls</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="n">Vehicle</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_vehicles</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="n">Vehicle</span><span class="p">]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fleet</span><span class="o">.</span><span class="n">vehicles</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">trips</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="n">Trip</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_trips</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="n">Trip</span><span class="p">]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">trips</span>
 
     <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -277,29 +275,16 @@
     <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Route</span><span class="p">:</span>
         <span class="k">pass</span>
 
-<div class="viewcode-block" id="InsertionIterator.mark_planned_trip_as_done"><a class="viewcode-back" href="../../../../../../api_reference/jinete.algorithms.heuristics.insertion.iterators.abc.html#jinete.algorithms.heuristics.insertion.iterators.abc.InsertionIterator.mark_planned_trip_as_done">[docs]</a>    <span class="k">def</span> <span class="nf">mark_planned_trip_as_done</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">planned_trip</span><span class="p">:</span> <span class="n">PlannedTrip</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Marking trip with &quot;</span><span class="si">{</span><span class="n">planned_trip</span><span class="o">.</span><span class="n">trip_identifier</span><span class="si">}</span><span class="s1">&quot; identifier as done &#39;</span>
-                    <span class="sa">f</span><span class="s1">&#39;over vehicle with &quot;</span><span class="si">{</span><span class="n">planned_trip</span><span class="o">.</span><span class="n">vehicle_identifier</span><span class="si">}</span><span class="s1">&quot; identifier...&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mark_trip_as_done</span><span class="p">(</span><span class="n">planned_trip</span><span class="o">.</span><span class="n">trip</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">_mark_planned_trip_as_done</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">planned_trip</span><span class="p">:</span> <span class="n">PlannedTrip</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;Marking trip with &quot;</span><span class="si">{</span><span class="n">planned_trip</span><span class="o">.</span><span class="n">trip_identifier</span><span class="si">}</span><span class="s1">&quot; identifier as done &#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;over vehicle with &quot;</span><span class="si">{</span><span class="n">planned_trip</span><span class="o">.</span><span class="n">vehicle_identifier</span><span class="si">}</span><span class="s1">&quot; identifier...&#39;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mark_trip_as_done</span><span class="p">(</span><span class="n">planned_trip</span><span class="o">.</span><span class="n">trip</span><span class="p">)</span>
 
-<div class="viewcode-block" id="InsertionIterator.mark_trip_as_done"><a class="viewcode-back" href="../../../../../../api_reference/jinete.algorithms.heuristics.insertion.iterators.abc.html#jinete.algorithms.heuristics.insertion.iterators.abc.InsertionIterator.mark_trip_as_done">[docs]</a>    <span class="k">def</span> <span class="nf">mark_trip_as_done</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trip</span><span class="p">:</span> <span class="n">Trip</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_mark_trip_as_done</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trip</span><span class="p">:</span> <span class="n">Trip</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Marked trip with &quot;</span><span class="si">{</span><span class="n">trip</span><span class="o">.</span><span class="n">identifier</span><span class="si">}</span><span class="s1">&quot; identifier as done.&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pending_trips</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">trip</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="InsertionIterator.mark_planned_trip_as_undone"><a class="viewcode-back" href="../../../../../../api_reference/jinete.algorithms.heuristics.insertion.iterators.abc.html#jinete.algorithms.heuristics.insertion.iterators.abc.InsertionIterator.mark_planned_trip_as_undone">[docs]</a>    <span class="k">def</span> <span class="nf">mark_planned_trip_as_undone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">planned_trip</span><span class="p">:</span> <span class="n">PlannedTrip</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mark_trip_as_undone</span><span class="p">(</span><span class="n">planned_trip</span><span class="o">.</span><span class="n">trip</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="InsertionIterator.mark_trip_as_undone"><a class="viewcode-back" href="../../../../../../api_reference/jinete.algorithms.heuristics.insertion.iterators.abc.html#jinete.algorithms.heuristics.insertion.iterators.abc.InsertionIterator.mark_trip_as_undone">[docs]</a>    <span class="k">def</span> <span class="nf">mark_trip_as_undone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trip</span><span class="p">:</span> <span class="n">Trip</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Marked trip with &quot;</span><span class="si">{</span><span class="n">trip</span><span class="o">.</span><span class="n">identifier</span><span class="si">}</span><span class="s1">&quot; identifier as undone.&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pending_trips</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">trip</span><span class="p">)</span></div>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">done_trips</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="n">Trip</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">trips</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">pending_trips</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">completed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pending_trips</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span></div>
 </pre></div>
 
            </div>

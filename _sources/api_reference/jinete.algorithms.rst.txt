@@ -15,6 +15,7 @@ algorithms package
    jinete.algorithms.exacts
    jinete.algorithms.heuristics
    jinete.algorithms.metaheuristics
+   jinete.algorithms.utils
    jinete.algorithms.abc
    jinete.algorithms.naive
 
@@ -23,6 +24,7 @@ algorithms package
    jinete.algorithms.exacts
    jinete.algorithms.heuristics
    jinete.algorithms.metaheuristics
+   jinete.algorithms.utils
    jinete.algorithms.abc
    jinete.algorithms.naive
 

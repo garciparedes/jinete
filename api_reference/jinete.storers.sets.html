@@ -87,8 +87,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../module_hierarchy.html">Module Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data LinearModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../directory_hierarchy.html">Directory Hierarchy</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="api_reference.html">API Reference</a></li>
 </ul>
@@ -163,32 +162,24 @@
             
   <div class="section" id="module-jinete.storers.sets">
 <span id="sets-module"></span><h1>sets module<a class="headerlink" href="#module-jinete.storers.sets" title="Permalink to this headline">¶</a></h1>
+<p>The set of definitions to use more than one storer at the same time.</p>
 <dl class="class">
 <dt id="jinete.storers.sets.StorerSet">
 <em class="property">class </em><code class="sig-prename descclassname">jinete.storers.sets.</code><code class="sig-name descname">StorerSet</code><span class="sig-paren">(</span><em class="sig-param">storer_cls_set</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/storers/sets.html#StorerSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.storers.sets.StorerSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="jinete.storers.abc.html#jinete.storers.abc.Storer" title="jinete.storers.abc.Storer"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.storers.abc.Storer</span></code></a></p>
+<p>Store a resulting solution trough multiple storers.</p>
+<p>This implementation is an intermediate tool to combine multiple storers.</p>
 <dl class="method">
 <dt id="jinete.storers.sets.StorerSet.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">storer_cls_set</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/storers/sets.html#StorerSet.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.storers.sets.StorerSet.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.sets.StorerSet.formatted_planning">
-<code class="sig-name descname">formatted_planning</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jinete.storers.sets.StorerSet.formatted_planning" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.sets.StorerSet.routes">
-<em class="property">property </em><code class="sig-name descname">routes</code><a class="headerlink" href="#jinete.storers.sets.StorerSet.routes" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Set[<a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a>]</p>
+<dd><p>Construct a new object instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>storer_cls_set</strong> (<em>Set</em><em>[</em><em>Type</em><em>[</em><a class="reference internal" href="jinete.storers.abc.html#jinete.storers.abc.Storer" title="jinete.storers.abc.Storer"><em>Storer</em></a><em>]</em><em>]</em>) – The storer classes to be used to store the problem solution.</p></li>
+<li><p><strong>args</strong> – Additional positional arguments.</p></li>
+<li><p><strong>kwargs</strong> – Additional named arguments.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -196,19 +187,10 @@
 <dl class="method">
 <dt id="jinete.storers.sets.StorerSet.store">
 <code class="sig-name descname">store</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/storers/sets.html#StorerSet.store"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.storers.sets.StorerSet.store" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Perform a storage process.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.sets.StorerSet.trips">
-<em class="property">property </em><code class="sig-name descname">trips</code><a class="headerlink" href="#jinete.storers.sets.StorerSet.trips" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Set[<a class="reference internal" href="jinete.models.trips.html#jinete.models.trips.Trip" title="jinete.models.trips.Trip">Trip</a>]</p>
 </dd>
 </dl>
 </dd></dl>

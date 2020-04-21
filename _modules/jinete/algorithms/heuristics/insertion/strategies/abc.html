@@ -85,8 +85,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../readme.html">Readme</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../../data_model.html">Data Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../../module_hierarchy.html">Module Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../data_model.html">Data LinearModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../directory_hierarchy.html">Directory Hierarchy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../api_reference/api_reference.html">API Reference</a></li>
 </ul>
@@ -156,9 +155,7 @@
 
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">attrgetter</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">TYPE_CHECKING</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
 
 <span class="kn">from</span> <span class="nn">.....models</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">Stop</span><span class="p">,</span>
@@ -173,20 +170,25 @@
         <span class="n">List</span><span class="p">,</span>
         <span class="n">Union</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="kn">from</span> <span class="nn">.....models</span> <span class="kn">import</span> <span class="p">(</span>
-        <span class="n">Route</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">.....models</span> <span class="kn">import</span> <span class="n">Route</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="InsertionStrategy"><a class="viewcode-back" href="../../../../../../api_reference/jinete.algorithms.heuristics.insertion.strategies.abc.html#jinete.algorithms.heuristics.insertion.strategies.abc.InsertionStrategy">[docs]</a><span class="k">class</span> <span class="nc">InsertionStrategy</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-
 <div class="viewcode-block" id="InsertionStrategy.__init__"><a class="viewcode-back" href="../../../../../../api_reference/jinete.algorithms.heuristics.insertion.strategies.abc.html#jinete.algorithms.heuristics.insertion.strategies.abc.InsertionStrategy.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">only_feasible</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">only_feasible</span> <span class="o">=</span> <span class="n">only_feasible</span></div>
 
-<div class="viewcode-block" id="InsertionStrategy.compute"><a class="viewcode-back" href="../../../../../../api_reference/jinete.algorithms.heuristics.insertion.strategies.abc.html#jinete.algorithms.heuristics.insertion.strategies.abc.InsertionStrategy.compute">[docs]</a>    <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">route</span><span class="p">:</span> <span class="n">Route</span><span class="p">,</span> <span class="n">trips</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Trip</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Trip</span><span class="p">]],</span> <span class="n">previous_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                <span class="n">following_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">only_feasible</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Route</span><span class="p">]:</span>
+<div class="viewcode-block" id="InsertionStrategy.compute"><a class="viewcode-back" href="../../../../../../api_reference/jinete.algorithms.heuristics.insertion.strategies.abc.html#jinete.algorithms.heuristics.insertion.strategies.abc.InsertionStrategy.compute">[docs]</a>    <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">route</span><span class="p">:</span> <span class="n">Route</span><span class="p">,</span>
+        <span class="n">trips</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Trip</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Trip</span><span class="p">]],</span>
+        <span class="n">previous_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">following_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">only_feasible</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Route</span><span class="p">]:</span>
         <span class="k">assert</span> <span class="n">previous_idx</span> <span class="o">&lt;</span> <span class="n">following_idx</span>
 
         <span class="k">if</span> <span class="n">only_feasible</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -222,7 +224,7 @@
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">route</span><span class="o">.</span><span class="n">stops</span><span class="p">))):</span>
             <span class="n">stop</span> <span class="o">=</span> <span class="n">route</span><span class="o">.</span><span class="n">stops</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="n">planned_trip</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">stop</span><span class="o">.</span><span class="n">pickup_planned_trips</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">attrgetter</span><span class="p">(</span><span class="s1">&#39;duration&#39;</span><span class="p">))</span>
+            <span class="n">planned_trip</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">stop</span><span class="o">.</span><span class="n">pickup_planned_trips</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">&quot;duration&quot;</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">planned_trip</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">continue</span>
 

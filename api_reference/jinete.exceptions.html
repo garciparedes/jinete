@@ -87,8 +87,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../module_hierarchy.html">Module Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data LinearModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../directory_hierarchy.html">Directory Hierarchy</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="api_reference.html">API Reference</a></li>
 </ul>
@@ -161,15 +160,16 @@
             
   <div class="section" id="module-jinete.exceptions">
 <span id="exceptions-module"></span><h1>exceptions module<a class="headerlink" href="#module-jinete.exceptions" title="Permalink to this headline">¶</a></h1>
-<p>This module defines the hierarchy of exceptions raised and used by <cite>jinete</cite>’s module.</p>
+<p>Defines the hierarchy of exceptions raised and used by <cite>jinete</cite>’s module.</p>
 <dl class="exception">
 <dt id="jinete.exceptions.JineteException">
 <em class="property">exception </em><code class="sig-prename descclassname">jinete.exceptions.</code><code class="sig-name descname">JineteException</code><span class="sig-paren">(</span><em class="sig-param">message</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/exceptions.html#JineteException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.exceptions.JineteException" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
+<p>The base exception on <cite>jinete</cite>’s package.</p>
 <dl class="method">
 <dt id="jinete.exceptions.JineteException.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">message</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/exceptions.html#JineteException.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.exceptions.JineteException.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>The base exception on <cite>jinete</cite>.</p>
+<dd><p>Construct a new instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – A brief description of the cause.</p>
@@ -195,13 +195,14 @@ set self.__traceback__ to tb and return self.</p>
 <dt id="jinete.exceptions.NonFeasiblePlannedTripException">
 <em class="property">exception </em><code class="sig-prename descclassname">jinete.exceptions.</code><code class="sig-name descname">NonFeasiblePlannedTripException</code><span class="sig-paren">(</span><em class="sig-param">planned_trip</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/exceptions.html#NonFeasiblePlannedTripException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.exceptions.NonFeasiblePlannedTripException" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#jinete.exceptions.JineteException" title="jinete.exceptions.JineteException"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.exceptions.JineteException</span></code></a></p>
+<p>Represents an exception raised while providing a non feasible route.</p>
 <dl class="method">
 <dt id="jinete.exceptions.NonFeasiblePlannedTripException.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">planned_trip</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/exceptions.html#NonFeasiblePlannedTripException.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.exceptions.NonFeasiblePlannedTripException.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>The base exception on <cite>jinete</cite>.</p>
+<dd><p>Construct a new instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>message</strong> – A brief description of the cause.</p>
+<dd class="field-odd"><p><strong>planned_trip</strong> (<a class="reference internal" href="jinete.models.planned_trips.html#jinete.models.planned_trips.PlannedTrip" title="jinete.models.planned_trips.PlannedTrip"><em>PlannedTrip</em></a>) – The non feasible planned trip.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -224,13 +225,14 @@ set self.__traceback__ to tb and return self.</p>
 <dt id="jinete.exceptions.NonFeasibleRouteException">
 <em class="property">exception </em><code class="sig-prename descclassname">jinete.exceptions.</code><code class="sig-name descname">NonFeasibleRouteException</code><span class="sig-paren">(</span><em class="sig-param">route</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/exceptions.html#NonFeasibleRouteException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.exceptions.NonFeasibleRouteException" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#jinete.exceptions.JineteException" title="jinete.exceptions.JineteException"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.exceptions.JineteException</span></code></a></p>
+<p>Represents an exception raised while providing a non feasible route.</p>
 <dl class="method">
 <dt id="jinete.exceptions.NonFeasibleRouteException.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">route</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/exceptions.html#NonFeasibleRouteException.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.exceptions.NonFeasibleRouteException.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>The base exception on <cite>jinete</cite>.</p>
+<dd><p>Construct a new instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>message</strong> – A brief description of the cause.</p>
+<dd class="field-odd"><p><strong>route</strong> (<a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route"><em>Route</em></a>) – The non feasible route.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -251,15 +253,19 @@ set self.__traceback__ to tb and return self.</p>
 
 <dl class="exception">
 <dt id="jinete.exceptions.PreviousStopNotInRouteException">
-<em class="property">exception </em><code class="sig-prename descclassname">jinete.exceptions.</code><code class="sig-name descname">PreviousStopNotInRouteException</code><span class="sig-paren">(</span><em class="sig-param">stop</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/exceptions.html#PreviousStopNotInRouteException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.exceptions.PreviousStopNotInRouteException" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="sig-prename descclassname">jinete.exceptions.</code><code class="sig-name descname">PreviousStopNotInRouteException</code><span class="sig-paren">(</span><em class="sig-param">route</em>, <em class="sig-param">stop</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/exceptions.html#PreviousStopNotInRouteException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.exceptions.PreviousStopNotInRouteException" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#jinete.exceptions.JineteException" title="jinete.exceptions.JineteException"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.exceptions.JineteException</span></code></a></p>
+<p>Represents an exception raised while the previous stop is not present in the target route.</p>
 <dl class="method">
 <dt id="jinete.exceptions.PreviousStopNotInRouteException.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">stop</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/exceptions.html#PreviousStopNotInRouteException.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.exceptions.PreviousStopNotInRouteException.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>The base exception on <cite>jinete</cite>.</p>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">route</em>, <em class="sig-param">stop</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/exceptions.html#PreviousStopNotInRouteException.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.exceptions.PreviousStopNotInRouteException.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a new instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>message</strong> – A brief description of the cause.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>route</strong> (<a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route"><em>Route</em></a>) – The route without the previous stop.</p></li>
+<li><p><strong>stop</strong> (<a class="reference internal" href="jinete.models.stops.html#jinete.models.stops.Stop" title="jinete.models.stops.Stop"><em>Stop</em></a>) – The stop that contains the non present previous stop.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

@@ -87,8 +87,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../module_hierarchy.html">Module Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data LinearModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../directory_hierarchy.html">Directory Hierarchy</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="api_reference.html">API Reference</a></li>
 </ul>
@@ -165,52 +164,23 @@
             
   <div class="section" id="module-jinete.storers.formatters.columnar">
 <span id="columnar-module"></span><h1>columnar module<a class="headerlink" href="#module-jinete.storers.formatters.columnar" title="Permalink to this headline">¶</a></h1>
+<p>The set of definitions to format the artifact to be stored following a columnar style.</p>
 <dl class="class">
 <dt id="jinete.storers.formatters.columnar.ColumnarStorerFormatter">
 <em class="property">class </em><code class="sig-prename descclassname">jinete.storers.formatters.columnar.</code><code class="sig-name descname">ColumnarStorerFormatter</code><span class="sig-paren">(</span><em class="sig-param">tab_character='  '</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/storers/formatters/columnar.html#ColumnarStorerFormatter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.storers.formatters.columnar.ColumnarStorerFormatter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="jinete.storers.formatters.abc.html#jinete.storers.formatters.abc.StorerFormatter" title="jinete.storers.formatters.abc.StorerFormatter"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.storers.formatters.abc.StorerFormatter</span></code></a></p>
+<p>Format a solution as a readable string following a columnar style.</p>
 <dl class="method">
 <dt id="jinete.storers.formatters.columnar.ColumnarStorerFormatter.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">tab_character='  '</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/storers/formatters/columnar.html#ColumnarStorerFormatter.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.storers.formatters.columnar.ColumnarStorerFormatter.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.formatters.columnar.ColumnarStorerFormatter.computation_time">
-<em class="property">property </em><code class="sig-name descname">computation_time</code><a class="headerlink" href="#jinete.storers.formatters.columnar.ColumnarStorerFormatter.computation_time" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.formatters.columnar.ColumnarStorerFormatter.coverage_rate">
-<em class="property">property </em><code class="sig-name descname">coverage_rate</code><a class="headerlink" href="#jinete.storers.formatters.columnar.ColumnarStorerFormatter.coverage_rate" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.formatters.columnar.ColumnarStorerFormatter.direction">
-<em class="property">property </em><code class="sig-name descname">direction</code><a class="headerlink" href="#jinete.storers.formatters.columnar.ColumnarStorerFormatter.direction" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="jinete.models.constants.html#jinete.models.constants.OptimizationDirection" title="jinete.models.constants.OptimizationDirection">OptimizationDirection</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.formatters.columnar.ColumnarStorerFormatter.feasible">
-<em class="property">property </em><code class="sig-name descname">feasible</code><a class="headerlink" href="#jinete.storers.formatters.columnar.ColumnarStorerFormatter.feasible" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
+<dd><p>Construct a new instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tab_character</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The tabulation character to use during the formatting process.</p></li>
+<li><p><strong>args</strong> – Additional positional parameters.</p></li>
+<li><p><strong>kwargs</strong> – Additional named parameters.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -218,99 +188,10 @@
 <dl class="method">
 <dt id="jinete.storers.formatters.columnar.ColumnarStorerFormatter.format">
 <code class="sig-name descname">format</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/storers/formatters/columnar.html#ColumnarStorerFormatter.format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.storers.formatters.columnar.ColumnarStorerFormatter.format" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Perform a format process.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.formatters.columnar.ColumnarStorerFormatter.job">
-<em class="property">property </em><code class="sig-name descname">job</code><a class="headerlink" href="#jinete.storers.formatters.columnar.ColumnarStorerFormatter.job" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="jinete.models.jobs.html#jinete.models.jobs.Job" title="jinete.models.jobs.Job">Job</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.formatters.columnar.ColumnarStorerFormatter.objective">
-<em class="property">property </em><code class="sig-name descname">objective</code><a class="headerlink" href="#jinete.storers.formatters.columnar.ColumnarStorerFormatter.objective" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="jinete.models.objectives.html#jinete.models.objectives.Objective" title="jinete.models.objectives.Objective">Objective</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.formatters.columnar.ColumnarStorerFormatter.optimization_value">
-<em class="property">property </em><code class="sig-name descname">optimization_value</code><a class="headerlink" href="#jinete.storers.formatters.columnar.ColumnarStorerFormatter.optimization_value" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Tuple[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a>, ..]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.formatters.columnar.ColumnarStorerFormatter.planned_trip_to_str">
-<code class="sig-name descname">planned_trip_to_str</code><span class="sig-paren">(</span><em class="sig-param">planned_trip</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/storers/formatters/columnar.html#ColumnarStorerFormatter.planned_trip_to_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.storers.formatters.columnar.ColumnarStorerFormatter.planned_trip_to_str" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.formatters.columnar.ColumnarStorerFormatter.planning">
-<em class="property">property </em><code class="sig-name descname">planning</code><a class="headerlink" href="#jinete.storers.formatters.columnar.ColumnarStorerFormatter.planning" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="jinete.models.plannings.html#jinete.models.plannings.Planning" title="jinete.models.plannings.Planning">Planning</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.formatters.columnar.ColumnarStorerFormatter.route_to_str">
-<code class="sig-name descname">route_to_str</code><span class="sig-paren">(</span><em class="sig-param">route</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/storers/formatters/columnar.html#ColumnarStorerFormatter.route_to_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.storers.formatters.columnar.ColumnarStorerFormatter.route_to_str" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">typing.List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.formatters.columnar.ColumnarStorerFormatter.routes">
-<em class="property">property </em><code class="sig-name descname">routes</code><a class="headerlink" href="#jinete.storers.formatters.columnar.ColumnarStorerFormatter.routes" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Set[<a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.formatters.columnar.ColumnarStorerFormatter.stop_to_str">
-<code class="sig-name descname">stop_to_str</code><span class="sig-paren">(</span><em class="sig-param">stop</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/storers/formatters/columnar.html#ColumnarStorerFormatter.stop_to_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.storers.formatters.columnar.ColumnarStorerFormatter.stop_to_str" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.formatters.columnar.ColumnarStorerFormatter.vehicle_to_str">
-<em class="property">static </em><code class="sig-name descname">vehicle_to_str</code><span class="sig-paren">(</span><em class="sig-param">vehicle</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/storers/formatters/columnar.html#ColumnarStorerFormatter.vehicle_to_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.storers.formatters.columnar.ColumnarStorerFormatter.vehicle_to_str" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">typing.List</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</p>
 </dd>
 </dl>
 </dd></dl>

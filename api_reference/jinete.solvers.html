@@ -86,8 +86,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../module_hierarchy.html">Module Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data LinearModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../directory_hierarchy.html">Directory Hierarchy</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="api_reference.html">API Reference</a></li>
 </ul>
@@ -160,23 +159,49 @@
             
   <div class="section" id="module-jinete.solvers">
 <span id="solvers-module"></span><h1>solvers module<a class="headerlink" href="#module-jinete.solvers" title="Permalink to this headline">¶</a></h1>
-<p>A set of abstractions to ease the launching process on external systems.</p>
+<p>A set of implementations to ease the launching process on external systems.</p>
 <dl class="class">
 <dt id="jinete.solvers.Solver">
 <em class="property">class </em><code class="sig-prename descclassname">jinete.solvers.</code><code class="sig-name descname">Solver</code><span class="sig-paren">(</span><em class="sig-param">algorithm=&lt;class 'jinete.algorithms.heuristics.insertion.algorithm.InsertionAlgorithm'&gt;</em>, <em class="sig-param">algorithm_kwargs=None</em>, <em class="sig-param">loader=&lt;class 'jinete.loaders.file.FileLoader'&gt;</em>, <em class="sig-param">loader_kwargs=None</em>, <em class="sig-param">storer=&lt;class 'jinete.storers.prompt.PromptStorer'&gt;</em>, <em class="sig-param">storer_kwargs=None</em>, <em class="sig-param">dispatcher=&lt;class 'jinete.dispatchers.static.StaticDispatcher'&gt;</em>, <em class="sig-param">dispatcher_kwargs=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/solvers.html#Solver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.solvers.Solver" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Solve a problem instance in an easy way.</p>
+<p>This class acts as the main library’s interface of use, allowing to configure all the needed classes and
+entities to generate solutions for a problem instance and providing the requested solution.</p>
 <dl class="method">
 <dt id="jinete.solvers.Solver.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">algorithm=&lt;class 'jinete.algorithms.heuristics.insertion.algorithm.InsertionAlgorithm'&gt;</em>, <em class="sig-param">algorithm_kwargs=None</em>, <em class="sig-param">loader=&lt;class 'jinete.loaders.file.FileLoader'&gt;</em>, <em class="sig-param">loader_kwargs=None</em>, <em class="sig-param">storer=&lt;class 'jinete.storers.prompt.PromptStorer'&gt;</em>, <em class="sig-param">storer_kwargs=None</em>, <em class="sig-param">dispatcher=&lt;class 'jinete.dispatchers.static.StaticDispatcher'&gt;</em>, <em class="sig-param">dispatcher_kwargs=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/solvers.html#Solver.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.solvers.Solver.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+<dd><p>Construct a new instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>algorithm</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>Type</em><em>[</em><a class="reference internal" href="jinete.algorithms.abc.html#jinete.algorithms.abc.Algorithm" title="jinete.algorithms.abc.Algorithm"><em>Algorithm</em></a><em>]</em><em>]</em>) – The solving method to solve the problem instance.</p></li>
+<li><p><strong>algorithm_kwargs</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – A dict-like object containing the named parameters for the <code class="docutils literal notranslate"><span class="pre">algorithm</span></code>’s class
+constructor.</p></li>
+<li><p><strong>loader</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>Type</em><em>[</em><a class="reference internal" href="jinete.loaders.abc.html#jinete.loaders.abc.Loader" title="jinete.loaders.abc.Loader"><em>Loader</em></a><em>]</em><em>]</em>) – The class that stores the optimized solution in a proper way.</p></li>
+<li><p><strong>loader_kwargs</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – A dict-like object containing the named parameters for the <code class="docutils literal notranslate"><span class="pre">loaders</span></code>’s class
+constructor.</p></li>
+<li><p><strong>storer</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>Type</em><em>[</em><a class="reference internal" href="jinete.storers.abc.html#jinete.storers.abc.Storer" title="jinete.storers.abc.Storer"><em>Storer</em></a><em>]</em><em>]</em>) – The class that stores the optimized solution in a proper way.</p></li>
+<li><p><strong>storer_kwargs</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – A dict-like object containing the named parameters for the <code class="docutils literal notranslate"><span class="pre">storer</span></code>’s class
+constructor.</p></li>
+<li><p><strong>dispatcher</strong> (<em>Union</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>Type</em><em>[</em><a class="reference internal" href="jinete.dispatchers.abc.html#jinete.dispatchers.abc.Dispatcher" title="jinete.dispatchers.abc.Dispatcher"><em>Dispatcher</em></a><em>]</em><em>]</em>) – The class that orchestrates the optimization process, linking the loaded instance to the
+algorithm, and the obtained solution to the storer.</p></li>
+<li><p><strong>dispatcher_kwargs</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – A dict-like object containing the named parameters for the <code class="docutils literal notranslate"><span class="pre">dispatcher</span></code>’s class
+constructor.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="jinete.solvers.Solver.solve">
 <code class="sig-name descname">solve</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/solvers.html#Solver.solve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.solvers.Solver.solve" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Compute an optimization.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="jinete.models.results.html#jinete.models.results.Result" title="jinete.models.results.Result">Result</a></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The execution’s result, containing a optimized solution for the given problem’s instance.</p>
 </dd>
 </dl>
 </dd></dl>

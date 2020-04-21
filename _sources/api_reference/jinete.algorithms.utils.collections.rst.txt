@@ -1,0 +1,7 @@
+collections module
+==================
+
+.. automodule:: jinete.algorithms.utils.collections
+   :members:
+   :undoc-members:
+   :show-inheritance:

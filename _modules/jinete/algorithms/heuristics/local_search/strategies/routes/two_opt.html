@@ -85,8 +85,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../../readme.html">Readme</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../../getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../../../data_model.html">Data Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../../../module_hierarchy.html">Module Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../data_model.html">Data LinearModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../../directory_hierarchy.html">Directory Hierarchy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../../../api_reference/api_reference.html">API Reference</a></li>
 </ul>
@@ -155,30 +154,28 @@
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span><span class="p">,</span> <span class="n">chain</span>
 
-<span class="kn">from</span> <span class="nn">..abc</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">LocalSearchStrategy</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..abc</span> <span class="kn">import</span> <span class="n">LocalSearchStrategy</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="TwoOPTLocalSearchStrategy"><a class="viewcode-back" href="../../../../../../../api_reference/jinete.algorithms.heuristics.local_search.strategies.routes.two_opt.html#jinete.algorithms.heuristics.local_search.strategies.routes.two_opt.TwoOPTLocalSearchStrategy">[docs]</a><span class="k">class</span> <span class="nc">TwoOPTLocalSearchStrategy</span><span class="p">(</span><span class="n">LocalSearchStrategy</span><span class="p">):</span>
-
     <span class="k">def</span> <span class="nf">_improve</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Starting to improve &quot;Result&quot; with &quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">&quot;...&#39;</span><span class="p">)</span>
 
         <span class="n">overwritten_routes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">route</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">routes</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">route</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_routes</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Improving route performed with vehicle identified by &quot;</span><span class="si">{</span><span class="n">route</span><span class="o">.</span><span class="n">vehicle_identifier</span><span class="si">}</span><span class="s1">&quot;...&#39;</span><span class="p">)</span>
-            <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">objective</span><span class="o">.</span><span class="n">optimization_function</span><span class="p">(</span><span class="n">route</span><span class="p">)</span>
+            <span class="n">cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objective</span><span class="o">.</span><span class="n">optimization_function</span><span class="p">(</span><span class="n">route</span><span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">route</span><span class="o">.</span><span class="n">stops</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">route</span><span class="o">.</span><span class="n">stops</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">2</span><span class="p">):</span>
+                <span class="n">j</span> <span class="o">=</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span>
                 <span class="n">condition</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span>
                     <span class="nb">any</span><span class="p">(</span>
-                        <span class="n">delivery</span> <span class="ow">in</span> <span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">pickup_planned_trips</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">route</span><span class="o">.</span><span class="n">stops</span><span class="p">[</span><span class="n">i</span><span class="p">:(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)])</span>
+                        <span class="n">delivery</span> <span class="ow">in</span> <span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">pickup_planned_trips</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">route</span><span class="o">.</span><span class="n">stops</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">j</span><span class="p">])</span>
                         <span class="k">for</span> <span class="n">delivery</span> <span class="ow">in</span> <span class="n">a</span><span class="o">.</span><span class="n">delivery_planned_trips</span>
                     <span class="p">)</span>
-                    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">route</span><span class="o">.</span><span class="n">stops</span><span class="p">[</span><span class="n">i</span><span class="p">:(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+                    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">route</span><span class="o">.</span><span class="n">stops</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">j</span><span class="p">]</span>
                 <span class="p">)</span>
                 <span class="k">if</span> <span class="n">condition</span><span class="p">:</span>
                     <span class="k">continue</span>
@@ -187,18 +184,19 @@
 
                 <span class="n">old_stops</span> <span class="o">=</span> <span class="p">[</span><span class="n">new_route</span><span class="o">.</span><span class="n">remove_stop_at</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_route</span><span class="o">.</span><span class="n">stops</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
 
-                <span class="k">for</span> <span class="n">stop</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">old_stops</span><span class="p">[:(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">i</span><span class="p">]):</span>
+                <span class="n">threshold</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">i</span>
+                <span class="k">for</span> <span class="n">stop</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">old_stops</span><span class="p">[:</span><span class="n">threshold</span><span class="p">]):</span>
                     <span class="n">stop</span><span class="o">.</span><span class="n">previous</span> <span class="o">=</span> <span class="n">new_route</span><span class="o">.</span><span class="n">current_stop</span>
                     <span class="n">new_route</span><span class="o">.</span><span class="n">insert_stop</span><span class="p">(</span><span class="n">stop</span><span class="p">)</span>
 
-                <span class="k">for</span> <span class="n">stop</span> <span class="ow">in</span> <span class="n">old_stops</span><span class="p">[(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">i</span><span class="p">:]:</span>
+                <span class="k">for</span> <span class="n">stop</span> <span class="ow">in</span> <span class="n">old_stops</span><span class="p">[</span><span class="n">threshold</span><span class="p">:]:</span>
                     <span class="n">stop</span><span class="o">.</span><span class="n">previous</span> <span class="o">=</span> <span class="n">new_route</span><span class="o">.</span><span class="n">current_stop</span>
                     <span class="n">new_route</span><span class="o">.</span><span class="n">insert_stop</span><span class="p">(</span><span class="n">stop</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">new_route</span><span class="o">.</span><span class="n">feasible</span><span class="p">:</span>
                     <span class="k">continue</span>
 
-                <span class="n">new_cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">objective</span><span class="o">.</span><span class="n">optimization_function</span><span class="p">(</span><span class="n">new_route</span><span class="p">)</span>
+                <span class="n">new_cost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_objective</span><span class="o">.</span><span class="n">optimization_function</span><span class="p">(</span><span class="n">new_route</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">new_cost</span> <span class="o">&gt;</span> <span class="n">cost</span><span class="p">:</span>
                     <span class="k">continue</span>
 

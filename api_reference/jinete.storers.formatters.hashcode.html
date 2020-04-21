@@ -87,8 +87,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../module_hierarchy.html">Module Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data LinearModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../directory_hierarchy.html">Directory Hierarchy</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="api_reference.html">API Reference</a></li>
 </ul>
@@ -165,52 +164,23 @@
             
   <div class="section" id="module-jinete.storers.formatters.hashcode">
 <span id="hashcode-module"></span><h1>hashcode module<a class="headerlink" href="#module-jinete.storers.formatters.hashcode" title="Permalink to this headline">¶</a></h1>
+<p>The set of definitions to format the artifact to be stored following the HashCode style.</p>
 <dl class="class">
 <dt id="jinete.storers.formatters.hashcode.HashCodeStorerFormatter">
 <em class="property">class </em><code class="sig-prename descclassname">jinete.storers.formatters.hashcode.</code><code class="sig-name descname">HashCodeStorerFormatter</code><span class="sig-paren">(</span><em class="sig-param">remove_empty_routes=True</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/storers/formatters/hashcode.html#HashCodeStorerFormatter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.storers.formatters.hashcode.HashCodeStorerFormatter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="jinete.storers.formatters.abc.html#jinete.storers.formatters.abc.StorerFormatter" title="jinete.storers.formatters.abc.StorerFormatter"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.storers.formatters.abc.StorerFormatter</span></code></a></p>
+<p>Format a solution as a readable string following the HashCode style.</p>
 <dl class="method">
 <dt id="jinete.storers.formatters.hashcode.HashCodeStorerFormatter.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">remove_empty_routes=True</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/storers/formatters/hashcode.html#HashCodeStorerFormatter.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.storers.formatters.hashcode.HashCodeStorerFormatter.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.formatters.hashcode.HashCodeStorerFormatter.computation_time">
-<em class="property">property </em><code class="sig-name descname">computation_time</code><a class="headerlink" href="#jinete.storers.formatters.hashcode.HashCodeStorerFormatter.computation_time" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.formatters.hashcode.HashCodeStorerFormatter.coverage_rate">
-<em class="property">property </em><code class="sig-name descname">coverage_rate</code><a class="headerlink" href="#jinete.storers.formatters.hashcode.HashCodeStorerFormatter.coverage_rate" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.formatters.hashcode.HashCodeStorerFormatter.direction">
-<em class="property">property </em><code class="sig-name descname">direction</code><a class="headerlink" href="#jinete.storers.formatters.hashcode.HashCodeStorerFormatter.direction" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="jinete.models.constants.html#jinete.models.constants.OptimizationDirection" title="jinete.models.constants.OptimizationDirection">OptimizationDirection</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.formatters.hashcode.HashCodeStorerFormatter.feasible">
-<em class="property">property </em><code class="sig-name descname">feasible</code><a class="headerlink" href="#jinete.storers.formatters.hashcode.HashCodeStorerFormatter.feasible" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
+<dd><p>Construct a new instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>remove_empty_routes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Flag to manage if empty routes should be removed.</p></li>
+<li><p><strong>args</strong> – Additional positional parameters.</p></li>
+<li><p><strong>kwargs</strong> – Additional named parameters.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -218,69 +188,10 @@
 <dl class="method">
 <dt id="jinete.storers.formatters.hashcode.HashCodeStorerFormatter.format">
 <code class="sig-name descname">format</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/storers/formatters/hashcode.html#HashCodeStorerFormatter.format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.storers.formatters.hashcode.HashCodeStorerFormatter.format" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Perform a format process.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.formatters.hashcode.HashCodeStorerFormatter.job">
-<em class="property">property </em><code class="sig-name descname">job</code><a class="headerlink" href="#jinete.storers.formatters.hashcode.HashCodeStorerFormatter.job" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="jinete.models.jobs.html#jinete.models.jobs.Job" title="jinete.models.jobs.Job">Job</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.formatters.hashcode.HashCodeStorerFormatter.objective">
-<em class="property">property </em><code class="sig-name descname">objective</code><a class="headerlink" href="#jinete.storers.formatters.hashcode.HashCodeStorerFormatter.objective" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="jinete.models.objectives.html#jinete.models.objectives.Objective" title="jinete.models.objectives.Objective">Objective</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.formatters.hashcode.HashCodeStorerFormatter.optimization_value">
-<em class="property">property </em><code class="sig-name descname">optimization_value</code><a class="headerlink" href="#jinete.storers.formatters.hashcode.HashCodeStorerFormatter.optimization_value" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Tuple[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a>, ..]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.formatters.hashcode.HashCodeStorerFormatter.planning">
-<em class="property">property </em><code class="sig-name descname">planning</code><a class="headerlink" href="#jinete.storers.formatters.hashcode.HashCodeStorerFormatter.planning" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="jinete.models.plannings.html#jinete.models.plannings.Planning" title="jinete.models.plannings.Planning">Planning</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.formatters.hashcode.HashCodeStorerFormatter.route_to_str">
-<em class="property">static </em><code class="sig-name descname">route_to_str</code><span class="sig-paren">(</span><em class="sig-param">route</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/storers/formatters/hashcode.html#HashCodeStorerFormatter.route_to_str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.storers.formatters.hashcode.HashCodeStorerFormatter.route_to_str" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.formatters.hashcode.HashCodeStorerFormatter.routes">
-<em class="property">property </em><code class="sig-name descname">routes</code><a class="headerlink" href="#jinete.storers.formatters.hashcode.HashCodeStorerFormatter.routes" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Set[<a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a>]</p>
 </dd>
 </dl>
 </dd></dl>

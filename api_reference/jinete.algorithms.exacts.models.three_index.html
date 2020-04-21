@@ -87,8 +87,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../module_hierarchy.html">Module Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data LinearModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../directory_hierarchy.html">Directory Hierarchy</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="api_reference.html">API Reference</a></li>
 </ul>
@@ -167,210 +166,39 @@
             
   <div class="section" id="module-jinete.algorithms.exacts.models.three_index">
 <span id="three-index-module"></span><h1>three_index module<a class="headerlink" href="#module-jinete.algorithms.exacts.models.three_index" title="Permalink to this headline">¶</a></h1>
+<p>Three index linear model class definitions.</p>
 <dl class="class">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel">
-<em class="property">class </em><code class="sig-prename descclassname">jinete.algorithms.exacts.models.three_index.</code><code class="sig-name descname">ThreeIndexModel</code><span class="sig-paren">(</span><em class="sig-param">solver=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/exacts/models/three_index.html#ThreeIndexModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="jinete.algorithms.exacts.models.abc.html#jinete.algorithms.exacts.models.abc.Model" title="jinete.algorithms.exacts.models.abc.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.algorithms.exacts.models.abc.Model</span></code></a></p>
+<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexLinearModel">
+<em class="property">class </em><code class="sig-prename descclassname">jinete.algorithms.exacts.models.three_index.</code><code class="sig-name descname">ThreeIndexLinearModel</code><span class="sig-paren">(</span><em class="sig-param">solver=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/exacts/models/three_index.html#ThreeIndexLinearModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexLinearModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="jinete.algorithms.exacts.models.abc.html#jinete.algorithms.exacts.models.abc.LinearModel" title="jinete.algorithms.exacts.models.abc.LinearModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.algorithms.exacts.models.abc.LinearModel</span></code></a></p>
+<p>Three index model class implementation.</p>
+<p>This implementation is based on the Cordeau-Laporte paper about the dial-a-ride problem.</p>
 <dl class="method">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">solver=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/exacts/models/three_index.html#ThreeIndexModel.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.capacity_by_position_idx">
-<code class="sig-name descname">capacity_by_position_idx</code><span class="sig-paren">(</span><em class="sig-param">idx</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/exacts/models/three_index.html#ThreeIndexModel.capacity_by_position_idx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.capacity_by_position_idx" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.connectivity_constraints">
-<code class="sig-name descname">connectivity_constraints</code><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.connectivity_constraints" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.constraints">
-<code class="sig-name descname">constraints</code><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.constraints" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.costs">
-<code class="sig-name descname">costs</code><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.costs" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.feasibility_constraints">
-<code class="sig-name descname">feasibility_constraints</code><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.feasibility_constraints" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.idx_by_position">
-<code class="sig-name descname">idx_by_position</code><span class="sig-paren">(</span><em class="sig-param">position</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/exacts/models/three_index.html#ThreeIndexModel.idx_by_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.idx_by_position" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.load_time_by_position_idx">
-<code class="sig-name descname">load_time_by_position_idx</code><span class="sig-paren">(</span><em class="sig-param">idx</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/exacts/models/three_index.html#ThreeIndexModel.load_time_by_position_idx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.load_time_by_position_idx" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></p>
+<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexLinearModel.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">solver=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/exacts/models/three_index.html#ThreeIndexLinearModel.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexLinearModel.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a new object instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>solver</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.8)"><code class="xref py py-data docutils literal notranslate"><span class="pre">typing.Optional</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">pulp.apis.core.LpSolver</span></code>]) – The solver to be used during the optimization.</p></li>
+<li><p><strong>args</strong> – Additional positional arguments.</p></li>
+<li><p><strong>kwargs</strong> – Additional named arguments.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.n">
-<em class="property">property </em><code class="sig-name descname">n</code><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.n" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.nodes_indexer">
-<em class="property">property </em><code class="sig-name descname">nodes_indexer</code><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.nodes_indexer" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Iterable[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.objective">
-<code class="sig-name descname">objective</code><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.objective" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.pickups_indexer">
-<em class="property">property </em><code class="sig-name descname">pickups_indexer</code><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.pickups_indexer" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Iterable[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.positions">
-<code class="sig-name descname">positions</code><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.positions" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.positions_indexer">
-<em class="property">property </em><code class="sig-name descname">positions_indexer</code><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.positions_indexer" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Iterable[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.print_solution">
-<code class="sig-name descname">print_solution</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/exacts/models/three_index.html#ThreeIndexModel.print_solution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.print_solution" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.problem">
-<code class="sig-name descname">problem</code><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.problem" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.routes_indexer">
-<em class="property">property </em><code class="sig-name descname">routes_indexer</code><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.routes_indexer" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Iterable[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.solve">
-<code class="sig-name descname">solve</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/exacts/models/three_index.html#ThreeIndexModel.solve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.solve" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexLinearModel.solve">
+<code class="sig-name descname">solve</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/exacts/models/three_index.html#ThreeIndexLinearModel.solve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexLinearModel.solve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a optimization based on the linear model.</p>
+<p>:return A set of optimized routes.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>Set[<a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a>]</p>
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="attribute">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.time_constraints">
-<code class="sig-name descname">time_constraints</code><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.time_constraints" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.time_window_by_position_idx">
-<code class="sig-name descname">time_window_by_position_idx</code><span class="sig-paren">(</span><em class="sig-param">idx</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/exacts/models/three_index.html#ThreeIndexModel.time_window_by_position_idx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.time_window_by_position_idx" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Tuple[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.timeout_by_position_idx">
-<code class="sig-name descname">timeout_by_position_idx</code><span class="sig-paren">(</span><em class="sig-param">idx</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/exacts/models/three_index.html#ThreeIndexModel.timeout_by_position_idx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.timeout_by_position_idx" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.trip_by_position_idx">
-<code class="sig-name descname">trip_by_position_idx</code><span class="sig-paren">(</span><em class="sig-param">idx</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/exacts/models/three_index.html#ThreeIndexModel.trip_by_position_idx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.trip_by_position_idx" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Optional[<a class="reference internal" href="jinete.models.trips.html#jinete.models.trips.Trip" title="jinete.models.trips.Trip">Trip</a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.trips">
-<code class="sig-name descname">trips</code><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.trips" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.u">
-<code class="sig-name descname">u</code><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.u" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.uniqueness_constraints">
-<code class="sig-name descname">uniqueness_constraints</code><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.uniqueness_constraints" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.validate">
-<code class="sig-name descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/exacts/models/three_index.html#ThreeIndexModel.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.validate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.vehicles">
-<code class="sig-name descname">vehicles</code><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.vehicles" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.w">
-<code class="sig-name descname">w</code><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.w" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="jinete.algorithms.exacts.models.three_index.ThreeIndexModel.x">
-<code class="sig-name descname">x</code><a class="headerlink" href="#jinete.algorithms.exacts.models.three_index.ThreeIndexModel.x" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 

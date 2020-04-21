@@ -85,8 +85,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../readme.html">Readme</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../data_model.html">Data Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../module_hierarchy.html">Module Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../data_model.html">Data LinearModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../directory_hierarchy.html">Directory Hierarchy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api_reference/api_reference.html">API Reference</a></li>
 </ul>
@@ -156,9 +155,7 @@
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
 
-<span class="kn">from</span> <span class="nn">.abc</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">Model</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.abc</span> <span class="kn">import</span> <span class="n">Model</span>
 <span class="kn">from</span> <span class="nn">.objectives</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">Objective</span><span class="p">,</span>
     <span class="n">DialARideObjective</span><span class="p">,</span>
@@ -173,9 +170,7 @@
         <span class="n">Type</span><span class="p">,</span>
         <span class="n">Optional</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="kn">from</span> <span class="nn">.trips</span> <span class="kn">import</span> <span class="p">(</span>
-        <span class="n">Trip</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">.trips</span> <span class="kn">import</span> <span class="n">Trip</span>
 
 
 <div class="viewcode-block" id="Job"><a class="viewcode-back" href="../../../api_reference/jinete.models.jobs.html#jinete.models.jobs.Job">[docs]</a><span class="k">class</span> <span class="nc">Job</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
@@ -212,8 +207,8 @@
 
     <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
         <span class="k">yield from</span> <span class="p">(</span>
-            <span class="p">(</span><span class="s1">&#39;trip_identifiers&#39;</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">trip</span><span class="o">.</span><span class="n">identifier</span> <span class="k">for</span> <span class="n">trip</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trips</span><span class="p">)),</span>
-            <span class="p">(</span><span class="s1">&#39;objective&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">objective</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;trip_identifiers&quot;</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">trip</span><span class="o">.</span><span class="n">identifier</span> <span class="k">for</span> <span class="n">trip</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trips</span><span class="p">)),</span>
+            <span class="p">(</span><span class="s2">&quot;objective&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">objective</span><span class="p">),</span>
         <span class="p">)</span></div>
 </pre></div>
 

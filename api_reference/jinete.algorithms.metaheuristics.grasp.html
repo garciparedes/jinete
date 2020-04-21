@@ -87,8 +87,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../module_hierarchy.html">Module Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data LinearModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../directory_hierarchy.html">Directory Hierarchy</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="api_reference.html">API Reference</a></li>
 </ul>
@@ -165,19 +164,26 @@
             
   <div class="section" id="module-jinete.algorithms.metaheuristics.grasp">
 <span id="grasp-module"></span><h1>grasp module<a class="headerlink" href="#module-jinete.algorithms.metaheuristics.grasp" title="Permalink to this headline">¶</a></h1>
+<p>GRASP-based algorithm class definitions.</p>
 <dl class="class">
 <dt id="jinete.algorithms.metaheuristics.grasp.GraspAlgorithm">
 <em class="property">class </em><code class="sig-prename descclassname">jinete.algorithms.metaheuristics.grasp.</code><code class="sig-name descname">GraspAlgorithm</code><span class="sig-paren">(</span><em class="sig-param">no_improvement_threshold=1</em>, <em class="sig-param">first_solution_kwargs=None</em>, <em class="sig-param">local_search_kwargs=None</em>, <em class="sig-param">seed=56</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/metaheuristics/grasp.html#GraspAlgorithm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.metaheuristics.grasp.GraspAlgorithm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="jinete.algorithms.abc.html#jinete.algorithms.abc.Algorithm" title="jinete.algorithms.abc.Algorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.algorithms.abc.Algorithm</span></code></a></p>
+<p>GRASP algorithm implementation.</p>
+<p>This implementation is based on the Greedy Randomized Adaptive Search Procedure meta-heuristic. For more information
+about how it works, you can visit the following link:
+<a class="reference external" href="https://en.wikipedia.org/wiki/Greedy_randomized_adaptive_search_procedure">https://en.wikipedia.org/wiki/Greedy_randomized_adaptive_search_procedure</a></p>
 <dl class="method">
 <dt id="jinete.algorithms.metaheuristics.grasp.GraspAlgorithm.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">no_improvement_threshold=1</em>, <em class="sig-param">first_solution_kwargs=None</em>, <em class="sig-param">local_search_kwargs=None</em>, <em class="sig-param">seed=56</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/metaheuristics/grasp.html#GraspAlgorithm.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.metaheuristics.grasp.GraspAlgorithm.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>The constructor of the class.</p>
+<dd><p>Construct a new instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fleet</strong> – The <cite>Fleet</cite> of available vehicles to use on the solution.</p></li>
-<li><p><strong>job</strong> – The <cite>Job</cite> composed of the requested <cite>Trip</cite> objects to be satisfied by the solution.</p></li>
+<li><p><strong>no_improvement_threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Manages the number of allowed iterations without any improvement.</p></li>
+<li><p><strong>first_solution_kwargs</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – Named arguments for the first solution algorithm.</p></li>
+<li><p><strong>local_search_kwargs</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – Named arguments for the local search algorithm.</p></li>
+<li><p><strong>seed</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – A seed to manage randomness.</p></li>
 <li><p><strong>args</strong> – Additional positional arguments.</p></li>
 <li><p><strong>kwargs</strong> – Additional named arguments.</p></li>
 </ul>
@@ -186,44 +192,10 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="jinete.algorithms.metaheuristics.grasp.GraspAlgorithm.build_first_solution_algorithm">
-<code class="sig-name descname">build_first_solution_algorithm</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/metaheuristics/grasp.html#GraspAlgorithm.build_first_solution_algorithm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.metaheuristics.grasp.GraspAlgorithm.build_first_solution_algorithm" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="jinete.algorithms.abc.html#jinete.algorithms.abc.Algorithm" title="jinete.algorithms.abc.Algorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.algorithms.abc.Algorithm</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.metaheuristics.grasp.GraspAlgorithm.build_local_search_algorithm">
-<code class="sig-name descname">build_local_search_algorithm</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/metaheuristics/grasp.html#GraspAlgorithm.build_local_search_algorithm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.metaheuristics.grasp.GraspAlgorithm.build_local_search_algorithm" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="jinete.algorithms.abc.html#jinete.algorithms.abc.Algorithm" title="jinete.algorithms.abc.Algorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.algorithms.abc.Algorithm</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.metaheuristics.grasp.GraspAlgorithm.objective">
-<em class="property">property </em><code class="sig-name descname">objective</code><a class="headerlink" href="#jinete.algorithms.metaheuristics.grasp.GraspAlgorithm.objective" title="Permalink to this definition">¶</a></dt>
-<dd><p>The objective function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="jinete.models.objectives.html#jinete.models.objectives.Objective" title="jinete.models.objectives.Objective">Objective</a></p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>An <code class="docutils literal notranslate"><span class="pre">Objective</span></code> object.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
 <dt id="jinete.algorithms.metaheuristics.grasp.GraspAlgorithm.optimize">
 <code class="sig-name descname">optimize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jinete.algorithms.metaheuristics.grasp.GraspAlgorithm.optimize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Performs an optimization over the <code class="docutils literal notranslate"><span class="pre">job</span></code> using the <code class="docutils literal notranslate"><span class="pre">fleet</span></code> and generates a <code class="docutils literal notranslate"><span class="pre">Result</span></code> object containing the
-generated results.</p>
+<dd><p>Perform an optimization over the <code class="docutils literal notranslate"><span class="pre">job</span></code> based on the <code class="docutils literal notranslate"><span class="pre">fleet</span></code> resources.</p>
+<p>Generates a <code class="docutils literal notranslate"><span class="pre">Result</span></code> object containing the generated planning.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="jinete.models.results.html#jinete.models.results.Result" title="jinete.models.results.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.results.Result</span></code></a></p>

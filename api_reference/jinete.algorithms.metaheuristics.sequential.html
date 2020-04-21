@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="abc module" href="jinete.algorithms.abc.html" />
+    <link rel="next" title="utils package" href="jinete.algorithms.utils.html" />
     <link rel="prev" title="iterative module" href="jinete.algorithms.metaheuristics.iterative.html" />
     <link href="../_static/style.css" rel="stylesheet" type="text/css">
 
@@ -87,8 +87,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../module_hierarchy.html">Module Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data LinearModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../directory_hierarchy.html">Directory Hierarchy</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="api_reference.html">API Reference</a></li>
 </ul>
@@ -165,19 +164,24 @@
             
   <div class="section" id="module-jinete.algorithms.metaheuristics.sequential">
 <span id="sequential-module"></span><h1>sequential module<a class="headerlink" href="#module-jinete.algorithms.metaheuristics.sequential" title="Permalink to this headline">¶</a></h1>
+<p>Sequential algorithm class definitions.</p>
 <dl class="class">
 <dt id="jinete.algorithms.metaheuristics.sequential.SequentialAlgorithm">
 <em class="property">class </em><code class="sig-prename descclassname">jinete.algorithms.metaheuristics.sequential.</code><code class="sig-name descname">SequentialAlgorithm</code><span class="sig-paren">(</span><em class="sig-param">initial</em>, <em class="sig-param">algorithms_cls=None</em>, <em class="sig-param">seed=56</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/metaheuristics/sequential.html#SequentialAlgorithm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.metaheuristics.sequential.SequentialAlgorithm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="jinete.algorithms.abc.html#jinete.algorithms.abc.Algorithm" title="jinete.algorithms.abc.Algorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.algorithms.abc.Algorithm</span></code></a></p>
+<p>Sequential algorithm implementation.</p>
+<p>This implementation is based on the application of a sequence of algorithm implementations. It’s mostly used as a
+component of more complicated metaheuristics.</p>
 <dl class="method">
 <dt id="jinete.algorithms.metaheuristics.sequential.SequentialAlgorithm.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">initial</em>, <em class="sig-param">algorithms_cls=None</em>, <em class="sig-param">seed=56</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/metaheuristics/sequential.html#SequentialAlgorithm.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.metaheuristics.sequential.SequentialAlgorithm.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>The constructor of the class.</p>
+<dd><p>Construct a new instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fleet</strong> – The <cite>Fleet</cite> of available vehicles to use on the solution.</p></li>
-<li><p><strong>job</strong> – The <cite>Job</cite> composed of the requested <cite>Trip</cite> objects to be satisfied by the solution.</p></li>
+<li><p><strong>initial</strong> (<a class="reference internal" href="jinete.models.results.html#jinete.models.results.Result" title="jinete.models.results.Result"><em>Result</em></a>) – The initial result from to start the optimization process.</p></li>
+<li><p><strong>algorithms_cls</strong> (<em>Sequence</em><em>[</em><em>Tuple</em><em>[</em><em>Type</em><em>[</em><a class="reference internal" href="jinete.algorithms.abc.html#jinete.algorithms.abc.Algorithm" title="jinete.algorithms.abc.Algorithm"><em>Algorithm</em></a><em>]</em><em>, </em><em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>Any</em><em>]</em><em>]</em><em>]</em>) – The sequence of algorithm classes to be applied.</p></li>
+<li><p><strong>seed</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – A seed to manage randomness.</p></li>
 <li><p><strong>args</strong> – Additional positional arguments.</p></li>
 <li><p><strong>kwargs</strong> – Additional named arguments.</p></li>
 </ul>
@@ -186,24 +190,10 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="jinete.algorithms.metaheuristics.sequential.SequentialAlgorithm.objective">
-<em class="property">property </em><code class="sig-name descname">objective</code><a class="headerlink" href="#jinete.algorithms.metaheuristics.sequential.SequentialAlgorithm.objective" title="Permalink to this definition">¶</a></dt>
-<dd><p>The objective function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="jinete.models.objectives.html#jinete.models.objectives.Objective" title="jinete.models.objectives.Objective">Objective</a></p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>An <code class="docutils literal notranslate"><span class="pre">Objective</span></code> object.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
 <dt id="jinete.algorithms.metaheuristics.sequential.SequentialAlgorithm.optimize">
 <code class="sig-name descname">optimize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jinete.algorithms.metaheuristics.sequential.SequentialAlgorithm.optimize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Performs an optimization over the <code class="docutils literal notranslate"><span class="pre">job</span></code> using the <code class="docutils literal notranslate"><span class="pre">fleet</span></code> and generates a <code class="docutils literal notranslate"><span class="pre">Result</span></code> object containing the
-generated results.</p>
+<dd><p>Perform an optimization over the <code class="docutils literal notranslate"><span class="pre">job</span></code> based on the <code class="docutils literal notranslate"><span class="pre">fleet</span></code> resources.</p>
+<p>Generates a <code class="docutils literal notranslate"><span class="pre">Result</span></code> object containing the generated planning.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="jinete.models.results.html#jinete.models.results.Result" title="jinete.models.results.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.results.Result</span></code></a></p>
@@ -226,7 +216,7 @@ generated results.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="jinete.algorithms.abc.html" class="btn btn-neutral float-right" title="abc module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="jinete.algorithms.utils.html" class="btn btn-neutral float-right" title="utils package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="jinete.algorithms.metaheuristics.iterative.html" class="btn btn-neutral float-left" title="iterative module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

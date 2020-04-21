@@ -87,8 +87,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../module_hierarchy.html">Module Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data LinearModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../directory_hierarchy.html">Directory Hierarchy</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="api_reference.html">API Reference</a></li>
 </ul>
@@ -163,57 +162,56 @@
             
   <div class="section" id="module-jinete.loaders.file">
 <span id="file-module"></span><h1>file module<a class="headerlink" href="#module-jinete.loaders.file" title="Permalink to this headline">¶</a></h1>
+<p>Defines the loader’s implementation to load problem instances from files.</p>
 <dl class="class">
 <dt id="jinete.loaders.file.FileLoader">
 <em class="property">class </em><code class="sig-prename descclassname">jinete.loaders.file.</code><code class="sig-name descname">FileLoader</code><span class="sig-paren">(</span><em class="sig-param">file_path</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/loaders/file.html#FileLoader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.loaders.file.FileLoader" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="jinete.loaders.abc.html#jinete.loaders.abc.Loader" title="jinete.loaders.abc.Loader"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.loaders.abc.Loader</span></code></a></p>
+<p>Load a problem instance from a file and build the needed class hierarchy to generate solutions.</p>
 <dl class="method">
 <dt id="jinete.loaders.file.FileLoader.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">file_path</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/loaders/file.html#FileLoader.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.loaders.file.FileLoader.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+<dd><p>Construct a new instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a>) – The path to load the problem instance.</p></li>
+<li><p><strong>args</strong> – Additional positional arguments.</p></li>
+<li><p><strong>kwargs</strong> – Additional named arguments.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="jinete.loaders.file.FileLoader.data">
-<em class="property">property </em><code class="sig-name descname">data</code><a class="headerlink" href="#jinete.loaders.file.FileLoader.data" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
+<dl class="attribute">
 <dt id="jinete.loaders.file.FileLoader.fleet">
-<em class="property">property </em><code class="sig-name descname">fleet</code><a class="headerlink" href="#jinete.loaders.file.FileLoader.fleet" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="jinete.models.vehicles.html#jinete.models.vehicles.Fleet" title="jinete.models.vehicles.Fleet"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.vehicles.Fleet</span></code></a></p>
+<code class="sig-name descname">fleet</code><a class="headerlink" href="#jinete.loaders.file.FileLoader.fleet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the fleet object for the current on load instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A surface instance from the loaded instance.</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="jinete.loaders.file.FileLoader.formatter">
-<em class="property">property </em><code class="sig-name descname">formatter</code><a class="headerlink" href="#jinete.loaders.file.FileLoader.formatter" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="jinete.loaders.formatters.abc.html#jinete.loaders.formatters.abc.LoaderFormatter" title="jinete.loaders.formatters.abc.LoaderFormatter">LoaderFormatter</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
+<dl class="attribute">
 <dt id="jinete.loaders.file.FileLoader.job">
-<em class="property">property </em><code class="sig-name descname">job</code><a class="headerlink" href="#jinete.loaders.file.FileLoader.job" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="jinete.models.jobs.html#jinete.models.jobs.Job" title="jinete.models.jobs.Job"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.jobs.Job</span></code></a></p>
+<code class="sig-name descname">job</code><a class="headerlink" href="#jinete.loaders.file.FileLoader.job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the job object for the current on load instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A surface instance from the loaded instance.</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="attribute">
 <dt id="jinete.loaders.file.FileLoader.surface">
-<em class="property">property </em><code class="sig-name descname">surface</code><a class="headerlink" href="#jinete.loaders.file.FileLoader.surface" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="jinete.models.surfaces.html#jinete.models.surfaces.Surface" title="jinete.models.surfaces.Surface"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.surfaces.Surface</span></code></a></p>
+<code class="sig-name descname">surface</code><a class="headerlink" href="#jinete.loaders.file.FileLoader.surface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the surface object for the current on load instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A surface instance from the loaded instance.</p>
 </dd>
 </dl>
 </dd></dl>

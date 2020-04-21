@@ -87,8 +87,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../module_hierarchy.html">Module Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data LinearModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../directory_hierarchy.html">Directory Hierarchy</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="api_reference.html">API Reference</a></li>
 </ul>
@@ -167,50 +166,35 @@
             
   <div class="section" id="module-jinete.algorithms.exacts.models.abc">
 <span id="abc-module"></span><h1>abc module<a class="headerlink" href="#module-jinete.algorithms.exacts.models.abc" title="Permalink to this headline">¶</a></h1>
+<p>Abstract class definitions.</p>
 <dl class="class">
-<dt id="jinete.algorithms.exacts.models.abc.Model">
-<em class="property">class </em><code class="sig-prename descclassname">jinete.algorithms.exacts.models.abc.</code><code class="sig-name descname">Model</code><span class="sig-paren">(</span><em class="sig-param">fleet</em>, <em class="sig-param">job</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/exacts/models/abc.html#Model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.exacts.models.abc.Model" title="Permalink to this definition">¶</a></dt>
+<dt id="jinete.algorithms.exacts.models.abc.LinearModel">
+<em class="property">class </em><code class="sig-prename descclassname">jinete.algorithms.exacts.models.abc.</code><code class="sig-name descname">LinearModel</code><span class="sig-paren">(</span><em class="sig-param">fleet</em>, <em class="sig-param">job</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/exacts/models/abc.html#LinearModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.exacts.models.abc.LinearModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
+<p>Linear model class.</p>
+<p>This class contains the linear model representation of the defined problem.</p>
 <dl class="method">
-<dt id="jinete.algorithms.exacts.models.abc.Model.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">fleet</em>, <em class="sig-param">job</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/exacts/models/abc.html#Model.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.exacts.models.abc.Model.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.exacts.models.abc.Model.constraints">
-<em class="property">abstract property </em><code class="sig-name descname">constraints</code><a class="headerlink" href="#jinete.algorithms.exacts.models.abc.Model.constraints" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>List[lp.LpConstraint]</p>
+<dt id="jinete.algorithms.exacts.models.abc.LinearModel.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">fleet</em>, <em class="sig-param">job</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/exacts/models/abc.html#LinearModel.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.exacts.models.abc.LinearModel.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a new instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fleet</strong> (<a class="reference internal" href="jinete.models.vehicles.html#jinete.models.vehicles.Fleet" title="jinete.models.vehicles.Fleet"><em>Fleet</em></a>) – The fleet of vehicles.</p></li>
+<li><p><strong>job</strong> (<a class="reference internal" href="jinete.models.jobs.html#jinete.models.jobs.Job" title="jinete.models.jobs.Job"><em>Job</em></a>) – The set of trips to be completed.</p></li>
+<li><p><strong>args</strong> – Additional positional arguments.</p></li>
+<li><p><strong>kwargs</strong> – Additional named arguments.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
-<dt id="jinete.algorithms.exacts.models.abc.Model.objective">
-<em class="property">abstract property </em><code class="sig-name descname">objective</code><a class="headerlink" href="#jinete.algorithms.exacts.models.abc.Model.objective" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">pulp.pulp.LpConstraintVar</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.exacts.models.abc.Model.problem">
-<em class="property">abstract property </em><code class="sig-name descname">problem</code><a class="headerlink" href="#jinete.algorithms.exacts.models.abc.Model.problem" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">pulp.pulp.LpProblem</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.exacts.models.abc.Model.solve">
-<em class="property">abstract </em><code class="sig-name descname">solve</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/exacts/models/abc.html#Model.solve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.exacts.models.abc.Model.solve" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dt id="jinete.algorithms.exacts.models.abc.LinearModel.solve">
+<em class="property">abstract </em><code class="sig-name descname">solve</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/exacts/models/abc.html#LinearModel.solve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.exacts.models.abc.LinearModel.solve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a optimization based on the linear model.</p>
+<p>:return A set of optimized routes.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>Set[<a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a>]</p>
 </dd>

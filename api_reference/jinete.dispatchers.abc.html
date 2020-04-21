@@ -87,8 +87,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../module_hierarchy.html">Module Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data LinearModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../directory_hierarchy.html">Directory Hierarchy</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="api_reference.html">API Reference</a></li>
 </ul>
@@ -163,20 +162,40 @@
             
   <div class="section" id="module-jinete.dispatchers.abc">
 <span id="abc-module"></span><h1>abc module<a class="headerlink" href="#module-jinete.dispatchers.abc" title="Permalink to this headline">¶</a></h1>
+<p>Abstract module which defines the high level scheduling during the process of optimization.</p>
 <dl class="class">
 <dt id="jinete.dispatchers.abc.Dispatcher">
 <em class="property">class </em><code class="sig-prename descclassname">jinete.dispatchers.abc.</code><code class="sig-name descname">Dispatcher</code><span class="sig-paren">(</span><em class="sig-param">loader_cls</em>, <em class="sig-param">algorithm_cls</em>, <em class="sig-param">storer_cls=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/dispatchers/abc.html#Dispatcher"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.dispatchers.abc.Dispatcher" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
+<p>Dispatch the problem instances.</p>
 <dl class="method">
 <dt id="jinete.dispatchers.abc.Dispatcher.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">loader_cls</em>, <em class="sig-param">algorithm_cls</em>, <em class="sig-param">storer_cls=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/dispatchers/abc.html#Dispatcher.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.dispatchers.abc.Dispatcher.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+<dd><p>Construct a new instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loader_cls</strong> (<em>Type</em><em>[</em><a class="reference internal" href="jinete.loaders.abc.html#jinete.loaders.abc.Loader" title="jinete.loaders.abc.Loader"><em>Loader</em></a><em>]</em>) – Loads problem instances.</p></li>
+<li><p><strong>algorithm_cls</strong> (<em>Type</em><em>[</em><a class="reference internal" href="jinete.algorithms.abc.html#jinete.algorithms.abc.Algorithm" title="jinete.algorithms.abc.Algorithm"><em>Algorithm</em></a><em>]</em>) – Generates the solution for the problem instance.</p></li>
+<li><p><strong>storer_cls</strong> (<em>Type</em><em>[</em><a class="reference internal" href="jinete.storers.abc.html#jinete.storers.abc.Storer" title="jinete.storers.abc.Storer"><em>Storer</em></a><em>]</em>) – Stores problem instances.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="jinete.dispatchers.abc.Dispatcher.run">
 <em class="property">abstract </em><code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/dispatchers/abc.html#Dispatcher.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.dispatchers.abc.Dispatcher.run" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Start the execution of the dispatcher.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="jinete.models.results.html#jinete.models.results.Result" title="jinete.models.results.Result">Result</a></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A result object containing the generated solution.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 

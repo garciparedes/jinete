@@ -87,8 +87,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../module_hierarchy.html">Module Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data LinearModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../directory_hierarchy.html">Directory Hierarchy</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="api_reference.html">API Reference</a></li>
 </ul>
@@ -163,12 +162,20 @@
             
   <div class="section" id="module-jinete.utils.collections">
 <span id="collections-module"></span><h1>collections module<a class="headerlink" href="#module-jinete.utils.collections" title="Permalink to this headline">¶</a></h1>
+<p>A set of utilities related with collections.</p>
 <dl class="function">
 <dt id="jinete.utils.collections.remove_duplicates">
 <code class="sig-prename descclassname">jinete.utils.collections.</code><code class="sig-name descname">remove_duplicates</code><span class="sig-paren">(</span><em class="sig-param">seq</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/utils/collections.html#remove_duplicates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.utils.collections.remove_duplicates" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">typing.List</span></code></a>[~E]</p>
+<dd><p>Remove the duplicated elements of a list, preserving its original order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seq</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">typing.List</span></code></a>[~E]) – The original list.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">typing.List</span></code></a>[~E]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A list with elements ordered as a in the initial one, but removing the duplicated elements.</p>
 </dd>
 </dl>
 </dd></dl>

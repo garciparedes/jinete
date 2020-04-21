@@ -87,8 +87,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../module_hierarchy.html">Module Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data LinearModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../directory_hierarchy.html">Directory Hierarchy</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="api_reference.html">API Reference</a></li>
 </ul>
@@ -165,22 +164,40 @@
             
   <div class="section" id="module-jinete.loaders.formatters.abc">
 <span id="abc-module"></span><h1>abc module<a class="headerlink" href="#module-jinete.loaders.formatters.abc" title="Permalink to this headline">¶</a></h1>
+<p>Formatting modules from raw objects to <a href="#id1"><span class="problematic" id="id2">``</span></a>jinete```s class hierarchy.</p>
 <dl class="class">
 <dt id="jinete.loaders.formatters.abc.LoaderFormatter">
 <em class="property">class </em><code class="sig-prename descclassname">jinete.loaders.formatters.abc.</code><code class="sig-name descname">LoaderFormatter</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/loaders/formatters/abc.html#LoaderFormatter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.loaders.formatters.abc.LoaderFormatter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
+<p>Format a problem instance from a raw object to build <code class="docutils literal notranslate"><span class="pre">jinete</span></code>’s set of objects.</p>
 <dl class="method">
 <dt id="jinete.loaders.formatters.abc.LoaderFormatter.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/loaders/formatters/abc.html#LoaderFormatter.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.loaders.formatters.abc.LoaderFormatter.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+<dd><p>Construct a new instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>Any</em>) – The object to retrieve the on load instance.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="jinete.loaders.formatters.abc.LoaderFormatter.fleet">
 <em class="property">abstract </em><code class="sig-name descname">fleet</code><span class="sig-paren">(</span><em class="sig-param">surface</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/loaders/formatters/abc.html#LoaderFormatter.fleet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.loaders.formatters.abc.LoaderFormatter.fleet" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="jinete.models.vehicles.html#jinete.models.vehicles.Fleet" title="jinete.models.vehicles.Fleet"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.vehicles.Fleet</span></code></a></p>
+<dd><p>Retrieve the fleet object for the current on load instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>surface</strong> (<a class="reference internal" href="jinete.models.surfaces.html#jinete.models.surfaces.Surface" title="jinete.models.surfaces.Surface"><em>Surface</em></a>) – The surface surface object for the current on load instance.</p></li>
+<li><p><strong>args</strong> – Additional positional arguments.</p></li>
+<li><p><strong>kwargs</strong> – Additional named arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="jinete.models.vehicles.html#jinete.models.vehicles.Fleet" title="jinete.models.vehicles.Fleet">Fleet</a></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A surface instance from the loaded instance.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -188,9 +205,20 @@
 <dl class="method">
 <dt id="jinete.loaders.formatters.abc.LoaderFormatter.job">
 <em class="property">abstract </em><code class="sig-name descname">job</code><span class="sig-paren">(</span><em class="sig-param">surface</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/loaders/formatters/abc.html#LoaderFormatter.job"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.loaders.formatters.abc.LoaderFormatter.job" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="jinete.models.jobs.html#jinete.models.jobs.Job" title="jinete.models.jobs.Job"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.jobs.Job</span></code></a></p>
+<dd><p>Retrieve the job object for the current on load instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>surface</strong> (<a class="reference internal" href="jinete.models.surfaces.html#jinete.models.surfaces.Surface" title="jinete.models.surfaces.Surface"><em>Surface</em></a>) – The surface object for the current on load instance.</p></li>
+<li><p><strong>args</strong> – Additional positional arguments.</p></li>
+<li><p><strong>kwargs</strong> – Additional named arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="jinete.models.jobs.html#jinete.models.jobs.Job" title="jinete.models.jobs.Job">Job</a></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A surface instance from the loaded instance.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -198,9 +226,19 @@
 <dl class="method">
 <dt id="jinete.loaders.formatters.abc.LoaderFormatter.surface">
 <em class="property">abstract </em><code class="sig-name descname">surface</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/loaders/formatters/abc.html#LoaderFormatter.surface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.loaders.formatters.abc.LoaderFormatter.surface" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="jinete.models.surfaces.html#jinete.models.surfaces.Surface" title="jinete.models.surfaces.Surface"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.surfaces.Surface</span></code></a></p>
+<dd><p>Retrieve the surface object for the current on load instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> – Additional positional arguments.</p></li>
+<li><p><strong>kwargs</strong> – Additional named arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="jinete.models.surfaces.html#jinete.models.surfaces.Surface" title="jinete.models.surfaces.Surface">Surface</a></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A surface instance from the loaded instance.</p>
 </dd>
 </dl>
 </dd></dl>

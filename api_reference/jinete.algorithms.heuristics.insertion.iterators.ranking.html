@@ -87,8 +87,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../module_hierarchy.html">Module Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data LinearModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../directory_hierarchy.html">Directory Hierarchy</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="api_reference.html">API Reference</a></li>
 </ul>
@@ -179,160 +178,10 @@
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.attractive_routes">
-<em class="property">property </em><code class="sig-name descname">attractive_routes</code><a class="headerlink" href="#jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.attractive_routes" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Set[<a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.completed">
-<em class="property">property </em><code class="sig-name descname">completed</code><a class="headerlink" href="#jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.completed" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.create_sub_ranking">
-<code class="sig-name descname">create_sub_ranking</code><span class="sig-paren">(</span><em class="sig-param">route</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/heuristics/insertion/iterators/ranking.html#RankingInsertionIterator.create_sub_ranking"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.create_sub_ranking" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>List[<a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.criterion">
-<code class="sig-name descname">criterion</code><a class="headerlink" href="#jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.criterion" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.done_trips">
-<em class="property">property </em><code class="sig-name descname">done_trips</code><a class="headerlink" href="#jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.done_trips" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Set[<a class="reference internal" href="jinete.models.trips.html#jinete.models.trips.Trip" title="jinete.models.trips.Trip">Trip</a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.initialize_ranking">
-<code class="sig-name descname">initialize_ranking</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/heuristics/insertion/iterators/ranking.html#RankingInsertionIterator.initialize_ranking"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.initialize_ranking" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.mark_planned_trip_as_done">
-<code class="sig-name descname">mark_planned_trip_as_done</code><span class="sig-paren">(</span><em class="sig-param">planned_trip</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/heuristics/insertion/iterators/ranking.html#RankingInsertionIterator.mark_planned_trip_as_done"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.mark_planned_trip_as_done" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)">None</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.mark_planned_trip_as_undone">
-<code class="sig-name descname">mark_planned_trip_as_undone</code><span class="sig-paren">(</span><em class="sig-param">planned_trip</em><span class="sig-paren">)</span><a class="headerlink" href="#jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.mark_planned_trip_as_undone" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)">None</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.mark_trip_as_done">
-<code class="sig-name descname">mark_trip_as_done</code><span class="sig-paren">(</span><em class="sig-param">trip</em><span class="sig-paren">)</span><a class="headerlink" href="#jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.mark_trip_as_done" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)">None</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.mark_trip_as_undone">
-<code class="sig-name descname">mark_trip_as_undone</code><span class="sig-paren">(</span><em class="sig-param">trip</em><span class="sig-paren">)</span><a class="headerlink" href="#jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.mark_trip_as_undone" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)">None</a></p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.ranking">
 <code class="sig-name descname">ranking</code><em class="property">: Dict[Vehicle, List[Route]]</em><em class="property"> = None</em><a class="headerlink" href="#jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.ranking" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.routes">
-<em class="property">property </em><code class="sig-name descname">routes</code><a class="headerlink" href="#jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.routes" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Set[<a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.set_route">
-<code class="sig-name descname">set_route</code><span class="sig-paren">(</span><em class="sig-param">route</em><span class="sig-paren">)</span><a class="headerlink" href="#jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.set_route" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.strategy">
-<code class="sig-name descname">strategy</code><a class="headerlink" href="#jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.strategy" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.trips">
-<em class="property">property </em><code class="sig-name descname">trips</code><a class="headerlink" href="#jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.trips" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Set[<a class="reference internal" href="jinete.models.trips.html#jinete.models.trips.Trip" title="jinete.models.trips.Trip">Trip</a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.update_ranking">
-<code class="sig-name descname">update_ranking</code><span class="sig-paren">(</span><em class="sig-param">planned_trip</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/heuristics/insertion/iterators/ranking.html#RankingInsertionIterator.update_ranking"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.update_ranking" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.8)">None</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.vehicles">
-<em class="property">property </em><code class="sig-name descname">vehicles</code><a class="headerlink" href="#jinete.algorithms.heuristics.insertion.iterators.ranking.RankingInsertionIterator.vehicles" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Set[<a class="reference internal" href="jinete.models.vehicles.html#jinete.models.vehicles.Vehicle" title="jinete.models.vehicles.Vehicle">Vehicle</a>]</p>
-</dd>
-</dl>
-</dd></dl>
 
 </dd></dl>
 

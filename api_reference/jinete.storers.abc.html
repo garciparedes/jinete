@@ -87,8 +87,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../module_hierarchy.html">Module Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data LinearModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../directory_hierarchy.html">Directory Hierarchy</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="api_reference.html">API Reference</a></li>
 </ul>
@@ -163,32 +162,22 @@
             
   <div class="section" id="module-jinete.storers.abc">
 <span id="abc-module"></span><h1>abc module<a class="headerlink" href="#module-jinete.storers.abc" title="Permalink to this headline">¶</a></h1>
+<p>The set of abstract definitions for the <code class="docutils literal notranslate"><span class="pre">storers</span></code> module.</p>
 <dl class="class">
 <dt id="jinete.storers.abc.Storer">
 <em class="property">class </em><code class="sig-prename descclassname">jinete.storers.abc.</code><code class="sig-name descname">Storer</code><span class="sig-paren">(</span><em class="sig-param">result</em>, <em class="sig-param">formatter_cls=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/storers/abc.html#Storer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.storers.abc.Storer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></a></p>
+<p>Store a resulting solution.</p>
 <dl class="method">
 <dt id="jinete.storers.abc.Storer.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">result</em>, <em class="sig-param">formatter_cls=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/storers/abc.html#Storer.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.storers.abc.Storer.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.abc.Storer.formatted_planning">
-<code class="sig-name descname">formatted_planning</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/storers/abc.html#Storer.formatted_planning"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.storers.abc.Storer.formatted_planning" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.abc.Storer.routes">
-<em class="property">property </em><code class="sig-name descname">routes</code><a class="headerlink" href="#jinete.storers.abc.Storer.routes" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Set[<a class="reference internal" href="jinete.models.routes.html#jinete.models.routes.Route" title="jinete.models.routes.Route">Route</a>]</p>
+<dd><p>Construct a new object instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>result</strong> (<a class="reference internal" href="jinete.models.results.html#jinete.models.results.Result" title="jinete.models.results.Result"><em>Result</em></a>) – The result object to store.</p></li>
+<li><p><strong>formatter_cls</strong> (<em>Type</em><em>[</em><a class="reference internal" href="jinete.storers.formatters.abc.html#jinete.storers.formatters.abc.StorerFormatter" title="jinete.storers.formatters.abc.StorerFormatter"><em>StorerFormatter</em></a><em>]</em>) – The formatter class to be used during the storage process.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -196,19 +185,10 @@
 <dl class="method">
 <dt id="jinete.storers.abc.Storer.store">
 <em class="property">abstract </em><code class="sig-name descname">store</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/storers/abc.html#Storer.store"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.storers.abc.Storer.store" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Perform a storage process.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.storers.abc.Storer.trips">
-<em class="property">property </em><code class="sig-name descname">trips</code><a class="headerlink" href="#jinete.storers.abc.Storer.trips" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Set[<a class="reference internal" href="jinete.models.trips.html#jinete.models.trips.Trip" title="jinete.models.trips.Trip">Trip</a>]</p>
 </dd>
 </dl>
 </dd></dl>

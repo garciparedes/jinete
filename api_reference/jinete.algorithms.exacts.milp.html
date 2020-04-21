@@ -87,8 +87,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">Readme</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../module_hierarchy.html">Module Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_model.html">Data LinearModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../directory_hierarchy.html">Directory Hierarchy</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="api_reference.html">API Reference</a></li>
 </ul>
@@ -165,7 +164,7 @@
             
   <div class="section" id="module-jinete.algorithms.exacts.milp">
 <span id="milp-module"></span><h1>milp module<a class="headerlink" href="#module-jinete.algorithms.exacts.milp" title="Permalink to this headline">¶</a></h1>
-<p>A set of solving algorithms based on the formulation off Mixed-Integer Linear Programming models.</p>
+<p>Set of algorithms based on the formulation off Mixed-Integer Linear Programming models.</p>
 <dl class="class">
 <dt id="jinete.algorithms.exacts.milp.MilpAlgorithm">
 <em class="property">class </em><code class="sig-prename descclassname">jinete.algorithms.exacts.milp.</code><code class="sig-name descname">MilpAlgorithm</code><span class="sig-paren">(</span><em class="sig-param">model_cls=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/exacts/milp.html#MilpAlgorithm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.exacts.milp.MilpAlgorithm" title="Permalink to this definition">¶</a></dt>
@@ -174,10 +173,11 @@
 <dl class="method">
 <dt id="jinete.algorithms.exacts.milp.MilpAlgorithm.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">model_cls=None</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/exacts/milp.html#MilpAlgorithm.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.exacts.milp.MilpAlgorithm.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Construct a new instance.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>model_cls</strong> (<em>Type</em><em>[</em><a class="reference internal" href="jinete.algorithms.exacts.models.abc.html#jinete.algorithms.exacts.models.abc.Model" title="jinete.algorithms.exacts.models.abc.Model"><em>Model</em></a><em>]</em>) – The model class to generate the representation of the problem.</p></li>
+<li><p><strong>model_cls</strong> (<em>Type</em><em>[</em><a class="reference internal" href="jinete.algorithms.exacts.models.abc.html#jinete.algorithms.exacts.models.abc.LinearModel" title="jinete.algorithms.exacts.models.abc.LinearModel"><em>LinearModel</em></a><em>]</em>) – The model class to generate the representation of the problem.</p></li>
 <li><p><strong>args</strong> – Additional positional arguments.</p></li>
 <li><p><strong>kwargs</strong> – Additional named arguments.</p></li>
 </ul>
@@ -186,38 +186,10 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="jinete.algorithms.exacts.milp.MilpAlgorithm.build_model">
-<code class="sig-name descname">build_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/exacts/milp.html#MilpAlgorithm.build_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.exacts.milp.MilpAlgorithm.build_model" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates the <cite>Model</cite> object for the given instance problem.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="jinete.algorithms.exacts.models.abc.html#jinete.algorithms.exacts.models.abc.Model" title="jinete.algorithms.exacts.models.abc.Model">Model</a></p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><cite>Model</cite> object for the given instance problem.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="jinete.algorithms.exacts.milp.MilpAlgorithm.objective">
-<em class="property">property </em><code class="sig-name descname">objective</code><a class="headerlink" href="#jinete.algorithms.exacts.milp.MilpAlgorithm.objective" title="Permalink to this definition">¶</a></dt>
-<dd><p>The objective function.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="jinete.models.objectives.html#jinete.models.objectives.Objective" title="jinete.models.objectives.Objective">Objective</a></p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>An <code class="docutils literal notranslate"><span class="pre">Objective</span></code> object.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
 <dt id="jinete.algorithms.exacts.milp.MilpAlgorithm.optimize">
 <code class="sig-name descname">optimize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#jinete.algorithms.exacts.milp.MilpAlgorithm.optimize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Performs an optimization over the <code class="docutils literal notranslate"><span class="pre">job</span></code> using the <code class="docutils literal notranslate"><span class="pre">fleet</span></code> and generates a <code class="docutils literal notranslate"><span class="pre">Result</span></code> object containing the
-generated results.</p>
+<dd><p>Perform an optimization over the <code class="docutils literal notranslate"><span class="pre">job</span></code> based on the <code class="docutils literal notranslate"><span class="pre">fleet</span></code> resources.</p>
+<p>Generates a <code class="docutils literal notranslate"><span class="pre">Result</span></code> object containing the generated planning.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference internal" href="jinete.models.results.html#jinete.models.results.Result" title="jinete.models.results.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.models.results.Result</span></code></a></p>

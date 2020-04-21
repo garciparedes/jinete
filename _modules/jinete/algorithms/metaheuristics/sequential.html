@@ -85,8 +85,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../readme.html">Readme</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../getting_started.html">Getting Started</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../data_model.html">Data Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../module_hierarchy.html">Module Hierarchy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../data_model.html">Data LinearModel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../directory_hierarchy.html">Directory Hierarchy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../api_reference/api_reference.html">API Reference</a></li>
 </ul>
@@ -152,7 +151,9 @@
            <div itemprop="articleBody">
             
   <h1>Source code for jinete.algorithms.metaheuristics.sequential</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span></span><span class="sd">&quot;&quot;&quot;Sequential algorithm class definitions.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">Random</span>
@@ -162,14 +163,10 @@
     <span class="n">Planning</span><span class="p">,</span>
     <span class="n">MAX_INT</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">..abc</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">Algorithm</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..abc</span> <span class="kn">import</span> <span class="n">Algorithm</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">...models</span> <span class="kn">import</span> <span class="p">(</span>
-        <span class="n">Result</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">...models</span> <span class="kn">import</span> <span class="n">Result</span>
     <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
         <span class="n">Dict</span><span class="p">,</span>
         <span class="n">Any</span><span class="p">,</span>
@@ -182,9 +179,28 @@
 
 
 <div class="viewcode-block" id="SequentialAlgorithm"><a class="viewcode-back" href="../../../../api_reference/jinete.algorithms.metaheuristics.sequential.html#jinete.algorithms.metaheuristics.sequential.SequentialAlgorithm">[docs]</a><span class="k">class</span> <span class="nc">SequentialAlgorithm</span><span class="p">(</span><span class="n">Algorithm</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Sequential algorithm implementation.</span>
 
-<div class="viewcode-block" id="SequentialAlgorithm.__init__"><a class="viewcode-back" href="../../../../api_reference/jinete.algorithms.metaheuristics.sequential.html#jinete.algorithms.metaheuristics.sequential.SequentialAlgorithm.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial</span><span class="p">:</span> <span class="n">Result</span><span class="p">,</span> <span class="n">algorithms_cls</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Algorithm</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">56</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="sd">    This implementation is based on the application of a sequence of algorithm implementations. It&#39;s mostly used as a</span>
+<span class="sd">    component of more complicated metaheuristics.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SequentialAlgorithm.__init__"><a class="viewcode-back" href="../../../../api_reference/jinete.algorithms.metaheuristics.sequential.html#jinete.algorithms.metaheuristics.sequential.SequentialAlgorithm.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">initial</span><span class="p">:</span> <span class="n">Result</span><span class="p">,</span>
+        <span class="n">algorithms_cls</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Algorithm</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">56</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Construct a new instance.</span>
+
+<span class="sd">        :param initial: The initial result from to start the optimization process.</span>
+<span class="sd">        :param algorithms_cls: The sequence of algorithm classes to be applied.</span>
+<span class="sd">        :param seed: A seed to manage randomness.</span>
+<span class="sd">        :param args: Additional positional arguments.</span>
+<span class="sd">        :param kwargs: Additional named arguments.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">algorithms_cls</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -193,8 +209,9 @@
                 <span class="n">LocalSearchAlgorithm</span><span class="p">,</span>
                 <span class="n">ReallocationLocalSearchStrategy</span><span class="p">,</span>
             <span class="p">)</span>
+
             <span class="n">algorithms_cls</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="p">(</span><span class="n">LocalSearchAlgorithm</span><span class="p">,</span> <span class="p">{</span><span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="s1">&#39;strategy_cls&#39;</span><span class="p">:</span> <span class="n">ReallocationLocalSearchStrategy</span><span class="p">}),</span>
+                <span class="p">(</span><span class="n">LocalSearchAlgorithm</span><span class="p">,</span> <span class="p">{</span><span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="s2">&quot;strategy_cls&quot;</span><span class="p">:</span> <span class="n">ReallocationLocalSearchStrategy</span><span class="p">}),</span>
                 <span class="p">(</span><span class="n">IterativeAlgorithm</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">),</span>
             <span class="p">]</span>
 
@@ -206,12 +223,12 @@
     <span class="k">def</span> <span class="nf">_build_algorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Algorithm</span><span class="p">:</span>
         <span class="k">assert</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">Algorithm</span><span class="p">)</span>
         <span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="k">if</span> <span class="s1">&#39;fleet&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
-            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;fleet&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fleet</span>
-        <span class="k">if</span> <span class="s1">&#39;job&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
-            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;job&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">job</span>
-        <span class="k">if</span> <span class="s1">&#39;seed&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
-            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;seed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">MAX_INT</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;fleet&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;fleet&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fleet</span>
+        <span class="k">if</span> <span class="s2">&quot;job&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;job&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">job</span>
+        <span class="k">if</span> <span class="s2">&quot;seed&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;seed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">MAX_INT</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Planning</span><span class="p">:</span>

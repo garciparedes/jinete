@@ -1,0 +1,25 @@
+models package
+==============
+
+.. automodule:: jinete.algorithms.utils.models
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+
+.. toctree::
+   :hidden:
+
+
+   jinete.algorithms.utils.models.abc
+   jinete.algorithms.utils.models.three_index
+
+.. autosummary::
+
+   jinete.algorithms.utils.models.abc
+   jinete.algorithms.utils.models.three_index
+
+
+
+
