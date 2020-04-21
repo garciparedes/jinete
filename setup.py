@@ -26,7 +26,14 @@ dependencies = [
 ]
 
 extra_dependencies = {
-    "docs": ["sphinx<3.0.0", "sphinx-rtd-theme", "sphinxcontrib-apidoc", "sphinxcontrib-plantuml", "m2r"],
+    "docs": [
+        "sphinx<3.0.0",
+        "sphinx-rtd-theme",
+        "sphinxcontrib-apidoc",
+        "sphinxcontrib-plantuml",
+        "sphinx-autodoc-typehints",
+        "m2r",
+    ],
     "tests": ["coverage", "codecov"],
     "syntax": ["flake8", "mypy"],
     "logs": ["coloredlogs"],
