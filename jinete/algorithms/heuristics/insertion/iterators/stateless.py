@@ -22,15 +22,15 @@ logger = logging.getLogger(__name__)
 class StatelessInsertionIterator(InsertionIterator):
     @cached_property
     def iterator(self) -> Iterator[Route]:
-        for route, trip in it.product(self.attractive_routes, self.pending_trips):
+        for route, trip in it.product(self._attractive_routes, self.pending_trips):
             logger.debug(f"Yielding ({route}, {trip})...")
-            yield from self.strategy.compute(route, trip)
+            yield from self._strategy.compute(route, trip)
 
     def __next__(self) -> Route:
         return next(self.iterator)
 
-    def mark_trip_as_done(self, trip: Trip):
-        super().mark_trip_as_done(trip)
+    def _mark_trip_as_done(self, trip: Trip):
+        super()._mark_trip_as_done(trip)
         self.flush()
 
     def flush(self):
@@ -45,7 +45,7 @@ class BestStatelessInsertionIterator(StatelessInsertionIterator):
         self.random = Random(seed)
 
     def __next__(self) -> Route:
-        candidates = self.criterion.nbest(self.randomized_size, *self.iterator)
+        candidates = self._criterion.nbest(self.randomized_size, *self.iterator)
 
         if not any(candidates):
             raise StopIteration

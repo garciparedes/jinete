@@ -1,3 +1,5 @@
+"""Set of route costs improvement methods."""
+
 from .algorithm import LocalSearchAlgorithm
 
 from .strategies import (

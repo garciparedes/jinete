@@ -1,3 +1,7 @@
+"""
+The set of classes which models problem instances, solutions, etc.
+"""
+
 from .abc import Model
 from .positions import (
     Position,

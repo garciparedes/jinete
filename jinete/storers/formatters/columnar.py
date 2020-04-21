@@ -1,3 +1,5 @@
+"""The set of definitions to format the artifact to be stored following a columnar style."""
+
 import itertools as it
 from typing import List
 
@@ -12,33 +14,42 @@ from ...models import (
 
 
 class ColumnarStorerFormatter(StorerFormatter):
+    """Format a solution as a readable string following a columnar style."""
+
     def __init__(self, tab_character: str = "  ", *args, **kwargs):
+        """Construct a new instance.
+
+        :param tab_character: The tabulation character to use during the formatting process.
+        :param args: Additional positional parameters.
+        :param kwargs: Additional named parameters.
+        """
         super().__init__(*args, **kwargs)
         self.tab_character = tab_character
 
     def format(self) -> str:
-        rows = it.chain.from_iterable(self.route_to_str(route) for route in self.routes)
+        """Perform a format process."""
+        rows = it.chain.from_iterable(self._route_to_str(route) for route in self._routes)
         return "\n".join(
             (
-                f'Planning UUID: "{self.planning.uuid}"',
-                f'Routes count: "{len(self.routes)}"',
+                f'Planning UUID: "{self._planning.uuid}"',
+                f'Routes count: "{len(self._routes)}"',
                 f"Routes: ",
                 "\n".join(f"{self.tab_character}{row}" for row in rows),
-                f'Computation time: "{self.computation_time:0.4f}" seconds',
-                f'Coverage Rate: "{self.coverage_rate}"',
-                f'Objective: "{self.objective.__class__.__name__}"',
-                f'Optimization Value: "{self.optimization_value}"',
-                f'Feasible: "{self.feasible}"',
-                f'Direction: "{self.direction}"',
+                f'Computation time: "{self._computation_time:0.4f}" seconds',
+                f'Coverage Rate: "{self._coverage_rate}"',
+                f'Objective: "{self._objective.__class__.__name__}"',
+                f'Optimization Value: "{self._optimization_value}"',
+                f'Feasible: "{self._feasible}"',
+                f'Direction: "{self._direction}"',
             )
         )
 
-    def route_to_str(self, route: Route) -> List[str]:
-        planned_trip_rows = [self.planned_trip_to_str(planned_trip) for planned_trip in route.planned_trips]
-        stop_rows = [self.stop_to_str(stop) for stop in route.stops]
+    def _route_to_str(self, route: Route) -> List[str]:
+        planned_trip_rows = [self._planned_trip_to_str(planned_trip) for planned_trip in route.planned_trips]
+        stop_rows = [self._stop_to_str(stop) for stop in route.stops]
         return [
             f"Vehicle: ",
-            *(f"{self.tab_character}{row}" for row in self.vehicle_to_str(route.vehicle)),
+            *(f"{self.tab_character}{row}" for row in self._vehicle_to_str(route.vehicle)),
             f'Planned Trips: "{sum(1 for _ in route.planned_trips)}"',
             *(f"{self.tab_character}{row}" for row in planned_trip_rows),
             f'Stops: "{len(route.stops)}"',
@@ -46,7 +57,7 @@ class ColumnarStorerFormatter(StorerFormatter):
         ]
 
     @staticmethod
-    def vehicle_to_str(vehicle: Vehicle) -> List[str]:
+    def _vehicle_to_str(vehicle: Vehicle) -> List[str]:
         return [
             f'ID: "{vehicle.identifier}"',
             f"Initial:  {vehicle.origin_position}",
@@ -56,7 +67,7 @@ class ColumnarStorerFormatter(StorerFormatter):
             f"Capacity: {vehicle.capacity:7.2f}",
         ]
 
-    def planned_trip_to_str(self, planned_trip: PlannedTrip) -> str:
+    def _planned_trip_to_str(self, planned_trip: PlannedTrip) -> str:
         return self.tab_character.join(
             (
                 f"ID: {planned_trip.trip.identifier:5}",
@@ -71,7 +82,7 @@ class ColumnarStorerFormatter(StorerFormatter):
             )
         )
 
-    def stop_to_str(self, stop: Stop) -> str:
+    def _stop_to_str(self, stop: Stop) -> str:
         return self.tab_character.join(
             (
                 f"ID: {stop.identifier:5}",

@@ -26,10 +26,10 @@ dependencies = [
 ]
 
 extra_dependencies = {
-    "docs": ["sphinx<3.0.0", "sphinx-rtd-theme", "sphinxcontrib-apidoc", "sphinxcontrib-plantuml", "m2r",],
-    "tests": ["coverage", "codecov",],
-    "syntax": ["flake8", "mypy",],
-    "logs": ["coloredlogs",],
+    "docs": ["sphinx<3.0.0", "sphinx-rtd-theme", "sphinxcontrib-apidoc", "sphinxcontrib-plantuml", "m2r"],
+    "tests": ["coverage", "codecov"],
+    "syntax": ["flake8", "mypy"],
+    "logs": ["coloredlogs"],
 }
 extra_dependencies["all"] = list(it.chain(extra_dependencies.values()))
 

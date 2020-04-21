@@ -65,7 +65,7 @@ class InsertionIterator(ABC):
         self.fleet = fleet
         self.job = job
         self.routes_container = {route.vehicle: route for route in routes}
-        self._attractive_routes = None
+        self.__attractive_routes = None
         self.pending_trips = pending_trips
 
         self.strategy_cls = strategy_cls
@@ -75,21 +75,21 @@ class InsertionIterator(ABC):
         self.kwargs = kwargs
 
     @property
-    def routes(self) -> Set[Route]:
+    def _routes(self) -> Set[Route]:
         return set(self.routes_container.values())
 
     @property
-    def attractive_routes(self) -> Set[Route]:
-        if self._attractive_routes is None:
-            self._attractive_routes = set(route for route in self.routes if any(route.planned_trips))
+    def _attractive_routes(self) -> Set[Route]:
+        if self.__attractive_routes is None:
+            self.__attractive_routes = set(route for route in self._routes if any(route.planned_trips))
 
-        if not any(any(route.planned_trips) for route in self._attractive_routes):
-            empty_route = next((route for route in self.routes if not any(route.planned_trips)), None)
+        if not any(any(route.planned_trips) for route in self.__attractive_routes):
+            empty_route = next((route for route in self._routes if not any(route.planned_trips)), None)
             if empty_route is not None:
-                self._attractive_routes.add(empty_route)
-        return self._attractive_routes
+                self.__attractive_routes.add(empty_route)
+        return self.__attractive_routes
 
-    def set_route(self, route: Route) -> None:
+    def _set_route(self, route: Route) -> None:
         vehicle = route.vehicle
         logger.debug(f'Updating route for vehicle with "{vehicle.identifier}" identifier...')
         old_trips = set(self.routes_container[vehicle].trips)
@@ -97,22 +97,22 @@ class InsertionIterator(ABC):
         for planned_trip in route.planned_trips:
             if planned_trip.trip in old_trips:
                 continue
-            self.mark_planned_trip_as_done(planned_trip)
+            self._mark_planned_trip_as_done(planned_trip)
 
     @cached_property
-    def strategy(self) -> InsertionStrategy:
+    def _strategy(self) -> InsertionStrategy:
         return self.strategy_cls(*self.args, **self.kwargs)
 
     @cached_property
-    def criterion(self) -> RouteCriterion:
+    def _criterion(self) -> RouteCriterion:
         return self.criterion_cls(*self.args, **self.kwargs)
 
     @property
-    def vehicles(self) -> Set[Vehicle]:
+    def _vehicles(self) -> Set[Vehicle]:
         return self.fleet.vehicles
 
     @property
-    def trips(self) -> Set[Trip]:
+    def _trips(self) -> Set[Trip]:
         return self.job.trips
 
     def __iter__(self):
@@ -122,28 +122,13 @@ class InsertionIterator(ABC):
     def __next__(self) -> Route:
         pass
 
-    def mark_planned_trip_as_done(self, planned_trip: PlannedTrip) -> None:
+    def _mark_planned_trip_as_done(self, planned_trip: PlannedTrip) -> None:
         logger.info(
             f'Marking trip with "{planned_trip.trip_identifier}" identifier as done '
             f'over vehicle with "{planned_trip.vehicle_identifier}" identifier...'
         )
-        self.mark_trip_as_done(planned_trip.trip)
+        self._mark_trip_as_done(planned_trip.trip)
 
-    def mark_trip_as_done(self, trip: Trip) -> None:
+    def _mark_trip_as_done(self, trip: Trip) -> None:
         logger.debug(f'Marked trip with "{trip.identifier}" identifier as done.')
         self.pending_trips.remove(trip)
-
-    def mark_planned_trip_as_undone(self, planned_trip: PlannedTrip) -> None:
-        self.mark_trip_as_undone(planned_trip.trip)
-
-    def mark_trip_as_undone(self, trip: Trip) -> None:
-        logger.debug(f'Marked trip with "{trip.identifier}" identifier as undone.')
-        self.pending_trips.add(trip)
-
-    @property
-    def done_trips(self) -> Set[Trip]:
-        return self.trips - self.pending_trips
-
-    @property
-    def completed(self) -> bool:
-        return len(self.pending_trips) == 0

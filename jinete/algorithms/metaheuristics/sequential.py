@@ -1,3 +1,5 @@
+"""Sequential algorithm class definitions."""
+
 from __future__ import annotations
 
 import logging
@@ -24,6 +26,12 @@ logger = logging.getLogger(__name__)
 
 
 class SequentialAlgorithm(Algorithm):
+    """Sequential algorithm implementation.
+
+    This implementation is based on the application of a sequence of algorithm implementations. It's mostly used as a
+    component of more complicated metaheuristics.
+    """
+
     def __init__(
         self,
         initial: Result,
@@ -32,6 +40,14 @@ class SequentialAlgorithm(Algorithm):
         *args,
         **kwargs
     ):
+        """Construct a new instance.
+
+        :param initial: The initial result from to start the optimization process.
+        :param algorithms_cls: The sequence of algorithm classes to be applied.
+        :param seed: A seed to manage randomness.
+        :param args: Additional positional arguments.
+        :param kwargs: Additional named arguments.
+        """
         super().__init__(*args, **kwargs)
 
         if algorithms_cls is None:

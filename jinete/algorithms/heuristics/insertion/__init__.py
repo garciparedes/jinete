@@ -1,3 +1,5 @@
+"""Set of route generation methods."""
+
 from .algorithm import InsertionAlgorithm
 from .iterators import (
     InsertionIterator,

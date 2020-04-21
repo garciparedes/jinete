@@ -1,3 +1,7 @@
+"""
+Contains entities to represent trips in the data model.
+"""
+
 from __future__ import annotations
 
 import logging
@@ -31,13 +35,44 @@ class Trip(Model):
         "timeout",
     )
     identifier: str
+    """
+    The unique identifier of the trip.
+    """
+
     origin_position: Position
+    """
+    The position for the pickup service.
+    """
+
     destination_position: Position
+    """
+    The position for the delivery service.
+    """
+
     origin_earliest: float
+    """
+    The earliest time to start the pickup service.
+    """
+
     timeout: float
+    """
+    The max trip duration, from the pickup latest time to the delivery earliest time.
+    """
+
     on_time_bonus: float
+    """
+    The applied bonus if the trip starts at its earliest time (need to be set up through the cost function).
+    """
+
     origin_duration: float
+    """
+    The requested duration to perform the origin service.
+    """
+
     capacity: float
+    """
+    The requested capacity of the trip.
+    """
 
     def __init__(
         self,
@@ -48,6 +83,15 @@ class Trip(Model):
         on_time_bonus: float = 0.0,
         timeout: float = MAX_FLOAT,
     ):
+        """
+
+        :param identifier:
+        :param origin:
+        :param destination:
+        :param capacity:
+        :param on_time_bonus:
+        :param timeout:
+        """
         self.identifier = identifier
         self.origin = origin
         self.destination = destination

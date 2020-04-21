@@ -11,9 +11,9 @@ class TwoOPTLocalSearchStrategy(LocalSearchStrategy):
         logger.info(f'Starting to improve "Result" with "{self.__class__.__name__}"...')
 
         overwritten_routes = set()
-        for route in self.routes:
+        for route in self._routes:
             logger.info(f'Improving route performed with vehicle identified by "{route.vehicle_identifier}"...')
-            cost = self.objective.optimization_function(route)
+            cost = self._objective.optimization_function(route)
 
             for i, k in combinations(range(1, len(route.stops) - 1), 2):
                 j = k + 1
@@ -43,7 +43,7 @@ class TwoOPTLocalSearchStrategy(LocalSearchStrategy):
                 if not new_route.feasible:
                     continue
 
-                new_cost = self.objective.optimization_function(new_route)
+                new_cost = self._objective.optimization_function(new_route)
                 if not new_cost > cost:
                     continue
 

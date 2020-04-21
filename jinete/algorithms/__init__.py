@@ -1,3 +1,5 @@
+"""Contains the implementation of solving methods."""
+
 from .abc import Algorithm
 from .naive import NaiveAlgorithm
 from .heuristics import (

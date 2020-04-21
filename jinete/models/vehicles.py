@@ -25,6 +25,7 @@ class Vehicle(Model):
     origin: Service
     destination: Service
     capacity: float
+    timeout: float
 
     def __init__(
         self,

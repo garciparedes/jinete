@@ -24,19 +24,19 @@ class InsertionAlgorithm(Algorithm):
         self.iterator_cls = iterator_cls
         self.kwargs = kwargs
 
-    def build_iterator(self) -> InsertionIterator:
+    def _build_iterator(self) -> InsertionIterator:
         kwargs = self.kwargs.copy()
         if self.initial is not None and "routes" not in kwargs:
             kwargs["routes"] = self.initial.routes
         return self.iterator_cls(**kwargs)
 
     def _optimize(self) -> Planning:
-        iterator = self.build_iterator()
+        iterator = self._build_iterator()
 
         for route in iterator:
             if not route.feasible:
                 break
-            iterator.set_route(route)
+            iterator._set_route(route)
 
-        planning = Planning(iterator.routes)
+        planning = Planning(iterator._routes)
         return planning

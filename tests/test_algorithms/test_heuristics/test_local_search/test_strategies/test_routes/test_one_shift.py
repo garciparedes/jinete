@@ -41,14 +41,15 @@ class TestOneShiftLocalSearchStrategy(unittest.TestCase):
 
         self.job = jit.Job(generate_trips(10), objective_cls=jit.DialARideObjective)
         self.fleet = jit.Fleet(generate_vehicles(10))
-        self.result = jit.Result(self.fleet, self.job, jit.Algorithm, self.planning, computation_time=float(0.0))
+        self.algorithm = jit.NaiveAlgorithm(self.fleet, self.job)
+        self.result = jit.Result(self.algorithm, self.planning, computation_time=float(0.0))
 
     def test_creation(self):
         strategy = jit.OneShiftLocalSearchStrategy(self.result)
 
-        self.assertNotEqual(self.planning, strategy.planning)
-        self.assertEqual(1, len(strategy.routes))
-        self.assertEqual(tuple(self.route.positions), tuple(next(iter(strategy.routes)).positions))
+        self.assertNotEqual(self.planning, strategy._planning)
+        self.assertEqual(1, len(strategy._routes))
+        self.assertEqual(tuple(self.route.positions), tuple(next(iter(strategy._routes)).positions))
 
     def test_improve(self):
         strategy = jit.OneShiftLocalSearchStrategy(self.result)
@@ -60,7 +61,7 @@ class TestOneShiftLocalSearchStrategy(unittest.TestCase):
         strategy = jit.OneShiftLocalSearchStrategy(self.result)
         stops = self.route.stops
 
-        strategy.flip(self.route, stops[1], stops[2], stops[3])
+        strategy._flip(self.route, stops[1], stops[2], stops[3])
 
         self.assertEqual(stops[0].position, self.stops[0].position)
         self.assertEqual(stops[1].position, self.stops[2].position)

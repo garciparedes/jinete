@@ -1,5 +1,5 @@
 #######
-Read Me
+Readme
 #######
 
 .. mdinclude:: ../../README.md

@@ -1,3 +1,5 @@
+"""Formatting modules from raw objects containing Cordeau-Laporte problem instances to ``jinete```s class hierarchy."""
+
 from __future__ import annotations
 
 import logging
@@ -22,7 +24,16 @@ logger = logging.getLogger(__name__)
 
 
 class CordeauLaporteLoaderFormatter(LoaderFormatter):
+    """Format a HashCode problem instance from a raw object to build ``jinete``'s set of objects."""
+
     def fleet(self, surface: Surface, *args, **kwargs) -> Fleet:
+        """Retrieve the fleet object for the current on load instance.
+
+        :param surface: The surface surface object for the current on load instance.
+        :param args: Additional positional arguments.
+        :param kwargs: Additional named arguments.
+        :return: A surface instance from the loaded instance.
+        """
         row = self.data[0]
         m = int(row[0])
 
@@ -44,18 +55,25 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
         return fleet
 
     def job(self, surface: Surface, *args, **kwargs) -> Job:
+        """Retrieve the job object for the current on load instance.
+
+        :param surface: The surface object for the current on load instance.
+        :param args: Additional positional arguments.
+        :param kwargs: Additional named arguments.
+        :return: A surface instance from the loaded instance.
+        """
         row = self.data[0]
         n = int(row[1] // 2)
 
         trips = set()
         for idx in range(n):
-            trip = self.build_trip(surface, idx, n)
+            trip = self._build_trip(surface, idx, n)
             trips.add(trip)
         job = Job(trips, objective_cls=DialARideObjective)
         logger.info(f'Created "{job}"!')
         return job
 
-    def build_trip(self, surface: Surface, idx: int, n: int) -> Trip:
+    def _build_trip(self, surface: Surface, idx: int, n: int) -> Trip:
         origin_idx = idx + 2
         origin_row = self.data[origin_idx]
         origin = Service(
@@ -84,6 +102,12 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
         return trip
 
     def surface(self, *args, **kwargs) -> Surface:
+        """Retrieve the surface object for the current on load instance.
+
+        :param args: Additional positional arguments.
+        :param kwargs: Additional named arguments.
+        :return: A surface instance from the loaded instance.
+        """
         surface = GeometricSurface(DistanceMetric.EUCLIDEAN)
         logger.info(f"Created surface!")
         return surface

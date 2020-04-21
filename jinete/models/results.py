@@ -10,7 +10,6 @@ if TYPE_CHECKING:
         Generator,
         Tuple,
         Any,
-        Type,
         Callable,
     )
     from uuid import UUID
@@ -31,14 +30,18 @@ if TYPE_CHECKING:
 
 
 class Result(Model):
-    def __init__(
-        self, fleet: Fleet, job: Job, algorithm_cls: Type[Algorithm], planning: Planning, computation_time: float
-    ):
-        self.fleet = fleet
-        self.job = job
-        self.algorithm_cls = algorithm_cls
+    def __init__(self, algorithm: Algorithm, planning: Planning, computation_time: float):
+        self.algorithm = algorithm
         self.planning = planning
         self.computation_time = computation_time
+
+    @property
+    def job(self) -> Job:
+        return self.algorithm.job
+
+    @property
+    def fleet(self) -> Fleet:
+        return self.algorithm.fleet
 
     @property
     def trips(self) -> Set[Trip]:
@@ -91,6 +94,6 @@ class Result(Model):
         yield from (
             ("fleet_uuid", tuple(self.fleet)),
             ("job", tuple(self.job)),
-            ("algorithm_name", self.algorithm_cls.__name__),
+            ("algorithm_name", type(self.algorithm).__name__),
             ("planning_uuid", self.planning_uuid),
         )

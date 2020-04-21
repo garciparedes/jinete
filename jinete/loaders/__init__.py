@@ -1,3 +1,5 @@
+"""Entities whose responsibility is to provide problem instances."""
+
 from .exceptions import LoaderException
 from .formatters import (
     LoaderFormatterException,

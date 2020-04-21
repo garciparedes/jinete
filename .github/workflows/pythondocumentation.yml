@@ -1,13 +1,12 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-name: Python application
+name: Python documentation
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    branches:
+      - master
 
 jobs:
   build:
@@ -24,12 +23,16 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -e .[all]
-    - name: Format validation
-      run: |
-        flake8
-    - name: Unit testing
-      run: |
-        coverage run -m unittest discover tests   
     - name: Documentation building
       run: |
-        coverage run -m unittest discover tests
+        sphinx-build docs/source docs/build/html
+    - name: Documentation artifacting
+      uses: actions/upload-artifact@v1
+      with:
+        name: documentation
+        path: docs/build/html
+    - name: Documentation deploying
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: docs/build/html

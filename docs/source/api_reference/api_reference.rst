@@ -1,7 +1,12 @@
-API reference
+API Reference
 =============
 
 .. toctree::
-   :glob:
+    :hidden:
 
-   jinete
+    jinete
+
+
+.. autosummary::
+
+    jinete

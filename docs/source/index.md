@@ -10,10 +10,10 @@ Welcome to jinete's documentation!
    :maxdepth: 1
    :caption: Contents:
 
-
    readme
    installation
    getting_started
+   data_model
    directory_hierarchy
    api_reference/api_reference
 

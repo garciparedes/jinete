@@ -1,3 +1,5 @@
+"""Entities whose responsibility is to deliver problem solutions."""
+
 from .formatters import (
     StorerFormatter,
     ColumnarStorerFormatter,

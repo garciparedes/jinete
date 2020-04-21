@@ -25,7 +25,7 @@ class TestLocalSearchAlgorithm(unittest.TestCase):
         self.assertEqual(algorithm.initial, self.initial)
         self.assertEqual(algorithm.job, self.job)
         self.assertEqual(algorithm.fleet, self.fleet)
-        self.assertEqual(algorithm.initial_routes, self.initial.routes)
+        self.assertEqual(algorithm._initial_routes, self.initial.routes)
 
     def test_optimize(self):
         algorithm = jit.LocalSearchAlgorithm(initial=self.initial, job=self.job, fleet=self.fleet,)
