@@ -12,6 +12,7 @@
 #
 
 import sys
+from datetime import date
 
 sys.path.append("..")
 
@@ -21,7 +22,7 @@ import jinete as jit
 
 
 project = jit.__name__
-copyright = "2019, Sergio García Prado"
+copyright = f"{date.today().year}, Sergio García Prado"
 author = "Sergio García Prado"
 release = jit.__version__
 
