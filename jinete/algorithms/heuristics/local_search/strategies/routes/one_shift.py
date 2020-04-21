@@ -1,9 +1,11 @@
 import logging
 
-from ..abc import LocalSearchStrategy
 from ......models import (
-    Stop,
     Route,
+    Stop,
+)
+from ..abc import (
+    LocalSearchStrategy,
 )
 
 logger = logging.getLogger(__name__)

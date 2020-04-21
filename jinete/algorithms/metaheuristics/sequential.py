@@ -1,16 +1,24 @@
 """Sequential algorithm class definitions."""
 
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import logging
-from random import Random
-from typing import TYPE_CHECKING
+from random import (
+    Random,
+)
+from typing import (
+    TYPE_CHECKING,
+)
 
 from ...models import (
-    Planning,
     MAX_INT,
+    Planning,
 )
-from ..abc import Algorithm
+from ..abc import (
+    Algorithm,
+)
 
 if TYPE_CHECKING:
     from ...models import Result

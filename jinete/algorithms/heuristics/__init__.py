@@ -1,20 +1,20 @@
 """Set of solving methods with reasonable space and time complexity."""
 
 from .insertion import (
+    BestStatelessInsertionIterator,
     InsertionAlgorithm,
     InsertionIterator,
-    StatelessInsertionIterator,
-    BestStatelessInsertionIterator,
-    RankingInsertionIterator,
     InsertionStrategy,
-    SamplingInsertionStrategy,
     IntensiveInsertionStrategy,
+    RankingInsertionIterator,
+    SamplingInsertionStrategy,
+    StatelessInsertionIterator,
     TailInsertionStrategy,
 )
 from .local_search import (
     LocalSearchAlgorithm,
     LocalSearchStrategy,
     OneShiftLocalSearchStrategy,
-    TwoOPTLocalSearchStrategy,
     ReallocationLocalSearchStrategy,
+    TwoOPTLocalSearchStrategy,
 )

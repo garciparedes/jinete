@@ -1,14 +1,23 @@
 """Set of algorithms based on the formulation off Mixed-Integer Linear Programming models."""
 
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import logging
-from typing import TYPE_CHECKING
+from typing import (
+    TYPE_CHECKING,
+)
 
-from ...models import Planning
-
-from ..abc import Algorithm
-from .models import ThreeIndexLinearModel
+from ...models import (
+    Planning,
+)
+from ..abc import (
+    Algorithm,
+)
+from .models import (
+    ThreeIndexLinearModel,
+)
 
 if TYPE_CHECKING:
     from typing import Type

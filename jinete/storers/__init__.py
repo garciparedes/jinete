@@ -1,14 +1,25 @@
 """Entities whose responsibility is to deliver problem solutions."""
 
+from .abc import (
+    Storer,
+)
+from .file import (
+    FileStorer,
+)
 from .formatters import (
-    StorerFormatter,
     ColumnarStorerFormatter,
     HashCodeStorerFormatter,
+    StorerFormatter,
 )
-
-from .abc import Storer
-from .file import FileStorer
-from .prompt import PromptStorer
-from .naive import NaiveStorer
-from .plots import GraphPlotStorer
-from .sets import StorerSet
+from .naive import (
+    NaiveStorer,
+)
+from .plots import (
+    GraphPlotStorer,
+)
+from .prompt import (
+    PromptStorer,
+)
+from .sets import (
+    StorerSet,
+)

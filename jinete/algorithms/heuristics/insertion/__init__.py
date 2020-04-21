@@ -1,15 +1,17 @@
 """Set of route generation methods."""
 
-from .algorithm import InsertionAlgorithm
+from .algorithm import (
+    InsertionAlgorithm,
+)
 from .iterators import (
-    InsertionIterator,
-    StatelessInsertionIterator,
     BestStatelessInsertionIterator,
+    InsertionIterator,
     RankingInsertionIterator,
+    StatelessInsertionIterator,
 )
 from .strategies import (
     InsertionStrategy,
-    SamplingInsertionStrategy,
     IntensiveInsertionStrategy,
+    SamplingInsertionStrategy,
     TailInsertionStrategy,
 )

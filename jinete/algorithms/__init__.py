@@ -1,26 +1,32 @@
 """Contains the implementation of solving methods."""
 
-from .abc import Algorithm
-from .naive import NaiveAlgorithm
+from .abc import (
+    Algorithm,
+)
+from .exacts import (
+    MilpAlgorithm,
+)
 from .heuristics import (
-    InsertionAlgorithm,
-    LocalSearchAlgorithm,
-    InsertionIterator,
-    StatelessInsertionIterator,
     BestStatelessInsertionIterator,
-    RankingInsertionIterator,
+    InsertionAlgorithm,
+    InsertionIterator,
+    InsertionStrategy,
+    IntensiveInsertionStrategy,
+    LocalSearchAlgorithm,
     LocalSearchStrategy,
     OneShiftLocalSearchStrategy,
-    TwoOPTLocalSearchStrategy,
+    RankingInsertionIterator,
     ReallocationLocalSearchStrategy,
-    InsertionStrategy,
     SamplingInsertionStrategy,
-    IntensiveInsertionStrategy,
+    StatelessInsertionIterator,
     TailInsertionStrategy,
+    TwoOPTLocalSearchStrategy,
 )
 from .metaheuristics import (
     GraspAlgorithm,
     IterativeAlgorithm,
     SequentialAlgorithm,
 )
-from .exacts import MilpAlgorithm
+from .naive import (
+    NaiveAlgorithm,
+)

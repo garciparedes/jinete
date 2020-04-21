@@ -12,11 +12,13 @@
 #
 
 import sys
-from datetime import date
+from datetime import (
+    date,
+)
 
-sys.path.append("..")
+sys.path.append("..")  # isort:skip
 
-import jinete as jit
+import jinete as jit  # isort:skip
 
 # -- Project information -----------------------------------------------------
 

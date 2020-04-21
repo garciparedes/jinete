@@ -3,17 +3,19 @@
 import logging
 
 from ...models import (
-    Fleet,
-    Job,
-    Surface,
-    GeometricSurface,
     DistanceMetric,
-    Vehicle,
-    Trip,
+    Fleet,
+    GeometricSurface,
     HashCodeObjective,
+    Job,
     Service,
+    Surface,
+    Trip,
+    Vehicle,
 )
-from .abc import LoaderFormatter
+from .abc import (
+    LoaderFormatter,
+)
 
 logger = logging.getLogger(__name__)
 

@@ -2,10 +2,17 @@
 Abstract base classes used as base for the entities implemented on :mod:`~jinete.models` module.
 """
 
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
-from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
+from abc import (
+    ABC,
+    abstractmethod,
+)
+from typing import (
+    TYPE_CHECKING,
+)
 
 if TYPE_CHECKING:
     from typing import (

@@ -1,15 +1,18 @@
 """The set of definitions to format the artifact to be stored following a columnar style."""
 
 import itertools as it
-from typing import List
-
-from .abc import StorerFormatter
+from typing import (
+    List,
+)
 
 from ...models import (
-    Route,
-    Vehicle,
     PlannedTrip,
+    Route,
     Stop,
+    Vehicle,
+)
+from .abc import (
+    StorerFormatter,
 )
 
 

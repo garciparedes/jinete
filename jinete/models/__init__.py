@@ -2,47 +2,66 @@
 The set of classes which models problem instances, solutions, etc.
 """
 
-from .abc import Model
-from .positions import (
-    Position,
-    GeometricPosition,
-)
-from .surfaces import (
-    Surface,
-    GeometricSurface,
-)
-from .trips import Trip
-from .planned_trips import PlannedTrip
-from .stops import Stop
-from .services import Service
-from .criterions import (
-    RouteCriterion,
-    ShortestAveragePlannerTripDurationCriterion,
-    EarliestLastDepartureTimeRouteCriterion,
-    ShortestTimeRouteCriterion,
-    LongestTimeRouteCriterion,
-    LongestUtilTimeRouteCriterion,
-    HashCodeRouteCriterion,
+from .abc import (
+    Model,
 )
 from .constants import (
-    OptimizationDirection,
-    DistanceMetric,
-    MAX_INT,
-    MIN_INT,
     MAX_FLOAT,
+    MAX_INT,
     MIN_FLOAT,
+    MIN_INT,
+    DistanceMetric,
+    OptimizationDirection,
 )
-from .jobs import Job
-from .vehicles import (
-    Vehicle,
-    Fleet,
+from .criterions import (
+    EarliestLastDepartureTimeRouteCriterion,
+    HashCodeRouteCriterion,
+    LongestTimeRouteCriterion,
+    LongestUtilTimeRouteCriterion,
+    RouteCriterion,
+    ShortestAveragePlannerTripDurationCriterion,
+    ShortestTimeRouteCriterion,
 )
-from .routes import Route, RouteCloner
-from .plannings import Planning
-from .results import Result
+from .jobs import (
+    Job,
+)
 from .objectives import (
-    Objective,
     DialARideObjective,
-    TaxiSharingObjective,
     HashCodeObjective,
+    Objective,
+    TaxiSharingObjective,
+)
+from .planned_trips import (
+    PlannedTrip,
+)
+from .plannings import (
+    Planning,
+)
+from .positions import (
+    GeometricPosition,
+    Position,
+)
+from .results import (
+    Result,
+)
+from .routes import (
+    Route,
+    RouteCloner,
+)
+from .services import (
+    Service,
+)
+from .stops import (
+    Stop,
+)
+from .surfaces import (
+    GeometricSurface,
+    Surface,
+)
+from .trips import (
+    Trip,
+)
+from .vehicles import (
+    Fleet,
+    Vehicle,
 )
