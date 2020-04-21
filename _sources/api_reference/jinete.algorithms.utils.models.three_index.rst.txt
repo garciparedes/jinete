@@ -1,7 +1,0 @@
-three\_index module
-===================
-
-.. automodule:: jinete.algorithms.utils.models.three_index
-   :members:
-   :undoc-members:
-   :show-inheritance:
