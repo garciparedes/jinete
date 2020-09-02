@@ -26,11 +26,11 @@ entity HashCodeLoaderFormatter <<loaders>> {
 }
 
 
-Loader -right-"generates" Job
-Loader -right-"generates" Fleet
-Loader -right-"generates" Surface
+Loader -up-"loads" Job
+Loader -up-"loads" Fleet
+Loader -up-"loads" Surface
 
-LoaderFormatter "uses"-left-o Loader
+LoaderFormatter "uses"-right-o Loader
 
 Loader <|-down- FileLoader
 
