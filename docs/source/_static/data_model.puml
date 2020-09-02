@@ -31,6 +31,10 @@ entity Planning <<models>> {
   computation_time: float
 }
 
+entity Result <<models>> {
+}
+
+
 entity Stop <<models>> {
   starting_time?: float
 }
@@ -56,8 +60,12 @@ entity Surface <<models>> {
 }
 
 
+
 Job o-"*" Trip
-Algorithm --o Planning: optimizes >
+Algorithm -- Result: optimizes >
+Result --o Planning
+Result o-- Fleet
+Result o-- Job
 Algorithm o-- Fleet
 Algorithm o-- Job
 Planning o--"*" Route
