@@ -27,6 +27,7 @@ class StatelessInsertionIterator <<algorithms>>
 class InsertionStrategy <<algorithms>>
 class IntensiveInsertionStrategy <<algorithms>>
 class SamplingInsertionStrategy <<algorithms>>
+class TailInsertionStrategy <<algorithms>>
 
 class LocalSearchAlgorithm <<algorithms>>
 
@@ -50,6 +51,7 @@ Algorithm <|-- SequentialAlgorithm
 
 InsertionStrategy <|-- IntensiveInsertionStrategy
 InsertionStrategy <|-- SamplingInsertionStrategy
+InsertionStrategy <|-- TailInsertionStrategy
 
 InsertionIterator <|-- RankingInsertionIterator
 InsertionIterator <|-- StatelessInsertionIterator
