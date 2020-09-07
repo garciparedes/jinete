@@ -6,6 +6,11 @@ skinparam ranksep 100
 hide empty methods
 hide empty attributes
 
+entity Job <<models>>
+entity Fleet <<models>>
+
+entity Result <<models>>
+
 abstract class Algorithm <<algorithms>>
 
 class MilpAlgorithm <<algorithms>>
@@ -36,7 +41,7 @@ class SequentialAlgorithm <<algorithms>>
 
 
 InsertionAlgorithm -up-|> Algorithm
-MilpAlgorithm --|> Algorithm
+Algorithm <|- MilpAlgorithm
 Algorithm <|-- LocalSearchAlgorithm
 Algorithm <|-- GRASPAlgorithm
 Algorithm <|- IterativeAlgorithm
@@ -57,9 +62,9 @@ LocalSearchStrategy <|-- TwoOPTLocalSearchStrategy
 
 
 InsertionAlgorithm -left- InsertionIterator
-InsertionAlgorithm -right- InsertionStrategy
+InsertionAlgorithm -down- InsertionStrategy
 
-MilpAlgorithm - LinearModel
+MilpAlgorithm -- LinearModel
 
 LocalSearchAlgorithm -- LocalSearchStrategy
 
@@ -75,5 +80,11 @@ N1 - Algorithm
 note "composed of" as N2
 N2 --o SequentialAlgorithm
 N2 - Algorithm
+
+
+Job "receives "--o Algorithm
+Fleet "receives"--o Algorithm
+Result "generates"-- Algorithm
+
 @enduml
 

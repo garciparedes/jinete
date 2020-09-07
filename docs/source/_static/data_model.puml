@@ -62,12 +62,12 @@ entity Surface <<models>> {
 
 
 Job o-"*" Trip
-Algorithm -- Result: optimizes >
+Algorithm -- Result: generates >
 Result --o Planning
 Result o-- Fleet
 Result o-- Job
-Algorithm o-- Fleet
-Algorithm o-- Job
+Algorithm o-- Fleet: receives <
+Algorithm o-- Job: receives <
 Planning o--"*" Route
 Trip o- PlannedTrip: planified >
 Trip o-right-"origin" Service
