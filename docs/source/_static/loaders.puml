@@ -10,19 +10,19 @@ entity Job <<models>>
 entity Fleet <<models>>
 entity Surface <<models>>
 
-entity Loader <<loaders>> {
+abstract class Loader <<loaders>> {
 }
 
-entity FileLoader <<loaders>> {
+class FileLoader <<loaders>> {
 }
 
-entity LoaderFormatter <<loaders>> {
+abstract class LoaderFormatter <<loaders>> {
 }
 
-entity CordeauLaporteLoaderFormatter <<loaders>> {
+class CordeauLaporteLoaderFormatter <<loaders>> {
 }
 
-entity HashCodeLoaderFormatter <<loaders>> {
+class HashCodeLoaderFormatter <<loaders>> {
 }
 
 

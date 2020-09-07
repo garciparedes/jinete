@@ -1,0 +1,79 @@
+@startuml
+skinparam linetype ortho
+skinparam nodesep 100
+skinparam ranksep 100
+
+hide empty methods
+hide empty attributes
+
+abstract class Algorithm <<algorithms>>
+
+class MilpAlgorithm <<algorithms>>
+
+abstract class LinearModel <<algorithms>>
+class ThreeIndexLinearModel <<algorithms>>
+
+class InsertionAlgorithm <<algorithms>>
+
+class InsertionIterator <<algorithms>>
+class RankingInsertionIterator <<algorithms>>
+class StatelessInsertionIterator <<algorithms>>
+
+class InsertionStrategy <<algorithms>>
+class IntensiveInsertionStrategy <<algorithms>>
+class SamplingInsertionStrategy <<algorithms>>
+
+class LocalSearchAlgorithm <<algorithms>>
+
+abstract class LocalSearchStrategy <<algorithms>>
+class ReallocationLocalSearchStrategy <<algorithms>>
+class OneShiftLocalSearchStrategy <<algorithms>>
+class TwoOPTLocalSearchStrategy <<algorithms>>
+
+class GRASPAlgorithm <<algorithms>>
+class IterativeAlgorithm <<algorithms>>
+class SequentialAlgorithm <<algorithms>>
+
+
+InsertionAlgorithm -up-|> Algorithm
+MilpAlgorithm --|> Algorithm
+Algorithm <|-- LocalSearchAlgorithm
+Algorithm <|-- GRASPAlgorithm
+Algorithm <|- IterativeAlgorithm
+Algorithm <|-- SequentialAlgorithm
+
+
+InsertionStrategy <|-- IntensiveInsertionStrategy
+InsertionStrategy <|-- SamplingInsertionStrategy
+
+InsertionIterator <|-- RankingInsertionIterator
+InsertionIterator <|-- StatelessInsertionIterator
+
+LinearModel <|-- ThreeIndexLinearModel
+
+LocalSearchStrategy <|-- ReallocationLocalSearchStrategy
+LocalSearchStrategy <|-- OneShiftLocalSearchStrategy
+LocalSearchStrategy <|-- TwoOPTLocalSearchStrategy
+
+
+InsertionAlgorithm -left- InsertionIterator
+InsertionAlgorithm -right- InsertionStrategy
+
+MilpAlgorithm - LinearModel
+
+LocalSearchAlgorithm -- LocalSearchStrategy
+
+
+GRASPAlgorithm -- LocalSearchAlgorithm
+GRASPAlgorithm -- InsertionAlgorithm
+
+
+note "composed of" as N1
+N1 --o IterativeAlgorithm
+N1 - Algorithm
+
+note "composed of" as N2
+N2 --o SequentialAlgorithm
+N2 - Algorithm
+@enduml
+

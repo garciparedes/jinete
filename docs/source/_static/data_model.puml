@@ -5,7 +5,7 @@ skinparam ranksep 100
 hide empty methods
 hide empty attributes
 
-entity Algorithm <<algorithms>>
+abstract class Algorithm <<algorithms>>
 
 entity Vehicle <<models>> {
   identifier: str

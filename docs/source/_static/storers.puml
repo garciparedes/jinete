@@ -11,20 +11,20 @@ entity Result <<models>>
 entity Storer <<storers>> {
 }
 
-entity FileStorer <<storers>> {
+abstract class FileStorer <<storers>> {
 }
-entity SetStorer <<storers>> {
+class SetStorer <<storers>> {
 }
-entity PromptStorer <<storers>> {
+class PromptStorer <<storers>> {
 }
-entity GraphPlotStorer <<storers>> {
+class GraphPlotStorer <<storers>> {
 }
 
-entity StorerFormatter <<storers>> {
+abstract class StorerFormatter <<storers>> {
 }
-entity ColumnarStorerFormatter <<storers>> {
+class ColumnarStorerFormatter <<storers>> {
 }
-entity HashCodeStorerFormatter <<storers>> {
+class HashCodeStorerFormatter <<storers>> {
 }
 
 
@@ -33,8 +33,8 @@ Storer -up-"stores" Result
 StorerFormatter "uses"-right-o Storer
 
 note "composed of" as N2
-N2 -- SetStorer
-N2 -o Storer
+N2 --o SetStorer
+N2 - Storer
 
 
 Storer <|-down- FileStorer
