@@ -58,9 +58,9 @@ class InsertionIterator(ABC):
         **kwargs,
     ):
         if strategy_cls is None:
-            from ..strategies import TailInsertionStrategy
+            from ..strategies import SamplingInsertionStrategy
 
-            strategy_cls = TailInsertionStrategy
+            strategy_cls = SamplingInsertionStrategy
         if criterion_cls is None:
             from .....models import EarliestLastDepartureTimeRouteCriterion
 

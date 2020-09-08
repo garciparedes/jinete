@@ -115,5 +115,5 @@ class CordeauLaporteLoaderFormatter(LoaderFormatter):
         :return: A surface instance from the loaded instance.
         """
         surface = GeometricSurface(DistanceMetric.EUCLIDEAN)
-        logger.info(f"Created surface!")
+        logger.info("Created surface!")
         return surface

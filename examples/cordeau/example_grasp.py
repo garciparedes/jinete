@@ -24,7 +24,13 @@ def main():
     solver = jit.Solver(
         loader_kwargs={"file_path": file_path},
         algorithm=jit.GraspAlgorithm,
-        algorithm_kwargs={"first_solution_kwargs": {"episodes": 1, "strategy_cls": jit.IntensiveInsertionStrategy}},
+        algorithm_kwargs={
+            "first_solution_kwargs": {
+                "episodes": 1,
+                "randomized_size": 2,
+            },
+            "episodes": 5,
+        },
         storer=jit.StorerSet,
         storer_kwargs={"storer_cls_set": {jit.PromptStorer, jit.GraphPlotStorer}},
     )

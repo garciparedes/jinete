@@ -13,7 +13,6 @@ from typing import (
 )
 
 from ...models import (
-    MAX_INT,
     Planning,
 )
 from ..abc import (
@@ -30,6 +29,8 @@ if TYPE_CHECKING:
     from typing import (
         Dict,
         Any,
+        Tuple,
+        Type,
     )
 
 logger = logging.getLogger(__name__)
@@ -72,40 +73,37 @@ class GraspAlgorithm(Algorithm):
         self.first_solution_kwargs = first_solution_kwargs
         self.local_search_kwargs = local_search_kwargs
         self.random = Random(seed)
+        self.args = args
+        self.kwargs = kwargs
 
-    def _build_first_solution_algorithm(self, **kwargs) -> Algorithm:
+    def _build_first_solution_algorithm(self, **kwargs) -> Tuple[Type[Algorithm], Dict]:
         kwargs.update(self.first_solution_kwargs.copy())
         if "fleet" not in kwargs:
             kwargs["fleet"] = self.fleet
         if "job" not in kwargs:
             kwargs["job"] = self.job
-        if "seed" not in kwargs:
-            kwargs["seed"] = self.random.randint(0, MAX_INT)
-        return IterativeAlgorithm(**kwargs)
+        return IterativeAlgorithm, kwargs
 
-    def _build_local_search_algorithm(self, **kwargs) -> Algorithm:
+    def _build_local_search_algorithm(self, **kwargs) -> Tuple[Type[Algorithm], Dict]:
         kwargs.update(self.local_search_kwargs.copy())
         if "fleet" not in kwargs:
             kwargs["fleet"] = self.fleet
         if "job" not in kwargs:
             kwargs["job"] = self.job
-        if "seed" not in kwargs:
-            kwargs["seed"] = self.random.randint(0, MAX_INT)
-        return SequentialAlgorithm(**kwargs)
+        kwargs["algorithm_cls"] = SequentialAlgorithm
+        kwargs["restart_mode"] = False
+        kwargs["episodes"] = 3
+        return IterativeAlgorithm, kwargs
 
     def _optimize(self) -> Planning:
-        iterative = self._build_first_solution_algorithm()
-        best = iterative.optimize()
-
-        no_improvement_count = 0
-        while no_improvement_count < self.no_improvement_threshold:
-            no_improvement_count += 1
-
-            current = self._build_local_search_algorithm(initial=best).optimize()
-
-            best = self._objective.best(best, current)
-
-            if best == current:
-                no_improvement_count = 0
-
-        return best.planning
+        algorithm = IterativeAlgorithm(
+            algorithm_cls=SequentialAlgorithm,
+            algorithms_cls=[
+                self._build_first_solution_algorithm(),
+                self._build_local_search_algorithm(),
+            ],
+            *self.args,
+            **self.kwargs
+        )
+        result = algorithm.optimize()
+        return result.planning

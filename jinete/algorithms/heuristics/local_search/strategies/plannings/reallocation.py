@@ -1,6 +1,7 @@
 import itertools as it
 import logging
 
+from jinete.utils import sample_index_pairs
 from ..abc import (
     LocalSearchStrategy,
 )
@@ -33,7 +34,7 @@ class ReallocationLocalSearchStrategy(LocalSearchStrategy):
 
                 partial_cost_origin = partial_cost + self._objective.optimization_function(new_origin)[-1]
 
-                for i, j in it.combinations(range(len(destination.stops) - 1), 2):
+                for i, j in sample_index_pairs(len(destination.stops), 128):
                     destinations = strategy.compute(destination, trip, i, j)
                     if not any(destinations):
                         continue

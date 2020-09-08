@@ -15,6 +15,8 @@ from .abc import (
     InsertionIterator,
 )
 
+from .....models import MAX_FLOAT
+
 if TYPE_CHECKING:
     from typing import (
         Dict,
@@ -28,7 +30,7 @@ logger = logging.getLogger(__name__)
 class RankingInsertionIterator(InsertionIterator):
     ranking: Dict[Vehicle, List[Route]]
 
-    def __init__(self, neighborhood_max_size: int = 250, randomized_size: int = 1, seed: int = 56, *args, **kwargs):
+    def __init__(self, neighborhood_max_size: int = 16, randomized_size: int = 1, seed: int = 56, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         if neighborhood_max_size is None:
@@ -84,7 +86,10 @@ class RankingInsertionIterator(InsertionIterator):
                 continue
 
             for current in sub_ranking:
-                if any(candidates) and self._criterion.best(candidates[-1], current) == candidates[-1]:
+                if (
+                    len(candidates) == self.randomized_size
+                    and self._criterion.best(candidates[-1], current) == candidates[-1]
+                ):
                     break
 
                 if self.randomized_size <= len(candidates):
