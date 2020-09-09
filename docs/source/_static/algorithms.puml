@@ -42,51 +42,65 @@ class SequentialAlgorithm <<algorithms>>
 
 
 InsertionAlgorithm -up-|> Algorithm
-Algorithm <|- MilpAlgorithm
 Algorithm <|-- LocalSearchAlgorithm
 Algorithm <|-- GRASPAlgorithm
-Algorithm <|- IterativeAlgorithm
-Algorithm <|-- SequentialAlgorithm
+MilpAlgorithm --|> Algorithm
+IterativeAlgorithm --|> Algorithm
+SequentialAlgorithm --|> Algorithm
 
 
-InsertionStrategy <|-- IntensiveInsertionStrategy
+
+InsertionStrategy <|- IntensiveInsertionStrategy
 InsertionStrategy <|-- SamplingInsertionStrategy
 InsertionStrategy <|-- TailInsertionStrategy
 
-InsertionIterator <|-- RankingInsertionIterator
-InsertionIterator <|-- StatelessInsertionIterator
+RankingInsertionIterator --|> InsertionIterator
+StatelessInsertionIterator --|> InsertionIterator
 
-LinearModel <|-- ThreeIndexLinearModel
+LinearModel <|-up- ThreeIndexLinearModel
 
 LocalSearchStrategy <|-- ReallocationLocalSearchStrategy
 LocalSearchStrategy <|-- OneShiftLocalSearchStrategy
 LocalSearchStrategy <|-- TwoOPTLocalSearchStrategy
 
 
-InsertionAlgorithm -left- InsertionIterator
+
+InsertionAlgorithm -up- InsertionIterator
 InsertionAlgorithm -down- InsertionStrategy
 
-MilpAlgorithm -- LinearModel
+MilpAlgorithm -up- LinearModel
 
-LocalSearchAlgorithm -- LocalSearchStrategy
+LocalSearchAlgorithm -down- LocalSearchStrategy
 
 
-GRASPAlgorithm -- LocalSearchAlgorithm
-GRASPAlgorithm -- InsertionAlgorithm
+GRASPAlgorithm -down- LocalSearchAlgorithm
+GRASPAlgorithm -down- InsertionAlgorithm
 
 
 note "composed of" as N1
 N1 --o IterativeAlgorithm
-N1 - Algorithm
+Algorithm - N1
 
 note "composed of" as N2
 N2 --o SequentialAlgorithm
-N2 - Algorithm
+Algorithm - N2
 
 
-Job "receives "--o Algorithm
-Fleet "receives"--o Algorithm
-Result "generates"-- Algorithm
+Job "receives "-o Algorithm
+Fleet "receives"-o Algorithm
+Result "generates"- Algorithm
+
+Job -down[hidden]- Fleet
+Fleet -down[hidden]- Result
+
+
+ReallocationLocalSearchStrategy -down[hidden]- OneShiftLocalSearchStrategy
+OneShiftLocalSearchStrategy -down[hidden]- TwoOPTLocalSearchStrategy
+
+IntensiveInsertionStrategy -down[hidden]- SamplingInsertionStrategy
+SamplingInsertionStrategy -down[hidden]- TailInsertionStrategy
+
+RankingInsertionIterator -down[hidden]- StatelessInsertionIterator
 
 @enduml
 
