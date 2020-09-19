@@ -1,8 +1,15 @@
-import operator as op
-from functools import reduce
 import itertools as it
-from random import Random
-from typing import Iterable, Tuple
+import operator as op
+from functools import (
+    reduce,
+)
+from random import (
+    Random,
+)
+from typing import (
+    Iterable,
+    Tuple,
+)
 
 
 def ncr(n, r):

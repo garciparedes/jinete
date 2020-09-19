@@ -3,4 +3,6 @@
 from .collections import (
     remove_duplicates,
 )
-from .random import sample_index_pairs
+from .random import (
+    sample_index_pairs,
+)

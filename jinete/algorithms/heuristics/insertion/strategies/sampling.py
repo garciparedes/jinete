@@ -1,6 +1,7 @@
 from __future__ import (
     annotations,
 )
+
 import logging
 from random import (
     Random,
@@ -12,10 +13,12 @@ from typing import (
 from .....models import (
     Trip,
 )
+from .....utils import (
+    sample_index_pairs,
+)
 from .abc import (
     InsertionStrategy,
 )
-from .....utils import sample_index_pairs
 
 if TYPE_CHECKING:
     from typing import (

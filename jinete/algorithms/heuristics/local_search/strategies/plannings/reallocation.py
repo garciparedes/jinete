@@ -1,7 +1,10 @@
 import itertools as it
 import logging
 
-from jinete.utils import sample_index_pairs
+from jinete.utils import (
+    sample_index_pairs,
+)
+
 from ..abc import (
     LocalSearchStrategy,
 )
