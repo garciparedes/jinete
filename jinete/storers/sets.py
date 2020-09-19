@@ -43,7 +43,8 @@ class StorerSet(Storer):
     def store(self) -> None:
         """Perform a storage process."""
         for storer_cls in self.storer_cls_set:
-            logger.info(f'Storing result with "{storer_cls.__name__}"...')
+            name = getattr(storer_cls, "__name__", None)
+            logger.info(f'Storing result with "{name}"...')
 
             storer = storer_cls(*self.args, **self.kwargs)
             storer.store()
