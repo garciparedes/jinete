@@ -13,10 +13,12 @@ utils package
 
 
    jinete.utils.collections
+   jinete.utils.random
 
 .. autosummary::
 
    jinete.utils.collections
+   jinete.utils.random
 
 
 

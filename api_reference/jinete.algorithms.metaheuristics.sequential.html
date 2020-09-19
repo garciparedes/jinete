@@ -1,15 +1,18 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>sequential module &mdash; jinete 0.0.14 documentation</title>
+  <title>sequential module &mdash; jinete 0.1.0 documentation</title>
   
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
 
   
   
@@ -17,7 +20,9 @@
   
 
   
-  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -29,10 +34,6 @@
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="abc module" href="jinete.algorithms.abc.html" />
@@ -52,7 +53,7 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> jinete
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> jinete
           
 
           
@@ -75,6 +76,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -95,6 +97,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -133,7 +136,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
           <li><a href="api_reference.html">API Reference</a> &raquo;</li>
         
@@ -167,14 +170,14 @@
 <p>Sequential algorithm class definitions.</p>
 <dl class="class">
 <dt id="jinete.algorithms.metaheuristics.sequential.SequentialAlgorithm">
-<em class="property">class </em><code class="sig-prename descclassname">jinete.algorithms.metaheuristics.sequential.</code><code class="sig-name descname">SequentialAlgorithm</code><span class="sig-paren">(</span><em class="sig-param">initial</em>, <em class="sig-param">algorithms_cls=None</em>, <em class="sig-param">seed=56</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/metaheuristics/sequential.html#SequentialAlgorithm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.metaheuristics.sequential.SequentialAlgorithm" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">jinete.algorithms.metaheuristics.sequential.</code><code class="sig-name descname">SequentialAlgorithm</code><span class="sig-paren">(</span><em class="sig-param">initial=None</em>, <em class="sig-param">algorithms_cls=None</em>, <em class="sig-param">seed=56</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/metaheuristics/sequential.html#SequentialAlgorithm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.metaheuristics.sequential.SequentialAlgorithm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="jinete.algorithms.abc.html#jinete.algorithms.abc.Algorithm" title="jinete.algorithms.abc.Algorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">jinete.algorithms.abc.Algorithm</span></code></a></p>
 <p>Sequential algorithm implementation.</p>
 <p>This implementation is based on the application of a sequence of algorithm implementations. It’s mostly used as a
 component of more complicated metaheuristics.</p>
 <dl class="method">
 <dt id="jinete.algorithms.metaheuristics.sequential.SequentialAlgorithm.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">initial</em>, <em class="sig-param">algorithms_cls=None</em>, <em class="sig-param">seed=56</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/metaheuristics/sequential.html#SequentialAlgorithm.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.metaheuristics.sequential.SequentialAlgorithm.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">initial=None</em>, <em class="sig-param">algorithms_cls=None</em>, <em class="sig-param">seed=56</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/jinete/algorithms/metaheuristics/sequential.html#SequentialAlgorithm.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#jinete.algorithms.metaheuristics.sequential.SequentialAlgorithm.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct a new instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -228,11 +231,19 @@ component of more complicated metaheuristics.</p>
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, Sergio García Prado
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -243,7 +254,6 @@ component of more complicated metaheuristics.</p>
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {

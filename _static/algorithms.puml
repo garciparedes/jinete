@@ -1,0 +1,106 @@
+@startuml
+skinparam linetype ortho
+skinparam nodesep 100
+skinparam ranksep 100
+
+hide empty methods
+hide empty attributes
+
+entity Job <<models>>
+entity Fleet <<models>>
+
+entity Result <<models>>
+
+abstract class Algorithm <<algorithms>>
+
+class MilpAlgorithm <<algorithms>>
+
+abstract class LinearModel <<algorithms>>
+class ThreeIndexLinearModel <<algorithms>>
+
+class InsertionAlgorithm <<algorithms>>
+
+class InsertionIterator <<algorithms>>
+class RankingInsertionIterator <<algorithms>>
+class StatelessInsertionIterator <<algorithms>>
+
+class InsertionStrategy <<algorithms>>
+class IntensiveInsertionStrategy <<algorithms>>
+class SamplingInsertionStrategy <<algorithms>>
+class TailInsertionStrategy <<algorithms>>
+
+class LocalSearchAlgorithm <<algorithms>>
+
+abstract class LocalSearchStrategy <<algorithms>>
+class ReallocationLocalSearchStrategy <<algorithms>>
+class OneShiftLocalSearchStrategy <<algorithms>>
+class TwoOPTLocalSearchStrategy <<algorithms>>
+
+class GRASPAlgorithm <<algorithms>>
+class IterativeAlgorithm <<algorithms>>
+class SequentialAlgorithm <<algorithms>>
+
+
+InsertionAlgorithm -up-|> Algorithm
+Algorithm <|-- LocalSearchAlgorithm
+Algorithm <|-- GRASPAlgorithm
+MilpAlgorithm --|> Algorithm
+IterativeAlgorithm --|> Algorithm
+SequentialAlgorithm --|> Algorithm
+
+
+
+InsertionStrategy <|- IntensiveInsertionStrategy
+InsertionStrategy <|-- SamplingInsertionStrategy
+InsertionStrategy <|-- TailInsertionStrategy
+
+RankingInsertionIterator --|> InsertionIterator
+StatelessInsertionIterator --|> InsertionIterator
+
+LinearModel <|-up- ThreeIndexLinearModel
+
+LocalSearchStrategy <|-- ReallocationLocalSearchStrategy
+LocalSearchStrategy <|-- OneShiftLocalSearchStrategy
+LocalSearchStrategy <|-- TwoOPTLocalSearchStrategy
+
+
+
+InsertionAlgorithm -up- InsertionIterator
+InsertionAlgorithm -down- InsertionStrategy
+
+MilpAlgorithm -up- LinearModel
+
+LocalSearchAlgorithm -down- LocalSearchStrategy
+
+
+GRASPAlgorithm -down- LocalSearchAlgorithm
+GRASPAlgorithm -down- InsertionAlgorithm
+
+
+note "composed of" as N1
+N1 --o IterativeAlgorithm
+Algorithm - N1
+
+note "composed of" as N2
+N2 --o SequentialAlgorithm
+Algorithm - N2
+
+
+Job "receives "-o Algorithm
+Fleet "receives"-o Algorithm
+Result "generates"- Algorithm
+
+Job -down[hidden]- Fleet
+Fleet -down[hidden]- Result
+
+
+ReallocationLocalSearchStrategy -down[hidden]- OneShiftLocalSearchStrategy
+OneShiftLocalSearchStrategy -down[hidden]- TwoOPTLocalSearchStrategy
+
+IntensiveInsertionStrategy -down[hidden]- SamplingInsertionStrategy
+SamplingInsertionStrategy -down[hidden]- TailInsertionStrategy
+
+RankingInsertionIterator -down[hidden]- StatelessInsertionIterator
+
+@enduml
+

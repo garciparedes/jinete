@@ -1,0 +1,42 @@
+@startuml
+skinparam linetype ortho
+skinparam nodesep 100
+skinparam ranksep 100
+
+hide empty methods
+hide empty attributes
+
+entity Job <<models>>
+entity Fleet <<models>>
+entity Surface <<models>>
+
+abstract class Loader <<loaders>> {
+}
+
+class FileLoader <<loaders>> {
+}
+
+abstract class LoaderFormatter <<loaders>> {
+}
+
+class CordeauLaporteLoaderFormatter <<loaders>> {
+}
+
+class HashCodeLoaderFormatter <<loaders>> {
+}
+
+
+Loader -up-"loads" Job
+Loader -up-"loads" Fleet
+Loader -up-"loads" Surface
+
+LoaderFormatter "uses"-right-o Loader
+
+Loader <|-down- FileLoader
+
+LoaderFormatter <|-down- CordeauLaporteLoaderFormatter
+LoaderFormatter <|-down- HashCodeLoaderFormatter
+
+
+@enduml
+

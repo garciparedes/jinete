@@ -1,0 +1,7 @@
+random module
+=============
+
+.. automodule:: jinete.utils.random
+   :members:
+   :undoc-members:
+   :show-inheritance:

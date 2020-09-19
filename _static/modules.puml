@@ -1,0 +1,14 @@
+@startuml
+
+package "jinete" {
+  [models]
+  [loaders]
+  [algorithms]
+  [storers]
+  [dispachers]
+  [solvers]
+  [exceptions]
+  [utils]
+}
+
+@enduml
