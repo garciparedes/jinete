@@ -98,7 +98,7 @@ class GraspAlgorithm(Algorithm):
     def _optimize(self) -> Planning:
         algorithm = IterativeAlgorithm(
             algorithm_cls=SequentialAlgorithm,
-            algorithms_cls=[self._build_first_solution_algorithm(), self._build_local_search_algorithm(),],
+            algorithms_cls=[self._build_first_solution_algorithm(), self._build_local_search_algorithm()],
             *self.args,
             **self.kwargs
         )
