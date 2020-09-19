@@ -24,10 +24,10 @@ class TwoOPTLocalSearchStrategy(LocalSearchStrategy):
                 j = k + 1
                 condition = any(
                     any(
-                        delivery in chain.from_iterable(b.pickup_planned_trips for b in route.stops[i:j])
+                        delivery in chain.from_iterable(b.pickup_planned_trips for b in route.stops[i : j + 1])
                         for delivery in a.delivery_planned_trips
                     )
-                    for a in route.stops[i:j]
+                    for a in route.stops[i : j + 1]
                 )
                 if condition:
                     continue

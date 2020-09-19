@@ -13,6 +13,9 @@ from typing import (
 from .....models import (
     Trip,
 )
+from .....utils import (
+    sample_index_pairs,
+)
 from .abc import (
     InsertionStrategy,
 )
@@ -34,19 +37,12 @@ class SamplingInsertionStrategy(InsertionStrategy):
         self.random = Random(seed)
 
     def compute(
-        self, route: Route, trips: Union[Trip, Iterable[Trip]], count: int = 25, *args, **kwargs
+        self, route: Route, trips: Union[Trip, Iterable[Trip]], count: int = 128, *args, **kwargs
     ) -> List[Route]:
         if not isinstance(trips, Trip):
             trips = tuple(trips)
 
-        indices = set()
-        for _ in range(count):
-            sampled_i = self.random.randint(0, len(route.stops) - 2)
-            sampled_j = self.random.randint(sampled_i + 1, len(route.stops) - 1)
-            pair = (sampled_i, sampled_j)
-            indices.add(pair)
-
         routes = list()
-        for i, j in indices:
+        for i, j in sample_index_pairs(len(route.stops), count, self.random):
             routes += super().compute(route, trips, i, j, *args, **kwargs)
         return routes

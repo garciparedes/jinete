@@ -5,59 +5,69 @@ skinparam ranksep 100
 hide empty methods
 hide empty attributes
 
-entity Vehicle {
+abstract class Algorithm <<algorithms>>
+
+entity Vehicle <<models>> {
   identifier: str
   capacity: float
   timeout: float
 }
 
-entity Route {
+entity Route <<models>> {
   uuid: UUID
 }
 
-entity Trip {
+entity Trip <<models>> {
   identifier: str
   on_time_bonus: float
   capacity: float
   timeout: float
 }
 
-entity PlannedTrip {
+entity PlannedTrip <<models>> {
 }
 
-entity Planning {
+entity Planning <<models>> {
   computation_time: float
 }
 
-entity Stop {
+entity Result <<models>> {
+}
+
+
+entity Stop <<models>> {
   starting_time?: float
 }
 
-entity Service {
+entity Service <<models>> {
   earliest: float
   latest: float
   duration: float
 }
 
-entity Job {
+entity Job <<models>> {
 }
 
-entity Fleet {
+entity Fleet <<models>> {
 }
 
-entity Position {
+entity Position <<models>> {
   coordinates: Tuple[float, ...]
 }
 
-entity Surface {
+entity Surface <<models>> {
   uuid: UUID
 }
 
 
+
 Job o-"*" Trip
-Algorithm --o Planning: optimizes >
-Algorithm o-- Fleet
-Algorithm o-- Job
+Algorithm -- Result: generates >
+Result --o Planning
+Result o-- Fleet
+Result o-- Job
+Algorithm o-- Fleet: receives <
+Algorithm o-- Job: receives <
 Planning o--"*" Route
 Trip o- PlannedTrip: planified >
 Trip o-right-"origin" Service

@@ -22,11 +22,22 @@ if TYPE_CHECKING:
         Any,
         Tuple,
     )
+    from pathlib import Path
     from ...models import Position
 
 
 class GraphPlotStorer(Storer):
     """Generate a directed graph representation of the solution."""
+
+    def __init__(self, file_path: Path = None, *args, **kwargs):
+        """Construct a new object instance.
+
+        :param file_path: The file path in which to store the problem solution.
+        :param args: Additional positional arguments.
+        :param kwargs: Additional named arguments.
+        """
+        super().__init__(*args, **kwargs)
+        self.file_path = file_path
 
     def _generate_nodes(self, edges: Dict[Tuple[Position, Position], Dict[str, Any]]) -> Dict[Position, Dict[str, Any]]:
         nodes: Dict[Position, Dict[str, Any]] = dict()
@@ -73,8 +84,7 @@ class GraphPlotStorer(Storer):
 
         return graph
 
-    @staticmethod
-    def _show_graph(graph: nx.Graph) -> None:
+    def _show_graph(self, graph: nx.Graph) -> None:
         import matplotlib as mpl
 
         mpl.rcParams["figure.dpi"] = 300
@@ -90,7 +100,10 @@ class GraphPlotStorer(Storer):
         nx.draw_networkx_labels(graph, pos, labels=node_labels, font_size=5, font_color="white")
         nx.draw_networkx_edge_labels(graph, pos, edge_labels=edge_labels)
 
-        plt.show()
+        if self.file_path is not None:
+            plt.savefig(str(self.file_path))
+        else:
+            plt.show()
 
     def store(self) -> None:
         """Perform a storage process."""

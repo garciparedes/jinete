@@ -73,7 +73,7 @@ class HashCodeLoaderFormatter(LoaderFormatter):
         origin = Service(position=surface.get_or_create_position([x1, y1]), earliest=earliest, latest=latest,)
         destination = Service(position=surface.get_or_create_position([x2, y2]),)
         trip = Trip(identifier, on_time_bonus=bonus, origin=origin, destination=destination)
-        logger.debug(f"Created trip!")
+        logger.debug("Created trip!")
         return trip
 
     def surface(self, *args, **kwargs) -> Surface:
@@ -84,5 +84,5 @@ class HashCodeLoaderFormatter(LoaderFormatter):
         :return: A surface instance from the loaded instance.
         """
         surface = GeometricSurface(DistanceMetric.MANHATTAN)
-        logger.info(f"Created surface!")
+        logger.info("Created surface!")
         return surface

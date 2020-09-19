@@ -36,7 +36,7 @@ class ColumnarStorerFormatter(StorerFormatter):
             (
                 f'Planning UUID: "{self._planning.uuid}"',
                 f'Routes count: "{len(self._routes)}"',
-                f"Routes: ",
+                "Routes: ",
                 "\n".join(f"{self.tab_character}{row}" for row in rows),
                 f'Computation time: "{self._computation_time:0.4f}" seconds',
                 f'Coverage Rate: "{self._coverage_rate}"',
@@ -51,7 +51,7 @@ class ColumnarStorerFormatter(StorerFormatter):
         planned_trip_rows = [self._planned_trip_to_str(planned_trip) for planned_trip in route.planned_trips]
         stop_rows = [self._stop_to_str(stop) for stop in route.stops]
         return [
-            f"Vehicle: ",
+            "Vehicle: ",
             *(f"{self.tab_character}{row}" for row in self._vehicle_to_str(route.vehicle)),
             f'Planned Trips: "{sum(1 for _ in route.planned_trips)}"',
             *(f"{self.tab_character}{row}" for row in planned_trip_rows),

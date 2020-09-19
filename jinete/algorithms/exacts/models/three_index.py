@@ -200,7 +200,7 @@ class ThreeIndexLinearModel(LinearModel):
         elif position == trip.destination_position:
             earliest, latest = trip.destination_earliest, trip.destination_latest
         else:
-            raise Exception(f"There was a problem related with earliest, latest indices.")
+            raise Exception("There was a problem related with earliest, latest indices.")
         return earliest, latest
 
     def _capacity_by_position_idx(self, idx: int) -> float:
@@ -376,7 +376,7 @@ class ThreeIndexLinearModel(LinearModel):
                     assert min(abs(self._x[k][i][j].varValue), abs(self._x[k][i][j].varValue - 1)) <= 0.05
 
     def _solution_to_routes(self):
-        logger.info(f"Casting solution to a set of routes...")
+        logger.info("Casting solution to a set of routes...")
         routes = set()
         for k in self._routes_indexer:
             vehicle = self._vehicles[k]

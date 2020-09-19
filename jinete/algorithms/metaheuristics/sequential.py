@@ -42,7 +42,7 @@ class SequentialAlgorithm(Algorithm):
 
     def __init__(
         self,
-        initial: Result,
+        initial: Result = None,
         algorithms_cls: Sequence[Tuple[Type[Algorithm], Dict[str, Any]]] = None,
         seed: int = 56,
         *args,
@@ -59,15 +59,15 @@ class SequentialAlgorithm(Algorithm):
         super().__init__(*args, **kwargs)
 
         if algorithms_cls is None:
-            from .iterative import IterativeAlgorithm
             from ..heuristics import (
+                InsertionAlgorithm,
                 LocalSearchAlgorithm,
                 ReallocationLocalSearchStrategy,
             )
 
             algorithms_cls = [
                 (LocalSearchAlgorithm, {**kwargs, "strategy_cls": ReallocationLocalSearchStrategy}),
-                (IterativeAlgorithm, kwargs),
+                (InsertionAlgorithm, kwargs),
             ]
 
         self.random = Random(seed)

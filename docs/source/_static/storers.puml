@@ -1,0 +1,52 @@
+@startuml
+skinparam linetype ortho
+skinparam nodesep 100
+skinparam ranksep 100
+
+hide empty methods
+hide empty attributes
+
+entity Result <<models>>
+
+entity Storer <<storers>> {
+}
+
+abstract class FileStorer <<storers>> {
+}
+class SetStorer <<storers>> {
+}
+class PromptStorer <<storers>> {
+}
+class GraphPlotStorer <<storers>> {
+}
+
+abstract class StorerFormatter <<storers>> {
+}
+class ColumnarStorerFormatter <<storers>> {
+}
+class HashCodeStorerFormatter <<storers>> {
+}
+
+
+Storer -up-"stores" Result
+
+StorerFormatter "uses"-right-o Storer
+
+note "composed of" as N2
+N2 --o SetStorer
+N2 - Storer
+
+
+Storer <|-down- FileStorer
+Storer <|-down- PromptStorer
+Storer <|-down- SetStorer
+
+
+Storer <|-down- GraphPlotStorer
+
+StorerFormatter <|-down- ColumnarStorerFormatter
+StorerFormatter <|-down- HashCodeStorerFormatter
+
+
+@enduml
+

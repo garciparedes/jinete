@@ -40,7 +40,15 @@ class IterativeAlgorithm(Algorithm):
     for a defined number of episodes. It's mostly used as a component of more complicated metaheuristics.
     """
 
-    def __init__(self, episodes: int = 3, algorithm_cls: Type[Algorithm] = None, seed: int = 56, *args, **kwargs):
+    def __init__(
+        self,
+        episodes: int = 3,
+        algorithm_cls: Type[Algorithm] = None,
+        seed: int = 56,
+        restart_mode: bool = True,
+        *args,
+        **kwargs,
+    ):
         """Construct a new instance.
 
         :param episodes: The number of episodes to repeat the algorithm.
@@ -55,21 +63,25 @@ class IterativeAlgorithm(Algorithm):
         self.episodes = episodes
         self.algorithm_cls = algorithm_cls
         self.random = Random(seed)
-
+        self.restart_mode = restart_mode
         self.args = args
         self.kwargs = kwargs
 
     def _build_algorithm(self, *args, **kwargs) -> Algorithm:
         args = (*self.args, *args)
-        kwargs.update(self.kwargs)
+        new_kwargs = self.kwargs.copy()
+        new_kwargs.update(kwargs)
 
-        return self.algorithm_cls(*args, **kwargs)
+        return self.algorithm_cls(*args, **new_kwargs)
 
     def _optimize(self) -> Planning:
         best: Optional[Result] = None
         for i in range(self.episodes):
             seed = self.random.randint(0, MAX_INT)
-            current = self._build_algorithm(seed=seed).optimize()
+            kwargs = {"seed": seed}
+            if not self.restart_mode and best is not None:
+                kwargs["initial"] = best
+            current = self._build_algorithm(**kwargs).optimize()
             best = self._objective.best(best, current)
 
         assert best is not None
