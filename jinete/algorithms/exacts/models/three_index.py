@@ -1,21 +1,33 @@
 """Three index linear model class definitions."""
 
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
 import logging
-from collections import defaultdict
-from itertools import product
-from typing import TYPE_CHECKING
+from collections import (
+    defaultdict,
+)
+from itertools import (
+    product,
+)
+from typing import (
+    TYPE_CHECKING,
+)
 
 import pulp as lp
-from cached_property import cached_property
+from cached_property import (
+    cached_property,
+)
 from jinete.models import (
     PlannedTrip,
     Route,
     Stop,
 )
 
-from .abc import LinearModel
+from .abc import (
+    LinearModel,
+)
 
 if TYPE_CHECKING:
     from typing import (

@@ -4,7 +4,9 @@ from itertools import (
     combinations,
 )
 
-from ..abc import LocalSearchStrategy
+from ..abc import (
+    LocalSearchStrategy,
+)
 
 logger = logging.getLogger(__name__)
 

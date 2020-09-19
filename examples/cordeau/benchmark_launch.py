@@ -1,8 +1,16 @@
 import logging
 import traceback
-from concurrent import futures
-from pathlib import Path
-from subprocess import check_output, TimeoutExpired, STDOUT
+from concurrent import (
+    futures,
+)
+from pathlib import (
+    Path,
+)
+from subprocess import (
+    STDOUT,
+    TimeoutExpired,
+    check_output,
+)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

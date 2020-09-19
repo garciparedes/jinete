@@ -1,8 +1,12 @@
 import logging
 import sys
 import traceback
-from functools import partial
-from pathlib import Path
+from functools import (
+    partial,
+)
+from pathlib import (
+    Path,
+)
 
 import jinete as jit
 

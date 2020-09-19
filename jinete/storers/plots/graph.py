@@ -1,14 +1,20 @@
 """Graph plotting storers module, in which a set of plotting storers whose resulting artifact is a graph."""
 
-from __future__ import annotations
+from __future__ import (
+    annotations,
+)
 
-from typing import TYPE_CHECKING
+from typing import (
+    TYPE_CHECKING,
+)
 
 import matplotlib.pyplot as plt
 import networkx as nx
 import seaborn as sns
 
-from ..abc import Storer
+from ..abc import (
+    Storer,
+)
 
 if TYPE_CHECKING:
     from typing import (
