@@ -1,7 +1,5 @@
 import logging
-from pathlib import (
-    Path,
-)
+from pathlib import Path
 
 import coloredlogs
 import jinete as jit
@@ -24,13 +22,7 @@ def main():
     solver = jit.Solver(
         loader_kwargs={"file_path": file_path},
         algorithm=jit.GraspAlgorithm,
-        algorithm_kwargs={
-            "first_solution_kwargs": {
-                "episodes": 1,
-                "randomized_size": 2,
-            },
-            "episodes": 5,
-        },
+        algorithm_kwargs={"first_solution_kwargs": {"episodes": 1, "randomized_size": 2,}, "episodes": 5,},
         storer=jit.StorerSet,
         storer_kwargs={"storer_cls_set": {jit.PromptStorer, jit.GraphPlotStorer}},
     )

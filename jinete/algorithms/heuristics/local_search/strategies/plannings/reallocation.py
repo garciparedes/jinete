@@ -2,9 +2,7 @@ import itertools as it
 import logging
 
 from jinete.utils import sample_index_pairs
-from ..abc import (
-    LocalSearchStrategy,
-)
+from ..abc import LocalSearchStrategy
 
 logger = logging.getLogger(__name__)
 

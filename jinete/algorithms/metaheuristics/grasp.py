@@ -1,29 +1,15 @@
 """GRASP-based algorithm class definitions."""
 
-from __future__ import (
-    annotations,
-)
+from __future__ import annotations
 
 import logging
-from random import (
-    Random,
-)
-from typing import (
-    TYPE_CHECKING,
-)
+from random import Random
+from typing import TYPE_CHECKING
 
-from ...models import (
-    Planning,
-)
-from ..abc import (
-    Algorithm,
-)
-from .iterative import (
-    IterativeAlgorithm,
-)
-from .sequential import (
-    SequentialAlgorithm,
-)
+from ...models import Planning
+from ..abc import Algorithm
+from .iterative import IterativeAlgorithm
+from .sequential import SequentialAlgorithm
 
 if TYPE_CHECKING:
     from typing import (
@@ -98,10 +84,7 @@ class GraspAlgorithm(Algorithm):
     def _optimize(self) -> Planning:
         algorithm = IterativeAlgorithm(
             algorithm_cls=SequentialAlgorithm,
-            algorithms_cls=[
-                self._build_first_solution_algorithm(),
-                self._build_local_search_algorithm(),
-            ],
+            algorithms_cls=[self._build_first_solution_algorithm(), self._build_local_search_algorithm(),],
             *self.args,
             **self.kwargs
         )
