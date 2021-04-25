@@ -78,5 +78,6 @@ To perform the tests with coverage you can need to type:
 coverage run -m unittest discover tests
 ```
 
+
 ## LICENSE
 This project is licensed under [MIT](LICENSE) license.
